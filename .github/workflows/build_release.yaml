@@ -48,16 +48,16 @@ jobs:
                   monero_c/monero/contrib/depends/built/*
                 key: depends-${{ github.job }}-monero-${{ hashFiles('*monero_c/monero/contrib/depends/packages/*.mk') }}
             - name: monero/x86_64-linux-android
-              run: ./build_single.sh monero x86_64-linux-android -j$(nproc)
+              run: cd monero_c && ./build_single.sh monero x86_64-linux-android -j$(nproc)
             - name: monero/aarch64-linux-android
-              run: ./build_single.sh monero aarch64-linux-android -j$(nproc)
+              run: cd monero_c && ./build_single.sh monero aarch64-linux-android -j$(nproc)
             - name: monero/armv7a-linux-androideabi
-              run: ./build_single.sh monero armv7a-linux-androideabi -j$(nproc)
+              run: cd monero_c && ./build_single.sh monero armv7a-linux-androideabi -j$(nproc)
             - name: Upload lib
               uses: actions/upload-artifact@v4
               with:
                 name: android monero
-                path: release/monero
+                path: monero_c/release/monero
             - name: remove android_ndk
               run: |
                 rm -rf monero_c/monero/contrib/depends/built/*/android_ndk
