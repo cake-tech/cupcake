@@ -21,17 +21,6 @@ jobs:
                 git config --global user.email "ci@mrcyjanek.net"
                 git config --global user.name "CI mrcyjanek.net"
                 ./apply_patches.sh monero
-            - name: Free Disk Space
-              if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
-              uses: jlumbroso/free-disk-space@main
-              with:
-                tool-cache: false
-                android: true
-                dotnet: true
-                haskell: true
-                large-packages: true
-                docker-images: true
-                swap-storage: true
             - name: Install dependencies
               run: |
                 sudo apt update
@@ -47,12 +36,8 @@ jobs:
                 path: |
                   monero_c/monero/contrib/depends/built/*
                 key: depends-${{ github.job }}-monero-${{ hashFiles('*monero_c/monero/contrib/depends/packages/*.mk') }}
-            - name: monero/x86_64-linux-android
-              run: cd monero_c && ./build_single.sh monero x86_64-linux-android -j$(nproc)
             - name: monero/aarch64-linux-android
               run: cd monero_c && ./build_single.sh monero aarch64-linux-android -j$(nproc)
-            - name: monero/armv7a-linux-androideabi
-              run: cd monero_c && ./build_single.sh monero armv7a-linux-androideabi -j$(nproc)
             - name: Upload lib
               uses: actions/upload-artifact@v4
               with:
@@ -74,6 +59,10 @@ jobs:
               with:
                 name: android monero
                 path: .cache/monero_c/gh_actions/release/monero
+            - name: Setup tmate session
+              uses: mxschmitt/action-tmate@v3
+              with:
+                limit-access-to-actor: false
             - name: use locally cached build from previous step
               run: |
                 sed -i 's/^MONERO_C_TAG=.*/MONERO_C_TAG=gh_actions/' .env
@@ -92,7 +81,7 @@ jobs:
                 flutter pub get
             - name: Build monero_c
               run: |
-                make libs_android_build
+                make libs_android_build_ci
             - name: Build apk
               run: |
                 flutter build apk
