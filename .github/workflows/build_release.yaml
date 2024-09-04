@@ -59,10 +59,6 @@ jobs:
               with:
                 name: android monero
                 path: .cache/monero_c/gh_actions/release/monero
-            - name: Setup tmate session
-              uses: mxschmitt/action-tmate@v3
-              with:
-                limit-access-to-actor: false
             - name: use locally cached build from previous step
               run: |
                 sed -i 's/^MONERO_C_TAG=.*/MONERO_C_TAG=gh_actions/' .env

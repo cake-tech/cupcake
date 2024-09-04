@@ -1,16 +1,21 @@
 # cup_cake
 
-A new Flutter project.
+> It's almost cake, but in a cup.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Getting Started (for developers)
 
-A few resources to get you started if this is your first Flutter project:
+To build:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```bash
+$ make libs_android_build # or libs_android_download
+$ make cupcake_monero
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Adding other coins
+
+This project currently only supports Monero, but is very welcoming of other wallets making it's way to the project.
+
+Adding new wallet is as simple as creating new `<coin>.dart` file in `coins` directory, and adding it to the `coins/list.dart`, with proper configuration options set.
+
+Building flavors of the app is as simple as providing `--dart-define=COIN_MONERO=false`, to disable Monero and doing exactly the same for newly added coin, to enable it.
