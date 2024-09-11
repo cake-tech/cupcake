@@ -8,13 +8,13 @@ class HomeScreenViewModel extends ViewModel {
   @override
   String get screenName => "Select Wallet";
 
-  List<CoinWalletInfo> get wallets {
+  Future<List<CoinWalletInfo>> get wallets async {
     List<CoinWalletInfo> wallets = [];
     for (var coin in walletCoins) {
-      wallets.addAll(coin.coinWallets);
+      wallets.addAll(await coin.coinWallets);
     }
     return wallets;
   }
 
-  bool get showLandingInfo => wallets.isEmpty;
+  Future<bool> get showLandingInfo async => (await wallets).isEmpty;
 }

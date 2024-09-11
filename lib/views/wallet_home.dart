@@ -1,44 +1,32 @@
 import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/view_model/home_screen_view_model.dart';
+import 'package:cup_cake/view_model/wallet_home_view_model.dart';
 import 'package:cup_cake/views/abstract.dart';
-import 'package:cup_cake/views/create_wallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 
 // ignore: must_be_immutable
-class HomeScreen extends AbstractView {
-  HomeScreen({super.key});
+class WalletHome extends AbstractView {
+  WalletHome({super.key, required CoinWallet coinWallet})
+      : viewModel = WalletHomeViewModel(wallet: coinWallet);
 
-  @override
-  Future<void> push(BuildContext context) async {
+  static Future<void> pushStatic(BuildContext context, CoinWallet coin) async {
     await Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (BuildContext context) {
-          return HomeScreen();
+          return WalletHome(coinWallet: coin);
         },
       ),
     );
   }
 
   @override
-  final HomeScreenViewModel viewModel = HomeScreenViewModel();
+  final WalletHomeViewModel viewModel;
 
   @override
   Widget? body(BuildContext context) {
-    return FutureBuilder(
-      future: viewModel.showLandingInfo,
-      builder: (BuildContext context, AsyncSnapshot<bool> value) {
-        if (!value.hasData) return Container(); // TODO: placeholder?
-        if (value.data!) {
-          return const Text(
-              "You don't have any wallets, consider creating one.");
-        }
-        return FutureBuilder(
-          future: viewModel.wallets,
-          builder: walletsBody,
-        );
-      },
+    return Column(
+      children: [Text(viewModel.balance)],
     );
   }
 
@@ -73,15 +61,12 @@ class HomeScreen extends AbstractView {
     );
   }
 
+
   @override
   Widget? floatingActionButton(BuildContext context) {
     return FloatingActionButton(
-      child: const Icon(Icons.add),
-      onPressed: () async {
-        await CreateWallet().push(context);
-        if (!context.mounted) return;
-        markNeedsBuild(context);
-      },
+      onPressed: () => viewModel.showScanner(context),
+      child: const Icon(Icons.scanner),
     );
   }
 }

@@ -42,6 +42,10 @@ dependencies:
       path: impls/monero.dart
   path: 1.9.0
   path_provider: 2.1.4
+  fast_scanner:
+    git:
+      url: https://github.com/MrCyjaneK/fast_scanner
+      ref: a46bdb97a513a27d5694039ac997637a36e715b2
 
 dev_dependencies:
   flutter_test:

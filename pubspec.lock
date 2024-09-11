@@ -57,6 +57,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
+  fast_scanner:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: a46bdb97a513a27d5694039ac997637a36e715b2
+      resolved-ref: a46bdb97a513a27d5694039ac997637a36e715b2
+      url: "https://github.com/MrCyjaneK/fast_scanner"
+    source: git
+    version: "5.1.1"
   ffi:
     dependency: transitive
     description:
@@ -80,6 +89,11 @@ packages:
     version: "3.0.2"
   flutter_test:
     dependency: "direct dev"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
+  flutter_web_plugins:
+    dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -289,6 +303,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "13.0.0"
+  web:
+    dependency: transitive
+    description:
+      name: web
+      sha256: "97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.1"
   xdg_directories:
     dependency: transitive
     description:
@@ -299,4 +321,4 @@ packages:
     version: "1.0.4"
 sdks:
   dart: ">=3.3.4 <4.0.0"
-  flutter: ">=3.16.6"
+  flutter: ">=3.19.0"
