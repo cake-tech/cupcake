@@ -46,12 +46,16 @@ class AbstractView extends StatefulWidget {
   Widget? body(BuildContext context) => null;
 
   Widget build(BuildContext context) {
+    viewModel.register(context);
     return Scaffold(
       appBar: appBar,
       body: body(context),
       floatingActionButton: floatingActionButton(context),
+      bottomNavigationBar: bottomNavigationBar(context),
     );
   }
+
+  Widget? bottomNavigationBar(BuildContext context) => null;
 
   Widget? floatingActionButton(BuildContext context) => null;
 

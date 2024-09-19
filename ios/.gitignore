@@ -33,5 +33,5 @@ Runner/GeneratedPluginRegistrant.*
 !default.pbxuser
 !default.perspectivev3
 
-monero_libwallet2_api_c.dylib
+libwallet2_api_c.dylib
 MoneroWallet.framework/MoneroWallet

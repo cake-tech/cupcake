@@ -44,8 +44,28 @@ class CreateWallet extends AbstractView {
         },
       );
     }
+    if (viewModel.currentForm == null) {
+      return ListView.builder(
+        itemCount: viewModel.createMethods.keys.length,
+        itemBuilder: (BuildContext context, int index) {
+          final key = viewModel.createMethods.keys.elementAt(index);
+          final value = viewModel.createMethods[key];
+          return InkWell(
+            onTap: () {
+              viewModel.currentForm = value;
+              markNeedsBuild(context);
+            },
+            child: Card(
+              child: ListTile(
+                title: Text(key),
+              ),
+            ),
+          );
+        },
+      );
+    }
     return Column(children: [
-      FormBuilder(formElements: viewModel.creationForm),
+      FormBuilder(formElements: viewModel.currentForm ?? []),
     ]);
   }
 
@@ -54,21 +74,29 @@ class CreateWallet extends AbstractView {
     if (viewModel.selectedCoin == null) return null;
     return FloatingActionButton(
       child: const Icon(Icons.navigate_next),
-      onPressed: () => callThrowable(
-          context, () async => await _createWallet(context), "Creating wallet"),
+      onPressed: () => _createWallet(context),
     );
   }
 
-  Future<void> _createWallet(BuildContext context) async {
-    for (var element in viewModel.creationForm) {
+  bool isFormBad(List<FormElement> form) {
+    for (var element in form) {
       if (!element.isOk) {
         if (kDebugMode) {
           print("${element.label} is not valid: ");
         }
-        return;
+        return true;
       }
     }
-    await viewModel.createWallet();
+    return false;
+  }
+
+  Future<void> _createWallet(BuildContext context) async {
+    if (isFormBad(viewModel.currentForm ?? [])) {
+      return;
+    }
+    final ok = await callThrowable(
+        context, viewModel.createWallet, "Unable to create wallet");
+    if (!ok) return;
     if (!context.mounted) return;
     Navigator.of(context).pop();
   }

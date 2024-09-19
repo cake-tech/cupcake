@@ -1,5 +1,6 @@
 import 'package:cup_cake/coins/abstract.dart';
 import 'package:cup_cake/coins/list.dart';
+import 'package:cup_cake/utils/null_if_empty.dart';
 import 'package:cup_cake/view_model/abstract.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -19,6 +20,8 @@ class CreateWalletViewModel extends ViewModel {
 
   List<Coin> get coins => walletCoins;
 
+  bool isCreate = true;
+
   Coin? selectedCoin;
 
   StringFormElement walletName =
@@ -37,43 +40,138 @@ class CreateWalletViewModel extends ViewModel {
     return null;
   });
 
-  StringFormElement walletSeed = StringFormElement("Wallet seed",
-    password: true, validator: (String? input) {
-      if (input == null) return "Input cannot be null";
-      if (input == "") return "Input cannot be empty";
-      if (input.split(" ").length != 16) {
-        return "Password needs to be at least 4 characters long";
-      }
-      return null;
-    });
+  StringFormElement polyseedSeed = StringFormElement("Wallet seed",
+      password: true, validator: (String? input) {
+    if (input == null) return "Input cannot be null";
+    if (input == "") return "Input cannot be empty";
+    if (input.split(" ").length != 16) {
+      return "Seed needs to contain exactly 16 words";
+    }
+    return null;
+  });
 
-  List<CreateMethods> get createMethods => selectedCoin?.createMethods??[];
+  StringFormElement legacySeed = StringFormElement("Wallet seed",
+      password: true, validator: (String? input) {
+    if (input == null) return "Input cannot be null";
+    if (input == "") return "Input cannot be empty";
+    if (input.split(" ").length != 16) {
+      return "Seed needs to contain exactly 16 words";
+    }
+    return null;
+  });
 
-  List<FormElement> get creationForm {
-    return [
-      walletName,
-      walletPassword,
-    ];
-  }
+  StringFormElement walletAddress = StringFormElement("Primary Address",
+      password: true, validator: (String? input) {
+    if (input == null) return "Input cannot be null";
+    if (input == "") return "Input cannot be empty";
+    if (input.split(" ").length != 16) {
+      return "Seed needs to contain exactly 16 words";
+    }
+    return null;
+  });
 
-  List<FormElement> get restoreFormSeed {
-    return [
-      walletName,
+  StringFormElement secretSpendKey = StringFormElement("Secret Spend Key",
+      password: true, validator: (String? input) {
+    if (input == null) return "Input cannot be null";
+    if (input == "") return "Input cannot be empty";
+    if (input.split(" ").length != 16) {
+      return "Seed needs to contain exactly 16 words";
+    }
+    return null;
+  });
 
-      walletPassword,
-    ];
-  }
+  StringFormElement secretViewKey = StringFormElement("Secret View Key",
+      password: true, validator: (String? input) {
+    if (input == null) return "Input cannot be null";
+    if (input == "") return "Input cannot be empty";
+    if (input.split(" ").length != 16) {
+      return "Seed needs to contain exactly 16 words";
+    }
+    return null;
+  });
 
-  List<FormElement> get restoreFormKeys {
-    return [
-      walletName,
+  StringFormElement restoreHeight = StringFormElement("Restore height",
+      password: true, validator: (String? input) {
+    if (input == null) return "Input cannot be null";
+    if (input == "") return "Input cannot be empty";
+    if (int.tryParse(input) == null) {
+      return "Input must be a number";
+    }
+    return null;
+  });
 
-      walletPassword,
-    ];
-  }
+  StringFormElement seedOffset = StringFormElement("Seed offset",
+      password: true, validator: (String? input) {
+    if (input == null) return "Input cannot be null";
+    if (input == "") return "Input cannot be empty";
+    return null;
+  });
+
+  List<FormElement>? currentForm;
+
+  Map<String, List<FormElement>> get createMethods => {
+        "New wallet": _createForm,
+        "New wallet (offset)": _createOffsetForm,
+        "New wallet (encrypted)": _createEncryptedForm,
+        "Polyseed": _restoreSeedPolyseedForm,
+        "Legacy Seed": _restoreSeedLegacyForm,
+        "Keys": _restoreFormKeysForm,
+      };
+
+  late final List<FormElement> _createForm = [
+    walletName,
+    walletPassword,
+  ];
+
+  late final List<FormElement> _createOffsetForm = [
+    walletName,
+    walletPassword,
+    seedOffset,
+  ];
+
+  late final List<FormElement> _createEncryptedForm = [
+    walletName,
+    walletPassword,
+    seedOffset,
+  ];
+
+  late final List<FormElement> _restoreSeedPolyseedForm = [
+    walletName,
+    walletPassword,
+    polyseedSeed,
+  ];
+
+  late final List<FormElement> _restoreSeedLegacyForm = [
+    walletName,
+    walletPassword,
+    legacySeed,
+    restoreHeight,
+  ];
+
+  late final List<FormElement> _restoreFormKeysForm = [
+    walletName,
+    walletPassword,
+    walletAddress,
+    secretSpendKey,
+    secretViewKey,
+  ];
+
   Future<void> createWallet() async {
     if (selectedCoin == null) throw Exception("selectedCoin is null");
-    await selectedCoin!.createNewWallet(walletName.value, walletPassword.value);
+    print(currentForm == _createForm);
+    await selectedCoin!.createNewWallet(
+      walletName.value,
+      walletPassword.value,
+      primaryAddress: nullIfEmpty(walletAddress.value),
+      createWallet: (currentForm == _createForm),
+      seed: (currentForm == _restoreSeedLegacyForm)
+          ? nullIfEmpty(legacySeed.value)
+          : nullIfEmpty(polyseedSeed.value),
+      restoreHeight: int.tryParse(restoreHeight.value),
+      viewKey: nullIfEmpty(secretViewKey.value),
+      spendKey: nullIfEmpty(secretSpendKey.value),
+      seedOffsetOrEncryption: nullIfEmpty(seedOffset.value),
+    );
   }
 }
 

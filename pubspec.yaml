@@ -38,14 +38,15 @@ dependencies:
   monero:
     git:
       url: https://github.com/mrcyjanek/monero_c
-      ref: v0.18.3.4-RC1
+      ref: v0.18.3.4-RC2
       path: impls/monero.dart
   path: 1.9.0
   path_provider: 2.1.4
+  qr_flutter: 4.1.0
   fast_scanner:
     git:
       url: https://github.com/MrCyjaneK/fast_scanner
-      ref: a46bdb97a513a27d5694039ac997637a36e715b2
+      ref: 0e398b047118f8734e1ded799ee0191d4232b1fe
 
 dev_dependencies:
   flutter_test:

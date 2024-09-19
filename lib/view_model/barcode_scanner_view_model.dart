@@ -1,3 +1,4 @@
+import 'package:cup_cake/coins/abstract.dart';
 import 'package:cup_cake/view_model/abstract.dart';
 import 'package:cup_cake/views/widgets/barcode_scanner/progress_painter.dart';
 import 'package:fast_scanner/fast_scanner.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 
 class BarcodeScannerViewModel extends ViewModel {
-  BarcodeScannerViewModel();
+  BarcodeScannerViewModel({required this.wallet});
   @override
   String get screenName => "Scan";
   Barcode? barcode;
@@ -14,14 +15,27 @@ class BarcodeScannerViewModel extends ViewModel {
   List<String> urCodes = [];
   late var ur = URQRToURQRData(urCodes);
 
+  final CoinWallet wallet;
+
   final MobileScannerController mobileScannerCtrl = MobileScannerController();
 
   URQrProgress get urQrProgress => URQrProgress(
-    expectedPartCount: ur.count - 1,
-    processedPartsCount: ur.inputs.length,
-    receivedPartIndexes: urParts(),
-    percentage: ur.progress,
-  );
+        expectedPartCount: ur.count - 1,
+        processedPartsCount: ur.inputs.length,
+        receivedPartIndexes: urParts(),
+        percentage: ur.progress,
+      );
+
+  Future<void> handleUR(BuildContext context) async {
+    if (ur.tag.startsWith("xmr-")) {
+      if (wallet.coin.type != Coins.monero) {
+        throw Exception(
+            "${ur.tag} found, but currently opened wallet is not Monero");
+      }
+      wallet.handleUR(context, ur);
+    }
+  }
+
   void handleBarcode(BuildContext context, BarcodeCapture barcodes) {
     for (final barcode in barcodes.barcodes) {
       print(barcode.rawValue!);

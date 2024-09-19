@@ -61,7 +61,6 @@ class WalletHome extends AbstractView {
     );
   }
 
-
   @override
   Widget? floatingActionButton(BuildContext context) {
     return FloatingActionButton(

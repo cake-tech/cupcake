@@ -14,7 +14,6 @@ class WalletHomeViewModel extends ViewModel {
   String get balance => wallet.getBalanceString();
 
   void showScanner(BuildContext context) {
-    BarcodeScanner().push(context);
+    BarcodeScanner.pushStatic(context, wallet);
   }
-
 }

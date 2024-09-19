@@ -1,6 +1,6 @@
 import 'dart:core';
 
-import 'package:cup_cake/view_model/create_wallet_view_model.dart';
+import 'package:cup_cake/view_model/barcode_scanner_view_model.dart';
 import 'package:flutter/cupertino.dart';
 
 class CoinException implements Exception {
@@ -10,7 +10,7 @@ class CoinException implements Exception {
 
   @override
   String toString() {
-    return exception;
+    return "$exception\n$details";
   }
 }
 
@@ -26,14 +26,19 @@ class Coin {
 
   Future<List<CoinWalletInfo>> get coinWallets => Future.value([]);
 
-  List<CreateMethods> get createMethods => [];
   Future<void> createNewWallet(
     String walletName,
     String walletPassword, {
     ProgressCallback? progressCallback,
+    required bool? createWallet,
+    required String? seed,
+    required int? restoreHeight,
+    required String? primaryAddress,
+    required String? viewKey,
+    required String? spendKey,
+    required String? seedOffsetOrEncryption,
   }) =>
       throw UnimplementedError("createNewWallet is not implemented");
-
   Future<CoinWallet> openWallet(String walletName,
           {required String password}) =>
       throw UnimplementedError();
@@ -63,6 +68,8 @@ class CoinWallet {
   CoinWallet();
 
   Coin coin = Coin();
+  Future<void> handleUR(BuildContext context, URQRData ur) =>
+      throw UnimplementedError();
   bool get hasAccountSupport => false;
   bool get hasAddressesSupport => false;
 

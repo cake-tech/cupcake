@@ -11,7 +11,10 @@ class HomeScreenViewModel extends ViewModel {
   Future<List<CoinWalletInfo>> get wallets async {
     List<CoinWalletInfo> wallets = [];
     for (var coin in walletCoins) {
-      wallets.addAll(await coin.coinWallets);
+      final toAdd = await coin.coinWallets;
+      if (toAdd.isNotEmpty) {
+        wallets.addAll(toAdd);
+      }
     }
     return wallets;
   }

@@ -61,8 +61,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: a46bdb97a513a27d5694039ac997637a36e715b2
-      resolved-ref: a46bdb97a513a27d5694039ac997637a36e715b2
+      ref: "0e398b047118f8734e1ded799ee0191d4232b1fe"
+      resolved-ref: "0e398b047118f8734e1ded799ee0191d4232b1fe"
       url: "https://github.com/MrCyjaneK/fast_scanner"
     source: git
     version: "5.1.1"
@@ -157,8 +157,8 @@ packages:
     dependency: "direct main"
     description:
       path: "impls/monero.dart"
-      ref: "v0.18.3.4-RC1"
-      resolved-ref: e6d6131c09a8f93bd1b7e99dea18a128aa519cde
+      ref: "v0.18.3.4-RC2"
+      resolved-ref: f90b1f57b1337671b145e53e95ff5c2ecf67224d
       url: "https://github.com/mrcyjanek/monero_c"
     source: git
     version: "0.0.0"
@@ -234,6 +234,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  qr:
+    dependency: transitive
+    description:
+      name: qr
+      sha256: "64957a3930367bf97cc211a5af99551d630f2f4625e38af10edd6b19131b64b3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
+  qr_flutter:
+    dependency: "direct main"
+    description:
+      name: qr_flutter
+      sha256: "5095f0fc6e3f71d08adef8feccc8cea4f12eec18a2e31c2e8d82cb6019f4b097"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   sky_engine:
     dependency: transitive
     description: flutter

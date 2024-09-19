@@ -1,3 +1,4 @@
+import 'package:cup_cake/coins/abstract.dart';
 import 'package:cup_cake/view_model/barcode_scanner_view_model.dart';
 import 'package:cup_cake/views/abstract.dart';
 import 'package:cup_cake/views/widgets/barcode_scanner/progress_painter.dart';
@@ -9,24 +10,26 @@ import 'package:flutter/material.dart';
 
 //ignore: must_be_immutable
 class BarcodeScanner extends AbstractView {
-  BarcodeScanner({super.key});
+  BarcodeScanner({super.key, required CoinWallet wallet})
+      : viewModel = BarcodeScannerViewModel(wallet: wallet);
 
-  @override
-  Future<void> push(BuildContext context) async {
+  static Future<void> pushStatic(
+      BuildContext context, CoinWallet wallet) async {
     await Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (BuildContext context) {
-          return BarcodeScanner();
+          return BarcodeScanner(wallet: wallet);
         },
       ),
     );
   }
 
   @override
-  final BarcodeScannerViewModel viewModel = BarcodeScannerViewModel();
+  final BarcodeScannerViewModel viewModel;
 
   @override
   Widget? body(BuildContext context) {
+    viewModel.register(context);
     return Stack(
       children: [
         MobileScanner(
@@ -61,11 +64,10 @@ class BarcodeScanner extends AbstractView {
   @override
   // TODO: implement appBar
   AppBar get appBar => AppBar(
-    title: Text(viewModel.screenName),
-    actions: [
-      SwitchCameraButton(controller: viewModel.mobileScannerCtrl),
-      ToggleFlashlightButton(controller: viewModel.mobileScannerCtrl),
-    ],
-  );
+        title: Text(viewModel.screenName),
+        actions: [
+          SwitchCameraButton(controller: viewModel.mobileScannerCtrl),
+          ToggleFlashlightButton(controller: viewModel.mobileScannerCtrl),
+        ],
+      );
 }
-
