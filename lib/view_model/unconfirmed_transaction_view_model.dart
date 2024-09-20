@@ -2,10 +2,16 @@ import 'dart:async';
 
 import 'package:cup_cake/coins/abstract.dart';
 import 'package:cup_cake/view_model/abstract.dart';
+import 'package:flutter/cupertino.dart';
 
 class Address {
   Address(this.address);
   final String address;
+
+  @override
+  String toString() {
+    return address;
+  }
 }
 
 class Amount {
@@ -29,8 +35,8 @@ class UnconfirmedTransactionViewModel extends ViewModel {
   @override
   late String screenName = wallet.coin.strings.nameFull;
 
-  final FutureOr<void> Function() confirmCallback;
-  final FutureOr<void> Function() cancelCallback;
+  final FutureOr<void> Function(BuildContext context) confirmCallback;
+  final FutureOr<void> Function(BuildContext context) cancelCallback;
 
   final Amount fee;
   final Map<Address, Amount> destMap;

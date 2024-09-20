@@ -2,11 +2,21 @@ import 'dart:async';
 
 import 'package:cup_cake/view_model/urqr_view_model.dart';
 import 'package:cup_cake/views/abstract.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 //ignore: must_be_immutable
 class AnimatedURPage extends AbstractView {
+  static Future<void> staticPush(
+      BuildContext context, URQRViewModel viewModel) async {
+    await Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (context) => AnimatedURPage(viewModel: viewModel),
+      ),
+    );
+  }
+
   AnimatedURPage({super.key, required this.viewModel});
 
   @override

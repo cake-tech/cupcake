@@ -36,7 +36,7 @@ class BarcodeScannerViewModel extends ViewModel {
     }
   }
 
-  void handleBarcode(BuildContext context, BarcodeCapture barcodes) {
+  void handleBarcode(BuildContext context, BarcodeCapture barcodes) async {
     for (final barcode in barcodes.barcodes) {
       print(barcode.rawValue!);
       if (barcode.rawValue!.startsWith("ur:")) {
@@ -46,10 +46,8 @@ class BarcodeScannerViewModel extends ViewModel {
         markNeedsBuild();
         if (ur.progress == 1) {
           popped = true;
+          await handleUR(context);
           markNeedsBuild();
-          SchedulerBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context).pop(ur.inputs.join("\n"));
-          });
           return;
         }
       }
@@ -59,9 +57,7 @@ class BarcodeScannerViewModel extends ViewModel {
     barcode = barcodes.barcodes.firstOrNull;
     if (barcode != null && popped != true) {
       popped = true;
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.of(context).pop(barcode?.rawValue ?? "");
-      });
+      await handleUR(context);
     }
     markNeedsBuild();
   }

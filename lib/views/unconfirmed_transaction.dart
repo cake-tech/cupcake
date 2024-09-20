@@ -38,18 +38,22 @@ class UnconfirmedTransactionView extends AbstractView {
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.cancel),
+          label: "Cancel",
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.check_circle),
+          label: "Confirm"
         ),
       ],
-      onTap: (int index) {
+      onTap: (int index) async {
         if (index == 0) {
+          await viewModel.cancelCallback(context);
+          if (!context.mounted) return;
           Navigator.of(context).pop();
-          viewModel.cancelCallback();
         } else {
+          await viewModel.confirmCallback(context);
+          if (!context.mounted) return;
           Navigator.of(context).pop();
-          viewModel.confirmCallback();
         }
       },
     );
