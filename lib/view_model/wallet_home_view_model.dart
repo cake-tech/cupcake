@@ -12,6 +12,7 @@ class WalletHomeViewModel extends ViewModel {
   late String screenName = wallet.coin.strings.nameFull;
 
   String get balance => wallet.getBalanceString();
+  String get currentAddress => wallet.getCurrentAddress;
 
   void showScanner(BuildContext context) {
     BarcodeScanner.pushStatic(context, wallet);

@@ -1,9 +1,9 @@
 import 'package:cup_cake/coins/abstract.dart';
+import 'package:cup_cake/utils/call_throwable.dart';
 import 'package:cup_cake/view_model/abstract.dart';
 import 'package:cup_cake/views/widgets/barcode_scanner/progress_painter.dart';
 import 'package:fast_scanner/fast_scanner.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/scheduler.dart';
 
 class BarcodeScannerViewModel extends ViewModel {
   BarcodeScannerViewModel({required this.wallet});
@@ -27,29 +27,26 @@ class BarcodeScannerViewModel extends ViewModel {
       );
 
   Future<void> handleUR(BuildContext context) async {
-    if (ur.tag.startsWith("xmr-")) {
-      if (wallet.coin.type != Coins.monero) {
-        throw Exception(
-            "${ur.tag} found, but currently opened wallet is not Monero");
-      }
-      wallet.handleUR(context, ur);
-    }
+    callThrowable(context, () => wallet.handleUR(context, ur),
+        "Error handling URQR scan");
   }
 
   void handleBarcode(BuildContext context, BarcodeCapture barcodes) async {
     for (final barcode in barcodes.barcodes) {
-      print(barcode.rawValue!);
       if (barcode.rawValue!.startsWith("ur:")) {
-        if (urCodes.contains(barcode.rawValue)) return;
-        urCodes.add(barcode.rawValue!);
-        ur = URQRToURQRData(urCodes);
-        markNeedsBuild();
-        if (ur.progress == 1) {
+        print("handleUR: ${ur.progress} : $popped");
+        if (ur.progress == 1 && !popped) {
+          print("handleUR called");
           popped = true;
           await handleUR(context);
           markNeedsBuild();
           return;
         }
+        if (urCodes.contains(barcode.rawValue)) return;
+        urCodes.add(barcode.rawValue!);
+        ur = URQRToURQRData(urCodes);
+
+        markNeedsBuild();
       }
     }
     if (urCodes.isNotEmpty) return;

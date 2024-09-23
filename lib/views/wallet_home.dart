@@ -26,7 +26,8 @@ class WalletHome extends AbstractView {
   @override
   Widget? body(BuildContext context) {
     return Column(
-      children: [Text(viewModel.balance)],
+      children: [Text(viewModel.balance),
+      SelectableText(viewModel.currentAddress)],
     );
   }
 
@@ -68,4 +69,18 @@ class WalletHome extends AbstractView {
       child: const Icon(Icons.scanner),
     );
   }
+
+  @override
+  // TODO: implement appBar
+  AppBar get appBar => AppBar(
+    title: Text(viewModel.screenName),
+    actions: [
+      IconButton(
+        iconSize: 32.0,
+        icon: const Icon(Icons.settings),
+        onPressed: () async {
+        },
+      ),
+    ],
+  );
 }

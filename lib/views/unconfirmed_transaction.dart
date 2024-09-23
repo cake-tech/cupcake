@@ -1,3 +1,4 @@
+import 'package:cup_cake/utils/call_throwable.dart';
 import 'package:cup_cake/view_model/unconfirmed_transaction_view_model.dart';
 import 'package:cup_cake/views/abstract.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,21 +38,25 @@ class UnconfirmedTransactionView extends AbstractView {
     return BottomNavigationBar(
       items: const [
         BottomNavigationBarItem(
-          icon: Icon(Icons.cancel),
+          icon: Icon(
+            Icons.cancel,
+            color: Colors.red,
+          ),
           label: "Cancel",
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.check_circle),
-          label: "Confirm"
-        ),
+            icon: Icon(Icons.check_circle, color: Colors.green),
+            label: "Confirm"),
       ],
       onTap: (int index) async {
         if (index == 0) {
-          await viewModel.cancelCallback(context);
+          await callThrowable(context,
+              () async => await viewModel.cancelCallback(context), "Canceling");
           if (!context.mounted) return;
           Navigator.of(context).pop();
         } else {
-          await viewModel.confirmCallback(context);
+          await callThrowable(context,
+              () async => await viewModel.confirmCallback(context), "Spending");
           if (!context.mounted) return;
           Navigator.of(context).pop();
         }

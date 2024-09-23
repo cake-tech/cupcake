@@ -62,7 +62,6 @@ class BarcodeScanner extends AbstractView {
   }
 
   @override
-  // TODO: implement appBar
   AppBar get appBar => AppBar(
         title: Text(viewModel.screenName),
         actions: [
