@@ -1,3 +1,4 @@
+import 'package:cup_cake/themes/monero_dark_theme.dart';
 import 'package:cup_cake/utils/filesystem.dart';
 import 'package:cup_cake/views/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +19,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cup Cake',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      themeMode: ThemeMode.dark,
+      darkTheme: MoneroDarkTheme(raw: 0).themeData,
       home: HomeScreen(),
     );
   }
