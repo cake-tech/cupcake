@@ -1,6 +1,7 @@
 import 'package:cup_cake/themes/base_theme.dart';
 import 'package:cup_cake/utils/config.dart';
 import 'package:cup_cake/utils/filesystem.dart';
+import 'package:cup_cake/view_model/home_screen_view_model.dart';
 import 'package:cup_cake/views/home_screen.dart';
 import 'package:cup_cake/views/initial_setup_screen.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,11 @@ class MyApp extends StatelessWidget {
       title: 'Cup Cake',
       themeMode: ThemeMode.dark,
       darkTheme: darkBaseTheme,
-      home: config.initialSetupComplete ? HomeScreen() : InitialSetupScreen(),
+      home: config.initialSetupComplete
+          ? HomeScreen(
+              viewModel: HomeScreenViewModel(openLastWallet: true),
+            )
+          : InitialSetupScreen(),
     );
   }
 }

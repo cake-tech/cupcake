@@ -14,7 +14,14 @@ Future<void> showAlert({
         title: Text(title),
         content: SingleChildScrollView(
           child: ListBody(
-            children: body.map((e) => Text(e)).toList(),
+            children: body
+                .map(
+                  (e) => Text(
+                    e,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                )
+                .toList(),
           ),
         ),
         actions: <Widget>[

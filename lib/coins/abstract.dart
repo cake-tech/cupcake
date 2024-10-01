@@ -113,4 +113,5 @@ class CoinWallet {
 
   int getBalance() => throw UnimplementedError();
   String getBalanceString() => throw UnimplementedError();
+  Future<void> close() => throw UnimplementedError();
 }

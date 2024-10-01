@@ -59,6 +59,24 @@ class MoneroWallet implements CoinWallet {
   @override
   String getBalanceString() => (getBalance() / 1e12).toStringAsFixed(12);
 
+  Future<void> exportKeyImagesUR(BuildContext context) async {
+    final allImages = monero.Wallet_exportKeyImagesUR(wptr,
+            max_fragment_length: 130, all: true)
+        .split("\n");
+    final someImages = monero.Wallet_exportKeyImagesUR(wptr,
+            max_fragment_length: 130, all: false)
+        .split("\n");
+    await AnimatedURPage.staticPush(
+      context,
+      URQRViewModel(
+        urqrList: {
+          "Partial Key Images": someImages,
+          "All Key Images": allImages,
+        },
+      ),
+    );
+  }
+
   @override
   Future<void> handleUR(BuildContext context, URQRData ur) async {
     print("handling: ${ur.tag}.");
@@ -72,21 +90,7 @@ class MoneroWallet implements CoinWallet {
           final error = monero.Wallet_errorString(wptr);
           throw CoinException(error);
         }
-        final allImages = monero.Wallet_exportKeyImagesUR(wptr,
-                max_fragment_length: 130, all: true)
-            .split("\n");
-        final someImages = monero.Wallet_exportKeyImagesUR(wptr,
-                max_fragment_length: 130, all: false)
-            .split("\n");
-        await AnimatedURPage.staticPush(
-          context,
-          URQRViewModel(
-            urqrList: {
-              "Partial Key Images": someImages,
-              "All Key Images": allImages,
-            },
-          ),
-        );
+        exportKeyImagesUR(context);
         save();
       case "xmr-txunsigned":
         print("handling tx-unsignex");
@@ -161,6 +165,12 @@ class MoneroWallet implements CoinWallet {
 
   @override
   String get walletName => p.basename(monero.Wallet_path(wptr));
+
+  @override
+  Future<void> close() {
+    monero.WalletManager_closeWallet(Monero.wmPtr, wptr, true);
+    return Future.value();
+  }
 }
 
 class MoneroAmount implements Amount {

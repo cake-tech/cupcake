@@ -33,6 +33,9 @@ class R {
   static const String ASSETS_DRAWER_ICONS_WALLETS_SVG =
       'assets/drawer_icons/wallets.svg';
 
+  /// ![preview](file:///Users/user/work/cup_cake/assets/mobile.json)
+  static const String ASSETS_MOBILE_JSON = 'assets/mobile.json';
+
   /// ![preview](file:///Users/user/work/cup_cake/assets/shield.json)
   static const String ASSETS_SHIELD_JSON = 'assets/shield.json';
 }

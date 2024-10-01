@@ -10,21 +10,22 @@ import 'package:path/path.dart' as p;
 
 // ignore: must_be_immutable
 class HomeScreen extends AbstractView {
-  HomeScreen({super.key});
+  HomeScreen({super.key, required this.viewModel});
 
-  @override
-  Future<void> push(BuildContext context) async {
+  static Future<void> staticPush(BuildContext context,
+      {bool openLastWallet = true}) async {
     await Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (BuildContext context) {
-          return HomeScreen();
+          return HomeScreen(
+              viewModel: HomeScreenViewModel(openLastWallet: openLastWallet));
         },
       ),
     );
   }
 
   @override
-  final HomeScreenViewModel viewModel = HomeScreenViewModel();
+  final HomeScreenViewModel viewModel;
 
   @override
   Widget? body(BuildContext context) {
@@ -88,6 +89,7 @@ class HomeScreen extends AbstractView {
     await Future.delayed(Duration.zero); // load the screen
     if (config.lastWallet == null) return;
     if (!context.mounted) return;
+    if (!viewModel.openLastWallet) return;
     config.lastWallet!.openUI(context);
   }
 }

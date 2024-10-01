@@ -107,6 +107,7 @@ class _URQRState extends State<URQR> {
       children: [
         Center(
           child: QrImageView(
+            foregroundColor: Colors.white,
             data: widget.frames[frame % widget.frames.length],
             version: -1,
             size: 400,

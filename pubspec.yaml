@@ -80,6 +80,7 @@ flutter:
     - assets/cw.png
     - assets/shield.json
     - assets/cake_landing.json
+    - assets/mobile.json
     - assets/drawer_icons/address_book.svg
     - assets/drawer_icons/export_key_images.svg
     - assets/drawer_icons/other_settings.svg

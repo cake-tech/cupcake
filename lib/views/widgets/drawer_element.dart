@@ -1,3 +1,8 @@
+import 'package:cup_cake/coins/abstract.dart';
+import 'package:cup_cake/coins/monero/wallet.dart';
+import 'package:cup_cake/utils/call_throwable.dart';
+import 'package:cup_cake/views/home_screen.dart';
+import 'package:cup_cake/views/security_backup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:cup_cake/const/resource.dart';
@@ -17,7 +22,9 @@ class DrawerElement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => action(context),
+      onTap: () {
+        callThrowable(context, () async => await action(context), text);
+      },
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -27,9 +34,10 @@ class DrawerElement extends StatelessWidget {
             Text(
               text,
               style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700),
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ],
         ),
@@ -39,36 +47,63 @@ class DrawerElement extends StatelessWidget {
 }
 
 class DrawerElements extends StatelessWidget {
-  const DrawerElements({super.key});
+  const DrawerElements({super.key, required this.coinWallet});
+
+  final CoinWallet coinWallet;
+
+  Future<void> _walletList(BuildContext context) async {
+    HomeScreen.staticPush(context, openLastWallet: false);
+  }
+
+  Future<void> _addressBook(BuildContext context) async {
+    throw UnimplementedError("Address book is not implemented");
+  }
+
+  Future<void> _securityBackup(BuildContext context) async {
+    SecurityBackup.staticPush(context, coinWallet);
+  }
+
+  Future<void> _exportKeyImages(BuildContext context) async {
+    if (coinWallet is! MoneroWallet) {
+      throw Exception("coinWallet is not monero - we can't export key images");
+    }
+    await (coinWallet as MoneroWallet).exportKeyImagesUR(context);
+  }
+
+  Future<void> _otherSettings(BuildContext context) async {
+    throw UnimplementedError("Other settings are not implemented");
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         DrawerElement(
-            svgAsset: R.ASSETS_DRAWER_ICONS_WALLETS_SVG,
-            text: "Wallets",
-            action: (_) async {}),
+          svgAsset: R.ASSETS_DRAWER_ICONS_WALLETS_SVG,
+          text: "Wallets",
+          action: _walletList,
+        ),
         const Divider(),
         DrawerElement(
-            svgAsset: R.ASSETS_DRAWER_ICONS_ADDRESS_BOOK_SVG,
-            text: "Address book",
-            action: (_) async {}),
+          svgAsset: R.ASSETS_DRAWER_ICONS_ADDRESS_BOOK_SVG,
+          text: "Address book",
+          action: _addressBook,
+        ),
         const Divider(),
         DrawerElement(
             svgAsset: R.ASSETS_DRAWER_ICONS_SECURITY_AND_BACKUP_SVG,
             text: "Security and backup",
-            action: (_) async {}),
+            action: _securityBackup),
         const Divider(),
         DrawerElement(
             svgAsset: R.ASSETS_DRAWER_ICONS_EXPORT_KEY_IMAGES_SVG,
             text: "Export key images",
-            action: (_) async {}),
+            action: _exportKeyImages),
         const Divider(),
         DrawerElement(
             svgAsset: R.ASSETS_DRAWER_ICONS_OTHER_SETTINGS_SVG,
             text: "Other settings",
-            action: (_) async {}),
+            action: _otherSettings),
         const Divider(),
       ],
     );

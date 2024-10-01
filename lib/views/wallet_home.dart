@@ -58,7 +58,9 @@ class WalletHome extends AbstractView {
             ),
             const SizedBox(height: 8),
             const Divider(),
-            const DrawerElements(),
+            DrawerElements(
+              coinWallet: viewModel.wallet,
+            ),
           ],
         ),
       );

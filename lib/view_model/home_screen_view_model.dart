@@ -3,10 +3,11 @@ import 'package:cup_cake/coins/list.dart';
 import 'package:cup_cake/view_model/abstract.dart';
 
 class HomeScreenViewModel extends ViewModel {
-  HomeScreenViewModel();
+  HomeScreenViewModel({required this.openLastWallet});
 
   @override
   String get screenName => "Select Wallet";
+  bool openLastWallet;
 
   Future<List<CoinWalletInfo>> get wallets async {
     List<CoinWalletInfo> wallets = [];

@@ -27,8 +27,11 @@ class BarcodeScannerViewModel extends ViewModel {
       );
 
   Future<void> handleUR(BuildContext context) async {
-    callThrowable(context, () => wallet.handleUR(context, ur),
-        "Error handling URQR scan");
+    callThrowable(
+      context,
+      () => wallet.handleUR(context, ur),
+      "Error handling URQR scan",
+    );
   }
 
   void handleBarcode(BuildContext context, BarcodeCapture barcodes) async {

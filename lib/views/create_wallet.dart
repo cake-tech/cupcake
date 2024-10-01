@@ -85,7 +85,7 @@ class CreateWallet extends AbstractView {
       if (viewModel.isPinSet)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 64.0),
-          child: Lottie.asset(R.ASSETS_SHIELD_JSON),
+          child: Lottie.asset(R.ASSETS_MOBILE_JSON),
         ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
