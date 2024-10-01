@@ -1,11 +1,13 @@
 import 'package:cup_cake/coins/abstract.dart';
 import 'package:cup_cake/coins/monero/coin.dart';
+import 'package:cup_cake/utils/null_if_empty.dart';
 import 'package:cup_cake/view_model/barcode_scanner_view_model.dart';
 import 'package:cup_cake/view_model/unconfirmed_transaction_view_model.dart';
 import 'package:cup_cake/view_model/urqr_view_model.dart';
 import 'package:cup_cake/views/unconfirmed_transaction.dart';
 import 'package:cup_cake/views/urqr.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:path/path.dart' as p;
 import 'package:monero/monero.dart' as monero;
 
 class MoneroWallet implements CoinWallet {
@@ -55,7 +57,7 @@ class MoneroWallet implements CoinWallet {
   int getBalance() => monero.Wallet_balance(wptr, accountIndex: getAccountId());
 
   @override
-  String getBalanceString() => (getBalance() / 1e12).toStringAsFixed(8);
+  String getBalanceString() => (getBalance() / 1e12).toStringAsFixed(12);
 
   @override
   Future<void> handleUR(BuildContext context, URQRData ur) async {
@@ -145,6 +147,20 @@ class MoneroWallet implements CoinWallet {
         throw UnimplementedError("Unable to handle ${ur.tag}.");
     }
   }
+
+  // TODO: make this match the offset used in cake wallet, and define const
+  String get seedOffset =>
+      monero.Wallet_getCacheAttribute(wptr, key: "cw.offset");
+
+  @override
+  String get seed =>
+      nullIfEmpty(monero.Wallet_getPolyseed(wptr, passphrase: seedOffset)) ??
+      legacySeed;
+
+  String get legacySeed => monero.Wallet_seed(wptr, seedOffset: seedOffset);
+
+  @override
+  String get walletName => p.basename(monero.Wallet_path(wptr));
 }
 
 class MoneroAmount implements Amount {

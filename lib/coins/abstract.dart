@@ -1,7 +1,10 @@
 import 'dart:core';
 
+import 'package:cup_cake/coins/monero/coin.dart';
 import 'package:cup_cake/view_model/barcode_scanner_view_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as p;
 
 class CoinException implements Exception {
   CoinException(this.exception, {this.details});
@@ -26,7 +29,7 @@ class Coin {
 
   Future<List<CoinWalletInfo>> get coinWallets => Future.value([]);
 
-  Future<void> createNewWallet(
+  Future<CoinWallet> createNewWallet(
     String walletName,
     String walletPassword, {
     ProgressCallback? progressCallback,
@@ -39,7 +42,7 @@ class Coin {
     required String? seedOffsetOrEncryption,
   }) =>
       throw UnimplementedError("createNewWallet is not implemented");
-  Future<CoinWallet> openWallet(String walletName,
+  Future<CoinWallet> openWallet(CoinWalletInfo walletInfo,
           {required String password}) =>
       throw UnimplementedError();
 }
@@ -50,9 +53,32 @@ class CoinWalletInfo {
   Coin get coin => Coin();
   void openUI(BuildContext context) => throw UnimplementedError();
 
+  Future<bool> checkWalletPassword(String password) async =>
+      throw UnimplementedError();
+
   Future<CoinWallet> openWallet(BuildContext context,
           {required String password}) =>
       throw UnimplementedError();
+
+  Map<String, dynamic> toJson() {
+    return {
+      "typeIndex": type.index,
+      if (kDebugMode) "typeIndex__debug": type.toString(),
+      "walletName": p.basename(walletName),
+    };
+  }
+
+  static CoinWalletInfo? fromJson(Map<String, dynamic>? json) {
+    if (json == null) return null;
+    final type = Coins.values[json["typeIndex"] as int];
+    final walletName = (json["walletName"] as String);
+    switch (type) {
+      case Coins.monero:
+        return MoneroWalletInfo(walletName);
+      case Coins.unknown:
+        throw UnimplementedError("unknown coin");
+    }
+  }
 }
 
 class CoinStrings {
@@ -62,6 +88,8 @@ class CoinStrings {
   String get symbolLowercase => "coin";
   String get symbolUppercase => "COIN";
   String get nameFull => "$nameCapitalized ($symbolUppercase)";
+
+  String get iconSvg => throw UnimplementedError();
 }
 
 class CoinWallet {
@@ -80,6 +108,8 @@ class CoinWallet {
   int get addressIndex => throw UnimplementedError();
   String get getAccountLabel => throw UnimplementedError();
   String get getCurrentAddress => throw UnimplementedError();
+  String get seed => throw UnimplementedError();
+  String get walletName => throw UnimplementedError();
 
   int getBalance() => throw UnimplementedError();
   String getBalanceString() => throw UnimplementedError();

@@ -1,6 +1,8 @@
-import 'package:cup_cake/themes/monero_dark_theme.dart';
+import 'package:cup_cake/themes/base_theme.dart';
+import 'package:cup_cake/utils/config.dart';
 import 'package:cup_cake/utils/filesystem.dart';
 import 'package:cup_cake/views/home_screen.dart';
+import 'package:cup_cake/views/initial_setup_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -20,8 +22,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Cup Cake',
       themeMode: ThemeMode.dark,
-      darkTheme: MoneroDarkTheme(raw: 0).themeData,
-      home: HomeScreen(),
+      darkTheme: darkBaseTheme,
+      home: config.initialSetupComplete ? HomeScreen() : InitialSetupScreen(),
     );
   }
 }

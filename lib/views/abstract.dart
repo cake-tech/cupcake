@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:cup_cake/view_model/abstract.dart';
+import 'package:cup_cake/const/resource.dart';
 import 'package:flutter/material.dart';
 
 // Since there is no performance penalty for using stateful widgets I would just
@@ -32,26 +35,54 @@ class AbstractView extends StatefulWidget {
     return state!;
   }
 
+  Future<void> initState(BuildContext context) async {}
+
   State<AbstractView>? state;
 
-  Future<void> push(BuildContext context) => throw UnimplementedError();
   AbstractView({super.key});
 
   final viewModel = ViewModel();
 
-  late final appBar = AppBar(
-    title: Text(viewModel.screenName),
-  );
+  late final appBar = viewModel.screenName.isEmpty
+      ? null
+      : AppBar(
+          title: viewModel.screenName.toLowerCase() != "cupcake"
+              ? Text(
+                  viewModel.screenName,
+                  style: const TextStyle(color: Colors.white),
+                )
+              : const CupcakeAppbarTitle(),
+          automaticallyImplyLeading: canPop,
+        );
 
   Widget? body(BuildContext context) => null;
 
+  bool _internalIsInitStateCalled = false;
+
+  bool canPop = true;
+
+  Drawer? drawer;
+
   Widget build(BuildContext context) {
     viewModel.register(context);
-    return Scaffold(
-      appBar: appBar,
-      body: body(context),
-      floatingActionButton: floatingActionButton(context),
-      bottomNavigationBar: bottomNavigationBar(context),
+    if (!_internalIsInitStateCalled) {
+      _internalIsInitStateCalled = true;
+      unawaited(initState(context));
+    }
+    return PopScope(
+      canPop: canPop,
+      onPopInvoked: (bool pop) {
+        print(pop);
+      },
+      child: SafeArea(
+        child: Scaffold(
+          appBar: appBar,
+          body: body(context),
+          endDrawer: drawer,
+          floatingActionButton: floatingActionButton(context),
+          bottomNavigationBar: bottomNavigationBar(context),
+        ),
+      ),
     );
   }
 
@@ -61,5 +92,34 @@ class AbstractView extends StatefulWidget {
 
   void markNeedsBuild(BuildContext context) {
     state!.setState(() {});
+  }
+}
+
+class CupcakeAppbarTitle extends StatelessWidget {
+  const CupcakeAppbarTitle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox.square(dimension: 32, child: Image.asset(R.ASSETS_CW_PNG)),
+          const SizedBox(
+            width: 16,
+          ),
+          const Text(
+            "Cupcake",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 28,
+              color: Colors.white,
+            ),
+          ),
+          const Spacer(),
+        ],
+      ),
+    );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:cup_cake/coins/abstract.dart';
+import 'package:cup_cake/utils/config.dart';
+import 'package:cup_cake/view_model/create_wallet_view_model.dart';
 import 'package:cup_cake/view_model/home_screen_view_model.dart';
 import 'package:cup_cake/views/abstract.dart';
 import 'package:cup_cake/views/create_wallet.dart';
@@ -65,23 +67,27 @@ class HomeScreen extends AbstractView {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar,
-      body: body(context),
-      floatingActionButton: floatingActionButton(context),
-    );
-  }
-
-  @override
   Widget? floatingActionButton(BuildContext context) {
     return FloatingActionButton(
       child: const Icon(Icons.add),
       onPressed: () async {
-        await CreateWallet().push(context);
+        await CreateWallet.staticPush(
+          context,
+          CreateWalletViewModel(
+            createMethod: CreateMethod.any,
+          ),
+        );
         if (!context.mounted) return;
         markNeedsBuild(context);
       },
     );
+  }
+
+  @override
+  Future<void> initState(BuildContext context) async {
+    await Future.delayed(Duration.zero); // load the screen
+    if (config.lastWallet == null) return;
+    if (!context.mounted) return;
+    config.lastWallet!.openUI(context);
   }
 }

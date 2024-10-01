@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:cup_cake/coins/abstract.dart';
 import 'package:cup_cake/coins/monero/wallet.dart';
+import 'package:cup_cake/utils/config.dart';
 import 'package:cup_cake/utils/filesystem.dart';
 import 'package:cup_cake/views/open_wallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:monero/monero.dart' as monero;
 import 'package:path/path.dart' as p;
+import 'package:cup_cake/const/resource.dart';
 
 class Monero implements Coin {
   @override
@@ -27,15 +29,11 @@ class Monero implements Coin {
   @override
   CoinStrings get strings => MoneroStrings();
 
-  List<String> findWalletsManually() {
-    final List<String> ret = [];
-
-    return ret;
-  }
+  static final baseDir =
+      Directory(p.join(baseStoragePath, MoneroStrings().symbolLowercase));
 
   @override
   Future<List<CoinWalletInfo>> get coinWallets {
-    final baseDir = Directory(p.join(baseStoragePath, strings.symbolLowercase));
     if (!baseDir.existsSync()) {
       baseDir.createSync(recursive: true);
     }
@@ -184,7 +182,7 @@ class Monero implements Coin {
   }
 
   @override
-  Future<void> createNewWallet(
+  Future<CoinWallet> createNewWallet(
     String walletName,
     String walletPassword, {
     ProgressCallback? progressCallback,
@@ -218,11 +216,12 @@ class Monero implements Coin {
     } else if (createWallet == false &&
         (seed ?? "").trim().split(" ").length == 16) {
       createMoneroWalletPolyseed(
-          progressCallback: progressCallback,
-          walletPath: walletPath,
-          walletPassword: walletPassword,
-          seed: seed!,
-          seedOffsetOrEncryption: seedOffsetOrEncryption ?? "");
+        progressCallback: progressCallback,
+        walletPath: walletPath,
+        walletPassword: walletPassword,
+        seed: seed!,
+        seedOffsetOrEncryption: seedOffsetOrEncryption ?? "",
+      );
       // polyseed
       // polyseed encrypted
       // polyseed offset
@@ -250,22 +249,27 @@ class Monero implements Coin {
     } else {
       throw Exception("Unknown form used to create wallet");
     }
+
+    return openWallet(MoneroWalletInfo(walletPath), password: walletPassword);
   }
 
   @override
-  Future<CoinWallet> openWallet(String walletName,
+  Future<CoinWallet> openWallet(CoinWalletInfo walletInfo,
       {required String password}) async {
-    final walletExist = monero.WalletManager_walletExists(wmPtr, walletName);
+    final walletExist =
+        monero.WalletManager_walletExists(wmPtr, walletInfo.walletName);
     if (!walletExist) {
-      throw Exception("Given wallet doesn't exist");
+      throw Exception("Given wallet doesn't exist (${walletInfo.walletName})");
     }
     final wptr = monero.WalletManager_openWallet(wmPtr,
-        path: walletName, password: password);
+        path: walletInfo.walletName, password: password);
     final status = monero.Wallet_status(wptr);
     if (status != 0) {
       final error = monero.Wallet_errorString(wptr);
       throw Exception(error);
     }
+    config.lastWallet = walletInfo;
+    config.save();
     return MoneroWallet(wptr);
   }
 
@@ -273,7 +277,8 @@ class Monero implements Coin {
   Coins get type => Coins.monero;
 
   // monero.dart stuff
-  monero.WalletManager wmPtr = monero.WalletManagerFactory_getWalletManager();
+  static monero.WalletManager wmPtr =
+      monero.WalletManagerFactory_getWalletManager();
 }
 
 class MoneroStrings implements CoinStrings {
@@ -289,13 +294,33 @@ class MoneroStrings implements CoinStrings {
   String get symbolUppercase => "XMR";
   @override
   String get nameFull => "$nameCapitalized ($symbolUppercase)";
+
+  @override
+  String get iconSvg => R.ASSETS_COINS_XMR_SVG;
 }
 
-class MoneroWalletInfo implements CoinWalletInfo {
-  MoneroWalletInfo(this._walletName);
+class MoneroWalletInfo extends CoinWalletInfo {
+  MoneroWalletInfo(String walletName)
+      : _walletName = (() {
+          if (walletName == p.basename(walletName)) {
+            walletName = p.join(Monero.baseDir.path, walletName);
+          }
+          return walletName;
+        }());
 
   @override
   Coin get coin => Monero();
+
+  @override
+  Future<bool> checkWalletPassword(String password) async {
+    return monero.WalletManager_verifyWalletPassword(
+      Monero.wmPtr,
+      keysFileName: "$walletName.keys",
+      password: password,
+      noSpendKey: false,
+      kdfRounds: 0,
+    );
+  }
 
   @override
   String get walletName => _walletName;
@@ -313,7 +338,7 @@ class MoneroWalletInfo implements CoinWalletInfo {
   Future<CoinWallet> openWallet(BuildContext context,
       {required String password}) async {
     return await coin.openWallet(
-      _walletName,
+      this,
       password: password,
     );
   }

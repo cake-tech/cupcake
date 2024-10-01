@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
-String baseStoragePath = "";
+late String baseStoragePath;
 
 Future<void> initializeBaseStoragePath() async {
   if (Platform.isAndroid || Platform.isIOS || Platform.isMacOS) {

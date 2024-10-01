@@ -47,6 +47,9 @@ dependencies:
     git:
       url: https://github.com/MrCyjaneK/fast_scanner
       ref: 0e398b047118f8734e1ded799ee0191d4232b1fe
+  flutter_svg: 2.0.10+1
+  lottie: ^3.1.2
+  share_plus: ^10.0.0
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +61,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  flutter_asset_generator: 1.2.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -71,9 +75,25 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/coins/xmr.svg
+    - assets/cw.png
+    - assets/shield.json
+    - assets/cake_landing.json
+    - assets/drawer_icons/address_book.svg
+    - assets/drawer_icons/export_key_images.svg
+    - assets/drawer_icons/other_settings.svg
+    - assets/drawer_icons/security_and_backup.svg
+    - assets/drawer_icons/wallets.svg
+    - assets/drawer_icons/export_key_images.svg
+
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato-Regular.ttf
+        - asset: assets/fonts/Lato-Medium.ttf
+        - asset: assets/fonts/Lato-Semibold.ttf
+        - asset: assets/fonts/Lato-Bold.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
