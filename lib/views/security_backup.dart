@@ -2,6 +2,8 @@ import 'package:cup_cake/coins/abstract.dart';
 import 'package:cup_cake/view_model/security_backup_view_model.dart';
 import 'package:cup_cake/views/abstract.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class SecurityBackup extends AbstractView {
   SecurityBackup({super.key, required this.viewModel});
@@ -26,6 +28,14 @@ class SecurityBackup extends AbstractView {
     return SingleChildScrollView(
       child: Column(
         children: [
+          ListTile(
+            title: const Text("Primary address"),
+            subtitle: Text(viewModel.wallet.primaryAddress),
+          ),
+          QrImageView(
+            data: viewModel.wallet.DO_NOT_MERGE_restoreData,
+            foregroundColor: Colors.white,
+          ),
           Text(viewModel.wallet.seed),
         ],
       ),

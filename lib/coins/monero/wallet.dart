@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cup_cake/coins/abstract.dart';
 import 'package:cup_cake/coins/monero/coin.dart';
 import 'package:cup_cake/utils/null_if_empty.dart';
@@ -171,6 +173,24 @@ class MoneroWallet implements CoinWallet {
     monero.WalletManager_closeWallet(Monero.wmPtr, wptr, true);
     return Future.value();
   }
+
+  @override
+  String get primaryAddress => monero.Wallet_address(
+        wptr,
+        accountIndex: 0,
+        addressIndex: 0,
+      );
+
+  @override
+  // TODO: implement DO_NOT_MERGE_restoreData
+  String get DO_NOT_MERGE_restoreData =>
+      const JsonEncoder.withIndent('   ').convert({
+        "version": 0,
+        "primaryAddress":
+            monero.Wallet_address(wptr, accountIndex: 0, addressIndex: 0),
+        "privateViewKey": monero.Wallet_secretViewKey(wptr),
+        "restoreHeight": monero.Wallet_getRefreshFromBlockHeight(wptr),
+      });
 }
 
 class MoneroAmount implements Amount {

@@ -109,9 +109,11 @@ class CoinWallet {
   String get getAccountLabel => throw UnimplementedError();
   String get getCurrentAddress => throw UnimplementedError();
   String get seed => throw UnimplementedError();
+  String get primaryAddress => throw UnimplementedError();
   String get walletName => throw UnimplementedError();
 
   int getBalance() => throw UnimplementedError();
   String getBalanceString() => throw UnimplementedError();
   Future<void> close() => throw UnimplementedError();
+  String get DO_NOT_MERGE_restoreData => throw UnimplementedError();
 }
