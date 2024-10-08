@@ -10,3 +10,5 @@ do
   popd
   dart format main.dart
 done
+
+flutter gen-l10n

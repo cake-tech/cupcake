@@ -1,0 +1,37 @@
+name: Lint cupcake
+run-name: Check if the code is properly formatted
+on: [push]
+
+jobs:
+  format:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - uses: kuhnroyal/flutter-fvm-config-action@v2
+        id: fvm-config-action
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - name: Flutter pub get
+        run: |
+          flutter pub get
+      - name: Format
+        run: ./format.sh
+      - name: check if git tree is clean
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then 
+            exit 0
+          else 
+            exit 1
+          fi
+      - name: check if there are missing translations
+        run: |
+          [[ -f missing_translations.txt ]] && exit 1

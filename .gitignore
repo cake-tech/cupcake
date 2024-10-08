@@ -45,3 +45,4 @@ app.*.map.json
 
 lib/l10n/*.dart
 lib/gen/*.dart
+missing_translations.txt
