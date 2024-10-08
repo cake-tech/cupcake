@@ -6,7 +6,7 @@ class HomeScreenViewModel extends ViewModel {
   HomeScreenViewModel({required this.openLastWallet});
 
   @override
-  String get screenName => "Select Wallet";
+  String get screenName => L.select_wallet;
   bool openLastWallet;
 
   Future<List<CoinWalletInfo>> get wallets async {

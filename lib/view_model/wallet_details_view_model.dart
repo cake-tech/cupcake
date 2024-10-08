@@ -6,7 +6,7 @@ class HomeScreenViewModel extends ViewModel {
   HomeScreenViewModel();
 
   @override
-  String get screenName => "Wallet Details";
+  String get screenName => L.wallet_details;
 
   Future<List<CoinWalletInfo>> get wallets async {
     List<CoinWalletInfo> wallets = [];

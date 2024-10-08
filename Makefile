@@ -23,4 +23,5 @@ libs_ios_build:
 	cd ios && ./gen_framework.sh
 
 cupcake_android_monero:
+	dart run build_runner build
 	flutter build apk --dart-define=COIN_MONERO=true

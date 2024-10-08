@@ -23,5 +23,6 @@ Building flavors of the app is as simple as providing `--dart-define=COIN_MONERO
 ### Adding assets
 
 ```bash
-$  dart pub run flutter_asset_generator:asset_generator --no-watch
+$ dart run build_runner build
+$ flutter gen-l10n
 ```

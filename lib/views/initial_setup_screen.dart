@@ -3,9 +3,8 @@ import 'package:cup_cake/view_model/create_wallet_view_model.dart';
 import 'package:cup_cake/view_model/initial_setup_view_model.dart';
 import 'package:cup_cake/views/abstract.dart';
 import 'package:cup_cake/views/create_wallet.dart';
+import 'package:cup_cake/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'package:cup_cake/const/resource.dart';
 
 // ignore: must_be_immutable
 class InitialSetupScreen extends AbstractView {
@@ -18,32 +17,20 @@ class InitialSetupScreen extends AbstractView {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16),
-          child: Lottie.asset(
-            R.ASSETS_CAKE_LANDING_JSON,
-            repeat: true,
-            onWarning: print,
-          ),
-        ),
-        const Text("Welcome to"),
+            padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16),
+            child: Assets.cakeLanding.lottie()),
+        Text(L.welcome_to),
         const SizedBox(height: 8),
         Text(
           "Cupcake",
           style: Theme.of(context).textTheme.displaySmall,
         ),
         const SizedBox(height: 8),
-        const Text("Keep you crypto even safer"),
+        Text(L.cupcake_slogan),
         const Spacer(),
         const SizedBox(height: 8),
-        const Padding(
-          padding: EdgeInsets.all(24.0),
-          child: Text(
-            "Please make selection below to create or recover your wallet.",
-            textAlign: TextAlign.center,
-          ),
-        ),
         LongSecondaryButton(
-          text: "Create new wallet",
+          text: L.create_new_wallet,
           icon: Icons.add,
           onPressed: () => CreateWallet.staticPush(
             context,
@@ -51,7 +38,7 @@ class InitialSetupScreen extends AbstractView {
           ),
         ),
         LongPrimaryButton(
-          text: "Restore wallet",
+          text: L.restore_wallet,
           icon: Icons.restore,
           onPressed: () => CreateWallet.staticPush(
             context,

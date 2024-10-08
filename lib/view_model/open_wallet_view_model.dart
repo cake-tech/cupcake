@@ -11,15 +11,15 @@ class OpenWalletViewModel extends ViewModel {
   CoinWalletInfo coinInfo;
 
   @override
-  String get screenName => "Enter Password";
+  String get screenName => L.enter_password;
 
   late PinFormElement walletPassword = PinFormElement(
       password: true,
       validator: (String? input) {
-        if (input == null) return "Input cannot be null";
-        if (input == "") return "Input cannot be empty";
+        if (input == null) return L.warning_input_cannot_be_null;
+        if (input == "") return L.warning_input_cannot_be_empty;
         if (input.length < 4) {
-          return "Password needs to be at least 4 characters long";
+          return L.warning_password_too_short;
         }
         return null;
       },
@@ -30,7 +30,7 @@ class OpenWalletViewModel extends ViewModel {
     callThrowable(
       context,
       () async => await _openWallet(context),
-      "Opening wallet",
+      L.opening_wallet,
     );
   }
 

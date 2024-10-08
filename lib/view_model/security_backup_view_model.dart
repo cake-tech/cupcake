@@ -6,7 +6,7 @@ class SecurityBackupViewModel extends ViewModel {
 
   @override
   // TODO: implement screenName
-  String get screenName => "Security and Backup";
+  String get screenName => L.security_and_backup;
 
   CoinWallet wallet;
 }

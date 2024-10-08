@@ -7,8 +7,7 @@ import 'package:cup_cake/views/widgets/cake_card.dart';
 import 'package:cup_cake/views/widgets/drawer_element.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cup_cake/const/resource.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cup_cake/gen/assets.gen.dart';
 
 // ignore: must_be_immutable
 class WalletHome extends AbstractView {
@@ -41,7 +40,7 @@ class WalletHome extends AbstractView {
               mainAxisSize: MainAxisSize.max,
               children: [
                 const SizedBox(width: 16),
-                SvgPicture.asset(R.ASSETS_COINS_XMR_SVG, width: 72),
+                Assets.coins.xmr.svg(width: 72),
                 const SizedBox(width: 16),
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -51,7 +50,7 @@ class WalletHome extends AbstractView {
                       viewModel.wallet.walletName,
                       style: const TextStyle(color: Colors.white),
                     ),
-                    const Text("Primary account"),
+                    Text(L.primary_account_label),
                   ],
                 )
               ],
@@ -76,7 +75,7 @@ class WalletHome extends AbstractView {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Balance"),
+                Text(L.balance),
                 Text(
                   viewModel.balance,
                   style: Theme.of(context)
@@ -87,10 +86,9 @@ class WalletHome extends AbstractView {
               ],
             ),
             const Spacer(),
-            SvgPicture.asset(
-              width: 42,
-              height: 42,
-              viewModel.coin.strings.iconSvg,
+            SizedBox.square(
+              dimension: 42,
+              child: viewModel.coin.strings.svg,
             ),
           ],
         )),
@@ -106,9 +104,9 @@ class WalletHome extends AbstractView {
                         Receive.pushStatic(context, viewModel.wallet),
                     icon:
                         const Icon(Icons.inbox, size: 35, color: Colors.white),
-                    label: const Text(
-                      "Receive",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    label: Text(
+                      L.receive,
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
                     ),
                   ),
                 ),
@@ -125,9 +123,9 @@ class WalletHome extends AbstractView {
                       size: 35,
                       color: Colors.white,
                     ),
-                    label: const Text(
-                      "Scan",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    label: Text(
+                      L.scan,
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
                     ),
                   ),
                 ),

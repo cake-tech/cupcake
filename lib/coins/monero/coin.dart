@@ -7,9 +7,10 @@ import 'package:cup_cake/utils/filesystem.dart';
 import 'package:cup_cake/views/open_wallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:monero/monero.dart' as monero;
 import 'package:path/path.dart' as p;
-import 'package:cup_cake/const/resource.dart';
+import 'package:cup_cake/gen/assets.gen.dart';
 
 class Monero implements Coin {
   @override
@@ -296,7 +297,7 @@ class MoneroStrings implements CoinStrings {
   String get nameFull => "$nameCapitalized ($symbolUppercase)";
 
   @override
-  String get iconSvg => R.ASSETS_COINS_XMR_SVG;
+  SvgPicture get svg => Assets.coins.xmr.svg();
 }
 
 class MoneroWalletInfo extends CoinWalletInfo {

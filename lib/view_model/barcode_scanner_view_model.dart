@@ -8,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 class BarcodeScannerViewModel extends ViewModel {
   BarcodeScannerViewModel({required this.wallet});
   @override
-  String get screenName => "Scan";
+  String get screenName => L.scan;
   Barcode? barcode;
   bool popped = false;
 

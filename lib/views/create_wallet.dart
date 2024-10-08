@@ -1,13 +1,12 @@
+import 'package:cup_cake/gen/assets.gen.dart';
 import 'package:cup_cake/utils/call_throwable.dart';
 import 'package:cup_cake/view_model/create_wallet_view_model.dart';
 import 'package:cup_cake/views/abstract.dart';
 import 'package:cup_cake/views/initial_setup_screen.dart';
 import 'package:cup_cake/widgets/form_builder.dart';
-import 'package:cup_cake/const/resource.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 // ignore: must_be_immutable
 class CreateWallet extends AbstractView {
@@ -85,7 +84,7 @@ class CreateWallet extends AbstractView {
       if (viewModel.isPinSet)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 64.0),
-          child: Lottie.asset(R.ASSETS_MOBILE_JSON),
+          child: Assets.mobile.lottie(),
         ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -94,7 +93,7 @@ class CreateWallet extends AbstractView {
       if (viewModel.isPinSet) const Spacer(),
       if (viewModel.isPinSet)
         LongPrimaryButton(
-          text: "Next",
+          text: L.next,
           icon: null,
           onPressed: () => _next(context),
           backgroundColor: const MaterialStatePropertyAll(Colors.green),
@@ -102,9 +101,9 @@ class CreateWallet extends AbstractView {
         ),
       if (viewModel.isPinSet)
         LongPrimaryButton(
-          text: "Advanced Options",
+          text: L.advanced_options,
           icon: null,
-          onPressed: () {},
+          onPressed: () {}, // TODO: passphrase
           backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
         ),
     ]);
@@ -112,7 +111,7 @@ class CreateWallet extends AbstractView {
 
   void _next(BuildContext context) async {
     await callThrowable(context,
-        () async => await viewModel.createWallet(context), "Wallet creation");
+        () async => await viewModel.createWallet(context), L.creating_wallet);
   }
 
   FormBuilder? formBuilder;
@@ -136,19 +135,6 @@ class CreateWallet extends AbstractView {
       }
     }
     return false;
-  }
-
-  Future<void> _createWallet(BuildContext context) async {
-    if (isFormBad(viewModel.currentForm ?? [])) {
-      return;
-    }
-    final ok = await callThrowable(
-        context,
-        () async => await viewModel.createWallet(context),
-        "Unable to create wallet");
-    if (!ok) return;
-    if (!context.mounted) return;
-    Navigator.of(context).pop();
   }
 
   @override

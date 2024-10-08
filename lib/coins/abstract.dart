@@ -4,6 +4,7 @@ import 'package:cup_cake/coins/monero/coin.dart';
 import 'package:cup_cake/view_model/barcode_scanner_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path/path.dart' as p;
 
 class CoinException implements Exception {
@@ -89,7 +90,7 @@ class CoinStrings {
   String get symbolUppercase => "COIN";
   String get nameFull => "$nameCapitalized ($symbolUppercase)";
 
-  String get iconSvg => throw UnimplementedError();
+  SvgPicture get svg => throw UnimplementedError();
 }
 
 class CoinWallet {

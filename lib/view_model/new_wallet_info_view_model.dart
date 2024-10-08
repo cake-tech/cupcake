@@ -1,5 +1,6 @@
 import 'package:cup_cake/view_model/abstract.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:lottie/lottie.dart';
 
 enum NewWalletActionType {
   nextPage,
@@ -24,7 +25,7 @@ class NewWalletInfoPage {
     required this.topText,
     required this.topAction,
     required this.topActionText,
-    required this.lottieAnimationAsset,
+    required this.lottieAnimation,
     required this.actions,
     required this.texts,
   });
@@ -33,7 +34,7 @@ class NewWalletInfoPage {
   final VoidCallback? topAction;
   final Widget? topActionText;
 
-  final String? lottieAnimationAsset;
+  final LottieBuilder? lottieAnimation;
   final List<NewWalletAction> actions;
 
   List<Widget> texts;

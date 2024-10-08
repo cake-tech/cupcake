@@ -34,8 +34,7 @@ class HomeScreen extends AbstractView {
       builder: (BuildContext context, AsyncSnapshot<bool> value) {
         if (!value.hasData) return Container(); // TODO: placeholder?
         if (value.data!) {
-          return const Text(
-              "You don't have any wallets, consider creating one.");
+          return Text(L.home_no_wallets);
         }
         return FutureBuilder(
           future: viewModel.wallets,

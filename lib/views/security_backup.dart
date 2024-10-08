@@ -29,7 +29,7 @@ class SecurityBackup extends AbstractView {
       child: Column(
         children: [
           ListTile(
-            title: const Text("Primary address"),
+            title: Text(L.primary_address_label),
             subtitle: Text(viewModel.wallet.primaryAddress),
           ),
           QrImageView(

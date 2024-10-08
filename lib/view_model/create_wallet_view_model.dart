@@ -5,7 +5,7 @@ import 'package:cup_cake/utils/null_if_empty.dart';
 import 'package:cup_cake/view_model/abstract.dart';
 import 'package:cup_cake/view_model/new_wallet_info_view_model.dart';
 import 'package:cup_cake/views/new_wallet_info.dart';
-import 'package:cup_cake/const/resource.dart';
+import 'package:cup_cake/gen/assets.gen.dart';
 import 'package:cup_cake/views/wallet_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,7 +35,7 @@ class CreateWalletViewModel extends ViewModel {
   bool isPinSet = false;
 
   @override
-  String get screenName => "Create Wallet";
+  String get screenName => L.create_wallet;
 
   List<Coin> get coins => walletCoins;
 
@@ -48,83 +48,74 @@ class CreateWalletViewModel extends ViewModel {
     return null;
   }();
 
-  StringFormElement walletName =
-      StringFormElement("Wallet name", validator: (String? input) {
-    if (input == null) return "Input cannot be null";
-    if (input == "") return "Input cannot be empty";
+  late StringFormElement walletName =
+      StringFormElement(L.wallet_name, validator: (String? input) {
+    if (input == null) return L.warning_input_cannot_be_null;
+    if (input == "") return L.warning_input_cannot_be_empty;
     return null;
   });
 
-  SingleChoiceFormElement walletSeedType = SingleChoiceFormElement(
-    title: "Seed type",
-    elements: ["Polyseed (16 word)", "Legacy Seed (25 word)"],
+  late SingleChoiceFormElement walletSeedType = SingleChoiceFormElement(
+    title: L.seed_type,
+    elements: [
+      L.seed_type_polyseed,
+      L.seed_type_legacy,
+    ],
   );
 
-  PinFormElement walletPassword = PinFormElement(
+  late PinFormElement walletPassword = PinFormElement(
       password: true,
       validator: (String? input) {
-        if (input == null) return "Input cannot be null";
-        if (input == "") return "Input cannot be empty";
+        if (input == null) return L.warning_input_cannot_be_null;
+        if (input == "") return L.warning_input_cannot_be_empty;
         if (input.length < 4) {
-          return "Password needs to be at least 4 characters long";
+          return L.warning_password_too_short;
         }
         return null;
       });
 
-  StringFormElement seed = StringFormElement("Wallet seed", password: true,
+  late StringFormElement seed = StringFormElement("Wallet seed", password: true,
       validator: (String? input) {
-    if (input == null) return "Input cannot be null";
-    if (input == "") return "Input cannot be empty";
+    if (input == null) return L.warning_input_cannot_be_null;
+    if (input == "") return L.warning_input_cannot_be_empty;
     if (input.split(" ").length != 16 && input.split(" ").length != 25) {
-      return "Seed needs to contain exactly 16 or 25 words";
+      return L.warning_seed_incorrect_length;
     }
     return null;
   });
 
-  StringFormElement walletAddress = StringFormElement("Primary Address",
+  late StringFormElement walletAddress = StringFormElement("Primary Address",
       password: true, validator: (String? input) {
-    if (input == null) return "Input cannot be null";
-    if (input == "") return "Input cannot be empty";
-    if (input.split(" ").length != 16) {
-      return "Seed needs to contain exactly 16 words";
-    }
+    if (input == null) return L.warning_input_cannot_be_null;
+    if (input == "") return L.warning_input_cannot_be_empty;
     return null;
   });
 
-  StringFormElement secretSpendKey = StringFormElement("Secret Spend Key",
+  late StringFormElement secretSpendKey = StringFormElement("Secret Spend Key",
       password: true, validator: (String? input) {
-    if (input == null) return "Input cannot be null";
-    if (input == "") return "Input cannot be empty";
-    if (input.split(" ").length != 16) {
-      return "Seed needs to contain exactly 16 words";
-    }
+    if (input == null) return L.warning_input_cannot_be_null;
+    if (input == "") return L.warning_input_cannot_be_empty;
     return null;
   });
 
-  StringFormElement secretViewKey = StringFormElement("Secret View Key",
+  late StringFormElement secretViewKey = StringFormElement("Secret View Key",
       password: true, validator: (String? input) {
-    if (input == null) return "Input cannot be null";
-    if (input == "") return "Input cannot be empty";
-    if (input.split(" ").length != 16) {
-      return "Seed needs to contain exactly 16 words";
-    }
+    if (input == null) return L.warning_input_cannot_be_null;
+    if (input == "") return L.warning_input_cannot_be_empty;
     return null;
   });
 
-  StringFormElement restoreHeight = StringFormElement("Restore height",
+  late StringFormElement restoreHeight = StringFormElement("Restore height",
       password: true, validator: (String? input) {
-    if (input == null) return "Input cannot be null";
-    if (input == "") return "Input cannot be empty";
-    if (int.tryParse(input) == null) {
-      return "Input must be a number";
-    }
+    if (input == null) return L.warning_input_cannot_be_null;
+    if (input == "") return L.warning_input_cannot_be_empty;
     return null;
   });
 
-  StringFormElement seedOffset = StringFormElement("Seed offset",
+  late StringFormElement seedOffset = StringFormElement("Seed offset",
       password: true, validator: (String? input) {
-    if (input == null) return "Input cannot be null";
-    if (input == "") return "Input cannot be empty";
+    if (input == null) return L.warning_input_cannot_be_null;
+    if (input == "") return L.warning_input_cannot_be_empty;
     return null;
   });
 
@@ -137,11 +128,11 @@ class CreateWalletViewModel extends ViewModel {
 
   Map<String, List<FormElement>> get createMethods => {
         if ([CreateMethod.any, CreateMethod.create].contains(createMethod))
-          "New wallet": _createForm,
+          L.option_create_new_wallet: _createForm,
         if ([CreateMethod.any, CreateMethod.restore]
             .contains(createMethod)) ...{
-          "Seed": _restoreSeedForm,
-          "Keys": _restoreFormKeysForm,
+          L.option_create_seed: _restoreSeedForm,
+          L.option_create_keys: _restoreFormKeysForm,
         },
       };
 
@@ -182,45 +173,47 @@ class CreateWalletViewModel extends ViewModel {
 
     final List<NewWalletInfoPage> pages = [
       NewWalletInfoPage(
-        topText: "IMPORTANT",
+        topText: L.important,
         topAction: null,
         topActionText: null,
-        lottieAnimationAsset: R.ASSETS_SHIELD_JSON,
+        lottieAnimation: Assets.shield.lottie(),
         actions: [
           NewWalletAction(
             type: NewWalletActionType.nextPage,
             function: null,
-            text: const Text(
-              "I understand. Show me the seed",
-              style: TextStyle(color: Colors.white),
+            text: Text(
+              L.understand_show_seed,
+              style: const TextStyle(color: Colors.white),
             ),
             backgroundColor: Colors.blue,
           ),
         ],
         texts: [
-          const Text(
-              "On the next page you will see a series of 16 words. This is your unique and private seed and it is the ONLY way to recover your wallet in case of loss or malfunction. It is YOUR responsibility to write it down and store it in a safe place outside of the Cake Wallet app.",
-              textAlign: TextAlign.center),
+          Text(
+            L.important_seed_backup_info(
+                "16 word"), // TODO: translate it better?
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
       NewWalletInfoPage(
-        topText: "Seed",
+        topText: L.seed,
         topAction: () {
           config.initialSetupComplete = true;
           config.save();
           WalletHome.pushStatic(context, cw);
         },
-        topActionText: const Text("Next"),
-        lottieAnimationAsset: R.ASSETS_SHIELD_JSON,
+        topActionText: Text(L.next),
+        lottieAnimation: Assets.shield.lottie(),
         actions: [
           NewWalletAction(
             type: NewWalletActionType.function,
             function: () {
               Share.share(cw.seed);
             },
-            text: const Text(
-              "Save",
-              style: TextStyle(color: Colors.white),
+            text: Text(
+              L.save,
+              style: const TextStyle(color: Colors.white),
             ),
             backgroundColor: Colors.green,
           ),
@@ -229,9 +222,9 @@ class CreateWalletViewModel extends ViewModel {
             function: () {
               Clipboard.setData(ClipboardData(text: cw.seed));
             },
-            text: const Text(
-              "Copy",
-              style: TextStyle(color: Colors.white),
+            text: Text(
+              L.copy,
+              style: const TextStyle(color: Colors.white),
             ),
             backgroundColor: Colors.blue,
           ),
@@ -244,8 +237,9 @@ class CreateWalletViewModel extends ViewModel {
             textAlign: TextAlign.center,
           ),
           Text(
-              "${cw.seed}\n\n\n\nPlease write these down in case you lose or wipe your phone",
-              textAlign: TextAlign.center),
+            "${cw.seed}\n\n\n\n${L.write_down_notice}",
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     ];

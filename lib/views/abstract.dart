@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:cup_cake/l10n/app_localizations.dart';
 import 'package:cup_cake/view_model/abstract.dart';
-import 'package:cup_cake/const/resource.dart';
 import 'package:flutter/material.dart';
+import 'package:cup_cake/gen/assets.gen.dart';
 
 // Since there is no performance penalty for using stateful widgets I would just
 // use them everywhere, but honestly all I need in stateless widgets is easy
@@ -34,6 +35,8 @@ class AbstractView extends StatefulWidget {
     state ??= _AbstractViewState(realBuild: build);
     return state!;
   }
+
+  AppLocalizations get L => viewModel.L;
 
   Future<void> initState(BuildContext context) async {}
 
@@ -105,7 +108,7 @@ class CupcakeAppbarTitle extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox.square(dimension: 32, child: Image.asset(R.ASSETS_CW_PNG)),
+          SizedBox.square(dimension: 32, child: Assets.cw.image()),
           const SizedBox(
             width: 16,
           ),

@@ -3,7 +3,6 @@ import 'package:cup_cake/views/abstract.dart';
 import 'package:cup_cake/views/initial_setup_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class NewWalletInfoScreen extends AbstractView {
   static void staticPush(
@@ -70,8 +69,8 @@ class NewWalletInfoScreen extends AbstractView {
       padding: const EdgeInsets.only(left: 32, right: 32, top: 0, bottom: 16),
       child: Column(
         children: [
-          if (viewModel.page.lottieAnimationAsset != null)
-            Lottie.asset(viewModel.page.lottieAnimationAsset!),
+          if (viewModel.page.lottieAnimation != null)
+            viewModel.page.lottieAnimation!,
           ...viewModel.page.texts,
           const Spacer(),
           SizedBox(

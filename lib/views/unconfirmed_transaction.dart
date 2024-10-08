@@ -36,27 +36,29 @@ class UnconfirmedTransactionView extends AbstractView {
   @override
   Widget? bottomNavigationBar(BuildContext context) {
     return BottomNavigationBar(
-      items: const [
+      items: [
         BottomNavigationBarItem(
-          icon: Icon(
+          icon: const Icon(
             Icons.cancel,
             color: Colors.red,
           ),
-          label: "Cancel",
+          label: L.cancel,
         ),
         BottomNavigationBarItem(
-            icon: Icon(Icons.check_circle, color: Colors.green),
-            label: "Confirm"),
+            icon: const Icon(Icons.check_circle, color: Colors.green),
+            label: L.confirm),
       ],
       onTap: (int index) async {
         if (index == 0) {
           await callThrowable(context,
-              () async => await viewModel.cancelCallback(context), "Canceling");
+              () async => await viewModel.cancelCallback(context), L.canceling);
           if (!context.mounted) return;
           Navigator.of(context).pop();
         } else {
-          await callThrowable(context,
-              () async => await viewModel.confirmCallback(context), "Spending");
+          await callThrowable(
+              context,
+              () async => await viewModel.confirmCallback(context),
+              L.confirming);
           if (!context.mounted) return;
           Navigator.of(context).pop();
         }

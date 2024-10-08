@@ -50,7 +50,12 @@ dependencies:
   flutter_svg: 2.0.10+1
   lottie: ^3.1.2
   share_plus: ^10.0.0
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
+  vector_graphics: any
+  flutter_gen: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -62,13 +67,22 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
   flutter_asset_generator: 1.2.0
+  build_runner: ^2.4.9
+  flutter_gen_runner: ^5.8.0
+analyzer:
+  exclude:
+    - lib/l10n/*.dart
+    - lib/gen/*.dart
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+flutter_gen:
+  integrations:
+    flutter_svg: true
+    lottie: true
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

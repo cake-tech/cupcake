@@ -6,7 +6,7 @@ class ReceiveViewModel extends ViewModel {
   CoinWallet wallet;
 
   @override
-  String get screenName => "Receive";
+  String get screenName => L.receive;
 
   String get address => wallet.getCurrentAddress;
 }

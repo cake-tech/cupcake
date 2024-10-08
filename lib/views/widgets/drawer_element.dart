@@ -5,17 +5,17 @@ import 'package:cup_cake/views/home_screen.dart';
 import 'package:cup_cake/views/security_backup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:cup_cake/const/resource.dart';
+import 'package:cup_cake/gen/assets.gen.dart';
 
 class DrawerElement extends StatelessWidget {
   const DrawerElement({
     super.key,
-    required this.svgAsset,
+    required this.svg,
     required this.text,
     required this.action,
   });
 
-  final String svgAsset;
+  final SvgPicture svg;
   final String text;
   final Future<void> Function(BuildContext context) action;
 
@@ -29,7 +29,7 @@ class DrawerElement extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            SvgPicture.asset(svgAsset),
+            svg,
             const SizedBox(width: 8),
             Text(
               text,
@@ -79,31 +79,34 @@ class DrawerElements extends StatelessWidget {
     return Column(
       children: [
         DrawerElement(
-          svgAsset: R.ASSETS_DRAWER_ICONS_WALLETS_SVG,
+          svg: Assets.drawerIcons.wallets.svg(),
           text: "Wallets",
           action: _walletList,
         ),
         const Divider(),
         DrawerElement(
-          svgAsset: R.ASSETS_DRAWER_ICONS_ADDRESS_BOOK_SVG,
+          svg: Assets.drawerIcons.addressBook.svg(),
           text: "Address book",
           action: _addressBook,
         ),
         const Divider(),
         DrawerElement(
-            svgAsset: R.ASSETS_DRAWER_ICONS_SECURITY_AND_BACKUP_SVG,
-            text: "Security and backup",
-            action: _securityBackup),
+          svg: Assets.drawerIcons.securityAndBackup.svg(),
+          text: "Security and backup",
+          action: _securityBackup,
+        ),
         const Divider(),
         DrawerElement(
-            svgAsset: R.ASSETS_DRAWER_ICONS_EXPORT_KEY_IMAGES_SVG,
-            text: "Export key images",
-            action: _exportKeyImages),
+          svg: Assets.drawerIcons.exportKeyImages.svg(),
+          text: "Export key images",
+          action: _exportKeyImages,
+        ),
         const Divider(),
         DrawerElement(
-            svgAsset: R.ASSETS_DRAWER_ICONS_OTHER_SETTINGS_SVG,
-            text: "Other settings",
-            action: _otherSettings),
+          svg: Assets.drawerIcons.otherSettings.svg(),
+          text: "Other settings",
+          action: _otherSettings,
+        ),
         const Divider(),
       ],
     );
