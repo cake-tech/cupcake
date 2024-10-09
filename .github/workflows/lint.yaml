@@ -30,8 +30,17 @@ jobs:
           if [ -z "$(git status --porcelain)" ]; then 
             exit 0
           else 
+            git status --porcelain
             exit 1
           fi
       - name: check if there are missing translations
+        continue-on-error: true
         run: |
-          [[ -f missing_translations.txt ]] && exit 1
+          if [[ "$(cat missing_translations.txt)" == "{}" ]];
+          then
+            exit 0
+          else
+            echo "There are missing translations:"
+            cat missing_translations.txt          
+            exit 1
+          fi

@@ -33,13 +33,18 @@ class CreateWalletViewModel extends ViewModel {
   final CreateMethod createMethod;
 
   bool isPinSet = false;
-
+  bool showExtra = false;
   @override
   String get screenName => L.create_wallet;
 
   List<Coin> get coins => walletCoins;
 
   bool isCreate = true;
+
+  void toggleAdvancedOptions() {
+    showExtra = !showExtra;
+    markNeedsBuild();
+  }
 
   late Coin? selectedCoin = () {
     if (coins.length == 1) {
@@ -64,60 +69,80 @@ class CreateWalletViewModel extends ViewModel {
   );
 
   late PinFormElement walletPassword = PinFormElement(
-      password: true,
-      validator: (String? input) {
-        if (input == null) return L.warning_input_cannot_be_null;
-        if (input == "") return L.warning_input_cannot_be_empty;
-        if (input.length < 4) {
-          return L.warning_password_too_short;
-        }
-        return null;
-      });
+    password: true,
+    validator: (String? input) {
+      if (input == null) return L.warning_input_cannot_be_null;
+      if (input == "") return L.warning_input_cannot_be_empty;
+      if (input.length < 4) {
+        return L.warning_password_too_short;
+      }
+      return null;
+    },
+  );
 
-  late StringFormElement seed = StringFormElement("Wallet seed", password: true,
-      validator: (String? input) {
-    if (input == null) return L.warning_input_cannot_be_null;
-    if (input == "") return L.warning_input_cannot_be_empty;
-    if (input.split(" ").length != 16 && input.split(" ").length != 25) {
-      return L.warning_seed_incorrect_length;
-    }
-    return null;
-  });
+  late StringFormElement seed = StringFormElement(
+    L.wallet_seed,
+    password: true,
+    validator: (String? input) {
+      if (input == null) return L.warning_input_cannot_be_null;
+      if (input == "") return L.warning_input_cannot_be_empty;
+      if (input.split(" ").length != 16 && input.split(" ").length != 25) {
+        return L.warning_seed_incorrect_length;
+      }
+      return null;
+    },
+  );
 
-  late StringFormElement walletAddress = StringFormElement("Primary Address",
-      password: true, validator: (String? input) {
-    if (input == null) return L.warning_input_cannot_be_null;
-    if (input == "") return L.warning_input_cannot_be_empty;
-    return null;
-  });
+  late StringFormElement walletAddress = StringFormElement(
+    L.primary_address_label,
+    password: true,
+    validator: (String? input) {
+      if (input == null) return L.warning_input_cannot_be_null;
+      if (input == "") return L.warning_input_cannot_be_empty;
+      return null;
+    },
+  );
 
-  late StringFormElement secretSpendKey = StringFormElement("Secret Spend Key",
-      password: true, validator: (String? input) {
-    if (input == null) return L.warning_input_cannot_be_null;
-    if (input == "") return L.warning_input_cannot_be_empty;
-    return null;
-  });
+  late StringFormElement secretSpendKey = StringFormElement(
+    L.secret_spend_key,
+    password: true,
+    validator: (String? input) {
+      if (input == null) return L.warning_input_cannot_be_null;
+      if (input == "") return L.warning_input_cannot_be_empty;
+      return null;
+    },
+  );
 
-  late StringFormElement secretViewKey = StringFormElement("Secret View Key",
-      password: true, validator: (String? input) {
-    if (input == null) return L.warning_input_cannot_be_null;
-    if (input == "") return L.warning_input_cannot_be_empty;
-    return null;
-  });
+  late StringFormElement secretViewKey = StringFormElement(
+    L.secret_view_key,
+    password: true,
+    validator: (String? input) {
+      if (input == null) return L.warning_input_cannot_be_null;
+      if (input == "") return L.warning_input_cannot_be_empty;
+      return null;
+    },
+  );
 
-  late StringFormElement restoreHeight = StringFormElement("Restore height",
-      password: true, validator: (String? input) {
-    if (input == null) return L.warning_input_cannot_be_null;
-    if (input == "") return L.warning_input_cannot_be_empty;
-    return null;
-  });
+  late StringFormElement restoreHeight = StringFormElement(
+    L.restore_height,
+    password: true,
+    validator: (String? input) {
+      if (input == null) return L.warning_input_cannot_be_null;
+      if (input == "") return L.warning_input_cannot_be_empty;
+      return null;
+    },
+  );
 
-  late StringFormElement seedOffset = StringFormElement("Seed offset",
-      password: true, validator: (String? input) {
-    if (input == null) return L.warning_input_cannot_be_null;
-    if (input == "") return L.warning_input_cannot_be_empty;
-    return null;
-  });
+  late StringFormElement seedOffset = StringFormElement(
+    L.seed_offset,
+    password: true,
+    isExtra: true,
+    validator: (String? input) {
+      if (input == null) return L.warning_input_cannot_be_null;
+      if (input == "") return L.warning_input_cannot_be_empty;
+      return null;
+    },
+  );
 
   late List<FormElement>? currentForm = () {
     if (createMethods.length == 1) {
@@ -140,12 +165,14 @@ class CreateWalletViewModel extends ViewModel {
     walletPassword,
     walletName,
     walletSeedType,
+    seedOffset
   ];
 
   late final List<FormElement> _restoreSeedForm = [
     walletPassword,
     walletName,
     seed,
+    seedOffset
   ];
 
   late final List<FormElement> _restoreFormKeysForm = [
@@ -263,6 +290,7 @@ class StringFormElement extends FormElement {
     String initialText = "",
     this.password = false,
     this.validator = _defaultValidator,
+    this.isExtra = false,
   }) : ctrl = TextEditingController(text: initialText);
 
   TextEditingController ctrl;
@@ -271,6 +299,8 @@ class StringFormElement extends FormElement {
   String label;
   @override
   String get value => ctrl.text;
+
+  bool isExtra;
 
   @override
   bool get isOk => validator(value) == null;

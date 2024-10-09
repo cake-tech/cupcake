@@ -5,17 +5,20 @@ import 'package:cup_cake/views/widgets/numerical_keyboard/main.dart';
 import 'package:flutter/material.dart';
 
 class FormBuilder extends StatefulWidget {
-  const FormBuilder(
-      {super.key,
-      required this.formElements,
-      required this.scaffoldContext,
-      this.rebuild,
-      required this.isPinSet});
+  const FormBuilder({
+    super.key,
+    required this.formElements,
+    required this.scaffoldContext,
+    this.rebuild,
+    required this.isPinSet,
+    required this.showExtra,
+  });
 
   final List<FormElement> formElements;
   final BuildContext scaffoldContext;
   final void Function(bool isPinSet)? rebuild;
   final bool isPinSet;
+  final bool showExtra;
   @override
   State<FormBuilder> createState() => _FormBuilderState();
 }
@@ -75,6 +78,7 @@ class _FormBuilderState extends State<FormBuilder> {
       mainAxisSize: MainAxisSize.min,
       children: widget.formElements.map((e) {
         if (e is StringFormElement) {
+          if (e.isExtra && !widget.showExtra) return Container();
           return Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: TextFormField(

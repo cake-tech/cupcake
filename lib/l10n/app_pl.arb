@@ -51,5 +51,11 @@
   "cancel": "Anuluj",
   "confirming": "Potwierdzanie",
   "canceling": "Anulowanie",
-  "balance": "Saldo"
+  "balance": "Saldo",
+  "wallet_seed": "Fraza odzyskiwania",
+  "wallet_passphrase": "Hasło frazy odzyskiwania",
+  "secret_spend_key": "Tajny klucz wydatków",
+  "secret_view_key": "Tajny klucz podglądu",
+  "restore_height": "Wysokość przywracania",
+  "seed_offset": "Szyfrowanie frazy odzyskiwania"
 }

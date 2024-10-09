@@ -51,5 +51,11 @@
   "cancel": "Cancel",
   "confirming": "Confirming",
   "canceling": "Canceling",
-  "balance": "Balance"
+  "balance": "Balance",
+  "wallet_seed": "Wallet seed",
+  "wallet_passphrase": "Wallet passphrase",
+  "secret_spend_key": "Secret spend key",
+  "secret_view_key": "Secret View Key",
+  "restore_height": "Restore height",
+  "seed_offset": "Seed offset"
 }

@@ -79,34 +79,48 @@ class CreateWallet extends AbstractView {
       scaffoldContext: context,
       rebuild: (bool val) => setPinSet(context, val),
       isPinSet: viewModel.isPinSet,
+      showExtra: viewModel.showExtra,
     );
-    return Column(children: [
-      if (viewModel.isPinSet)
+    return Column(
+      children: [
+        if (viewModel.isPinSet)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 64.0),
+            child: Assets.mobile.lottie(),
+          ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 64.0),
-          child: Assets.mobile.lottie(),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: formBuilder,
         ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: formBuilder,
-      ),
-      if (viewModel.isPinSet) const Spacer(),
-      if (viewModel.isPinSet)
-        LongPrimaryButton(
-          text: L.next,
-          icon: null,
-          onPressed: () => _next(context),
-          backgroundColor: const MaterialStatePropertyAll(Colors.green),
-          textColor: Colors.white,
-        ),
-      if (viewModel.isPinSet)
-        LongPrimaryButton(
-          text: L.advanced_options,
-          icon: null,
-          onPressed: () {}, // TODO: passphrase
-          backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
-        ),
-    ]);
+      ],
+    );
+  }
+
+  @override
+  Widget? bottomNavigationBar(BuildContext context) {
+    if (viewModel.isPinSet) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          LongPrimaryButton(
+            text: L.next,
+            icon: null,
+            onPressed: () => _next(context),
+            backgroundColor: const MaterialStatePropertyAll(Colors.green),
+            textColor: Colors.white,
+          ),
+          LongPrimaryButton(
+            text: L.advanced_options,
+            icon: null,
+            onPressed: () {
+              viewModel.toggleAdvancedOptions();
+            }, // TODO: passphrase
+            backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
+          ),
+        ],
+      );
+    }
+    return null;
   }
 
   void _next(BuildContext context) async {
@@ -139,10 +153,12 @@ class CreateWallet extends AbstractView {
 
   @override
   Widget build(BuildContext context) {
+    viewModel.register(context);
     return Scaffold(
       appBar: appBar,
-      body: body(context),
+      body: SingleChildScrollView(child: body(context)),
       floatingActionButton: floatingActionButton(context),
+      bottomNavigationBar: bottomNavigationBar(context),
     );
   }
 }
