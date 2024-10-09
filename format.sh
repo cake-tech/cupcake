@@ -1,5 +1,6 @@
 #!/bin/bash
 set -x -e
+dart run build_runner build
 pushd lib
   for dir in coins themes utils view_model views widgets;
   do
