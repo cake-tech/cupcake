@@ -82,7 +82,7 @@ class CreateWalletViewModel extends ViewModel {
 
   late StringFormElement seed = StringFormElement(
     L.wallet_seed,
-    password: true,
+    password: false,
     validator: (String? input) {
       if (input == null) return L.warning_input_cannot_be_null;
       if (input == "") return L.warning_input_cannot_be_empty;
@@ -225,11 +225,13 @@ class CreateWalletViewModel extends ViewModel {
       ),
       NewWalletInfoPage(
         topText: L.seed,
-        topAction: () {
-          config.initialSetupComplete = true;
-          config.save();
-          WalletHome.pushStatic(context, cw);
-        },
+        topAction: seedOffset.value.isNotEmpty
+            ? null
+            : () {
+                config.initialSetupComplete = true;
+                config.save();
+                WalletHome.pushStatic(context, cw);
+              },
         topActionText: Text(L.next),
         lottieAnimation: Assets.shield.lottie(),
         actions: [
@@ -269,6 +271,55 @@ class CreateWalletViewModel extends ViewModel {
           ),
         ],
       ),
+      if (seedOffset.value.isNotEmpty)
+        NewWalletInfoPage(
+          topText: L.wallet_passphrase,
+          topAction: () {
+            config.initialSetupComplete = true;
+            config.save();
+            WalletHome.pushStatic(context, cw);
+          },
+          topActionText: Text(L.next),
+          lottieAnimation: Assets.shield.lottie(),
+          actions: [
+            NewWalletAction(
+              type: NewWalletActionType.function,
+              function: () {
+                Share.share(cw.seed);
+              },
+              text: Text(
+                L.save,
+                style: const TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.green,
+            ),
+            NewWalletAction(
+              type: NewWalletActionType.function,
+              function: () {
+                Clipboard.setData(ClipboardData(text: cw.seed));
+              },
+              text: Text(
+                L.copy,
+                style: const TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.blue,
+            ),
+          ],
+          texts: [
+            Text(
+              cw.walletName,
+              style: const TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              "${seedOffset.value}\n\n\n\n${L.write_down_notice}",
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
     ];
     if (!context.mounted) {
       throw Exception("context is not mounted, unable to show next screen");

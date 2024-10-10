@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cup_cake/coins/abstract.dart';
 import 'package:cup_cake/coins/monero/coin.dart';
+import 'package:cup_cake/l10n/app_localizations.dart';
 import 'package:cup_cake/utils/null_if_empty.dart';
 import 'package:cup_cake/view_model/barcode_scanner_view_model.dart';
 import 'package:cup_cake/view_model/unconfirmed_transaction_view_model.dart';
@@ -11,6 +12,10 @@ import 'package:cup_cake/views/urqr.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as p;
 import 'package:monero/monero.dart' as monero;
+import 'package:polyseed/polyseed.dart';
+
+const seedOffsetCacheKey = "cakewallet.passphrase";
+const seedCacheKey = "cakewallet.seed";
 
 class MoneroWallet implements CoinWallet {
   MoneroWallet(this.wptr);
@@ -156,12 +161,42 @@ class MoneroWallet implements CoinWallet {
 
   // TODO: make this match the offset used in cake wallet, and define const
   String get seedOffset =>
-      monero.Wallet_getCacheAttribute(wptr, key: "cw.offset");
+      monero.Wallet_getCacheAttribute(wptr, key: seedOffsetCacheKey);
+
+  set seedOffset(String newSeedOffset) => monero.Wallet_setCacheAttribute(
+        wptr,
+        key: seedOffsetCacheKey,
+        value: newSeedOffset,
+      );
 
   @override
   String get seed =>
-      nullIfEmpty(monero.Wallet_getPolyseed(wptr, passphrase: seedOffset)) ??
+      nullIfEmpty(polyseed ?? "") ??
+      nullIfEmpty(polyseedDart ?? "") ??
       legacySeed;
+
+  String? get polyseed =>
+      monero.Wallet_getPolyseed(wptr, passphrase: seedOffset);
+
+  String? get polyseedDart {
+    try {
+      const coin = PolyseedCoin.POLYSEED_MONERO;
+      var lang = PolyseedLang.getByName("English");
+
+      var polyseedString =
+          polyseed ?? monero.Wallet_getCacheAttribute(wptr, key: seedCacheKey);
+
+      var seed = Polyseed.decode(polyseedString, lang, coin);
+      if (seedOffset.isNotEmpty) {
+        seed.crypt(seedOffset);
+      }
+      return seed.encode(lang, coin);
+    } catch (e) {
+      print("polyseedDart failed: $e");
+      // this is fine, we don't care
+      return null;
+    }
+  }
 
   String get legacySeed => monero.Wallet_seed(wptr, seedOffset: seedOffset);
 
@@ -182,15 +217,69 @@ class MoneroWallet implements CoinWallet {
       );
 
   @override
-  // TODO: implement DO_NOT_MERGE_restoreData
-  String get DO_NOT_MERGE_restoreData =>
-      const JsonEncoder.withIndent('   ').convert({
-        "version": 0,
-        "primaryAddress":
-            monero.Wallet_address(wptr, accountIndex: 0, addressIndex: 0),
-        "privateViewKey": monero.Wallet_secretViewKey(wptr),
-        "restoreHeight": monero.Wallet_getRefreshFromBlockHeight(wptr),
-      });
+  List<WalletSeedDetail> seedDetails(AppLocalizations L) {
+    return [
+      WalletSeedDetail(
+        type: WalletSeedDetailType.text,
+        name: L.primary_address_label,
+        value: monero.Wallet_address(wptr, accountIndex: 0, addressIndex: 0),
+      ),
+      if ((polyseed ?? "").isNotEmpty)
+        WalletSeedDetail(
+          type: WalletSeedDetailType.text,
+          name: L.seed_screen_wallet_seed_polyseed,
+          value: polyseed!,
+        ),
+      if ((polyseedDart ?? "").isNotEmpty && polyseedDart != polyseed)
+        WalletSeedDetail(
+          type: WalletSeedDetailType.text,
+          name: L.seed_screen_wallet_seed_polyseed_encrypted,
+          value: polyseedDart!,
+        ),
+      WalletSeedDetail(
+        type: WalletSeedDetailType.text,
+        name: L.seed_screen_wallet_seed_legacy,
+        value: legacySeed,
+      ),
+      if (seedOffset.isNotEmpty)
+        WalletSeedDetail(
+          type: WalletSeedDetailType.text,
+          name: L.seed_offset,
+          value: seedOffset,
+        ),
+      WalletSeedDetail(
+        type: WalletSeedDetailType.text,
+        name: L.view_key,
+        value: monero.Wallet_publicViewKey(wptr),
+      ),
+      WalletSeedDetail(
+        type: WalletSeedDetailType.text,
+        name: L.secret_view_key,
+        value: monero.Wallet_secretViewKey(wptr),
+      ),
+      WalletSeedDetail(
+        type: WalletSeedDetailType.text,
+        name: L.spend_key,
+        value: monero.Wallet_publicSpendKey(wptr),
+      ),
+      WalletSeedDetail(
+        type: WalletSeedDetailType.text,
+        name: L.secret_spend_key,
+        value: monero.Wallet_secretSpendKey(wptr),
+      ),
+      WalletSeedDetail(
+        type: WalletSeedDetailType.qr,
+        name: L.view_only_restore_qr,
+        value: const JsonEncoder.withIndent('   ').convert({
+          "version": 0,
+          "primaryAddress":
+              monero.Wallet_address(wptr, accountIndex: 0, addressIndex: 0),
+          "privateViewKey": monero.Wallet_secretViewKey(wptr),
+          "restoreHeight": monero.Wallet_getRefreshFromBlockHeight(wptr),
+        }),
+      ),
+    ];
+  }
 }
 
 class MoneroAmount implements Amount {

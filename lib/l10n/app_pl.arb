@@ -55,7 +55,13 @@
   "wallet_seed": "Fraza odzyskiwania",
   "wallet_passphrase": "Hasło frazy odzyskiwania",
   "secret_spend_key": "Tajny klucz wydatków",
+  "spend_key": "Klucz wydatków",
   "secret_view_key": "Tajny klucz podglądu",
+  "view_key": "Klucz podglądu",
   "restore_height": "Wysokość przywracania",
-  "seed_offset": "Szyfrowanie frazy odzyskiwania"
+  "seed_offset": "Szyfrowanie frazy odzyskiwania",
+  "view_only_restore_qr": "Kod QR portfela podglądu",
+  "seed_screen_wallet_seed_polyseed": "Fraza odzyskiwania (Polyseed)",
+  "seed_screen_wallet_seed_polyseed_encrypted": "Fraza odzyskiwania (Polyseed [Szyfrowana])",
+  "seed_screen_wallet_seed_legacy": "Fraza odzyskiwania (Legacy)"
 }

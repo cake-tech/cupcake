@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:cup_cake/coins/monero/coin.dart';
+import 'package:cup_cake/l10n/app_localizations.dart';
 import 'package:cup_cake/view_model/barcode_scanner_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -93,6 +94,22 @@ class CoinStrings {
   SvgPicture get svg => throw UnimplementedError();
 }
 
+enum WalletSeedDetailType {
+  text,
+  qr,
+}
+
+class WalletSeedDetail {
+  WalletSeedDetail({
+    required this.type,
+    required this.name,
+    required this.value,
+  });
+  final WalletSeedDetailType type;
+  final String name;
+  final String value;
+}
+
 class CoinWallet {
   CoinWallet();
 
@@ -116,5 +133,7 @@ class CoinWallet {
   int getBalance() => throw UnimplementedError();
   String getBalanceString() => throw UnimplementedError();
   Future<void> close() => throw UnimplementedError();
-  String get DO_NOT_MERGE_restoreData => throw UnimplementedError();
+
+  List<WalletSeedDetail> seedDetails(AppLocalizations L) =>
+      throw UnimplementedError();
 }

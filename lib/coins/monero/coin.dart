@@ -11,6 +11,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:monero/monero.dart' as monero;
 import 'package:path/path.dart' as p;
 import 'package:cup_cake/gen/assets.gen.dart';
+import 'package:polyseed/polyseed.dart';
 
 class Monero implements Coin {
   @override
@@ -89,6 +90,9 @@ class Monero implements Coin {
         details: "unable to create wallet, createWalletFromPolyseed failed.",
       );
     }
+    monero.Wallet_setCacheAttribute(newWptr,
+        key: seedOffsetCacheKey, value: seedOffsetOrEncryption);
+    monero.Wallet_store(newWptr);
     print("wallet created in: $walletPath");
     progressCallback?.call(description: "Wallet created");
     await Future.delayed(Duration.zero);
@@ -102,12 +106,24 @@ class Monero implements Coin {
     required String seedOffsetOrEncryption,
   }) async {
     progressCallback?.call(description: "Creating wallet");
+    final lang = PolyseedLang.getByPhrase(seed);
+    const coin = PolyseedCoin.POLYSEED_MONERO;
+    final dartPolyseed = Polyseed.decode(seed, lang, coin);
+    var offset = seedOffsetOrEncryption;
+    if (dartPolyseed.isEncrypted) {
+      if (seedOffsetOrEncryption.isEmpty) {
+        throw CoinException("seed offset is empty, but polyseed is encrypted");
+      }
+      dartPolyseed.crypt(seedOffsetOrEncryption);
+      seed = dartPolyseed.encode(lang, coin);
+      offset = "";
+    }
     final newWptr = monero.WalletManager_createWalletFromPolyseed(
       wmPtr,
       path: walletPath,
       password: walletPassword,
       mnemonic: seed,
-      seedOffset: seedOffsetOrEncryption,
+      seedOffset: offset,
       newWallet: true,
       restoreHeight: 0,
       kdfRounds: 1,
@@ -121,6 +137,9 @@ class Monero implements Coin {
         details: "unable to create wallet, createWalletFromPolyseed failed.",
       );
     }
+    monero.Wallet_setCacheAttribute(newWptr,
+        key: seedOffsetCacheKey, value: seedOffsetOrEncryption);
+    monero.Wallet_store(newWptr);
     progressCallback?.call(description: "Wallet created");
   }
 
@@ -216,7 +235,7 @@ class Monero implements Coin {
       );
     } else if (createWallet == false &&
         (seed ?? "").trim().split(" ").length == 16) {
-      createMoneroWalletPolyseed(
+      await createMoneroWalletPolyseed(
         progressCallback: progressCallback,
         walletPath: walletPath,
         walletPassword: walletPassword,
@@ -228,7 +247,7 @@ class Monero implements Coin {
       // polyseed offset
     } else if (createWallet == false &&
         (seed ?? "").trim().split(" ").length == 25) {
-      createMoneroWalletSeed(
+      await createMoneroWalletSeed(
           progressCallback: progressCallback,
           walletPath: walletPath,
           walletPassword: walletPassword,
@@ -239,14 +258,15 @@ class Monero implements Coin {
     } else if (createWallet == false && spendKey != "") {
       // keys deterministic
       // keys non-deterministic
-      createMoneroWalletKeys(
-          progressCallback: progressCallback,
-          walletPath: walletPath,
-          walletPassword: walletPassword,
-          walletAddress: primaryAddress!,
-          secretSpendKey: spendKey!,
-          secretViewKey: viewKey!,
-          restoreHeight: restoreHeight!);
+      await createMoneroWalletKeys(
+        progressCallback: progressCallback,
+        walletPath: walletPath,
+        walletPassword: walletPassword,
+        walletAddress: primaryAddress!,
+        secretSpendKey: spendKey!,
+        secretViewKey: viewKey!,
+        restoreHeight: restoreHeight!,
+      );
     } else {
       throw Exception("Unknown form used to create wallet");
     }

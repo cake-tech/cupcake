@@ -55,23 +55,26 @@ class CreateWallet extends AbstractView {
       );
     }
     if (viewModel.currentForm == null) {
-      return ListView.builder(
-        itemCount: viewModel.createMethods.keys.length,
-        itemBuilder: (BuildContext context, int index) {
-          final key = viewModel.createMethods.keys.elementAt(index);
-          final value = viewModel.createMethods[key];
-          return InkWell(
-            onTap: () {
-              viewModel.currentForm = value;
-              markNeedsBuild(context);
-            },
-            child: Card(
-              child: ListTile(
-                title: Text(key),
+      return SizedBox(
+        height: double.maxFinite,
+        child: ListView.builder(
+          itemCount: viewModel.createMethods.keys.length,
+          itemBuilder: (BuildContext context, int index) {
+            final key = viewModel.createMethods.keys.elementAt(index);
+            final value = viewModel.createMethods[key];
+            return InkWell(
+              onTap: () {
+                viewModel.currentForm = value;
+                markNeedsBuild(context);
+              },
+              child: Card(
+                child: ListTile(
+                  title: Text(key),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       );
     }
     formBuilder = FormBuilder(

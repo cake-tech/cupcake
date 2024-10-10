@@ -56,6 +56,10 @@ class HomeScreen extends AbstractView {
           },
           child: Card(
             child: ListTile(
+              leading: SizedBox(
+                width: 32,
+                child: wallets.data![index].coin.strings.svg,
+              ),
               title: Text(
                 p.basename(wallets.data![index].walletName),
               ),

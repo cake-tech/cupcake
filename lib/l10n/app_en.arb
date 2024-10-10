@@ -55,7 +55,13 @@
   "wallet_seed": "Wallet seed",
   "wallet_passphrase": "Wallet passphrase",
   "secret_spend_key": "Secret spend key",
-  "secret_view_key": "Secret View Key",
+  "spend_key": "Spend key",
+  "secret_view_key": "Secret view key",
+  "view_key": "View Key",
   "restore_height": "Restore height",
-  "seed_offset": "Seed offset"
+  "seed_offset": "Seed offset",
+  "view_only_restore_qr": "View only restore qr",
+  "seed_screen_wallet_seed_polyseed": "Wallet seed (Polyseed)",
+  "seed_screen_wallet_seed_polyseed_encrypted": "Wallet seed (Polyseed [Encrypted])",
+  "seed_screen_wallet_seed_legacy": "Wallet seed (Legacy)"
 }

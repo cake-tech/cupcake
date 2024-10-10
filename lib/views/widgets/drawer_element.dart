@@ -1,5 +1,6 @@
 import 'package:cup_cake/coins/abstract.dart';
 import 'package:cup_cake/coins/monero/wallet.dart';
+import 'package:cup_cake/l10n/app_localizations.dart';
 import 'package:cup_cake/utils/call_throwable.dart';
 import 'package:cup_cake/views/home_screen.dart';
 import 'package:cup_cake/views/security_backup.dart';
@@ -55,10 +56,6 @@ class DrawerElements extends StatelessWidget {
     HomeScreen.staticPush(context, openLastWallet: false);
   }
 
-  Future<void> _addressBook(BuildContext context) async {
-    throw UnimplementedError("Address book is not implemented");
-  }
-
   Future<void> _securityBackup(BuildContext context) async {
     SecurityBackup.staticPush(context, coinWallet);
   }
@@ -76,35 +73,30 @@ class DrawerElements extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final L = AppLocalizations.of(context)!;
     return Column(
       children: [
         DrawerElement(
           svg: Assets.drawerIcons.wallets.svg(),
-          text: "Wallets",
+          text: L.wallets,
           action: _walletList,
         ),
         const Divider(),
         DrawerElement(
-          svg: Assets.drawerIcons.addressBook.svg(),
-          text: "Address book",
-          action: _addressBook,
-        ),
-        const Divider(),
-        DrawerElement(
           svg: Assets.drawerIcons.securityAndBackup.svg(),
-          text: "Security and backup",
+          text: L.security_and_backup,
           action: _securityBackup,
         ),
         const Divider(),
         DrawerElement(
           svg: Assets.drawerIcons.exportKeyImages.svg(),
-          text: "Export key images",
+          text: L.export_key_images,
           action: _exportKeyImages,
         ),
         const Divider(),
         DrawerElement(
           svg: Assets.drawerIcons.otherSettings.svg(),
-          text: "Other settings",
+          text: L.other_settings,
           action: _otherSettings,
         ),
         const Divider(),

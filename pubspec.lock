@@ -350,6 +350,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  hashlib:
+    dependency: transitive
+    description:
+      name: hashlib
+      sha256: f572f2abce09fc7aee53f15927052b9732ea1053e540af8cae211111ee0b99b1
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.21.0"
+  hashlib_codecs:
+    dependency: transitive
+    description:
+      name: hashlib_codecs
+      sha256: "8cea9ccafcfeaa7324d2ae52c61c69f7ff71f4237507a018caab31b9e416e3b1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.0"
   http:
     dependency: transitive
     description:
@@ -599,6 +615,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      sha256: "4be0097fcf3fd3e8449e53730c631200ebc7b88016acecab2b0da2f0149222fe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.9.1"
+  polyseed:
+    dependency: "direct main"
+    description:
+      name: polyseed
+      sha256: "11d4dbee409db053c5e9cd77382b2f5115f43fc2529158a826a96f3ba505d770"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
   pool:
     dependency: transitive
     description:
@@ -764,6 +796,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
+  unorm_dart:
+    dependency: transitive
+    description:
+      name: unorm_dart
+      sha256: "23d8bf65605401a6a32cff99435fed66ef3dab3ddcad3454059165df46496a3b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   url_launcher_linux:
     dependency: transitive
     description:
