@@ -57,6 +57,8 @@ dependencies:
   vector_graphics: any
   flutter_gen: any
   polyseed: ^0.0.6
+  flutter_secure_storage: ^9.2.2
+  crypto: ^3.0.3
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +73,8 @@ dev_dependencies:
   flutter_asset_generator: 1.2.0
   build_runner: ^2.4.9
   flutter_gen_runner: ^5.8.0
+  integration_test:
+    sdk: flutter
 analyzer:
   exclude:
     - lib/l10n/*.dart

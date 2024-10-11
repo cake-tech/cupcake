@@ -75,8 +75,8 @@ jobs:
             - name: Flutter pub get
               run: |
                 flutter pub get
-            - name: Format
-              run: ./format.sh
+            - name: Prepare dev
+              run: ./.tooling/prepare_dev.sh
             - name: Build monero_c
               run: |
                 make libs_android_build_ci

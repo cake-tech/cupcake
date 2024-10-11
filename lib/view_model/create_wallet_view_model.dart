@@ -1,7 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:cup_cake/coins/abstract.dart';
 import 'package:cup_cake/coins/list.dart';
 import 'package:cup_cake/utils/config.dart';
 import 'package:cup_cake/utils/null_if_empty.dart';
+import 'package:cup_cake/utils/secure_storage.dart';
 import 'package:cup_cake/view_model/abstract.dart';
 import 'package:cup_cake/view_model/new_wallet_info_view_model.dart';
 import 'package:cup_cake/views/new_wallet_info.dart';
@@ -70,6 +75,10 @@ class CreateWalletViewModel extends ViewModel {
 
   late PinFormElement walletPassword = PinFormElement(
     password: true,
+    valueOutcome: FlutterSecureStorageValueOutcome(
+      "secure.wallet_password",
+      canWrite: true,
+    ),
     validator: (String? input) {
       if (input == null) return L.warning_input_cannot_be_null;
       if (input == "") return L.warning_input_cannot_be_empty;
@@ -187,15 +196,15 @@ class CreateWalletViewModel extends ViewModel {
     if (selectedCoin == null) throw Exception("selectedCoin is null");
     print(currentForm == _createForm);
     final cw = await selectedCoin!.createNewWallet(
-      walletName.value,
-      walletPassword.value,
-      primaryAddress: nullIfEmpty(walletAddress.value),
+      await walletName.value,
+      await walletPassword.value,
+      primaryAddress: nullIfEmpty(await walletAddress.value),
       createWallet: (currentForm == _createForm),
-      seed: nullIfEmpty(seed.value),
-      restoreHeight: int.tryParse(restoreHeight.value),
-      viewKey: nullIfEmpty(secretViewKey.value),
-      spendKey: nullIfEmpty(secretSpendKey.value),
-      seedOffsetOrEncryption: nullIfEmpty(seedOffset.value),
+      seed: nullIfEmpty(await seed.value),
+      restoreHeight: int.tryParse(await restoreHeight.value),
+      viewKey: nullIfEmpty(await secretViewKey.value),
+      spendKey: nullIfEmpty(await secretSpendKey.value),
+      seedOffsetOrEncryption: nullIfEmpty(await seedOffset.value),
     );
 
     final List<NewWalletInfoPage> pages = [
@@ -225,7 +234,7 @@ class CreateWalletViewModel extends ViewModel {
       ),
       NewWalletInfoPage(
         topText: L.seed,
-        topAction: seedOffset.value.isNotEmpty
+        topAction: seedOffset.ctrl.text.isNotEmpty
             ? null
             : () {
                 config.initialSetupComplete = true;
@@ -271,7 +280,7 @@ class CreateWalletViewModel extends ViewModel {
           ),
         ],
       ),
-      if (seedOffset.value.isNotEmpty)
+      if (seedOffset.ctrl.text.isNotEmpty)
         NewWalletInfoPage(
           topText: L.wallet_passphrase,
           topAction: () {
@@ -349,14 +358,55 @@ class StringFormElement extends FormElement {
   @override
   String label;
   @override
-  String get value => ctrl.text;
+  Future<String> get value => Future.value(ctrl.text);
 
   bool isExtra;
 
   @override
-  bool get isOk => validator(value) == null;
+  bool get isOk => validator(ctrl.text) == null;
 
   String? Function(String? input) validator;
+}
+
+abstract class ValueOutcome {
+  Future<void> encode(String input);
+  Future<String> decode(String output);
+}
+
+class PlainValueOutcome implements ValueOutcome {
+  @override
+  Future<String> decode(String output) => Future.value(output);
+
+  @override
+  Future<void> encode(String input) => Future.value();
+}
+
+class FlutterSecureStorageValueOutcome implements ValueOutcome {
+  FlutterSecureStorageValueOutcome(this.key, {required this.canWrite});
+
+  final String key;
+  final bool canWrite;
+
+  @override
+  Future<void> encode(String input) async {
+    if (!canWrite) {
+      throw Exception("canWrite is false but we tried to flush the value");
+    }
+    var random = Random.secure();
+    var values = List<int>.generate(32, (i) => random.nextInt(256));
+    final pass = base64Url.encode(values) + input;
+    await secureStorage.write(key: key, value: pass);
+    return;
+  }
+
+  @override
+  Future<String> decode(String output) async {
+    final input = await secureStorage.read(key: key);
+    if (input == null) {
+      throw Exception("no secure storage $key found");
+    }
+    return input;
+  }
 }
 
 class PinFormElement extends FormElement {
@@ -364,20 +414,27 @@ class PinFormElement extends FormElement {
     String initialText = "",
     this.password = false,
     this.validator = _defaultValidator,
+    required this.valueOutcome,
     this.onChanged,
     this.onConfirm,
   }) : ctrl = TextEditingController(text: initialText);
 
   TextEditingController ctrl;
   bool password;
-  @override
-  String get value => ctrl.text;
+
+  ValueOutcome valueOutcome;
 
   @override
-  bool get isOk => validator(value) == null;
+  Future<String> get value async => await valueOutcome.decode(ctrl.text);
+
+  @override
+  bool get isOk => validator(ctrl.text) == null;
 
   Future<void> Function(BuildContext context)? onChanged;
   Future<void> Function(BuildContext context)? onConfirm;
+  Future<void> onConfirmInternal(BuildContext context) async {
+    await valueOutcome.encode(ctrl.text);
+  }
 
   String? Function(String? input) validator;
 }
@@ -390,7 +447,8 @@ class SingleChoiceFormElement extends FormElement {
   int currentSelection = 0;
 
   @override
-  String get value => elements[currentSelection];
+  Future<String> get value => Future.value(valueSync);
+  String get valueSync => elements[currentSelection];
 
   @override
   bool get isOk => true;
@@ -399,5 +457,5 @@ class SingleChoiceFormElement extends FormElement {
 class FormElement {
   bool get isOk => true;
   String get label => throw UnimplementedError();
-  dynamic get value => throw UnimplementedError();
+  Future<String> get value => throw UnimplementedError();
 }

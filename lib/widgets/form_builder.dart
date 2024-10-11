@@ -1,4 +1,5 @@
 import 'package:cup_cake/utils/alert.dart';
+import 'package:cup_cake/utils/call_throwable.dart';
 import 'package:cup_cake/view_model/create_wallet_view_model.dart';
 import 'package:cup_cake/views/initial_setup_screen.dart';
 import 'package:cup_cake/views/widgets/numerical_keyboard/main.dart';
@@ -64,8 +65,12 @@ class _FormBuilderState extends State<FormBuilder> {
               ctrl: e.ctrl,
               rebuild: _rebuild,
               showConfirm: () => e.isOk,
-              nextPage: () {
+              nextPage: () async {
                 _pinSet();
+                callThrowable(
+                    context,
+                    () async => await e.onConfirmInternal(context),
+                    "Secure storage communication");
                 e.onConfirm?.call(context);
               },
               showComma: false,
@@ -110,7 +115,7 @@ class _FormBuilderState extends State<FormBuilder> {
           return Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: LongPrimaryButton(
-              text: e.value,
+              text: e.valueSync,
               icon: null,
               onPressed: () => _changeSingleChoice(context, e),
               padding: EdgeInsets.zero,

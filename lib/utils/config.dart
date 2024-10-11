@@ -10,14 +10,17 @@ class CupcakeConfig {
   CupcakeConfig({
     required this.lastWallet,
     required this.initialSetupComplete,
+    required this.walletMigrationLevel,
   });
   CoinWalletInfo? lastWallet;
   bool initialSetupComplete;
+  int walletMigrationLevel;
 
   factory CupcakeConfig.fromJson(Map<String, dynamic> json) {
     return CupcakeConfig(
       lastWallet: CoinWalletInfo.fromJson(json['lastWallet']),
       initialSetupComplete: json['initialSetupComplete'] ?? false,
+      walletMigrationLevel: json['walletMigrationLevel'] ?? 0,
     );
   }
 
@@ -25,6 +28,7 @@ class CupcakeConfig {
     return {
       'lastWallet': lastWallet,
       'initialSetupComplete': initialSetupComplete,
+      'walletMigrationLevel': walletMigrationLevel,
     };
   }
 
@@ -44,7 +48,8 @@ final config = (() {
   } catch (e) {
     if (kDebugMode) {
       print("failed getting wallet config: $e");
+      print("don't worry tho - I'll create config with defaults");
     }
-    return CupcakeConfig(lastWallet: null, initialSetupComplete: false);
+    return CupcakeConfig.fromJson({});
   }
 })();

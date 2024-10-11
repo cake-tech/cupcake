@@ -15,6 +15,10 @@ class OpenWalletViewModel extends ViewModel {
 
   late PinFormElement walletPassword = PinFormElement(
       password: true,
+      valueOutcome: FlutterSecureStorageValueOutcome(
+        "secure.wallet_password",
+        canWrite: false,
+      ),
       validator: (String? input) {
         if (input == null) return L.warning_input_cannot_be_null;
         if (input == "") return L.warning_input_cannot_be_empty;
@@ -37,13 +41,13 @@ class OpenWalletViewModel extends ViewModel {
   Future<void> _openWallet(BuildContext context) async {
     final coin = await coinInfo.openWallet(
       context,
-      password: walletPassword.value,
+      password: await walletPassword.value,
     );
     WalletHome.pushStatic(context, coin);
   }
 
-  Future<bool> checkWalletPassword() {
-    return coinInfo.checkWalletPassword(walletPassword.value);
+  Future<bool> checkWalletPassword() async {
+    return coinInfo.checkWalletPassword(await walletPassword.value);
   }
 
   Future<void> openWalletIfPasswordCorrect(BuildContext context) async {

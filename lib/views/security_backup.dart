@@ -28,30 +28,35 @@ class SecurityBackup extends AbstractView {
   @override
   Widget? body(BuildContext context) {
     final details = viewModel.wallet.seedDetails(L);
-    return ListView.builder(
-      itemCount: details.length,
-      itemBuilder: (BuildContext context, int index) {
-        final d = details[index];
-        switch (d.type) {
-          case WalletSeedDetailType.text:
-            return ListTile(
-              title: Text(d.name),
-              subtitle: SelectableText(
-                d.value,
-                style: const TextStyle(color: Colors.white),
-              ),
-            );
-          case WalletSeedDetailType.qr:
-            return LongPrimaryButton(
-              text: d.name,
-              icon: null,
-              onPressed: () async {
-                await _showQrCode(context, d);
-              },
-            );
-        }
-      },
-    );
+    return FutureBuilder(
+        future: details,
+        builder: (BuildContext context, snapshot) {
+          if (!snapshot.hasData) return Text(snapshot.error.toString());
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (BuildContext context, int index) {
+              final d = snapshot.data![index];
+              switch (d.type) {
+                case WalletSeedDetailType.text:
+                  return ListTile(
+                    title: Text(d.name),
+                    subtitle: SelectableText(
+                      d.value,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  );
+                case WalletSeedDetailType.qr:
+                  return LongPrimaryButton(
+                    text: d.name,
+                    icon: null,
+                    onPressed: () async {
+                      await _showQrCode(context, d);
+                    },
+                  );
+              }
+            },
+          );
+        });
   }
 
   Future<void> _showQrCode(BuildContext context, WalletSeedDetail d) async {

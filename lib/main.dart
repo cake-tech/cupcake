@@ -2,17 +2,28 @@ import 'package:cup_cake/l10n/app_localizations.dart';
 import 'package:cup_cake/themes/base_theme.dart';
 import 'package:cup_cake/utils/config.dart';
 import 'package:cup_cake/utils/filesystem.dart';
+import 'package:cup_cake/utils/get_signing_key.dart';
 import 'package:cup_cake/view_model/home_screen_view_model.dart';
 import 'package:cup_cake/views/home_screen.dart';
 import 'package:cup_cake/views/initial_setup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() async {
+const String signingKeyExpected = "Please Fill Me On Release :)";
+late String signingKeyFound = "";
+
+Future<void> appInit() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  try {
+    signingKeyFound = await getSigningKey() ?? "unknown";
+  } catch (e) {
+    signingKeyFound = e.toString();
+  }
   await initializeBaseStoragePath();
+}
 
+Future<void> main() async {
+  await appInit();
   runApp(const MyApp());
 }
 
@@ -36,11 +47,43 @@ class MyApp extends StatelessWidget {
         Locale('en'), // English
         Locale('pl'), // Polish
       ],
+      builder: (BuildContext context, Widget? child) {
+        return Stack(
+          alignment: AlignmentDirectional.bottomStart,
+          children: [
+            child ?? Text("null"),
+            _getInfoWidget(),
+          ],
+        );
+      },
       home: config.initialSetupComplete
           ? HomeScreen(
               viewModel: HomeScreenViewModel(openLastWallet: true),
             )
           : InitialSetupScreen(),
+    );
+  }
+
+  Widget _getInfoWidget() {
+    String notice = "";
+    if (signingKeyFound != signingKeyExpected) {
+      notice += "\ninvalid signing key";
+    }
+    return Material(
+      color: Colors.transparent,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            notice.trim(),
+            style: TextStyle(
+              color: Colors.red,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

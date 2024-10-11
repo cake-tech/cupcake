@@ -4,12 +4,14 @@ import 'package:cup_cake/coins/abstract.dart';
 import 'package:cup_cake/coins/monero/coin.dart';
 import 'package:cup_cake/l10n/app_localizations.dart';
 import 'package:cup_cake/utils/null_if_empty.dart';
+import 'package:cup_cake/utils/secure_storage.dart';
 import 'package:cup_cake/view_model/barcode_scanner_view_model.dart';
 import 'package:cup_cake/view_model/unconfirmed_transaction_view_model.dart';
 import 'package:cup_cake/view_model/urqr_view_model.dart';
 import 'package:cup_cake/views/unconfirmed_transaction.dart';
 import 'package:cup_cake/views/urqr.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:monero/monero.dart' as monero;
 import 'package:polyseed/polyseed.dart';
@@ -217,7 +219,8 @@ class MoneroWallet implements CoinWallet {
       );
 
   @override
-  List<WalletSeedDetail> seedDetails(AppLocalizations L) {
+  Future<List<WalletSeedDetail>> seedDetails(AppLocalizations L) async {
+    final secrets = await secureStorage.readAll();
     return [
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
@@ -278,6 +281,14 @@ class MoneroWallet implements CoinWallet {
           "restoreHeight": monero.Wallet_getRefreshFromBlockHeight(wptr),
         }),
       ),
+      if (kDebugMode)
+        ...List.generate(secrets.keys.length, (index) {
+          final key = secrets.keys.elementAt(index);
+          return WalletSeedDetail(
+              type: WalletSeedDetailType.text,
+              name: key,
+              value: secrets[key] ?? "unknown");
+        }),
     ];
   }
 }

@@ -134,6 +134,6 @@ class CoinWallet {
   String getBalanceString() => throw UnimplementedError();
   Future<void> close() => throw UnimplementedError();
 
-  List<WalletSeedDetail> seedDetails(AppLocalizations L) =>
+  Future<List<WalletSeedDetail>> seedDetails(AppLocalizations L) =>
       throw UnimplementedError();
 }
