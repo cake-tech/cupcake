@@ -389,11 +389,16 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
 
   @override
   Future<void> encode(String input) async {
+    final input_ = await secureStorage.read(key: key);
+    // Do not update secret if it is already set.
+    if (input_ != null) {
+      return;
+    }
     if (!canWrite) {
       throw Exception("canWrite is false but we tried to flush the value");
     }
     var random = Random.secure();
-    var values = List<int>.generate(32, (i) => random.nextInt(256));
+    var values = List<int>.generate(64, (i) => random.nextInt(256));
     final pass = base64Url.encode(values) + input;
     await secureStorage.write(key: key, value: pass);
     return;
