@@ -18,6 +18,7 @@ class OpenWalletViewModel extends ViewModel {
       valueOutcome: FlutterSecureStorageValueOutcome(
         "secure.wallet_password",
         canWrite: false,
+        verifyMatching: true,
       ),
       validator: (String? input) {
         if (input == null) return L.warning_input_cannot_be_null;

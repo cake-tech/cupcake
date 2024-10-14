@@ -12,6 +12,7 @@ import 'package:cup_cake/view_model/new_wallet_info_view_model.dart';
 import 'package:cup_cake/views/new_wallet_info.dart';
 import 'package:cup_cake/gen/assets.gen.dart';
 import 'package:cup_cake/views/wallet_home.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
@@ -78,6 +79,7 @@ class CreateWalletViewModel extends ViewModel {
     valueOutcome: FlutterSecureStorageValueOutcome(
       "secure.wallet_password",
       canWrite: true,
+      verifyMatching: false,
     ),
     validator: (String? input) {
       if (input == null) return L.warning_input_cannot_be_null;
@@ -382,35 +384,58 @@ class PlainValueOutcome implements ValueOutcome {
 }
 
 class FlutterSecureStorageValueOutcome implements ValueOutcome {
-  FlutterSecureStorageValueOutcome(this.key, {required this.canWrite});
+  FlutterSecureStorageValueOutcome(this.key,
+      {required this.canWrite, required this.verifyMatching});
 
   final String key;
   final bool canWrite;
+  final bool verifyMatching;
 
   @override
   Future<void> encode(String input) async {
+    var valInput =
+        await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
+    if (valInput == null) {
+      await secureStorage.write(
+          key: "FlutterSecureStorageValueOutcome._$key", value: input);
+      valInput = await secureStorage.read(
+          key: "FlutterSecureStorageValueOutcome._$key");
+    }
+    if (input != valInput) {
+      throw Exception("Input doesn't match the secure element value");
+    }
+
     final input_ = await secureStorage.read(key: key);
     // Do not update secret if it is already set.
     if (input_ != null) {
       return;
     }
     if (!canWrite) {
-      throw Exception("canWrite is false but we tried to flush the value");
+      if (kDebugMode) {
+        throw Exception(
+            "DEBUG_ONLY: canWrite is false but we tried to flush the value");
+      }
+      return;
     }
     var random = Random.secure();
     var values = List<int>.generate(64, (i) => random.nextInt(256));
-    final pass = base64Url.encode(values) + input;
+    final pass = base64Url.encode(values);
     await secureStorage.write(key: key, value: pass);
     return;
   }
 
   @override
   Future<String> decode(String output) async {
+    var valInput =
+        await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
+    if (output != valInput) {
+      throw Exception("Input doesn't match the secure element value");
+    }
     final input = await secureStorage.read(key: key);
     if (input == null) {
       throw Exception("no secure storage $key found");
     }
-    return input;
+    return "$input/$output";
   }
 }
 

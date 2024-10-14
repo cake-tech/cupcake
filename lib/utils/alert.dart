@@ -66,3 +66,30 @@ Future<void> showAlertWidget({
     },
   );
 }
+
+Future<void> showAlertWidgetMinimal({
+  required BuildContext context,
+  required List<Widget> body,
+}) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return Material(
+        color: Colors.transparent,
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          const Spacer(),
+          // TODO: Make this look good
+          Container(
+            color: Colors.transparent,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: body,
+            ),
+          ),
+          const Spacer(),
+        ]),
+      );
+    },
+  );
+}

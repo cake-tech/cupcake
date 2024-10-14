@@ -66,11 +66,10 @@ class _FormBuilderState extends State<FormBuilder> {
               rebuild: _rebuild,
               showConfirm: () => e.isOk,
               nextPage: () async {
-                _pinSet();
-                callThrowable(
-                    context,
-                    () async => await e.onConfirmInternal(context),
-                    "Secure storage communication");
+                callThrowable(context, () async {
+                  await e.onConfirmInternal(context);
+                  _pinSet();
+                }, "Secure storage communication");
                 e.onConfirm?.call(context);
               },
               showComma: false,
@@ -129,9 +128,8 @@ class _FormBuilderState extends State<FormBuilder> {
 
   Future<void> _changeSingleChoice(
       BuildContext context, SingleChoiceFormElement e) async {
-    showAlertWidget(
+    await showAlertWidgetMinimal(
       context: context,
-      title: e.title,
       body: List.generate(
         e.elements.length,
         (index) {
