@@ -24,7 +24,7 @@ jobs:
         run: |
           flutter pub get
       - name: Format
-        run: ./format.sh
+        run: ./.tooling/format.sh
       - name: check if git tree is clean
         run: |
           if [ -z "$(git status --porcelain)" ]; then 
