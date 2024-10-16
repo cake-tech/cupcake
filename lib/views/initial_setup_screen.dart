@@ -14,39 +14,56 @@ class InitialSetupScreen extends AbstractView {
   InitialSetupScreen({super.key});
   @override
   Widget? body(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16),
-            child: Assets.cakeLanding.lottie()),
-        Text(L.welcome_to),
-        const SizedBox(height: 8),
-        Text(
-          "Cupcake",
-          style: Theme.of(context).textTheme.displaySmall,
-        ),
-        const SizedBox(height: 8),
-        Text(L.cupcake_slogan),
-        const Spacer(),
-        const SizedBox(height: 8),
-        LongSecondaryButton(
-          text: L.create_new_wallet,
-          icon: Icons.add,
-          onPressed: () => CreateWallet.staticPush(
-            context,
-            CreateWalletViewModel(createMethod: CreateMethod.create),
-          ),
-        ),
-        LongPrimaryButton(
-          text: L.restore_wallet,
-          icon: Icons.restore,
-          onPressed: () => CreateWallet.staticPush(
-            context,
-            CreateWalletViewModel(createMethod: CreateMethod.restore),
-          ),
-        ),
-      ],
-    );
+    return SafeArea(
+        minimum: const EdgeInsets.only(bottom: 16),
+        child: Column(
+          children: [
+            Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 64.0, vertical: 24),
+                child: Assets.cakeLanding.lottie()),
+            Text(L.welcome_to,
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    )),
+            const SizedBox(height: 8),
+            Text(
+              "Cupcake",
+              style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            //style: Theme.of(context).textTheme.displaySmall,
+            const SizedBox(height: 8),
+            Text(
+              L.cupcake_slogan,
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+            ),
+            const Spacer(),
+            const SizedBox(height: 8),
+            LongSecondaryButton(
+              text: L.create_new_wallet,
+              icon: Icons.add,
+              onPressed: () => CreateWallet.staticPush(
+                context,
+                CreateWalletViewModel(createMethod: CreateMethod.create),
+              ),
+            ),
+            LongPrimaryButton(
+              text: L.restore_wallet,
+              icon: Icons.restore,
+              onPressed: () => CreateWallet.staticPush(
+                context,
+                CreateWalletViewModel(createMethod: CreateMethod.restore),
+              ),
+            ),
+          ],
+        ));
   }
 }
 

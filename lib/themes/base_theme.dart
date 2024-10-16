@@ -13,10 +13,7 @@ final darkBaseTheme = ThemeData.dark(useMaterial3: true).copyWith(
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
         backgroundColor: onOnBackgroundColor,
-        side: const BorderSide(
-          width: 1,
-          color: buttonBorderColor,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         textStyle: const TextStyle(
           color: Colors.white,
         )),

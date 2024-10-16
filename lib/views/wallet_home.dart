@@ -5,7 +5,6 @@ import 'package:cup_cake/views/barcode_scanner.dart';
 import 'package:cup_cake/views/receive.dart';
 import 'package:cup_cake/views/widgets/cake_card.dart';
 import 'package:cup_cake/views/widgets/drawer_element.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cup_cake/gen/assets.gen.dart';
 
@@ -16,7 +15,7 @@ class WalletHome extends AbstractView {
 
   static Future<void> pushStatic(BuildContext context, CoinWallet coin) async {
     await Navigator.of(context).pushReplacement(
-      CupertinoPageRoute(
+      MaterialPageRoute(
         builder: (BuildContext context) {
           return WalletHome(coinWallet: coin);
         },
@@ -70,20 +69,26 @@ class WalletHome extends AbstractView {
   Widget? body(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 56),
+        const SizedBox(height: 40),
         CakeCard(
             child: Row(
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(L.balance),
+                Text(
+                  L.balance,
+                  style: Theme.of(context)
+                      .textTheme
+                      .displaySmall!
+                      .copyWith(fontSize: 12, fontWeight: FontWeight.w400),
+                ),
                 Text(
                   viewModel.balance,
                   style: Theme.of(context)
                       .textTheme
                       .displaySmall!
-                      .copyWith(fontSize: 32),
+                      .copyWith(fontSize: 24, fontWeight: FontWeight.w900),
                 ),
               ],
             ),
@@ -95,7 +100,7 @@ class WalletHome extends AbstractView {
           ],
         )),
         CakeCard(
-          firmPadding: const EdgeInsets.all(8),
+          firmPadding: const EdgeInsets.all(12),
           child: Row(
             children: [
               Expanded(
@@ -108,7 +113,7 @@ class WalletHome extends AbstractView {
                         const Icon(Icons.inbox, size: 35, color: Colors.white),
                     label: Text(
                       L.receive,
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                      style: const TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),
                 ),
@@ -121,13 +126,13 @@ class WalletHome extends AbstractView {
                     onPressed: () =>
                         BarcodeScanner.pushStatic(context, viewModel.wallet),
                     icon: const Icon(
-                      Icons.qr_code_2,
+                      Icons.qr_code_rounded,
                       size: 35,
                       color: Colors.white,
                     ),
                     label: Text(
                       L.scan,
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                      style: const TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),
                 ),

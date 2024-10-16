@@ -11,9 +11,9 @@ class CakeCard extends StatelessWidget {
         right: 24,
       ),
       this.externalPadding = const EdgeInsets.only(
-        top: 8,
+        top: 4,
         left: 16.0,
-        bottom: 8,
+        bottom: 4,
         right: 16,
       ),
       this.firmPadding =
@@ -31,7 +31,7 @@ class CakeCard extends StatelessWidget {
         width: double.maxFinite,
         child: Card(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(32.0),
+            borderRadius: BorderRadius.circular(30.0),
           ),
           child: Padding(
             padding: firmPadding,
