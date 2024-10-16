@@ -81,6 +81,9 @@ class CoinWalletInfo {
         throw UnimplementedError("unknown coin");
     }
   }
+
+  Future<void> deleteWallet() => throw UnimplementedError();
+  Future<void> renameWallet(String newName) => throw UnimplementedError();
 }
 
 class CoinStrings {

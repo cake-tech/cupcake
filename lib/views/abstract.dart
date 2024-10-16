@@ -77,14 +77,12 @@ class AbstractView extends StatefulWidget {
       onPopInvoked: (bool pop) {
         print(pop);
       },
-      child: SafeArea(
-        child: Scaffold(
-          appBar: appBar,
-          body: body(context),
-          endDrawer: drawer,
-          floatingActionButton: floatingActionButton(context),
-          bottomNavigationBar: bottomNavigationBar(context),
-        ),
+      child: Scaffold(
+        appBar: appBar,
+        body: body(context),
+        endDrawer: drawer,
+        floatingActionButton: floatingActionButton(context),
+        bottomNavigationBar: bottomNavigationBar(context),
       ),
     );
   }

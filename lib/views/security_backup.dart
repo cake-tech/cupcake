@@ -68,6 +68,7 @@ class SecurityBackup extends AbstractView {
           dimension: 300,
           child: QrImageView(
             data: d.value,
+            backgroundColor: Colors.black,
             foregroundColor: Colors.white,
           ),
         ),

@@ -1,9 +1,12 @@
 import 'package:cup_cake/coins/abstract.dart';
+import 'package:cup_cake/utils/call_throwable.dart';
 import 'package:cup_cake/utils/config.dart';
 import 'package:cup_cake/view_model/create_wallet_view_model.dart';
 import 'package:cup_cake/view_model/home_screen_view_model.dart';
 import 'package:cup_cake/views/abstract.dart';
 import 'package:cup_cake/views/create_wallet.dart';
+import 'package:cup_cake/views/initial_setup_screen.dart';
+import 'package:cup_cake/views/wallet_edit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
@@ -50,19 +53,27 @@ class HomeScreen extends AbstractView {
     return ListView.builder(
       itemCount: wallets.data!.length,
       itemBuilder: (BuildContext context, int index) {
-        return InkWell(
-          onTap: () {
-            wallets.data![index].openUI(context);
-          },
-          child: Card(
-            child: ListTile(
-              leading: SizedBox(
-                width: 32,
-                child: wallets.data![index].coin.strings.svg,
-              ),
-              title: Text(
-                p.basename(wallets.data![index].walletName),
-              ),
+        return Card(
+          child: ListTile(
+            onTap: () {
+              wallets.data![index].openUI(context);
+            },
+            leading: SizedBox(
+              width: 32,
+              child: wallets.data![index].coin.strings.svg,
+            ),
+            trailing: IconButton(
+              icon: const Icon(Icons.edit_rounded),
+              onPressed: () {
+                callThrowable(
+                  context,
+                  () => renameWallet(context, wallets.data![index]),
+                  "Renaming wallet",
+                );
+              },
+            ),
+            title: Text(
+              p.basename(wallets.data![index].walletName),
             ),
           ),
         );
@@ -70,20 +81,43 @@ class HomeScreen extends AbstractView {
     );
   }
 
+  Future<void> renameWallet(
+      BuildContext context, CoinWalletInfo walletInfo) async {
+    canPop = false; // don't allow user to go back to previous wallet
+    await viewModel.markNeedsBuild();
+    if (!context.mounted) return;
+    await WalletEdit.staticPush(context, walletInfo);
+    await viewModel.markNeedsBuild();
+  }
+
+  Future<void> createWallet(BuildContext context, CreateMethod method) async {
+    await CreateWallet.staticPush(
+      context,
+      CreateWalletViewModel(
+        createMethod: method,
+      ),
+    );
+    if (!context.mounted) return;
+    markNeedsBuild(context);
+  }
+
   @override
-  Widget? floatingActionButton(BuildContext context) {
-    return FloatingActionButton(
-      child: const Icon(Icons.add),
-      onPressed: () async {
-        await CreateWallet.staticPush(
-          context,
-          CreateWalletViewModel(
-            createMethod: CreateMethod.any,
-          ),
-        );
-        if (!context.mounted) return;
-        markNeedsBuild(context);
-      },
+  Widget? bottomNavigationBar(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        LongPrimaryButton(
+          icon: Icons.add,
+          onPressed: () => createWallet(context, CreateMethod.create),
+          text: L.create_new_wallet,
+        ),
+        LongSecondaryButton(
+          icon: Icons.restore,
+          onPressed: () => createWallet(context, CreateMethod.restore),
+          text: L.restore_wallet,
+        ),
+        const SizedBox(height: 16),
+      ],
     );
   }
 

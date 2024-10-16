@@ -13,6 +13,8 @@ import 'package:path/path.dart' as p;
 import 'package:cup_cake/gen/assets.gen.dart';
 import 'package:polyseed/polyseed.dart';
 
+List<monero.wallet> wPtrList = [];
+
 class Monero implements Coin {
   @override
   bool get isEnabled {
@@ -93,6 +95,7 @@ class Monero implements Coin {
     monero.Wallet_setCacheAttribute(newWptr,
         key: seedOffsetCacheKey, value: seedOffsetOrEncryption);
     monero.Wallet_store(newWptr);
+    wPtrList.add(newWptr);
     print("wallet created in: $walletPath");
     progressCallback?.call(description: "Wallet created");
     await Future.delayed(Duration.zero);
@@ -128,6 +131,7 @@ class Monero implements Coin {
       restoreHeight: 0,
       kdfRounds: 1,
     );
+    wPtrList.add(newWptr);
     progressCallback?.call(description: "Checking status");
     final status = monero.Wallet_status(newWptr);
     if (status != 0) {
@@ -160,6 +164,7 @@ class Monero implements Coin {
       restoreHeight: 0,
       kdfRounds: 1,
     );
+    wPtrList.add(newWptr);
     progressCallback?.call(description: "Checking status");
     final status = monero.Wallet_status(newWptr);
     if (status != 0) {
@@ -362,5 +367,26 @@ class MoneroWalletInfo extends CoinWalletInfo {
       this,
       password: password,
     );
+  }
+
+  @override
+  Future<void> deleteWallet() async {
+    for (var element in wPtrList) {
+      monero.WalletManager_closeWallet(Monero.wmPtr, element, true);
+    }
+    wPtrList.clear();
+    File(walletName).deleteSync();
+    File("$walletName.keys").deleteSync();
+  }
+
+  @override
+  Future<void> renameWallet(String newName) async {
+    for (var element in wPtrList) {
+      monero.WalletManager_closeWallet(Monero.wmPtr, element, true);
+    }
+    wPtrList.clear();
+    final basePath = p.dirname(walletName);
+    File(walletName).rename(p.join(basePath, newName));
+    File("$walletName.keys").rename(p.join(basePath, "$newName.keys"));
   }
 }

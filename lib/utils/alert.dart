@@ -75,20 +75,21 @@ Future<void> showAlertWidgetMinimal({
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
-      return Material(
-        color: Colors.transparent,
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          const Spacer(),
-          // TODO: Make this look good
-          Container(
-            color: Colors.transparent,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: body,
+      return SizedBox(
+        height: 360,
+        child: Material(
+          color: Colors.transparent,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            // TODO: Make this look good
+            Container(
+              color: Colors.transparent,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: body,
+              ),
             ),
-          ),
-          const Spacer(),
-        ]),
+          ]),
+        ),
       );
     },
   );

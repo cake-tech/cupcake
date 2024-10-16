@@ -33,34 +33,36 @@ class WalletHome extends AbstractView {
   @override
   // TODO: implement drawer
   Drawer? get drawer => Drawer(
-        child: Column(
-          children: [
-            const SizedBox(height: 16),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                const SizedBox(width: 16),
-                Assets.coins.xmr.svg(width: 72),
-                const SizedBox(width: 16),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      viewModel.wallet.walletName,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    Text(L.primary_account_label),
-                  ],
-                )
-              ],
-            ),
-            const SizedBox(height: 8),
-            const Divider(),
-            DrawerElements(
-              coinWallet: viewModel.wallet,
-            ),
-          ],
+        child: SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(height: 16),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const SizedBox(width: 16),
+                  Assets.coins.xmr.svg(width: 72),
+                  const SizedBox(width: 16),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        viewModel.wallet.walletName,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      Text(L.primary_account_label),
+                    ],
+                  )
+                ],
+              ),
+              const SizedBox(height: 8),
+              const Divider(),
+              DrawerElements(
+                coinWallet: viewModel.wallet,
+              ),
+            ],
+          ),
         ),
       );
 

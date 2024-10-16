@@ -75,6 +75,7 @@ class CreateWalletViewModel extends ViewModel {
   );
 
   late PinFormElement walletPassword = PinFormElement(
+    label: "Wallet password",
     password: true,
     valueOutcome: FlutterSecureStorageValueOutcome(
       "secure.wallet_password",
@@ -335,10 +336,14 @@ class CreateWalletViewModel extends ViewModel {
     if (!context.mounted) {
       throw Exception("context is not mounted, unable to show next screen");
     }
-    NewWalletInfoScreen.staticPush(
-      context,
-      NewWalletInfoViewModel(pages),
-    );
+    if (currentForm != _createForm) {
+      WalletHome.pushStatic(context, cw);
+    } else {
+      NewWalletInfoScreen.staticPush(
+        context,
+        NewWalletInfoViewModel(pages),
+      );
+    }
   }
 }
 
@@ -401,7 +406,7 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
       valInput = await secureStorage.read(
           key: "FlutterSecureStorageValueOutcome._$key");
     }
-    if (input != valInput) {
+    if (input != valInput && verifyMatching) {
       throw Exception("Input doesn't match the secure element value");
     }
 
@@ -428,7 +433,7 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
   Future<String> decode(String output) async {
     var valInput =
         await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
-    if (output != valInput) {
+    if (output != valInput && verifyMatching) {
       throw Exception("Input doesn't match the secure element value");
     }
     final input = await secureStorage.read(key: key);
@@ -447,10 +452,16 @@ class PinFormElement extends FormElement {
     required this.valueOutcome,
     this.onChanged,
     this.onConfirm,
+    this.showNumboard = true,
+    required this.label,
   }) : ctrl = TextEditingController(text: initialText);
 
   TextEditingController ctrl;
   bool password;
+  bool showNumboard;
+
+  @override
+  String label;
 
   ValueOutcome valueOutcome;
 

@@ -37,7 +37,8 @@ class _FormBuilderState extends State<FormBuilder> {
   @override
   Widget build(BuildContext context) {
     if (widget.formElements.isNotEmpty &&
-        widget.formElements.first is PinFormElement &&
+        (widget.formElements.first is PinFormElement &&
+            (widget.formElements.first as PinFormElement).showNumboard) &&
         !widget.isPinSet) {
       final e = widget.formElements.first as PinFormElement;
       return Column(
@@ -109,7 +110,32 @@ class _FormBuilderState extends State<FormBuilder> {
             ),
           );
         } else if (e is PinFormElement) {
-          return Container();
+          if (e.showNumboard) return Container();
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: TextFormField(
+              controller: e.ctrl,
+              obscureText: true,
+              enableSuggestions: !e.password,
+              autocorrect: !e.password,
+              decoration: InputDecoration(
+                border: null,
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.error,
+                    width: 0.0,
+                  ),
+                ),
+                hintText: e.label,
+              ),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: e.validator,
+              onChanged: (_) {
+                _rebuild();
+              },
+              textAlign: TextAlign.center,
+            ),
+          );
         } else if (e is SingleChoiceFormElement) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 8.0),

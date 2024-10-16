@@ -14,22 +14,24 @@ class OpenWalletViewModel extends ViewModel {
   String get screenName => L.enter_password;
 
   late PinFormElement walletPassword = PinFormElement(
-      password: true,
-      valueOutcome: FlutterSecureStorageValueOutcome(
-        "secure.wallet_password",
-        canWrite: false,
-        verifyMatching: true,
-      ),
-      validator: (String? input) {
-        if (input == null) return L.warning_input_cannot_be_null;
-        if (input == "") return L.warning_input_cannot_be_empty;
-        if (input.length < 4) {
-          return L.warning_password_too_short;
-        }
-        return null;
-      },
-      onChanged: openWalletIfPasswordCorrect,
-      onConfirm: openWallet);
+    label: "Wallet password",
+    password: true,
+    valueOutcome: FlutterSecureStorageValueOutcome(
+      "secure.wallet_password",
+      canWrite: false,
+      verifyMatching: true,
+    ),
+    validator: (String? input) {
+      if (input == null) return L.warning_input_cannot_be_null;
+      if (input == "") return L.warning_input_cannot_be_empty;
+      if (input.length < 4) {
+        return L.warning_password_too_short;
+      }
+      return null;
+    },
+    onChanged: openWalletIfPasswordCorrect,
+    onConfirm: openWallet,
+  );
 
   Future<void> openWallet(BuildContext context) async {
     callThrowable(

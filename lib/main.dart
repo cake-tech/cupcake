@@ -51,8 +51,7 @@ class MyApp extends StatelessWidget {
         return Stack(
           alignment: AlignmentDirectional.bottomStart,
           children: [
-            child ?? Text("null"),
-            _getInfoWidget(),
+            child ?? const Text("null"),
           ],
         );
       },
@@ -61,29 +60,6 @@ class MyApp extends StatelessWidget {
               viewModel: HomeScreenViewModel(openLastWallet: true),
             )
           : InitialSetupScreen(),
-    );
-  }
-
-  Widget _getInfoWidget() {
-    String notice = "";
-    if (signingKeyFound != signingKeyExpected) {
-      notice += "\ninvalid signing key";
-    }
-    return Material(
-      color: Colors.transparent,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            notice.trim(),
-            style: TextStyle(
-              color: Colors.red,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
