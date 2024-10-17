@@ -39,7 +39,9 @@ class SecurityBackup extends AbstractView {
               switch (d.type) {
                 case WalletSeedDetailType.text:
                   return ListTile(
-                    title: Text(d.name),
+                    title: Text(d.name,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: 14, fontWeight: FontWeight.w700)),
                     subtitle: SelectableText(
                       d.value,
                       style: const TextStyle(color: Colors.white),
@@ -48,7 +50,7 @@ class SecurityBackup extends AbstractView {
                 case WalletSeedDetailType.qr:
                   return LongPrimaryButton(
                     text: d.name,
-                    icon: null,
+                    icon: Icons.qr_code_rounded,
                     onPressed: () async {
                       await _showQrCode(context, d);
                     },

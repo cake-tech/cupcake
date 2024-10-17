@@ -22,28 +22,45 @@ class DrawerElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        callThrowable(context, () async => await action(context), text);
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            svg,
-            const SizedBox(width: 8),
-            Text(
-              text,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
+    return Container(
+        //padding: EdgeInsets.only(top: 5, left: 15, bottom: 5),
+        margin: const EdgeInsets.only(top: 5, left: 20, bottom: 5),
+        child: TextButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.black12),
+            shape: MaterialStateProperty.all(
+              const RoundedRectangleBorder(
+                side: BorderSide(
+                    //color: Colors.black12,
+                    width: 100),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  bottomLeft: Radius.circular(20),
+                ),
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+          onPressed: () {
+            callThrowable(context, () async => await action(context), text);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                svg,
+                const SizedBox(width: 8),
+                Text(
+                  text,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
 
@@ -81,25 +98,21 @@ class DrawerElements extends StatelessWidget {
           text: L.wallets,
           action: _walletList,
         ),
-        const Divider(),
         DrawerElement(
           svg: Assets.drawerIcons.securityAndBackup.svg(),
           text: L.security_and_backup,
           action: _securityBackup,
         ),
-        const Divider(),
         DrawerElement(
           svg: Assets.drawerIcons.exportKeyImages.svg(),
           text: L.export_key_images,
           action: _exportKeyImages,
         ),
-        const Divider(),
         DrawerElement(
           svg: Assets.drawerIcons.otherSettings.svg(),
           text: L.other_settings,
           action: _otherSettings,
         ),
-        const Divider(),
       ],
     );
   }

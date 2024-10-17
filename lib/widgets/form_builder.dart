@@ -85,7 +85,8 @@ class _FormBuilderState extends State<FormBuilder> {
         if (e is StringFormElement) {
           if (e.isExtra && !widget.showExtra) return Container();
           return Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
+            padding:
+                const EdgeInsets.only(bottom: 16.0, left: 24.0, right: 24.0),
             child: TextFormField(
               controller: e.ctrl,
               obscureText: e.password,
@@ -112,7 +113,8 @@ class _FormBuilderState extends State<FormBuilder> {
         } else if (e is PinFormElement) {
           if (e.showNumboard) return Container();
           return Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
+            padding:
+                const EdgeInsets.only(bottom: 16.0, left: 24.0, right: 24.0),
             child: TextFormField(
               controller: e.ctrl,
               obscureText: true,

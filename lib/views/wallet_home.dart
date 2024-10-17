@@ -34,13 +34,17 @@ class WalletHome extends AbstractView {
   Drawer? get drawer => Drawer(
         child: SafeArea(
           child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 16),
+              const SizedBox(height: 4),
               Row(
                 mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const Padding(padding: EdgeInsets.only(top: 50, bottom: 24)),
                   const SizedBox(width: 16),
-                  Assets.coins.xmr.svg(width: 72),
+                  Assets.coins.xmr.svg(width: 50),
                   const SizedBox(width: 16),
                   Column(
                     mainAxisSize: MainAxisSize.min,
@@ -48,7 +52,10 @@ class WalletHome extends AbstractView {
                     children: [
                       Text(
                         viewModel.wallet.walletName,
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
                       ),
                       Text(L.primary_account_label),
                     ],
@@ -56,7 +63,6 @@ class WalletHome extends AbstractView {
                 ],
               ),
               const SizedBox(height: 8),
-              const Divider(),
               DrawerElements(
                 coinWallet: viewModel.wallet,
               ),
