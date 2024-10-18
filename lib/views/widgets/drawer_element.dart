@@ -4,6 +4,7 @@ import 'package:cup_cake/l10n/app_localizations.dart';
 import 'package:cup_cake/utils/call_throwable.dart';
 import 'package:cup_cake/views/home_screen.dart';
 import 'package:cup_cake/views/security_backup.dart';
+import 'package:cup_cake/views/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:cup_cake/gen/assets.gen.dart';
@@ -23,7 +24,6 @@ class DrawerElement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        //padding: EdgeInsets.only(top: 5, left: 15, bottom: 5),
         margin: const EdgeInsets.only(top: 5, left: 20, bottom: 5),
         child: TextButton(
           style: ButtonStyle(
@@ -32,7 +32,7 @@ class DrawerElement extends StatelessWidget {
               const RoundedRectangleBorder(
                 side: BorderSide(
                     //color: Colors.black12,
-                    width: 100),
+                    width: 1),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   bottomLeft: Radius.circular(20),
@@ -70,11 +70,11 @@ class DrawerElements extends StatelessWidget {
   final CoinWallet coinWallet;
 
   Future<void> _walletList(BuildContext context) async {
-    HomeScreen.staticPush(context, openLastWallet: false);
+    await HomeScreen.staticPush(context, openLastWallet: false);
   }
 
   Future<void> _securityBackup(BuildContext context) async {
-    SecurityBackup.staticPush(context, coinWallet);
+    await SecurityBackup.staticPush(context, coinWallet);
   }
 
   Future<void> _exportKeyImages(BuildContext context) async {
@@ -85,7 +85,7 @@ class DrawerElements extends StatelessWidget {
   }
 
   Future<void> _otherSettings(BuildContext context) async {
-    throw UnimplementedError("Other settings are not implemented");
+    await SettingsView.staticPush(context);
   }
 
   @override

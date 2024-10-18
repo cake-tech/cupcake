@@ -6,7 +6,6 @@ import 'package:cup_cake/utils/config.dart';
 import 'package:cup_cake/utils/filesystem.dart';
 import 'package:cup_cake/views/open_wallet.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:monero/monero.dart' as monero;
 import 'package:path/path.dart' as p;
@@ -22,7 +21,7 @@ class Monero implements Coin {
       monero.isLibOk();
       return true;
     } catch (e) {
-      if (kDebugMode) {
+      if (config.debug) {
         print("monero.dart: isLibOk failed: $e");
         return false;
       }

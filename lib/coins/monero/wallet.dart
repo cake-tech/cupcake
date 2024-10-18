@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cup_cake/coins/abstract.dart';
 import 'package:cup_cake/coins/monero/coin.dart';
 import 'package:cup_cake/l10n/app_localizations.dart';
+import 'package:cup_cake/utils/config.dart';
 import 'package:cup_cake/utils/null_if_empty.dart';
 import 'package:cup_cake/utils/secure_storage.dart';
 import 'package:cup_cake/view_model/barcode_scanner_view_model.dart';
@@ -11,7 +12,6 @@ import 'package:cup_cake/view_model/urqr_view_model.dart';
 import 'package:cup_cake/views/unconfirmed_transaction.dart';
 import 'package:cup_cake/views/urqr.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:monero/monero.dart' as monero;
 import 'package:polyseed/polyseed.dart';
@@ -70,10 +70,10 @@ class MoneroWallet implements CoinWallet {
 
   Future<void> exportKeyImagesUR(BuildContext context) async {
     final allImages = monero.Wallet_exportKeyImagesUR(wptr,
-            max_fragment_length: 130, all: true)
+            max_fragment_length: config.maxFragmentLength, all: true)
         .split("\n");
     final someImages = monero.Wallet_exportKeyImagesUR(wptr,
-            max_fragment_length: 130, all: false)
+            max_fragment_length: config.maxFragmentLength, all: false)
         .split("\n");
     await AnimatedURPage.staticPush(
       context,
@@ -137,8 +137,9 @@ class MoneroWallet implements CoinWallet {
             destMap: destMap,
             fee: fee,
             confirmCallback: (BuildContext context) async {
-              final signedTx =
-                  monero.UnsignedTransaction_signUR(txptr, 130).split("\n");
+              final signedTx = monero.UnsignedTransaction_signUR(
+                      txptr, config.maxFragmentLength)
+                  .split("\n");
               var status = monero.Wallet_status(wptr);
               if (status != 0) {
                 final error = monero.Wallet_errorString(wptr);
@@ -281,14 +282,17 @@ class MoneroWallet implements CoinWallet {
           "restoreHeight": monero.Wallet_getRefreshFromBlockHeight(wptr),
         }),
       ),
-      if (kDebugMode)
-        ...List.generate(secrets.keys.length, (index) {
-          final key = secrets.keys.elementAt(index);
-          return WalletSeedDetail(
-              type: WalletSeedDetailType.text,
-              name: key,
-              value: secrets[key] ?? "unknown");
-        }),
+      if (config.debug)
+        ...List.generate(
+          secrets.keys.length,
+          (index) {
+            final key = secrets.keys.elementAt(index);
+            return WalletSeedDetail(
+                type: WalletSeedDetailType.text,
+                name: key,
+                value: secrets[key] ?? "unknown");
+          },
+        ),
     ];
   }
 }

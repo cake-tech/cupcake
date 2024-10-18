@@ -59,6 +59,7 @@ dependencies:
   polyseed: ^0.0.6
   flutter_secure_storage: ^9.2.2
   crypto: ^3.0.3
+  package_info_plus: ^8.0.2
 
 dev_dependencies:
   flutter_test:

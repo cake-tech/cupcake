@@ -1,11 +1,11 @@
 import 'package:cup_cake/gen/assets.gen.dart';
 import 'package:cup_cake/utils/call_throwable.dart';
+import 'package:cup_cake/utils/config.dart';
 import 'package:cup_cake/view_model/create_wallet_view_model.dart';
 import 'package:cup_cake/views/abstract.dart';
 import 'package:cup_cake/views/initial_setup_screen.dart';
 import 'package:cup_cake/widgets/form_builder.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -145,7 +145,7 @@ class CreateWallet extends AbstractView {
   bool isFormBad(List<FormElement> form) {
     for (var element in form) {
       if (!element.isOk) {
-        if (kDebugMode) {
+        if (config.debug) {
           print("${element.label} is not valid: ");
         }
         return true;

@@ -12,7 +12,6 @@ import 'package:cup_cake/view_model/new_wallet_info_view_model.dart';
 import 'package:cup_cake/views/new_wallet_info.dart';
 import 'package:cup_cake/gen/assets.gen.dart';
 import 'package:cup_cake/views/wallet_home.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
@@ -416,7 +415,7 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
       return;
     }
     if (!canWrite) {
-      if (kDebugMode) {
+      if (config.debug) {
         throw Exception(
             "DEBUG_ONLY: canWrite is false but we tried to flush the value");
       }
