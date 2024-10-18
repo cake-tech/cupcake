@@ -358,8 +358,10 @@ class StringFormElement extends FormElement {
     this.password = false,
     this.validator = _defaultValidator,
     this.isExtra = false,
+    this.showIf,
   }) : ctrl = TextEditingController(text: initialText);
 
+  bool Function()? showIf;
   TextEditingController ctrl;
   bool password;
   @override
@@ -398,15 +400,17 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
 
   @override
   Future<void> encode(String input) async {
+    List<int> bytes = utf8.encode(input);
+    Digest sha512Hash = sha512.convert(bytes);
     var valInput =
         await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
     if (valInput == null) {
       await secureStorage.write(
-          key: "FlutterSecureStorageValueOutcome._$key", value: input);
+          key: "FlutterSecureStorageValueOutcome._$key", value: sha512Hash.toString());
       valInput = await secureStorage.read(
           key: "FlutterSecureStorageValueOutcome._$key");
     }
-    if (input != valInput && verifyMatching) {
+    if (sha512Hash.toString() != valInput && verifyMatching) {
       throw Exception("Input doesn't match the secure element value");
     }
 
@@ -431,9 +435,11 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
 
   @override
   Future<String> decode(String output) async {
+    List<int> bytes = utf8.encode(output);
+    Digest sha512Hash = sha512.convert(bytes);
     var valInput =
         await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
-    if (output != valInput && verifyMatching) {
+    if (sha512Hash.toString() != valInput && verifyMatching) {
       throw Exception("Input doesn't match the secure element value");
     }
     final input = await secureStorage.read(key: key);

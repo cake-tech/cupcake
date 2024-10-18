@@ -67,7 +67,11 @@ class DrawerElements extends StatelessWidget {
   final CoinWallet coinWallet;
 
   Future<void> _walletList(BuildContext context) async {
-    await HomeScreen.staticPush(context, openLastWallet: false, lastOpenedWallet: coinWallet.walletName,);
+    await HomeScreen.staticPush(
+      context,
+      openLastWallet: false,
+      lastOpenedWallet: coinWallet.walletName,
+    );
   }
 
   Future<void> _securityBackup(BuildContext context) async {

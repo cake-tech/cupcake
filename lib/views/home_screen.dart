@@ -21,7 +21,11 @@ class HomeScreen extends AbstractView {
       CupertinoPageRoute(
         builder: (BuildContext context) {
           return HomeScreen(
-              viewModel: HomeScreenViewModel(openLastWallet: openLastWallet, lastOpenedWallet: lastOpenedWallet,),);
+            viewModel: HomeScreenViewModel(
+              openLastWallet: openLastWallet,
+              lastOpenedWallet: lastOpenedWallet,
+            ),
+          );
         },
       ),
     );
@@ -51,48 +55,48 @@ class HomeScreen extends AbstractView {
       BuildContext context, AsyncSnapshot<List<CoinWalletInfo>> wallets) {
     if (!wallets.hasData) return Container(); // TODO: placeholder?
     return ListView.builder(
-      itemCount: wallets.data!.length,
-      itemBuilder: (BuildContext context, int index) {
-        bool isOpen = (wallets.data![index].walletName).contains(viewModel.lastOpenedWallet??"");
-        return Card(
-          child: IntrinsicHeight(
-            child: Row(
-              children: [
-                Container(
-                  width: 3,
-                  color: isOpen ? Colors.blue : Colors.transparent,
-                  height: double.infinity,
-                ),
-                Expanded(
-                  child: ListTile(
-                    onTap: () {
-                      wallets.data![index].openUI(context);
-                    },
-                    leading: SizedBox(
-                      width: 32,
-                      child: wallets.data![index].coin.strings.svg,
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.edit_rounded),
-                      onPressed: () {
-                        callThrowable(
-                          context,
-                              () => renameWallet(context, wallets.data![index]),
-                          "Renaming wallet",
-                        );
+        itemCount: wallets.data!.length,
+        itemBuilder: (BuildContext context, int index) {
+          bool isOpen = (wallets.data![index].walletName)
+              .contains(viewModel.lastOpenedWallet ?? "");
+          return Card(
+            child: IntrinsicHeight(
+              child: Row(
+                children: [
+                  Container(
+                    width: 3,
+                    color: isOpen ? Colors.blue : Colors.transparent,
+                    height: double.infinity,
+                  ),
+                  Expanded(
+                    child: ListTile(
+                      onTap: () {
+                        wallets.data![index].openUI(context);
                       },
-                    ),
-                    title: Text(
-                      p.basename(wallets.data![index].walletName),
+                      leading: SizedBox(
+                        width: 32,
+                        child: wallets.data![index].coin.strings.svg,
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.edit_rounded),
+                        onPressed: () {
+                          callThrowable(
+                            context,
+                            () => renameWallet(context, wallets.data![index]),
+                            "Renaming wallet",
+                          );
+                        },
+                      ),
+                      title: Text(
+                        p.basename(wallets.data![index].walletName),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-        }
-    );
+          );
+        });
   }
 
   Future<void> renameWallet(

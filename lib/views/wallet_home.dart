@@ -43,7 +43,8 @@ class WalletHome extends AbstractView {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Padding(padding: EdgeInsets.only(top: 50, bottom: 24)),
+                    const Padding(
+                        padding: EdgeInsets.only(top: 50, bottom: 24)),
                     const SizedBox(width: 16),
                     Assets.coins.xmr.svg(width: 50),
                     const SizedBox(width: 16),

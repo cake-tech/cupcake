@@ -120,6 +120,7 @@ class CreateWallet extends AbstractView {
             }, // TODO: passphrase
             backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
           ),
+          const SizedBox(height: 16),
         ],
       );
     }
