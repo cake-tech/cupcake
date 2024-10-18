@@ -79,16 +79,19 @@ Future<void> showAlertWidgetMinimal({
         height: 360,
         child: Material(
           color: Colors.transparent,
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            // TODO: Make this look good
-            Container(
-              color: Colors.transparent,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: body,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                color: Colors.transparent,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: body,
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
       );
     },
