@@ -94,6 +94,7 @@ class Monero implements Coin {
     monero.Wallet_setCacheAttribute(newWptr,
         key: seedOffsetCacheKey, value: seedOffsetOrEncryption);
     monero.Wallet_store(newWptr);
+    monero.Wallet_store(newWptr);
     wPtrList.add(newWptr);
     print("wallet created in: $walletPath");
     progressCallback?.call(description: "Wallet created");
@@ -142,6 +143,7 @@ class Monero implements Coin {
     }
     monero.Wallet_setCacheAttribute(newWptr,
         key: seedOffsetCacheKey, value: seedOffsetOrEncryption);
+    monero.Wallet_store(newWptr);
     monero.Wallet_store(newWptr);
     progressCallback?.call(description: "Wallet created");
   }
@@ -281,6 +283,10 @@ class Monero implements Coin {
   @override
   Future<CoinWallet> openWallet(CoinWalletInfo walletInfo,
       {required String password}) async {
+    for (var wptr in wPtrList) {
+      monero.WalletManager_closeWallet(wmPtr, wptr, true);
+    }
+    wPtrList.clear();
     final walletExist =
         monero.WalletManager_walletExists(wmPtr, walletInfo.walletName);
     if (!walletExist) {

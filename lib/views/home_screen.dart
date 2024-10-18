@@ -16,12 +16,12 @@ class HomeScreen extends AbstractView {
   HomeScreen({super.key, required this.viewModel});
 
   static Future<void> staticPush(BuildContext context,
-      {bool openLastWallet = true}) async {
+      {bool openLastWallet = true, String? lastOpenedWallet}) async {
     await Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (BuildContext context) {
           return HomeScreen(
-              viewModel: HomeScreenViewModel(openLastWallet: openLastWallet));
+              viewModel: HomeScreenViewModel(openLastWallet: openLastWallet, lastOpenedWallet: lastOpenedWallet,),);
         },
       ),
     );
@@ -53,31 +53,45 @@ class HomeScreen extends AbstractView {
     return ListView.builder(
       itemCount: wallets.data!.length,
       itemBuilder: (BuildContext context, int index) {
+        bool isOpen = (wallets.data![index].walletName).contains(viewModel.lastOpenedWallet??"");
         return Card(
-          child: ListTile(
-            onTap: () {
-              wallets.data![index].openUI(context);
-            },
-            leading: SizedBox(
-              width: 32,
-              child: wallets.data![index].coin.strings.svg,
-            ),
-            trailing: IconButton(
-              icon: const Icon(Icons.edit_rounded),
-              onPressed: () {
-                callThrowable(
-                  context,
-                  () => renameWallet(context, wallets.data![index]),
-                  "Renaming wallet",
-                );
-              },
-            ),
-            title: Text(
-              p.basename(wallets.data![index].walletName),
+          child: IntrinsicHeight(
+            child: Row(
+              children: [
+                Container(
+                  width: 3,
+                  color: isOpen ? Colors.blue : Colors.transparent,
+                  height: double.infinity,
+                ),
+                Expanded(
+                  child: ListTile(
+                    onTap: () {
+                      wallets.data![index].openUI(context);
+                    },
+                    leading: SizedBox(
+                      width: 32,
+                      child: wallets.data![index].coin.strings.svg,
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.edit_rounded),
+                      onPressed: () {
+                        callThrowable(
+                          context,
+                              () => renameWallet(context, wallets.data![index]),
+                          "Renaming wallet",
+                        );
+                      },
+                    ),
+                    title: Text(
+                      p.basename(wallets.data![index].walletName),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         );
-      },
+        }
     );
   }
 

@@ -32,41 +32,43 @@ class WalletHome extends AbstractView {
   @override
   // TODO: implement drawer
   Drawer? get drawer => Drawer(
-        child: SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 4),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Padding(padding: EdgeInsets.only(top: 50, bottom: 24)),
-                  const SizedBox(width: 16),
-                  Assets.coins.xmr.svg(width: 50),
-                  const SizedBox(width: 16),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        viewModel.wallet.walletName,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
-                      ),
-                      Text(L.primary_account_label),
-                    ],
-                  )
-                ],
-              ),
-              const SizedBox(height: 8),
-              DrawerElements(
-                coinWallet: viewModel.wallet,
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Padding(padding: EdgeInsets.only(top: 50, bottom: 24)),
+                    const SizedBox(width: 16),
+                    Assets.coins.xmr.svg(width: 50),
+                    const SizedBox(width: 16),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          viewModel.wallet.walletName,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                        Text(L.primary_account_label),
+                      ],
+                    )
+                  ],
+                ),
+                const SizedBox(height: 8),
+                DrawerElements(
+                  coinWallet: viewModel.wallet,
+                ),
+              ],
+            ),
           ),
         ),
       );

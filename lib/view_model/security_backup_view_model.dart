@@ -8,5 +8,35 @@ class SecurityBackupViewModel extends ViewModel {
   // TODO: implement screenName
   String get screenName => L.security_and_backup;
 
+  bool isLocked = true;
+
+  late List<FormElement> form = [
+    PinFormElement(    label: "Wallet password",
+      password: true,
+      valueOutcome: FlutterSecureStorageValueOutcome(
+        "secure.wallet_password",
+        canWrite: false,
+        verifyMatching: true,
+      ),
+      validator: (String? input) {
+        if (input == null) return L.warning_input_cannot_be_null;
+        if (input == "") return L.warning_input_cannot_be_empty;
+        if (input.length < 4) {
+          return L.warning_password_too_short;
+        }
+        return null;
+      },
+      showNumboard: true,
+      onConfirm: (BuildContext context) async {
+        try {await form.first.value;} catch (e) {
+          print(e);
+        }
+
+        isLocked = false;
+        markNeedsBuild();
+      }
+    )
+  ];
+
   CoinWallet wallet;
 }

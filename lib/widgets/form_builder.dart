@@ -67,10 +67,12 @@ class _FormBuilderState extends State<FormBuilder> {
               rebuild: _rebuild,
               showConfirm: () => e.isOk,
               nextPage: () async {
-                callThrowable(context, () async {
+                final b = await callThrowable(context, () async {
                   await e.onConfirmInternal(context);
                   _pinSet();
                 }, "Secure storage communication");
+                if (b == false) return;
+                if (!context.mounted) return;
                 e.onConfirm?.call(context);
               },
               showComma: false,
@@ -83,6 +85,7 @@ class _FormBuilderState extends State<FormBuilder> {
       mainAxisSize: MainAxisSize.min,
       children: widget.formElements.map((e) {
         if (e is StringFormElement) {
+          if (e.showIf?.call() == false) return Container();
           if (e.isExtra && !widget.showExtra) return Container();
           return Padding(
             padding:

@@ -54,6 +54,7 @@ class OpenWalletViewModel extends ViewModel {
   }
 
   Future<void> openWalletIfPasswordCorrect(BuildContext context) async {
+    print("called");
     if (await checkWalletPassword()) {
       if (!context.mounted) return;
       openWallet(context);

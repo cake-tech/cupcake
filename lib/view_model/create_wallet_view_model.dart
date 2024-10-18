@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:crypto/crypto.dart';
 import 'package:cupcake/coins/abstract.dart';
 import 'package:cupcake/coins/list.dart';
 import 'package:cupcake/utils/config.dart';

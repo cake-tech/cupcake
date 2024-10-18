@@ -209,6 +209,7 @@ class MoneroWallet implements CoinWallet {
   @override
   Future<void> close() {
     monero.WalletManager_closeWallet(Monero.wmPtr, wptr, true);
+    wPtrList.removeWhere((element) => element.address == wptr.address);
     return Future.value();
   }
 
@@ -270,6 +271,11 @@ class MoneroWallet implements CoinWallet {
         type: WalletSeedDetailType.text,
         name: L.secret_spend_key,
         value: monero.Wallet_secretSpendKey(wptr),
+      ),
+      WalletSeedDetail(
+        type: WalletSeedDetailType.text,
+        name: L.restore_height,
+        value: monero.Wallet_getRefreshFromBlockHeight(wptr).toString(),
       ),
       WalletSeedDetail(
         type: WalletSeedDetailType.qr,
