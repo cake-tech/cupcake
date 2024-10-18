@@ -30,9 +30,6 @@ class DrawerElement extends StatelessWidget {
             backgroundColor: MaterialStateProperty.all(Colors.black12),
             shape: MaterialStateProperty.all(
               const RoundedRectangleBorder(
-                side: BorderSide(
-                    //color: Colors.black12,
-                    width: 1),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   bottomLeft: Radius.circular(20),
