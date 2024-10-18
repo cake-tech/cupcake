@@ -1,4 +1,4 @@
-package com.cakewallet.cup_cake
+package com.cakewallet.cupcake
 
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -11,7 +11,7 @@ import java.security.MessageDigest
 
 class MainActivity : FlutterActivity() {
 
-    private val CHANNEL = "com.cakewallet.cup_cake/key"
+    private val CHANNEL = "com.cakewallet.cupcake/key"
 
     override fun configureFlutterEngine(flutterEngine: io.flutter.embedding.engine.FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

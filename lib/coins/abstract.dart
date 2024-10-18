@@ -1,9 +1,9 @@
 import 'dart:core';
 
-import 'package:cup_cake/coins/monero/coin.dart';
-import 'package:cup_cake/l10n/app_localizations.dart';
-import 'package:cup_cake/utils/config.dart';
-import 'package:cup_cake/view_model/barcode_scanner_view_model.dart';
+import 'package:cupcake/coins/monero/coin.dart';
+import 'package:cupcake/l10n/app_localizations.dart';
+import 'package:cupcake/utils/config.dart';
+import 'package:cupcake/view_model/barcode_scanner_view_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path/path.dart' as p;

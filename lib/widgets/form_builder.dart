@@ -1,8 +1,8 @@
-import 'package:cup_cake/utils/alert.dart';
-import 'package:cup_cake/utils/call_throwable.dart';
-import 'package:cup_cake/view_model/create_wallet_view_model.dart';
-import 'package:cup_cake/views/initial_setup_screen.dart';
-import 'package:cup_cake/views/widgets/numerical_keyboard/main.dart';
+import 'package:cupcake/utils/alert.dart';
+import 'package:cupcake/utils/call_throwable.dart';
+import 'package:cupcake/view_model/create_wallet_view_model.dart';
+import 'package:cupcake/views/initial_setup_screen.dart';
+import 'package:cupcake/views/widgets/numerical_keyboard/main.dart';
 import 'package:flutter/material.dart';
 
 class FormBuilder extends StatefulWidget {

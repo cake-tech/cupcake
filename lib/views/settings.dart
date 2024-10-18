@@ -1,7 +1,7 @@
-import 'package:cup_cake/utils/alert.dart';
-import 'package:cup_cake/utils/config.dart';
-import 'package:cup_cake/view_model/settings_view_model.dart';
-import 'package:cup_cake/views/abstract.dart';
+import 'package:cupcake/utils/alert.dart';
+import 'package:cupcake/utils/config.dart';
+import 'package:cupcake/view_model/settings_view_model.dart';
+import 'package:cupcake/views/abstract.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';

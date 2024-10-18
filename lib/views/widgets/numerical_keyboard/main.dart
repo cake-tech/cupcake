@@ -1,5 +1,5 @@
-import 'package:cup_cake/views/widgets/numerical_keyboard/keyboard.dart';
-import 'package:cup_cake/views/widgets/numerical_keyboard/single_key.dart';
+import 'package:cupcake/views/widgets/numerical_keyboard/keyboard.dart';
+import 'package:cupcake/views/widgets/numerical_keyboard/single_key.dart';
 import 'package:flutter/cupertino.dart';
 
 class NumericalKeyboard extends StatelessWidget {

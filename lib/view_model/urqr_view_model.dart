@@ -1,4 +1,4 @@
-import 'package:cup_cake/view_model/abstract.dart';
+import 'package:cupcake/view_model/abstract.dart';
 
 class URQRDetails {
   URQRDetails(

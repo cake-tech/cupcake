@@ -1,16 +1,16 @@
 import 'dart:convert';
 
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/coins/monero/coin.dart';
-import 'package:cup_cake/l10n/app_localizations.dart';
-import 'package:cup_cake/utils/config.dart';
-import 'package:cup_cake/utils/null_if_empty.dart';
-import 'package:cup_cake/utils/secure_storage.dart';
-import 'package:cup_cake/view_model/barcode_scanner_view_model.dart';
-import 'package:cup_cake/view_model/unconfirmed_transaction_view_model.dart';
-import 'package:cup_cake/view_model/urqr_view_model.dart';
-import 'package:cup_cake/views/unconfirmed_transaction.dart';
-import 'package:cup_cake/views/urqr.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/monero/coin.dart';
+import 'package:cupcake/l10n/app_localizations.dart';
+import 'package:cupcake/utils/config.dart';
+import 'package:cupcake/utils/null_if_empty.dart';
+import 'package:cupcake/utils/secure_storage.dart';
+import 'package:cupcake/view_model/barcode_scanner_view_model.dart';
+import 'package:cupcake/view_model/unconfirmed_transaction_view_model.dart';
+import 'package:cupcake/view_model/urqr_view_model.dart';
+import 'package:cupcake/views/unconfirmed_transaction.dart';
+import 'package:cupcake/views/urqr.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as p;
 import 'package:monero/monero.dart' as monero;

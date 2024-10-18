@@ -1,5 +1,5 @@
-import 'package:cup_cake/utils/config.dart';
-import 'package:cup_cake/view_model/abstract.dart';
+import 'package:cupcake/utils/config.dart';
+import 'package:cupcake/view_model/abstract.dart';
 
 class SettingsViewModel extends ViewModel {
   SettingsViewModel();

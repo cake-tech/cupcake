@@ -1,8 +1,8 @@
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/utils/call_throwable.dart';
-import 'package:cup_cake/view_model/abstract.dart';
-import 'package:cup_cake/view_model/create_wallet_view_model.dart';
-import 'package:cup_cake/views/wallet_home.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/utils/call_throwable.dart';
+import 'package:cupcake/view_model/abstract.dart';
+import 'package:cupcake/view_model/create_wallet_view_model.dart';
+import 'package:cupcake/views/wallet_home.dart';
 import 'package:flutter/cupertino.dart';
 
 class OpenWalletViewModel extends ViewModel {

@@ -1,12 +1,12 @@
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/view_model/wallet_home_view_model.dart';
-import 'package:cup_cake/views/abstract.dart';
-import 'package:cup_cake/views/barcode_scanner.dart';
-import 'package:cup_cake/views/receive.dart';
-import 'package:cup_cake/views/widgets/cake_card.dart';
-import 'package:cup_cake/views/widgets/drawer_element.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/view_model/wallet_home_view_model.dart';
+import 'package:cupcake/views/abstract.dart';
+import 'package:cupcake/views/barcode_scanner.dart';
+import 'package:cupcake/views/receive.dart';
+import 'package:cupcake/views/widgets/cake_card.dart';
+import 'package:cupcake/views/widgets/drawer_element.dart';
 import 'package:flutter/material.dart';
-import 'package:cup_cake/gen/assets.gen.dart';
+import 'package:cupcake/gen/assets.gen.dart';
 
 // ignore: must_be_immutable
 class WalletHome extends AbstractView {
@@ -93,7 +93,7 @@ class WalletHome extends AbstractView {
                   viewModel.balance,
                   style: Theme.of(context)
                       .textTheme
-                      .displaySmall!
+                      .bodyLarge!
                       .copyWith(fontSize: 24, fontWeight: FontWeight.w900),
                 ),
               ],

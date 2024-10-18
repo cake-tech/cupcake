@@ -1,9 +1,9 @@
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/view_model/barcode_scanner_view_model.dart';
-import 'package:cup_cake/views/abstract.dart';
-import 'package:cup_cake/views/widgets/barcode_scanner/progress_painter.dart';
-import 'package:cup_cake/views/widgets/barcode_scanner/switch_camera.dart';
-import 'package:cup_cake/views/widgets/barcode_scanner/toggle_flashlight_button.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/view_model/barcode_scanner_view_model.dart';
+import 'package:cupcake/views/abstract.dart';
+import 'package:cupcake/views/widgets/barcode_scanner/progress_painter.dart';
+import 'package:cupcake/views/widgets/barcode_scanner/switch_camera.dart';
+import 'package:cupcake/views/widgets/barcode_scanner/toggle_flashlight_button.dart';
 import 'package:fast_scanner/fast_scanner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

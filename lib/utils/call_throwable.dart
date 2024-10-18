@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/utils/alert.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/utils/alert.dart';
 import 'package:flutter/cupertino.dart';
 
 Future<bool> callThrowable(BuildContext context,

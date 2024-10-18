@@ -1,7 +1,7 @@
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/utils/call_throwable.dart';
-import 'package:cup_cake/view_model/abstract.dart';
-import 'package:cup_cake/views/widgets/barcode_scanner/progress_painter.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/utils/call_throwable.dart';
+import 'package:cupcake/view_model/abstract.dart';
+import 'package:cupcake/views/widgets/barcode_scanner/progress_painter.dart';
 import 'package:fast_scanner/fast_scanner.dart';
 import 'package:flutter/cupertino.dart';
 

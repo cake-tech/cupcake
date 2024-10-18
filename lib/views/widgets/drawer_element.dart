@@ -1,13 +1,13 @@
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/coins/monero/wallet.dart';
-import 'package:cup_cake/l10n/app_localizations.dart';
-import 'package:cup_cake/utils/call_throwable.dart';
-import 'package:cup_cake/views/home_screen.dart';
-import 'package:cup_cake/views/security_backup.dart';
-import 'package:cup_cake/views/settings.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/monero/wallet.dart';
+import 'package:cupcake/l10n/app_localizations.dart';
+import 'package:cupcake/utils/call_throwable.dart';
+import 'package:cupcake/views/home_screen.dart';
+import 'package:cupcake/views/security_backup.dart';
+import 'package:cupcake/views/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:cup_cake/gen/assets.gen.dart';
+import 'package:cupcake/gen/assets.gen.dart';
 
 class DrawerElement extends StatelessWidget {
   const DrawerElement({

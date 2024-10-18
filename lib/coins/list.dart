@@ -1,5 +1,5 @@
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/coins/monero/coin.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/monero/coin.dart';
 
 const moneroEnabled = bool.fromEnvironment("COIN_MONERO", defaultValue: true);
 

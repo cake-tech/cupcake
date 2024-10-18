@@ -1,9 +1,9 @@
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/utils/call_throwable.dart';
-import 'package:cup_cake/view_model/wallet_edit_view_model.dart';
-import 'package:cup_cake/views/abstract.dart';
-import 'package:cup_cake/views/initial_setup_screen.dart';
-import 'package:cup_cake/widgets/form_builder.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/utils/call_throwable.dart';
+import 'package:cupcake/view_model/wallet_edit_view_model.dart';
+import 'package:cupcake/views/abstract.dart';
+import 'package:cupcake/views/initial_setup_screen.dart';
+import 'package:cupcake/widgets/form_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

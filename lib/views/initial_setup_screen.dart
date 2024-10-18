@@ -1,9 +1,9 @@
-import 'package:cup_cake/themes/base_theme.dart';
-import 'package:cup_cake/view_model/create_wallet_view_model.dart';
-import 'package:cup_cake/view_model/initial_setup_view_model.dart';
-import 'package:cup_cake/views/abstract.dart';
-import 'package:cup_cake/views/create_wallet.dart';
-import 'package:cup_cake/gen/assets.gen.dart';
+import 'package:cupcake/themes/base_theme.dart';
+import 'package:cupcake/view_model/create_wallet_view_model.dart';
+import 'package:cupcake/view_model/initial_setup_view_model.dart';
+import 'package:cupcake/views/abstract.dart';
+import 'package:cupcake/views/create_wallet.dart';
+import 'package:cupcake/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable

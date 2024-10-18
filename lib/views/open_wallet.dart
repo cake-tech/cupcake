@@ -1,7 +1,7 @@
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/view_model/open_wallet_view_model.dart';
-import 'package:cup_cake/views/abstract.dart';
-import 'package:cup_cake/widgets/form_builder.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/view_model/open_wallet_view_model.dart';
+import 'package:cupcake/views/abstract.dart';
+import 'package:cupcake/widgets/form_builder.dart';
 import 'package:flutter/cupertino.dart';
 
 // ignore: must_be_immutable

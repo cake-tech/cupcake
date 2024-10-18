@@ -1,4 +1,4 @@
-import 'package:cup_cake/views/widgets/numerical_keyboard/keyboard.dart';
+import 'package:cupcake/views/widgets/numerical_keyboard/keyboard.dart';
 import 'package:flutter/material.dart';
 
 class SingleKey extends StatelessWidget {

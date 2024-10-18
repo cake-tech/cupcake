@@ -1,6 +1,6 @@
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/coins/list.dart';
-import 'package:cup_cake/view_model/abstract.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/list.dart';
+import 'package:cupcake/view_model/abstract.dart';
 
 class HomeScreenViewModel extends ViewModel {
   HomeScreenViewModel();

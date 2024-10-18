@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/utils/filesystem.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/utils/filesystem.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 

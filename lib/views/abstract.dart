@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:cup_cake/l10n/app_localizations.dart';
-import 'package:cup_cake/view_model/abstract.dart';
+import 'package:cupcake/l10n/app_localizations.dart';
+import 'package:cupcake/view_model/abstract.dart';
 import 'package:flutter/material.dart';
-import 'package:cup_cake/gen/assets.gen.dart';
+import 'package:cupcake/gen/assets.gen.dart';
 
 // Since there is no performance penalty for using stateful widgets I would just
 // use them everywhere, but honestly all I need in stateless widgets is easy

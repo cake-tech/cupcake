@@ -1,15 +1,15 @@
 import 'dart:io';
 
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/coins/monero/wallet.dart';
-import 'package:cup_cake/utils/config.dart';
-import 'package:cup_cake/utils/filesystem.dart';
-import 'package:cup_cake/views/open_wallet.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/monero/wallet.dart';
+import 'package:cupcake/utils/config.dart';
+import 'package:cupcake/utils/filesystem.dart';
+import 'package:cupcake/views/open_wallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:monero/monero.dart' as monero;
 import 'package:path/path.dart' as p;
-import 'package:cup_cake/gen/assets.gen.dart';
+import 'package:cupcake/gen/assets.gen.dart';
 import 'package:polyseed/polyseed.dart';
 
 List<monero.wallet> wPtrList = [];

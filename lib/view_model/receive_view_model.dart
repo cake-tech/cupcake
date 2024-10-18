@@ -1,5 +1,5 @@
-import 'package:cup_cake/coins/abstract.dart';
-import 'package:cup_cake/view_model/abstract.dart';
+import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/view_model/abstract.dart';
 
 class ReceiveViewModel extends ViewModel {
   ReceiveViewModel(this.wallet);
