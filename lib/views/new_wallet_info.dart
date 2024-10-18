@@ -74,7 +74,8 @@ class NewWalletInfoScreen extends AbstractView {
 
   @override
   Widget? body(BuildContext context) {
-    return Padding(
+    return SafeArea(
+        child: Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, top: 0, bottom: 16),
       child: Column(
         children: [
@@ -91,6 +92,6 @@ class NewWalletInfoScreen extends AbstractView {
           )
         ],
       ),
-    );
+    ));
   }
 }

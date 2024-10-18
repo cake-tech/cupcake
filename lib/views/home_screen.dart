@@ -121,7 +121,8 @@ class HomeScreen extends AbstractView {
 
   @override
   Widget? bottomNavigationBar(BuildContext context) {
-    return Column(
+    return SafeArea(
+        child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         LongPrimaryButton(
@@ -134,9 +135,8 @@ class HomeScreen extends AbstractView {
           onPressed: () => createWallet(context, CreateMethod.restore),
           text: L.restore_wallet,
         ),
-        const SizedBox(height: 16),
       ],
-    );
+    ));
   }
 
   @override

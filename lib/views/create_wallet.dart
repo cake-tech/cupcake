@@ -102,7 +102,8 @@ class CreateWallet extends AbstractView {
   @override
   Widget? bottomNavigationBar(BuildContext context) {
     if (viewModel.isPinSet) {
-      return Column(
+      return SafeArea(
+          child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           LongPrimaryButton(
@@ -122,7 +123,7 @@ class CreateWallet extends AbstractView {
           ),
           const SizedBox(height: 16),
         ],
-      );
+      ));
     }
     return null;
   }
