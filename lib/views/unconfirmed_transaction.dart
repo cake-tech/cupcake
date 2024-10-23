@@ -24,13 +24,16 @@ class UnconfirmedTransactionView extends AbstractView {
   Widget? body(BuildContext context) {
     final keys = viewModel.destMap.keys.toList();
     return ListView.builder(
-        itemCount: keys.length,
-        itemBuilder: (BuildContext context, int index) {
-          final key = keys[index];
-          final value = viewModel.destMap[key]!;
-
-          return Text("$key => $value");
-        });
+      itemCount: keys.length,
+      itemBuilder: (BuildContext context, int index) {
+        final key = keys[index];
+        final value = viewModel.destMap[key]!;
+        return ListTile(
+          subtitle: Text(key.address),
+          title: Text(value.toString()),
+        );
+      },
+    );
   }
 
   @override

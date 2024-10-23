@@ -31,7 +31,7 @@ class AnimatedURPage extends AbstractView {
         Padding(
           padding: const EdgeInsets.only(top: 64.0, left: 32, right: 32),
           child: URQR(
-            frames: viewModel.urqr,
+            frames: viewModel.urqr..removeWhere((element) => element.isEmpty),
           ),
         ),
         const SizedBox(height: 32),

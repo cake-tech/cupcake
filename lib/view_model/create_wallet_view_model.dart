@@ -406,7 +406,8 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
         await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
     if (valInput == null) {
       await secureStorage.write(
-          key: "FlutterSecureStorageValueOutcome._$key", value: sha512Hash.toString());
+          key: "FlutterSecureStorageValueOutcome._$key",
+          value: sha512Hash.toString());
       valInput = await secureStorage.read(
           key: "FlutterSecureStorageValueOutcome._$key");
     }
