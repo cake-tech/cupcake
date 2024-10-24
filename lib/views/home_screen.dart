@@ -51,6 +51,21 @@ class HomeScreen extends AbstractView {
     );
   }
 
+  @override
+  // TODO: implement appBar
+  AppBar? get appBar => AppBar(
+        title: Text(
+          viewModel.screenName,
+          style: const TextStyle(color: Colors.white),
+        ),
+        automaticallyImplyLeading: canPop,
+        actions: [
+          IconButton(
+            onPressed: viewModel.toggleSort,
+            icon: const Icon(Icons.sort),
+          ),
+        ],
+      );
   Widget walletsBody(
       BuildContext context, AsyncSnapshot<List<CoinWalletInfo>> wallets) {
     if (!wallets.hasData) return Container(); // TODO: placeholder?

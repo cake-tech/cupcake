@@ -13,6 +13,7 @@ class CupcakeConfig {
     required this.walletMigrationLevel,
     required this.msForQrCode,
     required this.maxFragmentLength,
+    required this.walletSort,
     required this.debug,
   });
   CoinWalletInfo? lastWallet;
@@ -20,6 +21,7 @@ class CupcakeConfig {
   int walletMigrationLevel;
   int msForQrCode;
   int maxFragmentLength;
+  int walletSort;
   bool debug;
 
   factory CupcakeConfig.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class CupcakeConfig {
       walletMigrationLevel: json['walletMigrationLevel'] ?? 0,
       msForQrCode: json['msForQrCode'] ?? 1000 ~/ 3.5,
       maxFragmentLength: json['maxFragmentLength'] ?? 130,
+      walletSort: json['walletSort'] ?? 0,
       debug: json['debug'] ?? false,
     );
   }
@@ -40,6 +43,7 @@ class CupcakeConfig {
       'walletMigrationLevel': walletMigrationLevel,
       'msForQrCode': msForQrCode,
       'maxFragmentLength': maxFragmentLength,
+      'walletSort': walletSort,
       'debug': debug,
     };
   }
