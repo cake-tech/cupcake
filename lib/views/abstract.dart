@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:flutter/material.dart';
-import 'package:cupcake/gen/assets.gen.dart';
 import 'package:flutter_svg/svg.dart';
 
 // Since there is no performance penalty for using stateful widgets I would just
@@ -107,7 +106,8 @@ class CupcakeAppbarTitle extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SvgPicture.asset("assets/icons/icon-white.svg", height: 32, width: 32, color: Colors.white),
+          SvgPicture.asset("assets/icons/icon-white.svg",
+              height: 32, width: 32, color: Colors.white),
           const SizedBox(
             width: 12,
           ),
