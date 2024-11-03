@@ -115,7 +115,7 @@ class CreateWallet extends AbstractView {
             text: L.next,
             icon: null,
             onPressed: () => _next(context),
-            backgroundColor: const MaterialStatePropertyAll(Colors.green),
+            backgroundColor: const WidgetStatePropertyAll(Colors.green),
             textColor: Colors.white,
           ),
           LongPrimaryButton(
@@ -124,7 +124,7 @@ class CreateWallet extends AbstractView {
             onPressed: () {
               viewModel.toggleAdvancedOptions();
             }, // TODO: passphrase
-            backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
+            backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
           ),
           const SizedBox(height: 16),
         ],

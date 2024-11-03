@@ -27,8 +27,8 @@ class DrawerElement extends StatelessWidget {
         margin: const EdgeInsets.only(top: 5, left: 20, bottom: 5),
         child: TextButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.black12),
-            shape: MaterialStateProperty.all(
+            backgroundColor: WidgetStateProperty.all(Colors.black12),
+            shape: WidgetStateProperty.all(
               const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
