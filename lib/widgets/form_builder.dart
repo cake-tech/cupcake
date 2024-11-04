@@ -29,18 +29,32 @@ class _FormBuilderState extends State<FormBuilder> {
     setState(() {});
   }
 
-  void _pinSet() {
-    widget.rebuild?.call(true);
+  void _pinSet(bool val) {
+    widget.rebuild?.call(val);
     _rebuild();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.formElements.isNotEmpty &&
-        (widget.formElements.first is PinFormElement &&
-            (widget.formElements.first as PinFormElement).showNumboard) &&
-        !widget.isPinSet) {
-      final e = widget.formElements.first as PinFormElement;
+    if ((widget.formElements.isNotEmpty &&
+            (widget.formElements.first is PinFormElement &&
+                (widget.formElements.first as PinFormElement).showNumboard) &&
+            !(widget.formElements[0] as PinFormElement).isConfirmed) ||
+        widget.formElements.length >= 2 &&
+            (widget.formElements[1] is PinFormElement &&
+                (widget.formElements[1] as PinFormElement).showNumboard) &&
+            !(widget.formElements[1] as PinFormElement).isConfirmed) {
+      var e = widget.formElements.first as PinFormElement;
+      int i = 0;
+      int count = 0;
+      if (widget.formElements.length >= 2 &&
+          (widget.formElements[1] is PinFormElement)) {
+        count++;
+      }
+      if (e.isConfirmed) {
+        i++;
+        e = widget.formElements[1] as PinFormElement;
+      }
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -69,10 +83,10 @@ class _FormBuilderState extends State<FormBuilder> {
               nextPage: () async {
                 final b = await callThrowable(context, () async {
                   await e.onConfirmInternal(context);
-                  _pinSet();
                 }, "Secure storage communication");
                 if (b == false) return;
                 if (!context.mounted) return;
+                _pinSet(count == i);
                 e.onConfirm?.call(context);
               },
               showComma: false,
