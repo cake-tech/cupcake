@@ -3,6 +3,7 @@ import 'package:cupcake/utils/alert.dart';
 import 'package:cupcake/view_model/security_backup_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
+import 'package:cupcake/widgets/form_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -27,6 +28,14 @@ class SecurityBackup extends AbstractView {
 
   @override
   Widget? body(BuildContext context) {
+    if (viewModel.isLocked) {
+      return FormBuilder(
+        formElements: viewModel.form,
+        scaffoldContext: context,
+        isPinSet: !viewModel.isLocked,
+        showExtra: true,
+      );
+    }
     final details = viewModel.wallet.seedDetails(L);
     return FutureBuilder(
         future: details,

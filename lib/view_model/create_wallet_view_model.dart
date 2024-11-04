@@ -47,7 +47,18 @@ class CreateWalletViewModel extends ViewModel {
 
   bool isCreate = true;
 
+  bool get hasAdvancedOptions {
+    if (currentForm == null) return false;
+    for (final elm in currentForm!) {
+      if (elm is StringFormElement) {
+        if (elm.isExtra) return true;
+      }
+    }
+    return false;
+  }
+
   void toggleAdvancedOptions() {
+    print("toggling");
     showExtra = !showExtra;
     markNeedsBuild();
   }

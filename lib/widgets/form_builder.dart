@@ -81,13 +81,18 @@ class _FormBuilderState extends State<FormBuilder> {
         ],
       );
     }
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: widget.formElements.map((e) {
-        if (e is StringFormElement) {
-          if (e.showIf?.call() == false) return Container();
-          if (e.isExtra && !widget.showExtra) return Container();
-          return Padding(
+    final showExtra = widget.showExtra;
+    final List<Widget> children = [];
+    for (final e in widget.formElements) {
+      if (e is StringFormElement) {
+        if (e.showIf?.call() == false) continue;
+        if (e.isExtra && !showExtra) {
+          // If we return Container() some stuff happens on flutter render cache
+          // and it doesn't render properly.
+          continue;
+        }
+        children.add(
+          Padding(
             padding:
                 const EdgeInsets.only(bottom: 16.0, left: 24.0, right: 24.0),
             child: TextFormField(
@@ -112,10 +117,13 @@ class _FormBuilderState extends State<FormBuilder> {
               },
               textAlign: TextAlign.center,
             ),
-          );
-        } else if (e is PinFormElement) {
-          if (e.showNumboard) return Container();
-          return Padding(
+          ),
+        );
+        continue;
+      } else if (e is PinFormElement) {
+        if (e.showNumboard) continue;
+        children.add(
+          Padding(
             padding:
                 const EdgeInsets.only(bottom: 16.0, left: 24.0, right: 24.0),
             child: TextFormField(
@@ -140,9 +148,12 @@ class _FormBuilderState extends State<FormBuilder> {
               },
               textAlign: TextAlign.center,
             ),
-          );
-        } else if (e is SingleChoiceFormElement) {
-          return Padding(
+          ),
+        );
+        continue;
+      } else if (e is SingleChoiceFormElement) {
+        children.add(
+          Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: LongPrimaryButton(
               text: e.valueSync,
@@ -150,10 +161,18 @@ class _FormBuilderState extends State<FormBuilder> {
               onPressed: () => _changeSingleChoice(context, e),
               padding: EdgeInsets.zero,
             ),
-          );
-        }
-        return Text("unknown form element: $e");
-      }).toList(),
+          ),
+        );
+        continue;
+      }
+      children.add(
+        Text("unknown form element: $e"),
+      );
+    }
+    print("len: ${children.length}");
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: children,
     );
   }
 
