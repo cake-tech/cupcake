@@ -30,13 +30,7 @@ class CreateWallet extends AbstractView {
 
   void setPinSet(BuildContext context, bool val) {
     viewModel.isPinSet = val;
-    navigateSelf(context);
-  }
-
-  Future<void> navigateSelf(BuildContext context) async {
-    await CreateWallet.staticPush(context, viewModel);
-    if (!context.mounted) return;
-    Navigator.of(context).pop();
+    markNeedsBuild(context);
   }
 
   @override
@@ -48,7 +42,7 @@ class CreateWallet extends AbstractView {
           return InkWell(
             onTap: () {
               viewModel.selectedCoin = viewModel.coins[index];
-              navigateSelf(context);
+              markNeedsBuild(context);
             },
             child: Card(
               child: ListTile(
@@ -70,7 +64,7 @@ class CreateWallet extends AbstractView {
             return InkWell(
               onTap: () {
                 viewModel.currentForm = value;
-                navigateSelf(context);
+                markNeedsBuild(context);
               },
               child: Card(
                 child: ListTile(
@@ -85,7 +79,10 @@ class CreateWallet extends AbstractView {
     formBuilder = FormBuilder(
       formElements: viewModel.currentForm ?? [],
       scaffoldContext: context,
-      rebuild: (bool val) => setPinSet(context, val),
+      rebuild: (bool val) {
+        setPinSet(context, val);
+        markNeedsBuild(context);
+      },
       isPinSet: viewModel.isPinSet,
       showExtra: viewModel.showExtra,
     );
@@ -115,17 +112,18 @@ class CreateWallet extends AbstractView {
             text: L.next,
             icon: null,
             onPressed: () => _next(context),
-            backgroundColor: const MaterialStatePropertyAll(Colors.green),
+            backgroundColor: const WidgetStatePropertyAll(Colors.green),
             textColor: Colors.white,
           ),
-          LongPrimaryButton(
-            text: L.advanced_options,
-            icon: null,
-            onPressed: () {
-              viewModel.toggleAdvancedOptions();
-            }, // TODO: passphrase
-            backgroundColor: const MaterialStatePropertyAll(Colors.transparent),
-          ),
+          if (viewModel.hasAdvancedOptions)
+            LongPrimaryButton(
+              text: L.advanced_options,
+              icon: null,
+              onPressed: () {
+                viewModel.toggleAdvancedOptions();
+              }, // TODO: passphrase
+              backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+            ),
           const SizedBox(height: 16),
         ],
       ));

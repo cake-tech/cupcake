@@ -63,5 +63,6 @@
   "view_only_restore_qr": "Kod QR portfela podglądu",
   "seed_screen_wallet_seed_polyseed": "Fraza odzyskiwania (Polyseed)",
   "seed_screen_wallet_seed_polyseed_encrypted": "Fraza odzyskiwania (Polyseed [Szyfrowana])",
-  "seed_screen_wallet_seed_legacy": "Fraza odzyskiwania (Legacy)"
+  "seed_screen_wallet_seed_legacy": "Fraza odzyskiwania (Legacy)",
+  "password_doesnt_match": "Hasła się różnią"
 }

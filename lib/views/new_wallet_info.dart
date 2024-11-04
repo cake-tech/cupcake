@@ -65,7 +65,7 @@ class NewWalletInfoScreen extends AbstractView {
           textWidget: action.text,
           icon: null,
           onPressed: callback,
-          backgroundColor: MaterialStatePropertyAll(action.backgroundColor),
+          backgroundColor: WidgetStatePropertyAll(action.backgroundColor),
           width: null,
         ),
       );

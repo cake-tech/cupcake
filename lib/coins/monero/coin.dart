@@ -355,7 +355,8 @@ class MoneroWalletInfo extends CoinWalletInfo {
 
   @override
   String get walletName => _walletName;
-  final String _walletName;
+
+  String _walletName;
 
   @override
   Coins get type => coin.type;
@@ -393,5 +394,6 @@ class MoneroWalletInfo extends CoinWalletInfo {
     final basePath = p.dirname(walletName);
     File(walletName).rename(p.join(basePath, newName));
     File("$walletName.keys").rename(p.join(basePath, "$newName.keys"));
+    _walletName = newName;
   }
 }

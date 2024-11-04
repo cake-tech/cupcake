@@ -75,8 +75,8 @@ class LongSecondaryButton extends LongPrimaryButton {
       required super.onPressed});
 
   @override
-  MaterialStateProperty<Color>? get backgroundColor =>
-      const MaterialStatePropertyAll(Colors.white);
+  WidgetStateProperty<Color>? get backgroundColor =>
+      const WidgetStatePropertyAll(Colors.white);
 
   @override
   Color get textColor => onBackgroundColor;
@@ -96,7 +96,7 @@ class LongPrimaryButton extends StatelessWidget {
   });
 
   final padding;
-  final MaterialStateProperty<Color>? backgroundColor;
+  final WidgetStateProperty<Color>? backgroundColor;
   final Color textColor;
 
   final String text;
@@ -114,8 +114,8 @@ class LongPrimaryButton extends StatelessWidget {
         child: ElevatedButton.icon(
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
                 backgroundColor: backgroundColor,
-                elevation: const MaterialStatePropertyAll(0),
-                side: const MaterialStatePropertyAll(
+                elevation: const WidgetStatePropertyAll(0),
+                side: const WidgetStatePropertyAll(
                   BorderSide(
                     width: 0,
                     color: Colors.transparent,

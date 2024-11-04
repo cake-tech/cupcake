@@ -56,8 +56,9 @@ class WalletEditViewModel extends ViewModel {
     if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
       throw Exception("Invalid wallet password");
     }
-    walletInfo.renameWallet(await walletName.value);
+    await walletInfo.renameWallet(await walletName.value);
     if (!context.mounted) return;
+    await markNeedsBuild();
     Navigator.of(context).pop();
   }
 }

@@ -94,12 +94,13 @@ class HomeScreen extends AbstractView {
                       ),
                       trailing: IconButton(
                         icon: const Icon(Icons.edit_rounded),
-                        onPressed: () {
-                          callThrowable(
+                        onPressed: () async {
+                          await callThrowable(
                             context,
                             () => renameWallet(context, wallets.data![index]),
                             "Renaming wallet",
                           );
+                          markNeedsBuild(context);
                         },
                       ),
                       title: Text(

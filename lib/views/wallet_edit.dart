@@ -35,7 +35,7 @@ class WalletEdit extends AbstractView {
           children: [
             Expanded(
               child: LongPrimaryButton(
-                backgroundColor: const MaterialStatePropertyAll(Colors.red),
+                backgroundColor: const WidgetStatePropertyAll(Colors.red),
                 icon: null,
                 onPressed: () {
                   callThrowable(

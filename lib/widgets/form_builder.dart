@@ -29,18 +29,32 @@ class _FormBuilderState extends State<FormBuilder> {
     setState(() {});
   }
 
-  void _pinSet() {
-    widget.rebuild?.call(true);
+  void _pinSet(bool val) {
+    widget.rebuild?.call(val);
     _rebuild();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.formElements.isNotEmpty &&
-        (widget.formElements.first is PinFormElement &&
-            (widget.formElements.first as PinFormElement).showNumboard) &&
-        !widget.isPinSet) {
-      final e = widget.formElements.first as PinFormElement;
+    if ((widget.formElements.isNotEmpty &&
+            (widget.formElements.first is PinFormElement &&
+                (widget.formElements.first as PinFormElement).showNumboard) &&
+            !(widget.formElements[0] as PinFormElement).isConfirmed) ||
+        widget.formElements.length >= 2 &&
+            (widget.formElements[1] is PinFormElement &&
+                (widget.formElements[1] as PinFormElement).showNumboard) &&
+            !(widget.formElements[1] as PinFormElement).isConfirmed) {
+      var e = widget.formElements.first as PinFormElement;
+      int i = 0;
+      int count = 0;
+      if (widget.formElements.length >= 2 &&
+          (widget.formElements[1] is PinFormElement)) {
+        count++;
+      }
+      if (e.isConfirmed) {
+        i++;
+        e = widget.formElements[1] as PinFormElement;
+      }
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -69,10 +83,10 @@ class _FormBuilderState extends State<FormBuilder> {
               nextPage: () async {
                 final b = await callThrowable(context, () async {
                   await e.onConfirmInternal(context);
-                  _pinSet();
                 }, "Secure storage communication");
                 if (b == false) return;
                 if (!context.mounted) return;
+                _pinSet(count == i);
                 e.onConfirm?.call(context);
               },
               showComma: false,
@@ -81,13 +95,18 @@ class _FormBuilderState extends State<FormBuilder> {
         ],
       );
     }
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: widget.formElements.map((e) {
-        if (e is StringFormElement) {
-          if (e.showIf?.call() == false) return Container();
-          if (e.isExtra && !widget.showExtra) return Container();
-          return Padding(
+    final showExtra = widget.showExtra;
+    final List<Widget> children = [];
+    for (final e in widget.formElements) {
+      if (e is StringFormElement) {
+        if (e.showIf?.call() == false) continue;
+        if (e.isExtra && !showExtra) {
+          // If we return Container() some stuff happens on flutter render cache
+          // and it doesn't render properly.
+          continue;
+        }
+        children.add(
+          Padding(
             padding:
                 const EdgeInsets.only(bottom: 16.0, left: 24.0, right: 24.0),
             child: TextFormField(
@@ -112,10 +131,13 @@ class _FormBuilderState extends State<FormBuilder> {
               },
               textAlign: TextAlign.center,
             ),
-          );
-        } else if (e is PinFormElement) {
-          if (e.showNumboard) return Container();
-          return Padding(
+          ),
+        );
+        continue;
+      } else if (e is PinFormElement) {
+        if (e.showNumboard) continue;
+        children.add(
+          Padding(
             padding:
                 const EdgeInsets.only(bottom: 16.0, left: 24.0, right: 24.0),
             child: TextFormField(
@@ -140,9 +162,12 @@ class _FormBuilderState extends State<FormBuilder> {
               },
               textAlign: TextAlign.center,
             ),
-          );
-        } else if (e is SingleChoiceFormElement) {
-          return Padding(
+          ),
+        );
+        continue;
+      } else if (e is SingleChoiceFormElement) {
+        children.add(
+          Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: LongPrimaryButton(
               text: e.valueSync,
@@ -150,10 +175,18 @@ class _FormBuilderState extends State<FormBuilder> {
               onPressed: () => _changeSingleChoice(context, e),
               padding: EdgeInsets.zero,
             ),
-          );
-        }
-        return Text("unknown form element: $e");
-      }).toList(),
+          ),
+        );
+        continue;
+      }
+      children.add(
+        Text("unknown form element: $e"),
+      );
+    }
+    print("len: ${children.length}");
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: children,
     );
   }
 

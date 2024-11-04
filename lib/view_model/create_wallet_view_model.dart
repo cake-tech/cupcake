@@ -47,7 +47,18 @@ class CreateWalletViewModel extends ViewModel {
 
   bool isCreate = true;
 
+  bool get hasAdvancedOptions {
+    if (currentForm == null) return false;
+    for (final elm in currentForm!) {
+      if (elm is StringFormElement) {
+        if (elm.isExtra) return true;
+      }
+    }
+    return false;
+  }
+
   void toggleAdvancedOptions() {
+    print("toggling");
     showExtra = !showExtra;
     markNeedsBuild();
   }
@@ -74,19 +85,36 @@ class CreateWalletViewModel extends ViewModel {
     ],
   );
 
+  late PinFormElement walletPasswordInitial = PinFormElement(
+    label: "Wallet password",
+    password: true,
+    valueOutcome: PlainValueOutcome(),
+    validator: (String? input) {
+      if (input == null) return L.warning_input_cannot_be_null;
+      if (input == "") return L.warning_input_cannot_be_empty;
+      if (input.length < 4) {
+        return L.warning_password_too_short;
+      }
+      return null;
+    },
+  );
+
   late PinFormElement walletPassword = PinFormElement(
     label: "Wallet password",
     password: true,
     valueOutcome: FlutterSecureStorageValueOutcome(
       "secure.wallet_password",
       canWrite: true,
-      verifyMatching: false,
+      verifyMatching: true,
     ),
     validator: (String? input) {
       if (input == null) return L.warning_input_cannot_be_null;
       if (input == "") return L.warning_input_cannot_be_empty;
       if (input.length < 4) {
         return L.warning_password_too_short;
+      }
+      if (input != walletPasswordInitial.ctrl.text) {
+        return L.password_doesnt_match;
       }
       return null;
     },
@@ -174,6 +202,7 @@ class CreateWalletViewModel extends ViewModel {
       };
 
   late final List<FormElement> _createForm = [
+    walletPasswordInitial,
     walletPassword,
     walletName,
     walletSeedType,
@@ -181,6 +210,7 @@ class CreateWalletViewModel extends ViewModel {
   ];
 
   late final List<FormElement> _restoreSeedForm = [
+    walletPasswordInitial,
     walletPassword,
     walletName,
     seed,
@@ -188,6 +218,7 @@ class CreateWalletViewModel extends ViewModel {
   ];
 
   late final List<FormElement> _restoreFormKeysForm = [
+    walletPasswordInitial,
     walletPassword,
     walletName,
     walletAddress,
@@ -481,9 +512,11 @@ class PinFormElement extends FormElement {
   Future<void> Function(BuildContext context)? onChanged;
   Future<void> Function(BuildContext context)? onConfirm;
   Future<void> onConfirmInternal(BuildContext context) async {
+    isConfirmed = true;
     await valueOutcome.encode(ctrl.text);
   }
 
+  bool isConfirmed = false;
   String? Function(String? input) validator;
 }
 
