@@ -55,7 +55,6 @@ android {
         targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        setProperty("archivesBaseName", "cupcake_" + versionCode)
     }
     signingConfigs {
         release {
