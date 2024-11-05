@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 const baseBackgroundColor = Color.fromRGBO(25, 35, 60, 1);
-const onBackgroundColor = Color.fromRGBO(25, 35, 60, 1);
-const onOnBackgroundColor = Color.fromRGBO(35, 47, 79, 1);
+const onBackgroundColor = Color.fromRGBO(35, 44, 79, 1);
+const onOnBackgroundColor = Color.fromRGBO(35, 55, 93, 1);
 const buttonBorderColor = Color.fromRGBO(79, 91, 121, 1);
 
 final darkBaseTheme = ThemeData.dark(useMaterial3: true).copyWith(
