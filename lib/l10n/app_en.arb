@@ -26,7 +26,7 @@
   "wallets": "Wallets",
   "address_book": "Address book",
   "security_and_backup": "Security and backup",
-  "export_key_images": "Synchronize balance",
+  "export_key_images": "Export key images",
   "other_settings": "Other settings",
   "select_wallet": "Select wallet",
   "warning_input_cannot_be_null": "Input cannot be null",

@@ -105,8 +105,7 @@ class DrawerElements extends StatelessWidget {
           action: _securityBackup,
         ),
         DrawerElement(
-          svg: Assets.drawerIcons.exportKeyImages.svg(width: 20,
-              height: 20),
+          svg: Assets.drawerIcons.exportKeyImages.svg(),
           text: L.export_key_images,
           action: _exportKeyImages,
         ),
