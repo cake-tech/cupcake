@@ -119,7 +119,7 @@ class WalletHome extends AbstractView {
                     onPressed: () =>
                         Receive.pushStatic(context, viewModel.wallet),
                     icon:
-                        const Icon(Icons.inbox, size: 35, color: Colors.white),
+                        const Icon(Icons.call_received, size: 35, color: Colors.white),
                     label: Text(
                       L.receive,
                       style: const TextStyle(color: Colors.white, fontSize: 18),

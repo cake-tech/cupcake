@@ -33,12 +33,25 @@ class Receive extends AbstractView {
           Padding(
             padding:
                 const EdgeInsets.only(top: 8, left: 48, right: 48, bottom: 32),
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30.0),
+          color: Colors.white,
+        ),
             child: QrImageView(
               data: "monero:${viewModel.address}",
-              foregroundColor: Colors.white,
+              foregroundColor: Colors.black,
             ),
           ),
-          InkWell(
+          ),
+          Container(
+            padding: const EdgeInsets.all(25.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30.0),
+              color: Color.fromRGBO(35, 44, 79, 1),
+            ),
+          child: InkWell(
             onTap: () {
               Clipboard.setData(
                 ClipboardData(
@@ -47,7 +60,7 @@ class Receive extends AbstractView {
               );
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -56,8 +69,9 @@ class Receive extends AbstractView {
                     viewModel.address,
                     style: const TextStyle(color: Colors.white),
                   )),
-                  const Icon(Icons.copy),
+                  const Icon(Icons.copy, color: Colors.grey),
                 ],
+              ),
               ),
             ),
           ),
