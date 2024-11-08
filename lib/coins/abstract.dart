@@ -10,6 +10,7 @@ import 'package:path/path.dart' as p;
 
 class CoinException implements Exception {
   CoinException(this.exception, {this.details});
+
   String exception;
   String? details;
 
@@ -25,11 +26,12 @@ enum Coins { monero, unknown }
 
 abstract class Coin {
   Coins get type => Coins.unknown;
-  CoinStrings get strings => throw UnimplementedError();
 
-  bool get isEnabled => false;
+  CoinStrings get strings;
 
-  Future<List<CoinWalletInfo>> get coinWallets => Future.value([]);
+  bool get isEnabled;
+
+  Future<List<CoinWalletInfo>> get coinWallets;
 
   Future<CoinWallet> createNewWallet(
     String walletName,
@@ -42,25 +44,23 @@ abstract class Coin {
     required String? viewKey,
     required String? spendKey,
     required String? seedOffsetOrEncryption,
-  }) =>
-      throw UnimplementedError("createNewWallet is not implemented");
-  Future<CoinWallet> openWallet(CoinWalletInfo walletInfo,
-          {required String password}) =>
-      throw UnimplementedError();
+  });
+
+  Future<CoinWallet> openWallet(CoinWalletInfo walletInfo, {required String password});
 }
 
 abstract class CoinWalletInfo {
-  String get walletName => throw UnimplementedError();
+  String get walletName;
+
   Coins get type => coin.type;
-  Coin get coin => throw UnimplementedError();
-  void openUI(BuildContext context) => throw UnimplementedError();
 
-  Future<bool> checkWalletPassword(String password) async =>
-      throw UnimplementedError();
+  Coin get coin;
 
-  Future<CoinWallet> openWallet(BuildContext context,
-          {required String password}) =>
-      throw UnimplementedError();
+  void openUI(BuildContext context);
+
+  Future<bool> checkWalletPassword(String password);
+
+  Future<CoinWallet> openWallet(BuildContext context, {required String password});
 
   Map<String, dynamic> toJson() {
     return {
@@ -82,8 +82,9 @@ abstract class CoinWalletInfo {
     }
   }
 
-  Future<void> deleteWallet() => throw UnimplementedError();
-  Future<void> renameWallet(String newName) => throw UnimplementedError();
+  Future<void> deleteWallet();
+
+  Future<void> renameWallet(String newName);
 }
 
 abstract class CoinStrings {
@@ -94,7 +95,7 @@ abstract class CoinStrings {
   String get symbolUppercase => "COIN";
   String get nameFull => "$nameCapitalized ($symbolUppercase)";
 
-  SvgPicture get svg => throw UnimplementedError();
+  SvgPicture get svg;
 }
 
 enum WalletSeedDetailType {
@@ -108,35 +109,46 @@ class WalletSeedDetail {
     required this.name,
     required this.value,
   });
+
   final WalletSeedDetailType type;
   final String name;
   final String value;
 }
 
-class CoinWallet {
+abstract class CoinWallet {
   CoinWallet();
 
-  Coin get coin => throw UnimplementedError();
-  Future<void> handleUR(BuildContext context, URQRData ur) =>
-      throw UnimplementedError();
+  Coin get coin;
+
+  Future<void> handleUR(BuildContext context, URQRData ur) => throw UnimplementedError();
+
   bool get hasAccountSupport => false;
+
   bool get hasAddressesSupport => false;
 
-  int getAccountsCount() => throw UnimplementedError();
-  void setAccount(int accountIndex) => throw UnimplementedError();
-  int getAccountId() => throw UnimplementedError();
+  int getAccountsCount();
 
-  int get addressIndex => throw UnimplementedError();
-  String get getAccountLabel => throw UnimplementedError();
-  String get getCurrentAddress => throw UnimplementedError();
-  String get seed => throw UnimplementedError();
-  String get primaryAddress => throw UnimplementedError();
-  String get walletName => throw UnimplementedError();
+  void setAccount(int accountIndex);
 
-  int getBalance() => throw UnimplementedError();
-  String getBalanceString() => throw UnimplementedError();
-  Future<void> close() => throw UnimplementedError();
+  int getAccountId();
 
-  Future<List<WalletSeedDetail>> seedDetails(AppLocalizations L) =>
-      throw UnimplementedError();
+  int get addressIndex;
+
+  String get getAccountLabel;
+
+  String get getCurrentAddress;
+
+  String get seed;
+
+  String get primaryAddress;
+
+  String get walletName;
+
+  int getBalance();
+
+  String getBalanceString();
+
+  Future<void> close();
+
+  Future<List<WalletSeedDetail>> seedDetails(AppLocalizations L) => throw UnimplementedError();
 }

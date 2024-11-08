@@ -2,7 +2,6 @@ import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/themes/base_theme.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/filesystem.dart';
-import 'package:cupcake/utils/get_signing_key.dart';
 import 'package:cupcake/view_model/home_screen_view_model.dart';
 import 'package:cupcake/views/home_screen.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
@@ -14,11 +13,11 @@ late String signingKeyFound = "";
 
 Future<void> appInit() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    signingKeyFound = await getSigningKey() ?? "unknown";
-  } catch (e) {
-    signingKeyFound = e.toString();
-  }
+  // try {
+  //   signingKeyFound = await getSigningKey() ?? "unknown";
+  // } catch (e) {
+  //   signingKeyFound = e.toString();
+  // }
   await initializeBaseStoragePath();
 }
 
