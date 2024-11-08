@@ -175,6 +175,8 @@ class Monero implements Coin {
         details: "unable to create wallet, recoveryWallet failed.",
       );
     }
+    monero.Wallet_store(newWptr);
+    monero.Wallet_store(newWptr);
     progressCallback?.call(description: "Wallet created");
   }
 
@@ -204,6 +206,8 @@ class Monero implements Coin {
         details: "unable to create wallet, recoveryWallet failed.",
       );
     }
+    monero.Wallet_store(newWptr);
+    monero.Wallet_store(newWptr);
     progressCallback?.call(description: "Wallet created");
   }
 

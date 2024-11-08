@@ -232,13 +232,13 @@ class CreateWalletViewModel extends ViewModel {
     final cw = await selectedCoin!.createNewWallet(
       await walletName.value,
       await walletPassword.value,
-      primaryAddress: nullIfEmpty(await walletAddress.value),
+      primaryAddress: (await walletAddress.value).nullIfEmpty(),
       createWallet: (currentForm == _createForm),
-      seed: nullIfEmpty(await seed.value),
+      seed: (await seed.value).nullIfEmpty(),
       restoreHeight: int.tryParse(await restoreHeight.value),
-      viewKey: nullIfEmpty(await secretViewKey.value),
-      spendKey: nullIfEmpty(await secretSpendKey.value),
-      seedOffsetOrEncryption: nullIfEmpty(await seedOffset.value),
+      viewKey: (await secretViewKey.value).nullIfEmpty(),
+      spendKey: (await secretSpendKey.value).nullIfEmpty(),
+      seedOffsetOrEncryption: (await seedOffset.value).nullIfEmpty(),
     );
 
     final List<NewWalletInfoPage> pages = [

@@ -105,19 +105,19 @@ class _URQRState extends State<URQR> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Center(
-    child: Container(
-    padding: const EdgeInsets.all(17.0),
-    decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(30.0),
-    color: Colors.white,
-    ),
-          child: QrImageView(
-            foregroundColor: Colors.black,
-            data: widget.frames[frame % widget.frames.length],
-            version: -1,
-            size: 275,
+          child: Container(
+            padding: const EdgeInsets.all(17.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30.0),
+              color: Colors.white,
+            ),
+            child: QrImageView(
+              foregroundColor: Colors.black,
+              data: widget.frames[frame % widget.frames.length],
+              version: -1,
+              size: 275,
+            ),
           ),
-    ),
         ),
       ],
     );

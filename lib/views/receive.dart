@@ -33,45 +33,45 @@ class Receive extends AbstractView {
           Padding(
             padding:
                 const EdgeInsets.only(top: 8, left: 48, right: 48, bottom: 32),
-      child: Container(
-        padding: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30.0),
-          color: Colors.white,
-        ),
-            child: QrImageView(
-              data: "monero:${viewModel.address}",
-              foregroundColor: Colors.black,
+            child: Container(
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30.0),
+                color: Colors.white,
+              ),
+              child: QrImageView(
+                data: "monero:${viewModel.address}",
+                foregroundColor: Colors.black,
+              ),
             ),
-          ),
           ),
           Container(
             padding: const EdgeInsets.all(25.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30.0),
-              color: Color.fromRGBO(35, 44, 79, 1),
+              color: const Color.fromRGBO(35, 44, 79, 1),
             ),
-          child: InkWell(
-            onTap: () {
-              Clipboard.setData(
-                ClipboardData(
-                  text: viewModel.address,
+            child: InkWell(
+              onTap: () {
+                Clipboard.setData(
+                  ClipboardData(
+                    text: viewModel.address,
+                  ),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                        child: SelectableText(
+                      viewModel.address,
+                      style: const TextStyle(color: Colors.white),
+                    )),
+                    const Icon(Icons.copy, color: Colors.grey),
+                  ],
                 ),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                      child: SelectableText(
-                    viewModel.address,
-                    style: const TextStyle(color: Colors.white),
-                  )),
-                  const Icon(Icons.copy, color: Colors.grey),
-                ],
-              ),
               ),
             ),
           ),

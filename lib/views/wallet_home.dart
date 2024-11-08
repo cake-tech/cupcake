@@ -118,8 +118,8 @@ class WalletHome extends AbstractView {
                   child: ElevatedButton.icon(
                     onPressed: () =>
                         Receive.pushStatic(context, viewModel.wallet),
-                    icon:
-                        const Icon(Icons.call_received, size: 35, color: Colors.white),
+                    icon: const Icon(Icons.call_received,
+                        size: 35, color: Colors.white),
                     label: Text(
                       L.receive,
                       style: const TextStyle(color: Colors.white, fontSize: 18),

@@ -1,4 +1,6 @@
-String? nullIfEmpty(String str) {
-  if (str.isEmpty) return null;
-  return str;
+extension NullIfEmpty on String {
+  String? nullIfEmpty() {
+    if (isEmpty) return null;
+    return this;
+  }
 }

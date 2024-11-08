@@ -23,9 +23,9 @@ typedef ProgressCallback = int Function({String? title, String? description});
 
 enum Coins { monero, unknown }
 
-class Coin {
+abstract class Coin {
   Coins get type => Coins.unknown;
-  CoinStrings get strings => CoinStrings();
+  CoinStrings get strings => throw UnimplementedError();
 
   bool get isEnabled => false;
 
@@ -49,10 +49,10 @@ class Coin {
       throw UnimplementedError();
 }
 
-class CoinWalletInfo {
+abstract class CoinWalletInfo {
   String get walletName => throw UnimplementedError();
   Coins get type => coin.type;
-  Coin get coin => Coin();
+  Coin get coin => throw UnimplementedError();
   void openUI(BuildContext context) => throw UnimplementedError();
 
   Future<bool> checkWalletPassword(String password) async =>
@@ -86,7 +86,7 @@ class CoinWalletInfo {
   Future<void> renameWallet(String newName) => throw UnimplementedError();
 }
 
-class CoinStrings {
+abstract class CoinStrings {
   String get nameLowercase => "coin";
   String get nameCapitalized => "Coin";
   String get nameUppercase => "COIN";
@@ -116,7 +116,7 @@ class WalletSeedDetail {
 class CoinWallet {
   CoinWallet();
 
-  Coin coin = Coin();
+  Coin get coin => throw UnimplementedError();
   Future<void> handleUR(BuildContext context, URQRData ur) =>
       throw UnimplementedError();
   bool get hasAccountSupport => false;

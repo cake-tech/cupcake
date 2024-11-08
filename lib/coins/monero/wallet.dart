@@ -174,8 +174,8 @@ class MoneroWallet implements CoinWallet {
 
   @override
   String get seed =>
-      nullIfEmpty(polyseed ?? "") ??
-      nullIfEmpty(polyseedDart ?? "") ??
+      (polyseed ?? "").nullIfEmpty() ??
+      (polyseedDart ?? "").nullIfEmpty() ??
       legacySeed;
 
   String? get polyseed =>
