@@ -1,0 +1,90 @@
+name: build cupcake
+run-name: Build cupcake for supported targets
+on: [push]
+
+jobs:
+    moneroc_android:
+        runs-on: ubuntu-22.04
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+                submodules: recursive
+            - name: clone monero_c
+              run: |
+                source .env
+                git clone https://github.com/mrcyjanek/monero_c
+                cd monero_c
+                git checkout ${MONERO_C_TAG}
+                git submodule update --init --force --recursive
+                git config --global --add safe.directory '*'
+                git config --global user.email "ci@mrcyjanek.net"
+                git config --global user.name "CI mrcyjanek.net"
+                ./apply_patches.sh monero
+            - name: Install dependencies
+              run: |
+                sudo apt update
+                sudo apt install -y build-essential pkg-config autoconf libtool ccache make cmake gcc g++ git curl lbzip2 libtinfo5 gperf unzip python-is-python3
+            - name: setup ccache
+              uses: hendrikmuhs/ccache-action@v1.2
+              with:
+                key: android-${{ github.job }}-monero
+            - name: Cache built depends
+              if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+              uses: actions/cache@v4
+              with:
+                path: |
+                  monero_c/monero/contrib/depends/built/*
+                key: depends-${{ github.job }}-monero-${{ hashFiles('*monero_c/monero/contrib/depends/packages/*.mk') }}
+            - name: monero/aarch64-linux-android
+              run: cd monero_c && ./build_single.sh monero aarch64-linux-android -j$(nproc)
+            - name: Upload lib
+              uses: actions/upload-artifact@v4
+              with:
+                name: android monero
+                path: monero_c/release/monero
+            - name: remove android_ndk
+              run: |
+                rm -rf monero_c/monero/contrib/depends/built/*/android_ndk
+                rm -rf monero_c/monero/contrib/depends/sources/android-ndk-r26d-linux.zip
+    app_android:
+        needs: [moneroc_android]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+                submodules: recursive
+            - uses: actions/download-artifact@v4
+              with:
+                name: android monero
+                path: .cache/monero_c/gh_actions/release/monero
+            - name: use locally cached build from previous step
+              run: |
+                sed -i 's/^MONERO_C_TAG=.*/MONERO_C_TAG=gh_actions/' .env
+            - uses: kuhnroyal/flutter-fvm-config-action@v2
+              id: fvm-config-action
+            - uses: subosito/flutter-action@v2
+              with:
+                flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+                channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
+            - uses: actions/setup-java@v4
+              with:
+                distribution: 'zulu'
+                java-version: '17'
+            - name: Flutter pub get
+              run: |
+                flutter pub get
+            - name: Prepare dev
+              run: ./.tooling/prepare_dev.sh
+            - name: Build monero_c
+              run: |
+                make libs_android_build_ci
+            - name: Build apk
+              run: |
+                flutter build apk
+            - name: Upload lib
+              uses: actions/upload-artifact@v4
+              with:
+                name: android apk
+                path: build/app/outputs/flutter-apk/*.apk
