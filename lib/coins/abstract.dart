@@ -46,7 +46,8 @@ abstract class Coin {
     required String? seedOffsetOrEncryption,
   });
 
-  Future<CoinWallet> openWallet(CoinWalletInfo walletInfo, {required String password});
+  Future<CoinWallet> openWallet(CoinWalletInfo walletInfo,
+      {required String password});
 }
 
 abstract class CoinWalletInfo {
@@ -60,7 +61,8 @@ abstract class CoinWalletInfo {
 
   Future<bool> checkWalletPassword(String password);
 
-  Future<CoinWallet> openWallet(BuildContext context, {required String password});
+  Future<CoinWallet> openWallet(BuildContext context,
+      {required String password});
 
   Map<String, dynamic> toJson() {
     return {
@@ -120,7 +122,8 @@ abstract class CoinWallet {
 
   Coin get coin;
 
-  Future<void> handleUR(BuildContext context, URQRData ur) => throw UnimplementedError();
+  Future<void> handleUR(BuildContext context, URQRData ur) =>
+      throw UnimplementedError();
 
   bool get hasAccountSupport => false;
 
@@ -150,5 +153,6 @@ abstract class CoinWallet {
 
   Future<void> close();
 
-  Future<List<WalletSeedDetail>> seedDetails(AppLocalizations L) => throw UnimplementedError();
+  Future<List<WalletSeedDetail>> seedDetails(AppLocalizations L) =>
+      throw UnimplementedError();
 }
