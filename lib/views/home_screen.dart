@@ -161,6 +161,7 @@ class HomeScreen extends AbstractView {
     if (config.lastWallet == null) return;
     if (!context.mounted) return;
     if (!viewModel.openLastWallet) return;
+    if (config.lastWallet?.exists() != true) return;
     config.lastWallet!.openUI(context);
   }
 }
