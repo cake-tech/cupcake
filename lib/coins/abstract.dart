@@ -61,6 +61,8 @@ abstract class CoinWalletInfo {
 
   Future<bool> checkWalletPassword(String password);
 
+  bool exists();
+
   Future<CoinWallet> openWallet(BuildContext context,
       {required String password});
 
