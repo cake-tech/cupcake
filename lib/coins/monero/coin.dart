@@ -400,7 +400,7 @@ class MoneroWalletInfo extends CoinWalletInfo {
     File("$walletName.keys").rename(p.join(basePath, "$newName.keys"));
     _walletName = newName;
   }
-  
+
   @override
   bool exists() => File("$walletName.keys").existsSync();
 }
