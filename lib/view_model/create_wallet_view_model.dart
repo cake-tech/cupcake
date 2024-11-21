@@ -505,8 +505,8 @@ class PinFormElement extends FormElement {
   Future<void> Function(BuildContext context)? onChanged;
   Future<void> Function(BuildContext context)? onConfirm;
   Future<void> onConfirmInternal(BuildContext context) async {
-    isConfirmed = true;
     await valueOutcome.encode(ctrl.text);
+    isConfirmed = true;
   }
 
   bool isConfirmed = false;
