@@ -17,14 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
-enum CreateMethods {
-  create,
-  restoreSeedPolyseed,
-  restoreSeedLegacy,
-  restoreKeysDeterministic,
-  restoreKeys
-}
-
 enum CreateMethod {
   any,
   create,
@@ -228,6 +220,7 @@ class CreateWalletViewModel extends ViewModel {
 
   Future<void> createWallet(BuildContext context) async {
     if (selectedCoin == null) throw Exception("selectedCoin is null");
+    if ((await walletName.value).isEmpty) throw Exception(L.warning_input_cannot_be_empty);
     print(currentForm == _createForm);
     final cw = await selectedCoin!.createNewWallet(
       await walletName.value,

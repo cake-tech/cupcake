@@ -51,6 +51,9 @@ class WalletEdit extends AbstractView {
               child: LongPrimaryButton(
                 icon: null,
                 onPressed: () {
+                  for (var element in viewModel.form) {
+                    if (!element.isOk) continue;
+                  }
                   callThrowable(context, () => viewModel.renameWallet(context),
                       "Rename wallet");
                 },

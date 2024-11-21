@@ -14,6 +14,11 @@ class WalletEditViewModel extends ViewModel {
   late StringFormElement walletName = StringFormElement(
     "Wallet name",
     initialText: p.basename(walletInfo.walletName),
+    validator: (input) {
+      if (input == null) return L.warning_input_cannot_be_null;
+      if (input == "") return L.warning_input_cannot_be_empty;
+      return null;
+    },
   );
 
   late PinFormElement walletPassword = PinFormElement(

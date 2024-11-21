@@ -15,6 +15,7 @@ class CupcakeConfig {
     required this.maxFragmentLength,
     required this.walletSort,
     required this.debug,
+    required this.oldSecureStorage,
   });
   CoinWalletInfo? lastWallet;
   bool initialSetupComplete;
@@ -23,6 +24,7 @@ class CupcakeConfig {
   int maxFragmentLength;
   int walletSort;
   bool debug;
+  Map<String, dynamic> oldSecureStorage;
 
   factory CupcakeConfig.fromJson(Map<String, dynamic> json) {
     return CupcakeConfig(
@@ -33,6 +35,7 @@ class CupcakeConfig {
       maxFragmentLength: json['maxFragmentLength'] ?? 130,
       walletSort: json['walletSort'] ?? 0,
       debug: json['debug'] ?? false,
+      oldSecureStorage: json['oldSecureStorage'] ?? {},
     );
   }
 
