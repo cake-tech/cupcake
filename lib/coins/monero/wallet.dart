@@ -299,6 +299,18 @@ class MoneroWallet implements CoinWallet {
                 value: secrets[key] ?? "unknown");
           },
         ),
+      if (config.debug)
+        ...List.generate(
+          config.toJson().keys.length,
+          (index) {
+            final key = config.toJson().keys.elementAt(index);
+            return WalletSeedDetail(
+                type: WalletSeedDetailType.text,
+                name: key,
+                value: const JsonEncoder.withIndent('    ')
+                    .convert(config.toJson()[key]));
+          },
+        ),
     ];
   }
 }

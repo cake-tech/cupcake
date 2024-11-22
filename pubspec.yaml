@@ -61,6 +61,7 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   crypto: ^3.0.3
   package_info_plus: ^8.1.0
+  local_auth: ^2.3.0
 
 dev_dependencies:
   flutter_test:

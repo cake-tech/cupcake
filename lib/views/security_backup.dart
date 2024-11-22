@@ -6,6 +6,7 @@ import 'package:cupcake/views/initial_setup_screen.dart';
 import 'package:cupcake/widgets/form_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class SecurityBackup extends AbstractView {
@@ -26,6 +27,13 @@ class SecurityBackup extends AbstractView {
     );
   }
 
+  void _copy(BuildContext context, String value, String key) {
+    Clipboard.setData(ClipboardData(text: value));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text("Copied $key"),
+    ));
+  }
+
   @override
   Widget? body(BuildContext context) {
     if (viewModel.isLocked) {
@@ -34,6 +42,7 @@ class SecurityBackup extends AbstractView {
         scaffoldContext: context,
         isPinSet: !viewModel.isLocked,
         showExtra: true,
+        onLabelChange: viewModel.titleUpdate,
       );
     }
     final details = viewModel.wallet.seedDetails(L);
@@ -48,10 +57,13 @@ class SecurityBackup extends AbstractView {
               switch (d.type) {
                 case WalletSeedDetailType.text:
                   return ListTile(
+                    onTap: () {
+                      _copy(context, d.value, d.name);
+                    },
                     title: Text(d.name,
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             fontSize: 14, fontWeight: FontWeight.w700)),
-                    subtitle: SelectableText(
+                    subtitle: Text(
                       d.value,
                       style: const TextStyle(color: Colors.white),
                     ),

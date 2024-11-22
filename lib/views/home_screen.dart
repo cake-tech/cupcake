@@ -52,7 +52,6 @@ class HomeScreen extends AbstractView {
   }
 
   @override
-  // TODO: implement appBar
   AppBar? get appBar => AppBar(
         title: Text(
           viewModel.screenName,
@@ -100,7 +99,7 @@ class HomeScreen extends AbstractView {
                             () => renameWallet(context, wallets.data![index]),
                             "Renaming wallet",
                           );
-                          markNeedsBuild(context);
+                          markNeedsBuild();
                         },
                       ),
                       title: Text(
@@ -129,10 +128,11 @@ class HomeScreen extends AbstractView {
       context,
       CreateWalletViewModel(
         createMethod: method,
+        needsPasswordConfirm: false,
       ),
     );
     if (!context.mounted) return;
-    markNeedsBuild(context);
+    markNeedsBuild();
   }
 
   @override
@@ -161,6 +161,7 @@ class HomeScreen extends AbstractView {
     if (config.lastWallet == null) return;
     if (!context.mounted) return;
     if (!viewModel.openLastWallet) return;
+    if (config.lastWallet?.exists() != true) return;
     config.lastWallet!.openUI(context);
   }
 }

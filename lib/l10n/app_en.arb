@@ -54,6 +54,8 @@
   "balance": "Balance",
   "wallet_seed": "Wallet seed",
   "wallet_passphrase": "Wallet passphrase",
+  "wallet_password": "Wallet password",
+  "wallet_password_repeat": "Wallet password (repeat)",
   "secret_spend_key": "Secret spend key",
   "spend_key": "Spend key",
   "secret_view_key": "Secret view key",

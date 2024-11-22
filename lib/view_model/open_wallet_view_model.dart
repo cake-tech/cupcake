@@ -50,7 +50,11 @@ class OpenWalletViewModel extends ViewModel {
   }
 
   Future<bool> checkWalletPassword() async {
-    return coinInfo.checkWalletPassword(await walletPassword.value);
+    try {
+      return coinInfo.checkWalletPassword(await walletPassword.value);
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<void> openWalletIfPasswordCorrect(BuildContext context) async {
@@ -60,4 +64,6 @@ class OpenWalletViewModel extends ViewModel {
       openWallet(context);
     }
   }
+
+  void titleUpdate(String? suggestedTitle) {}
 }

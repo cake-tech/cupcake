@@ -31,12 +31,17 @@ class SecurityBackupViewModel extends ViewModel {
         },
         showNumboard: true,
         onConfirm: (BuildContext context) async {
-          await form.first.value;
-
+          try {
+            await form.first.value;
+          } catch (e) {
+            print(e);
+          }
           isLocked = false;
           markNeedsBuild();
         })
   ];
 
   CoinWallet wallet;
+
+  void titleUpdate(String? suggestedTitle) {}
 }

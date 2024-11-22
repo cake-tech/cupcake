@@ -37,6 +37,7 @@ class OpenWallet extends AbstractView {
           scaffoldContext: context,
           isPinSet: false,
           showExtra: false,
+          onLabelChange: viewModel.titleUpdate,
         ),
       ],
     );
