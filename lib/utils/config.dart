@@ -14,6 +14,7 @@ class CupcakeConfig {
     required this.msForQrCode,
     required this.maxFragmentLength,
     required this.walletSort,
+    required this.biometricEnabled,
     required this.debug,
     required this.oldSecureStorage,
   });
@@ -23,6 +24,7 @@ class CupcakeConfig {
   int msForQrCode;
   int maxFragmentLength;
   int walletSort;
+  bool biometricEnabled;
   bool debug;
   Map<String, dynamic> oldSecureStorage;
 
@@ -34,6 +36,7 @@ class CupcakeConfig {
       msForQrCode: json['msForQrCode'] ?? 1000 ~/ 3.5,
       maxFragmentLength: json['maxFragmentLength'] ?? 130,
       walletSort: json['walletSort'] ?? 0,
+      biometricEnabled: json['biometricEnabled'] ?? false,
       debug: json['debug'] ?? false,
       oldSecureStorage: json['oldSecureStorage'] ?? {},
     );
@@ -47,6 +50,8 @@ class CupcakeConfig {
       'msForQrCode': msForQrCode,
       'maxFragmentLength': maxFragmentLength,
       'walletSort': walletSort,
+      'biometricEnabled': biometricEnabled,
+      'oldSecureStorage': oldSecureStorage,
       'debug': debug,
     };
   }

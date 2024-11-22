@@ -29,6 +29,7 @@ class WalletEdit extends AbstractView {
           scaffoldContext: context,
           isPinSet: false,
           showExtra: true,
+          onLabelChange: viewModel.titleUpdate,
         ),
         const Spacer(),
         Row(

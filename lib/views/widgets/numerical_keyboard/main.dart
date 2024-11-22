@@ -3,17 +3,20 @@ import 'package:cupcake/views/widgets/numerical_keyboard/single_key.dart';
 import 'package:flutter/cupertino.dart';
 
 class NumericalKeyboard extends StatelessWidget {
-  const NumericalKeyboard(
-      {super.key,
-      required this.ctrl,
-      required this.rebuild,
-      required this.showConfirm,
-      required this.nextPage,
-      required this.showComma});
+  const NumericalKeyboard({
+    super.key,
+    required this.ctrl,
+    required this.rebuild,
+    required this.showConfirm,
+    required this.nextPage,
+    required this.onConfirmLongPress,
+    required this.showComma,
+  });
   final TextEditingController ctrl;
   final VoidCallback rebuild;
   final bool Function() showConfirm;
   final VoidCallback? nextPage;
+  final VoidCallback? onConfirmLongPress;
   final bool showComma;
   @override
   Widget build(BuildContext context) {
@@ -46,7 +49,7 @@ class NumericalKeyboard extends StatelessWidget {
           SingleKey(Keys.a0, ctrl, rebuild),
           if (showConfirm() &&
               (!showComma || ctrl.text.contains(getKeysChar(Keys.dot))))
-            SingleKey(Keys.next, ctrl, nextPage),
+            SingleKey(Keys.next, ctrl, nextPage, longPress: onConfirmLongPress),
           if (showComma && !ctrl.text.contains(getKeysChar(Keys.dot)))
             SingleKey(Keys.dot, ctrl, rebuild),
           Spacer(flex: showConfirm() || showComma ? 1 : 3),

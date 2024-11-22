@@ -64,4 +64,6 @@ class OpenWalletViewModel extends ViewModel {
       openWallet(context);
     }
   }
+
+  void titleUpdate(String? suggestedTitle) {}
 }

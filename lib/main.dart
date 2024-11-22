@@ -15,10 +15,11 @@ late String signingKeyFound = "";
 Future<void> appInit() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeBaseStoragePath();
-  if (config.initialSetupComplete != false) {
+  if (config.initialSetupComplete == false) {
     final oldSecureStorage = await secureStorage.readAll();
     final date = DateTime.now().toIso8601String();
     config.oldSecureStorage[date] = oldSecureStorage;
+    config.save();
     await secureStorage.deleteAll();
   }
 }

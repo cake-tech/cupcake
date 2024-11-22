@@ -391,13 +391,18 @@ class MoneroWalletInfo extends CoinWalletInfo {
 
   @override
   Future<void> renameWallet(String newName) async {
+    if (p.basename(walletName) == newName) {
+      throw Exception("Wallet wasn't renamed");
+    }
     for (var element in wPtrList) {
       monero.WalletManager_closeWallet(Monero.wmPtr, element, true);
     }
     wPtrList.clear();
     final basePath = p.dirname(walletName);
-    File(walletName).rename(p.join(basePath, newName));
-    File("$walletName.keys").rename(p.join(basePath, "$newName.keys"));
+    File(walletName).copySync(p.join(basePath, newName));
+    File("$walletName.keys").copySync(p.join(basePath, "$newName.keys"));
+    File(walletName).deleteSync();
+    File("$walletName.keys").deleteSync();
     _walletName = newName;
   }
 

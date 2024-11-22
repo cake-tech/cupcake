@@ -16,6 +16,7 @@ import 'package:cupcake/views/wallet_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:local_auth/local_auth.dart';
 
 enum CreateMethod {
   any,
@@ -26,14 +27,22 @@ enum CreateMethod {
 class CreateWalletViewModel extends ViewModel {
   CreateWalletViewModel({
     required this.createMethod,
+    required this.needsPasswordConfirm,
   });
 
   final CreateMethod createMethod;
 
   bool isPinSet = false;
   bool showExtra = false;
+
   @override
-  String get screenName => L.create_wallet;
+  late String screenName = screenNameOriginal;
+
+  String get screenNameOriginal => switch (createMethod) {
+        CreateMethod.any => L.create_wallet,
+        CreateMethod.create => L.create_wallet,
+        CreateMethod.restore => L.restore_wallet,
+      };
 
   List<Coin> get coins => walletCoins;
 
@@ -62,12 +71,15 @@ class CreateWalletViewModel extends ViewModel {
     return null;
   }();
 
-  late StringFormElement walletName =
-      StringFormElement(L.wallet_name, validator: (String? input) {
-    if (input == null) return L.warning_input_cannot_be_null;
-    if (input == "") return L.warning_input_cannot_be_empty;
-    return null;
-  });
+  late StringFormElement walletName = StringFormElement(
+    L.wallet_name,
+    validator: (String? input) {
+      if (input == null) return L.warning_input_cannot_be_null;
+      if (input == "") return L.warning_input_cannot_be_empty;
+      return null;
+    },
+    randomNameGenerator: true,
+  );
 
   late SingleChoiceFormElement walletSeedType = SingleChoiceFormElement(
     title: L.seed_type,
@@ -78,7 +90,7 @@ class CreateWalletViewModel extends ViewModel {
   );
 
   late PinFormElement walletPasswordInitial = PinFormElement(
-    label: "Wallet password",
+    label: L.wallet_password,
     password: true,
     valueOutcome: PlainValueOutcome(),
     validator: (String? input) {
@@ -92,7 +104,8 @@ class CreateWalletViewModel extends ViewModel {
   );
 
   late PinFormElement walletPassword = PinFormElement(
-    label: "Wallet password",
+    label:
+        (needsPasswordConfirm) ? L.wallet_password_repeat : L.wallet_password,
     password: true,
     valueOutcome: FlutterSecureStorageValueOutcome(
       "secure.wallet_password",
@@ -105,7 +118,7 @@ class CreateWalletViewModel extends ViewModel {
       if (input.length < 4) {
         return L.warning_password_too_short;
       }
-      if (input != walletPasswordInitial.ctrl.text) {
+      if (input != walletPasswordInitial.ctrl.text && needsPasswordConfirm) {
         return L.password_doesnt_match;
       }
       return null;
@@ -193,8 +206,10 @@ class CreateWalletViewModel extends ViewModel {
         },
       };
 
+  bool needsPasswordConfirm;
+
   late final List<FormElement> _createForm = [
-    walletPasswordInitial,
+    if (needsPasswordConfirm) walletPasswordInitial,
     walletPassword,
     walletName,
     walletSeedType,
@@ -202,7 +217,7 @@ class CreateWalletViewModel extends ViewModel {
   ];
 
   late final List<FormElement> _restoreSeedForm = [
-    walletPasswordInitial,
+    if (needsPasswordConfirm) walletPasswordInitial,
     walletPassword,
     walletName,
     seed,
@@ -210,7 +225,7 @@ class CreateWalletViewModel extends ViewModel {
   ];
 
   late final List<FormElement> _restoreFormKeysForm = [
-    walletPasswordInitial,
+    if (needsPasswordConfirm) walletPasswordInitial,
     walletPassword,
     walletName,
     walletAddress,
@@ -220,7 +235,9 @@ class CreateWalletViewModel extends ViewModel {
 
   Future<void> createWallet(BuildContext context) async {
     if (selectedCoin == null) throw Exception("selectedCoin is null");
-    if ((await walletName.value).isEmpty) throw Exception(L.warning_input_cannot_be_empty);
+    if ((await walletName.value).isEmpty) {
+      throw Exception(L.warning_input_cannot_be_empty);
+    }
     print(currentForm == _createForm);
     final cw = await selectedCoin!.createNewWallet(
       await walletName.value,
@@ -369,6 +386,12 @@ class CreateWalletViewModel extends ViewModel {
       );
     }
   }
+
+  void titleUpdate(String? suggestedTitle) async {
+    await Future.delayed(Duration.zero); // don't do it on build();
+    screenName = suggestedTitle ?? screenNameOriginal;
+    markNeedsBuild();
+  }
 }
 
 String? _defaultValidator(String? input) {
@@ -383,6 +406,7 @@ class StringFormElement extends FormElement {
     this.validator = _defaultValidator,
     this.isExtra = false,
     this.showIf,
+    this.randomNameGenerator = false,
   }) : ctrl = TextEditingController(text: initialText);
 
   bool Function()? showIf;
@@ -394,6 +418,7 @@ class StringFormElement extends FormElement {
   Future<String> get value => Future.value(ctrl.text);
 
   bool isExtra;
+  bool randomNameGenerator;
 
   @override
   bool get isOk => validator(ctrl.text) == null;
@@ -404,6 +429,8 @@ class StringFormElement extends FormElement {
 abstract class ValueOutcome {
   Future<void> encode(String input);
   Future<String> decode(String output);
+
+  String get uniqueId => throw UnimplementedError();
 }
 
 class PlainValueOutcome implements ValueOutcome {
@@ -412,6 +439,9 @@ class PlainValueOutcome implements ValueOutcome {
 
   @override
   Future<void> encode(String input) => Future.value();
+
+  @override
+  String get uniqueId => "undefined";
 }
 
 class FlutterSecureStorageValueOutcome implements ValueOutcome {
@@ -473,7 +503,13 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
     }
     return "$input/$output";
   }
+
+  @override
+  // TODO: implement uniqueId
+  String get uniqueId => key;
 }
+
+final LocalAuthentication auth = LocalAuthentication();
 
 class PinFormElement extends FormElement {
   PinFormElement({
@@ -486,6 +522,33 @@ class PinFormElement extends FormElement {
     this.showNumboard = true,
     required this.label,
   }) : ctrl = TextEditingController(text: initialText);
+
+  Future<void> loadSecureStorageValue(VoidCallback callback) async {
+    if (ctrl.text.isNotEmpty) return;
+    if (!config.biometricEnabled) return;
+    final List<BiometricType> availableBiometrics =
+        await auth.getAvailableBiometrics();
+    final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+    final bool canAuthenticate =
+        canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+    if (!canAuthenticate) return;
+    if (!availableBiometrics.contains(BiometricType.fingerprint) &&
+        !availableBiometrics.contains(BiometricType.face)) {
+      return;
+    }
+
+    final bool didAuthenticate = await auth.authenticate(
+      localizedReason: 'Authenticate...',
+      options: const AuthenticationOptions(
+          useErrorDialogs: true, biometricOnly: true),
+    );
+    if (!didAuthenticate) return;
+    final value = await secureStorage.read(key: "UI.${valueOutcome.uniqueId}");
+    if (value == null) return;
+    ctrl.text = value;
+    await Future.delayed(Duration.zero);
+    callback();
+  }
 
   TextEditingController ctrl;
   bool password;

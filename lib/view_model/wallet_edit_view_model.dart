@@ -12,17 +12,18 @@ class WalletEditViewModel extends ViewModel {
   CoinWalletInfo walletInfo;
 
   late StringFormElement walletName = StringFormElement(
-    "Wallet name",
+    L.wallet_name,
     initialText: p.basename(walletInfo.walletName),
     validator: (input) {
       if (input == null) return L.warning_input_cannot_be_null;
       if (input == "") return L.warning_input_cannot_be_empty;
       return null;
     },
+    randomNameGenerator: true,
   );
 
   late PinFormElement walletPassword = PinFormElement(
-    label: "Wallet password",
+    label: L.wallet_password,
     password: true,
     valueOutcome: FlutterSecureStorageValueOutcome(
       "secure.wallet_password",
@@ -61,9 +62,14 @@ class WalletEditViewModel extends ViewModel {
     if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
       throw Exception("Invalid wallet password");
     }
+    if ((await walletName.value).isEmpty) {
+      throw Exception("Wallet name is empty");
+    }
     await walletInfo.renameWallet(await walletName.value);
     if (!context.mounted) return;
     await markNeedsBuild();
     Navigator.of(context).pop();
   }
+
+  void titleUpdate(String? suggestedTitle) {}
 }

@@ -46,7 +46,7 @@ class AbstractView extends StatefulWidget {
 
   final viewModel = ViewModel();
 
-  late final appBar = viewModel.screenName.isEmpty
+  get appBar => viewModel.screenName.isEmpty
       ? null
       : AppBar(
           title: viewModel.screenName.toLowerCase() != "cupcake"
@@ -91,7 +91,7 @@ class AbstractView extends StatefulWidget {
 
   Widget? floatingActionButton(BuildContext context) => null;
 
-  void markNeedsBuild(BuildContext context) {
+  void markNeedsBuild() {
     state!.setState(() {});
   }
 }
