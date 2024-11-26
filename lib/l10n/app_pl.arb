@@ -54,6 +54,8 @@
   "balance": "Saldo",
   "wallet_seed": "Fraza odzyskiwania",
   "wallet_passphrase": "Hasło frazy odzyskiwania",
+  "wallet_password": "Hasło portfela",
+  "wallet_password_repeat": "Hasło portfela (ponownie)",
   "secret_spend_key": "Tajny klucz wydatków",
   "spend_key": "Klucz wydatków",
   "secret_view_key": "Tajny klucz podglądu",

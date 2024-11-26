@@ -51,7 +51,10 @@ class InitialSetupScreen extends AbstractView {
               icon: Icons.add,
               onPressed: () => CreateWallet.staticPush(
                 context,
-                CreateWalletViewModel(createMethod: CreateMethod.create),
+                CreateWalletViewModel(
+                  createMethod: CreateMethod.create,
+                  needsPasswordConfirm: true,
+                ),
               ),
             ),
             LongPrimaryButton(
@@ -59,7 +62,10 @@ class InitialSetupScreen extends AbstractView {
               icon: Icons.restore,
               onPressed: () => CreateWallet.staticPush(
                 context,
-                CreateWalletViewModel(createMethod: CreateMethod.restore),
+                CreateWalletViewModel(
+                  createMethod: CreateMethod.restore,
+                  needsPasswordConfirm: true,
+                ),
               ),
             ),
           ],

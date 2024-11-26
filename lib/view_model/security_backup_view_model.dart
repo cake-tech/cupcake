@@ -42,4 +42,6 @@ class SecurityBackupViewModel extends ViewModel {
   ];
 
   CoinWallet wallet;
+
+  void titleUpdate(String? suggestedTitle) {}
 }

@@ -30,7 +30,7 @@ class CreateWallet extends AbstractView {
 
   void setPinSet(BuildContext context, bool val) {
     viewModel.isPinSet = val;
-    markNeedsBuild(context);
+    markNeedsBuild();
   }
 
   @override
@@ -42,7 +42,7 @@ class CreateWallet extends AbstractView {
           return InkWell(
             onTap: () {
               viewModel.selectedCoin = viewModel.coins[index];
-              markNeedsBuild(context);
+              markNeedsBuild();
             },
             child: Card(
               child: ListTile(
@@ -64,7 +64,7 @@ class CreateWallet extends AbstractView {
             return InkWell(
               onTap: () {
                 viewModel.currentForm = value;
-                markNeedsBuild(context);
+                markNeedsBuild();
               },
               child: Card(
                 child: ListTile(
@@ -81,10 +81,11 @@ class CreateWallet extends AbstractView {
       scaffoldContext: context,
       rebuild: (bool val) {
         setPinSet(context, val);
-        markNeedsBuild(context);
+        markNeedsBuild();
       },
       isPinSet: viewModel.isPinSet,
       showExtra: viewModel.showExtra,
+      onLabelChange: viewModel.titleUpdate,
     );
     return Column(
       children: [

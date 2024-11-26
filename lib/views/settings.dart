@@ -1,5 +1,6 @@
 import 'package:cupcake/utils/alert.dart';
 import 'package:cupcake/utils/config.dart';
+import 'package:cupcake/utils/secure_storage.dart';
 import 'package:cupcake/view_model/settings_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,7 +23,7 @@ class SettingsView extends AbstractView {
 
   Future<void> postUpdate(BuildContext context) async {
     viewModel.appConfig.save();
-    markNeedsBuild(context);
+    markNeedsBuild();
   }
 
   @override
@@ -39,16 +40,6 @@ class SettingsView extends AbstractView {
                 viewModel.appConfig.debug = value;
                 postUpdate(context);
               }),
-        if (config.debug)
-          BooleanConfigElement(
-              title: "Initial config done",
-              subtitleEnabled: "Initial setup has been completed",
-              subtitleDisabled: "Initial setup has not been completed",
-              value: viewModel.appConfig.initialSetupComplete,
-              onChange: (bool value) {
-                viewModel.appConfig.initialSetupComplete = value;
-                postUpdate(context);
-              }),
         IntegerConfigElement(
             title: "Milliseconds for qr code",
             hint:
@@ -58,6 +49,24 @@ class SettingsView extends AbstractView {
               viewModel.appConfig.msForQrCode = value;
               postUpdate(context);
             }),
+        // BooleanConfigElement(
+        //     title: "Biometric auth",
+        //     subtitleEnabled: "Biometrics are enabled",
+        //     subtitleDisabled:
+        //         "In order to enable biometrics long press confirm button when entering pin",
+        //     value: config.biometricEnabled,
+        //     onChange: (bool value) async {
+        //       if (value) return;
+        //       config.biometricEnabled = false;
+        //       final map = await secureStorage.readAll();
+        //       for (var key in map.keys) {
+        //         if (map[key]!.startsWith("UI.")) {
+        //           await secureStorage.delete(key: key);
+        //         }
+        //       }
+        //       config.save();
+        //       postUpdate(context);
+        //     }),
         IntegerConfigElement(
           title: "Max fragment density",
           hint:
