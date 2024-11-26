@@ -38,7 +38,7 @@ class _FormBuilderState extends State<FormBuilder> {
   }
 
   String? lastSuggestedTitle = DateTime.now().toIso8601String();
-  void onLabelChange(String? suggestedTitle) {
+  void _onLabelChange(String? suggestedTitle) {
     if (suggestedTitle == lastSuggestedTitle) return;
     lastSuggestedTitle = suggestedTitle;
     widget.onLabelChange(suggestedTitle);
@@ -70,7 +70,7 @@ class _FormBuilderState extends State<FormBuilder> {
         i++;
         e = widget.formElements[1] as PinFormElement;
       }
-      onLabelChange(e.label);
+      _onLabelChange(e.label);
       nextPageCallback() async {
         final b = await callThrowable(context, () async {
           await e.onConfirmInternal(context);
@@ -148,7 +148,7 @@ class _FormBuilderState extends State<FormBuilder> {
         ],
       );
     }
-    onLabelChange(null);
+    _onLabelChange(null);
     final showExtra = widget.showExtra;
     final List<Widget> children = [];
     for (final e in widget.formElements) {

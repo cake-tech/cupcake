@@ -49,24 +49,24 @@ class SettingsView extends AbstractView {
               viewModel.appConfig.msForQrCode = value;
               postUpdate(context);
             }),
-        BooleanConfigElement(
-            title: "Biometric auth",
-            subtitleEnabled: "Biometrics are enabled",
-            subtitleDisabled:
-                "In order to enable biometrics long press confirm button when entering pin",
-            value: config.biometricEnabled,
-            onChange: (bool value) async {
-              if (value) return;
-              config.biometricEnabled = false;
-              final map = await secureStorage.readAll();
-              for (var key in map.keys) {
-                if (map[key]!.startsWith("UI.")) {
-                  await secureStorage.delete(key: key);
-                }
-              }
-              config.save();
-              postUpdate(context);
-            }),
+        // BooleanConfigElement(
+        //     title: "Biometric auth",
+        //     subtitleEnabled: "Biometrics are enabled",
+        //     subtitleDisabled:
+        //         "In order to enable biometrics long press confirm button when entering pin",
+        //     value: config.biometricEnabled,
+        //     onChange: (bool value) async {
+        //       if (value) return;
+        //       config.biometricEnabled = false;
+        //       final map = await secureStorage.readAll();
+        //       for (var key in map.keys) {
+        //         if (map[key]!.startsWith("UI.")) {
+        //           await secureStorage.delete(key: key);
+        //         }
+        //       }
+        //       config.save();
+        //       postUpdate(context);
+        //     }),
         IntegerConfigElement(
           title: "Max fragment density",
           hint:
