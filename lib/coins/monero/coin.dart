@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:cupcake/coins/abstract/coin.dart';
-import 'package:cupcake/coins/abstract/coin_exception.dart';
-import 'package:cupcake/coins/abstract/coin_strings.dart';
-import 'package:cupcake/coins/abstract/coin_wallet.dart';
-import 'package:cupcake/coins/abstract/coin_wallet_info.dart';
-import 'package:cupcake/coins/monero/monero_strings.dart';
-import 'package:cupcake/coins/monero/monero_wallet_info.dart';
+import 'package:cupcake/coins/abstract/exception.dart';
+import 'package:cupcake/coins/abstract/strings.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/coins/abstract/wallet_info.dart';
+import 'package:cupcake/coins/monero/cache_keys.dart';
+import 'package:cupcake/coins/monero/strings.dart';
+import 'package:cupcake/coins/monero/wallet_info.dart';
 import 'package:cupcake/coins/monero/wallet.dart';
 import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/utils/config.dart';
@@ -15,16 +16,16 @@ import 'package:monero/monero.dart' as monero;
 import 'package:path/path.dart' as p;
 import 'package:polyseed/polyseed.dart';
 
-List<monero.wallet> wPtrList = [];
-
 class Monero implements Coin {
+  static List<monero.wallet> wPtrList = [];
+
   @override
   bool get isEnabled {
     try {
       monero.isLibOk();
       return true;
     } catch (e) {
-      if (config.debug) {
+      if (CupcakeConfig.instance.debug) {
         print("monero.dart: isLibOk failed: $e");
         return false;
       }
@@ -95,7 +96,7 @@ class Monero implements Coin {
       );
     }
     monero.Wallet_setCacheAttribute(newWptr,
-        key: seedOffsetCacheKey, value: seedOffsetOrEncryption);
+        key: MoneroCacheKeys.seedOffsetCacheKey, value: seedOffsetOrEncryption);
     monero.Wallet_store(newWptr);
     monero.Wallet_store(newWptr);
     wPtrList.add(newWptr);
@@ -145,7 +146,7 @@ class Monero implements Coin {
       );
     }
     monero.Wallet_setCacheAttribute(newWptr,
-        key: seedOffsetCacheKey, value: seedOffsetOrEncryption);
+        key: MoneroCacheKeys.seedOffsetCacheKey, value: seedOffsetOrEncryption);
     monero.Wallet_store(newWptr);
     monero.Wallet_store(newWptr);
     progressCallback?.call(description: "Wallet created");
@@ -306,8 +307,8 @@ class Monero implements Coin {
       final error = monero.Wallet_errorString(wptr);
       throw Exception(error);
     }
-    config.lastWallet = walletInfo;
-    config.save();
+    CupcakeConfig.instance.lastWallet = walletInfo;
+    CupcakeConfig.instance.save();
     return MoneroWallet(wptr);
   }
 

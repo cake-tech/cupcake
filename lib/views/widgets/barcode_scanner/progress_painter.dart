@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cupcake/views/widgets/barcode_scanner/urqr_progress.dart';
 import 'package:flutter/material.dart';
 
 class ProgressPainter extends CustomPainter {
@@ -37,26 +38,5 @@ class ProgressPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant ProgressPainter oldDelegate) {
     return urQrProgress != oldDelegate.urQrProgress;
-  }
-}
-
-class URQrProgress {
-  int expectedPartCount;
-  int processedPartsCount;
-  List<int> receivedPartIndexes;
-  double percentage;
-
-  URQrProgress({
-    required this.expectedPartCount,
-    required this.processedPartsCount,
-    required this.receivedPartIndexes,
-    required this.percentage,
-  });
-
-  bool equals(URQrProgress? progress) {
-    if (progress == null) {
-      return false;
-    }
-    return processedPartsCount == progress.processedPartsCount;
   }
 }

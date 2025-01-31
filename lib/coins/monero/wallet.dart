@@ -1,27 +1,27 @@
 import 'dart:convert';
 
 import 'package:cupcake/coins/abstract/coin.dart';
-import 'package:cupcake/coins/abstract/coin_exception.dart';
-import 'package:cupcake/coins/abstract/coin_wallet.dart';
+import 'package:cupcake/coins/abstract/exception.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
 import 'package:cupcake/coins/monero/coin.dart';
+import 'package:cupcake/coins/monero/amount.dart';
+import 'package:cupcake/coins/monero/cache_keys.dart';
 import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/null_if_empty.dart';
 import 'package:cupcake/utils/secure_storage.dart';
+import 'package:cupcake/coins/abstract/address.dart';
 import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/view_model/unconfirmed_transaction_view_model.dart';
 import 'package:cupcake/view_model/urqr_view_model.dart';
+import 'package:cupcake/views/animated_qr_page.dart';
 import 'package:cupcake/views/unconfirmed_transaction.dart';
-import 'package:cupcake/views/urqr.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as p;
 import 'package:monero/monero.dart' as monero;
 import 'package:polyseed/polyseed.dart';
-
-const seedOffsetCacheKey = "cakewallet.passphrase";
-const seedCacheKey = "cakewallet.seed";
 
 class MoneroWallet implements CoinWallet {
   MoneroWallet(this.wptr);
@@ -74,10 +74,12 @@ class MoneroWallet implements CoinWallet {
 
   Future<void> exportKeyImagesUR(BuildContext context) async {
     final allImages = monero.Wallet_exportKeyImagesUR(wptr,
-            max_fragment_length: config.maxFragmentLength, all: true)
+            max_fragment_length: CupcakeConfig.instance.maxFragmentLength,
+            all: true)
         .split("\n");
     final someImages = monero.Wallet_exportKeyImagesUR(wptr,
-            max_fragment_length: config.maxFragmentLength, all: false)
+            max_fragment_length: CupcakeConfig.instance.maxFragmentLength,
+            all: false)
         .split("\n");
     await AnimatedURPage.staticPush(
       context,
@@ -142,7 +144,7 @@ class MoneroWallet implements CoinWallet {
             fee: fee,
             confirmCallback: (BuildContext context) async {
               final signedTx = monero.UnsignedTransaction_signUR(
-                      txptr, config.maxFragmentLength)
+                      txptr, CupcakeConfig.instance.maxFragmentLength)
                   .split("\n");
               var status = monero.Wallet_status(wptr);
               if (status != 0) {
@@ -167,12 +169,12 @@ class MoneroWallet implements CoinWallet {
   }
 
   // TODO: make this match the offset used in cake wallet, and define const
-  String get seedOffset =>
-      monero.Wallet_getCacheAttribute(wptr, key: seedOffsetCacheKey);
+  String get seedOffset => monero.Wallet_getCacheAttribute(wptr,
+      key: MoneroCacheKeys.seedOffsetCacheKey);
 
   set seedOffset(String newSeedOffset) => monero.Wallet_setCacheAttribute(
         wptr,
-        key: seedOffsetCacheKey,
+        key: MoneroCacheKeys.seedOffsetCacheKey,
         value: newSeedOffset,
       );
 
@@ -190,8 +192,9 @@ class MoneroWallet implements CoinWallet {
       const coin = PolyseedCoin.POLYSEED_MONERO;
       var lang = PolyseedLang.getByName("English");
 
-      var polyseedString =
-          polyseed ?? monero.Wallet_getCacheAttribute(wptr, key: seedCacheKey);
+      var polyseedString = polyseed ??
+          monero.Wallet_getCacheAttribute(wptr,
+              key: MoneroCacheKeys.seedCacheKey);
 
       var seed = Polyseed.decode(polyseedString, lang, coin);
       if (seedOffset.isNotEmpty) {
@@ -213,7 +216,7 @@ class MoneroWallet implements CoinWallet {
   @override
   Future<void> close() {
     monero.WalletManager_closeWallet(Monero.wmPtr, wptr, true);
-    wPtrList.removeWhere((element) => element.address == wptr.address);
+    Monero.wPtrList.removeWhere((element) => element.address == wptr.address);
     return Future.value();
   }
 
@@ -292,7 +295,7 @@ class MoneroWallet implements CoinWallet {
           "restoreHeight": monero.Wallet_getRefreshFromBlockHeight(wptr),
         }),
       ),
-      if (config.debug)
+      if (CupcakeConfig.instance.debug)
         ...List.generate(
           secrets.keys.length,
           (index) {
@@ -303,27 +306,18 @@ class MoneroWallet implements CoinWallet {
                 value: secrets[key] ?? "unknown");
           },
         ),
-      if (config.debug)
+      if (CupcakeConfig.instance.debug)
         ...List.generate(
-          config.toJson().keys.length,
+          CupcakeConfig.instance.toJson().keys.length,
           (index) {
-            final key = config.toJson().keys.elementAt(index);
+            final key = CupcakeConfig.instance.toJson().keys.elementAt(index);
             return WalletSeedDetail(
                 type: WalletSeedDetailType.text,
                 name: key,
                 value: const JsonEncoder.withIndent('    ')
-                    .convert(config.toJson()[key]));
+                    .convert(CupcakeConfig.instance.toJson()[key]));
           },
         ),
     ];
   }
-}
-
-class MoneroAmount implements Amount {
-  MoneroAmount(this.amount);
-  @override
-  final int amount;
-
-  @override
-  String toString() => monero.Wallet_displayAmount(amount);
 }

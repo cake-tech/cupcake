@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/list.dart';
+import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
@@ -18,12 +19,6 @@ import 'package:cupcake/views/wallet_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
-
-enum CreateMethod {
-  any,
-  create,
-  restore,
-}
 
 class CreateWalletViewModel extends ViewModel {
   CreateWalletViewModel({
@@ -282,8 +277,8 @@ class CreateWalletViewModel extends ViewModel {
         topAction: seedOffset.ctrl.text.isNotEmpty
             ? null
             : () {
-                config.initialSetupComplete = true;
-                config.save();
+                CupcakeConfig.instance.initialSetupComplete = true;
+                CupcakeConfig.instance.save();
                 WalletHome.pushStatic(context, cw);
               },
         topActionText: Text(L.next),
@@ -329,8 +324,8 @@ class CreateWalletViewModel extends ViewModel {
         NewWalletInfoPage(
           topText: L.wallet_passphrase,
           topAction: () {
-            config.initialSetupComplete = true;
-            config.save();
+            CupcakeConfig.instance.initialSetupComplete = true;
+            CupcakeConfig.instance.save();
             WalletHome.pushStatic(context, cw);
           },
           topActionText: Text(L.next),

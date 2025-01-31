@@ -1,4 +1,4 @@
-import 'package:cupcake/coins/abstract/coin_wallet.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
 import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/utils/alerts/widget.dart';

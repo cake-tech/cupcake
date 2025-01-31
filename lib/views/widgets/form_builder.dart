@@ -114,6 +114,8 @@ class _FormBuilderState extends State<FormBuilder> {
               onConfirmLongPress: () async {
                 final b = await callThrowable(context, () async {
                   await e.onConfirmInternal(context);
+                  final auth = LocalAuthentication();
+
                   final List<BiometricType> availableBiometrics =
                       await auth.getAvailableBiometrics();
                   final bool canAuthenticateWithBiometrics =
@@ -137,8 +139,8 @@ class _FormBuilderState extends State<FormBuilder> {
                   }
                   await secureStorage.write(
                       key: "UI.${e.valueOutcome.uniqueId}", value: e.ctrl.text);
-                  config.biometricEnabled = true;
-                  config.save();
+                  CupcakeConfig.instance.biometricEnabled = true;
+                  CupcakeConfig.instance.save();
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text("Biometric enabled!"),
                   ));

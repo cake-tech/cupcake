@@ -1,13 +1,5 @@
 import 'package:cupcake/view_model/abstract.dart';
 
-class URQRDetails {
-  URQRDetails(
-      {required this.tag, required this.description, required this.values});
-  String tag;
-  String description;
-  List<String> values;
-}
-
 class URQRViewModel extends ViewModel {
   URQRViewModel({
     required this.urqrList,

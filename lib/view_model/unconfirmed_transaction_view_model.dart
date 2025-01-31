@@ -1,26 +1,10 @@
 import 'dart:async';
 
-import 'package:cupcake/coins/abstract/coin_wallet.dart';
+import 'package:cupcake/coins/abstract/address.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/coins/abstract/amount.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:flutter/cupertino.dart';
-
-class Address {
-  Address(this.address);
-  final String address;
-
-  @override
-  String toString() {
-    return address;
-  }
-}
-
-class Amount {
-  Amount(this.amount);
-  final int amount;
-
-  @override
-  String toString() => "$amount";
-}
 
 class UnconfirmedTransactionViewModel extends ViewModel {
   UnconfirmedTransactionViewModel(

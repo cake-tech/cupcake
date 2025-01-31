@@ -29,7 +29,7 @@ class SettingsView extends AbstractView {
   Widget? body(BuildContext context) {
     return Column(
       children: [
-        if (config.debug)
+        if (CupcakeConfig.instance.debug)
           BooleanConfigElement(
               title: "Debug",
               subtitleEnabled: "Debug options are enabled",
@@ -138,9 +138,9 @@ class _VersionWidgetState extends State<VersionWidget> {
 
   Future<void> _debugTrigger() async {
     if (easterEgg.isEmpty) {
-      if (config.debug) return;
-      config.debug = true;
-      config.save();
+      if (CupcakeConfig.instance.debug) return;
+      CupcakeConfig.instance.debug = true;
+      CupcakeConfig.instance.save();
       setState(() {
         subtitle = "debug options enabled";
       });
@@ -183,8 +183,8 @@ class IntegerConfigElement extends StatelessWidget {
     return ListTile(
       title: Text(title),
       onLongPress: () {
-        config.debug = true;
-        config.save();
+        CupcakeConfig.instance.debug = true;
+        CupcakeConfig.instance.save();
       },
       subtitle: TextField(
         controller: ctrl,

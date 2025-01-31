@@ -1,4 +1,4 @@
-import 'package:cupcake/coins/abstract/coin_wallet_info.dart';
+import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/list.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/view_model/abstract.dart';
@@ -20,17 +20,18 @@ class HomeScreenViewModel extends ViewModel {
         wallets.addAll(toAdd);
       }
     }
-    if (config.walletSort == 0) {
+    if (CupcakeConfig.instance.walletSort == 0) {
       wallets.sort((a, b) => b.walletName.compareTo(a.walletName));
-    } else if (config.walletSort == 1) {
+    } else if (CupcakeConfig.instance.walletSort == 1) {
       wallets.sort((a, b) => a.walletName.compareTo(b.walletName));
     }
     return wallets;
   }
 
   void toggleSort() {
-    config.walletSort = (config.walletSort + 1) % 2;
-    config.save();
+    CupcakeConfig.instance.walletSort =
+        (CupcakeConfig.instance.walletSort + 1) % 2;
+    CupcakeConfig.instance.save();
     markNeedsBuild();
   }
 

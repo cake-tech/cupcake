@@ -15,11 +15,11 @@ String signingKeyFound = "";
 Future<void> appInit() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeBaseStoragePath();
-  if (config.initialSetupComplete == false) {
+  if (CupcakeConfig.instance.initialSetupComplete == false) {
     final oldSecureStorage = await secureStorage.readAll();
     final date = DateTime.now().toIso8601String();
-    config.oldSecureStorage[date] = oldSecureStorage;
-    config.save();
+    CupcakeConfig.instance.oldSecureStorage[date] = oldSecureStorage;
+    CupcakeConfig.instance.save();
     await secureStorage.deleteAll();
   }
 }
@@ -37,9 +37,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Cup Cake',
+      title: 'Cupcake',
       themeMode: ThemeMode.dark,
-      darkTheme: darkBaseTheme,
+      darkTheme: BaseTheme.darkBaseTheme,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
           ],
         );
       },
-      home: config.initialSetupComplete
+      home: CupcakeConfig.instance.initialSetupComplete
           ? HomeScreen(
               viewModel: HomeScreenViewModel(openLastWallet: true),
             )

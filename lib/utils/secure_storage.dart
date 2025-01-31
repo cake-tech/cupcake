@@ -1,3 +1,4 @@
+import 'package:cupcake/utils/secure_storage_key.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 AndroidOptions _getAndroidOptions() => const AndroidOptions(
@@ -6,10 +7,6 @@ AndroidOptions _getAndroidOptions() => const AndroidOptions(
 
 final FlutterSecureStorage secureStorage =
     FlutterSecureStorage(aOptions: _getAndroidOptions());
-
-class SecureStorageKey {
-  static String pin = "secret.pin";
-}
 
 Future<void> setWalletPin(String password) async {
   final pin = await secureStorage.read(key: SecureStorageKey.pin);

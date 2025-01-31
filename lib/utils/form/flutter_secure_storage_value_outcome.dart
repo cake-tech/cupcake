@@ -37,7 +37,7 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
       return;
     }
     if (!canWrite) {
-      if (config.debug) {
+      if (CupcakeConfig.instance.debug) {
         throw Exception(
             "DEBUG_ONLY: canWrite is false but we tried to flush the value");
       }
@@ -67,6 +67,5 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
   }
 
   @override
-  // TODO: implement uniqueId
   String get uniqueId => key;
 }

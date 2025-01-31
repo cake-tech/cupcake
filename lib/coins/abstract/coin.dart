@@ -1,6 +1,6 @@
-import 'package:cupcake/coins/abstract/coin_strings.dart';
-import 'package:cupcake/coins/abstract/coin_wallet.dart';
-import 'package:cupcake/coins/abstract/coin_wallet_info.dart';
+import 'package:cupcake/coins/abstract/strings.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/types.dart';
 
 enum Coins { monero, unknown }

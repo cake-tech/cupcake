@@ -1,4 +1,4 @@
-import 'package:cupcake/coins/abstract/coin_wallet.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/monero/wallet.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/l10n/app_localizations.dart';

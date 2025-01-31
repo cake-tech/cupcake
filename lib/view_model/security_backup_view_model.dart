@@ -1,4 +1,4 @@
-import 'package:cupcake/coins/abstract/coin_wallet.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';

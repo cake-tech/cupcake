@@ -1,3 +1,4 @@
+import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/themes/base_theme.dart';
 import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/view_model/initial_setup_view_model.dart';
@@ -85,7 +86,7 @@ class LongSecondaryButton extends LongPrimaryButton {
       const WidgetStatePropertyAll(Colors.white);
 
   @override
-  Color get textColor => onBackgroundColor;
+  Color get textColor => BaseTheme.onBackgroundColor;
 }
 
 class LongPrimaryButton extends StatelessWidget {

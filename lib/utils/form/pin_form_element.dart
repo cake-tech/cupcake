@@ -6,8 +6,6 @@ import 'package:cupcake/utils/form/default_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:local_auth/local_auth.dart';
 
-final auth = LocalAuthentication();
-
 class PinFormElement extends FormElement {
   PinFormElement({
     String initialText = "",
@@ -22,7 +20,9 @@ class PinFormElement extends FormElement {
 
   Future<void> loadSecureStorageValue(VoidCallback callback) async {
     if (ctrl.text.isNotEmpty) return;
-    if (!config.biometricEnabled) return;
+    if (!CupcakeConfig.instance.biometricEnabled) return;
+    final auth = LocalAuthentication();
+
     final List<BiometricType> availableBiometrics =
         await auth.getAvailableBiometrics();
     final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;

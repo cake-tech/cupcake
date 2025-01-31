@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:cupcake/coins/abstract/coin.dart';
-import 'package:cupcake/coins/abstract/coin_wallet.dart';
-import 'package:cupcake/coins/abstract/coin_wallet_info.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/monero/coin.dart';
 import 'package:cupcake/views/open_wallet.dart';
 import 'package:flutter/cupertino.dart';
@@ -56,10 +56,10 @@ class MoneroWalletInfo extends CoinWalletInfo {
 
   @override
   Future<void> deleteWallet() async {
-    for (var element in wPtrList) {
+    for (var element in Monero.wPtrList) {
       monero.WalletManager_closeWallet(Monero.wmPtr, element, true);
     }
-    wPtrList.clear();
+    Monero.wPtrList.clear();
     File(walletName).deleteSync();
     File("$walletName.keys").deleteSync();
   }
@@ -69,10 +69,10 @@ class MoneroWalletInfo extends CoinWalletInfo {
     if (p.basename(walletName) == newName) {
       throw Exception("Wallet wasn't renamed");
     }
-    for (var element in wPtrList) {
+    for (var element in Monero.wPtrList) {
       monero.WalletManager_closeWallet(Monero.wmPtr, element, true);
     }
-    wPtrList.clear();
+    Monero.wPtrList.clear();
     final basePath = p.dirname(walletName);
     File(walletName).copySync(p.join(basePath, newName));
     File("$walletName.keys").copySync(p.join(basePath, "$newName.keys"));

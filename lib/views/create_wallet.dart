@@ -143,7 +143,7 @@ class CreateWallet extends AbstractView {
   bool isFormBad(List<FormElement> form) {
     for (var element in form) {
       if (!element.isOk) {
-        if (config.debug) {
+        if (CupcakeConfig.instance.debug) {
           print("${element.label} is not valid: ");
         }
         return true;

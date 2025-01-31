@@ -7,5 +7,5 @@ class SettingsViewModel extends ViewModel {
   @override
   String get screenName => "Settings";
 
-  CupcakeConfig get appConfig => config;
+  CupcakeConfig get appConfig => CupcakeConfig.instance;
 }

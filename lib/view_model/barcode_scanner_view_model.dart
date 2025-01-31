@@ -1,8 +1,8 @@
-import 'package:cupcake/coins/abstract/coin_wallet.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/utils/call_throwable.dart';
 import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/view_model/abstract.dart';
-import 'package:cupcake/views/widgets/barcode_scanner/progress_painter.dart';
+import 'package:cupcake/views/widgets/barcode_scanner/urqr_progress.dart';
 import 'package:fast_scanner/fast_scanner.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -14,7 +14,7 @@ class BarcodeScannerViewModel extends ViewModel {
   bool popped = false;
 
   List<String> urCodes = [];
-  late var ur = URQRToURQRData(urCodes);
+  late var ur = URQRData.parse(urCodes);
 
   final CoinWallet wallet;
 
@@ -48,7 +48,7 @@ class BarcodeScannerViewModel extends ViewModel {
         }
         if (urCodes.contains(barcode.rawValue)) return;
         urCodes.add(barcode.rawValue!);
-        ur = URQRToURQRData(urCodes);
+        ur = URQRData.parse(urCodes);
 
         markNeedsBuild();
       }

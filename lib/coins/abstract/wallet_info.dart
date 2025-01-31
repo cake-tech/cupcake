@@ -1,6 +1,6 @@
 import 'package:cupcake/coins/abstract/coin.dart';
-import 'package:cupcake/coins/abstract/coin_wallet.dart';
-import 'package:cupcake/coins/monero/monero_wallet_info.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/coins/monero/wallet_info.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as p;
@@ -24,7 +24,7 @@ abstract class CoinWalletInfo {
   Map<String, dynamic> toJson() {
     return {
       "typeIndex": type.index,
-      if (config.debug) "typeIndex__debug": type.toString(),
+      if (CupcakeConfig.instance.debug) "typeIndex__debug": type.toString(),
       "walletName": p.basename(walletName),
     };
   }

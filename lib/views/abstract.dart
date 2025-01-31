@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/view_model/abstract.dart';
+import 'package:cupcake/views/widgets/cupcake_appbar_title.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 // Since there is no performance penalty for using stateful widgets I would just
 // use them everywhere, but honestly all I need in stateless widgets is easy
@@ -93,35 +93,5 @@ class AbstractView extends StatefulWidget {
 
   void markNeedsBuild() {
     state!.setState(() {});
-  }
-}
-
-class CupcakeAppbarTitle extends StatelessWidget {
-  const CupcakeAppbarTitle({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset("assets/icons/icon-white.svg",
-              height: 32, width: 32, color: Colors.white),
-          const SizedBox(
-            width: 12,
-          ),
-          const Text(
-            "Cupcake",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 28,
-              color: Colors.white,
-            ),
-          ),
-          const Spacer(),
-        ],
-      ),
-    );
   }
 }

@@ -4,3 +4,9 @@ enum WalletSeedDetailType {
   text,
   qr,
 }
+
+enum CreateMethod {
+  any,
+  create,
+  restore,
+}

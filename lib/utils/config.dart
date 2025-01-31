@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cupcake/coins/abstract/coin_wallet_info.dart';
+import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/utils/filesystem.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
@@ -59,21 +59,21 @@ class CupcakeConfig {
   void save() {
     File(configPath).writeAsStringSync(json.encode(toJson()));
   }
-}
 
-final configPath = p.join(baseStoragePath, "config.json");
-final config = (() {
-  try {
-    return CupcakeConfig.fromJson(
-      json.decode(
-        File(configPath).readAsStringSync(),
-      ),
-    );
-  } catch (e) {
-    if (kDebugMode) {
-      print("failed getting wallet config: $e");
-      print("don't worry tho - I'll create config with defaults");
+  static final configPath = p.join(baseStoragePath, "config.json");
+  static final instance = (() {
+    try {
+      return CupcakeConfig.fromJson(
+        json.decode(
+          File(configPath).readAsStringSync(),
+        ),
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print("failed getting wallet config: $e");
+        print("don't worry tho - I'll create config with defaults");
+      }
+      return CupcakeConfig.fromJson({});
     }
-    return CupcakeConfig.fromJson({});
-  }
-})();
+  })();
+}

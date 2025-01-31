@@ -1,4 +1,5 @@
-import 'package:cupcake/coins/abstract/coin_wallet_info.dart';
+import 'package:cupcake/coins/abstract/wallet_info.dart';
+import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/utils/call_throwable.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/view_model/create_wallet_view_model.dart';
@@ -158,10 +159,10 @@ class HomeScreen extends AbstractView {
   @override
   Future<void> initState(BuildContext context) async {
     await Future.delayed(Duration.zero); // load the screen
-    if (config.lastWallet == null) return;
+    if (CupcakeConfig.instance.lastWallet == null) return;
     if (!context.mounted) return;
     if (!viewModel.openLastWallet) return;
-    if (config.lastWallet?.exists() != true) return;
-    config.lastWallet!.openUI(context);
+    if (CupcakeConfig.instance.lastWallet?.exists() != true) return;
+    CupcakeConfig.instance.lastWallet!.openUI(context);
   }
 }

@@ -1,4 +1,4 @@
-import 'package:cupcake/coins/abstract/coin_strings.dart';
+import 'package:cupcake/coins/abstract/strings.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

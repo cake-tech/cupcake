@@ -17,39 +17,40 @@ class DrawerElement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.only(top: 5, left: 20, bottom: 5),
-        child: TextButton(
-          style: ButtonStyle(
-            backgroundColor: WidgetStateProperty.all(Colors.black12),
-            shape: WidgetStateProperty.all(
-              const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  bottomLeft: Radius.circular(20),
-                ),
+      margin: const EdgeInsets.only(top: 5, left: 20, bottom: 5),
+      child: TextButton(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.all(Colors.black12),
+          shape: WidgetStateProperty.all(
+            const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
               ),
             ),
           ),
-          onPressed: () {
-            callThrowable(context, () async => await action(context), text);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                svg,
-                const SizedBox(width: 8),
-                Text(
-                  text,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
+        ),
+        onPressed: () {
+          callThrowable(context, () async => await action(context), text);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              svg,
+              const SizedBox(width: 8),
+              Text(
+                text,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
