@@ -74,9 +74,6 @@ class AbstractView extends StatefulWidget {
     }
     return PopScope(
       canPop: canPop,
-      onPopInvoked: (bool pop) {
-        print(pop);
-      },
       child: Scaffold(
         appBar: appBar,
         body: body(context),
