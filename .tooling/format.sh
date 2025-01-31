@@ -4,7 +4,7 @@ cd "$(dirname "$0")"
 cd ..
 dart run build_runner build
 pushd lib
-  for dir in coins themes utils view_model views widgets;
+  for dir in coins themes utils view_model views;
   do
     pushd $dir
       dart fix --apply
