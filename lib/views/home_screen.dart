@@ -1,4 +1,4 @@
-import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/abstract/coin_wallet_info.dart';
 import 'package:cupcake/utils/call_throwable.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/view_model/create_wallet_view_model.dart';

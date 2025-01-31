@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 const String signingKeyExpected = "Please Fill Me On Release :)";
-late String signingKeyFound = "";
+String signingKeyFound = "";
 
 Future<void> appInit() async {
   WidgetsFlutterBinding.ensureInitialized();

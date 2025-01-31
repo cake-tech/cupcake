@@ -1,10 +1,11 @@
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/utils/call_throwable.dart';
 import 'package:cupcake/utils/config.dart';
+import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
-import 'package:cupcake/widgets/form_builder.dart';
+import 'package:cupcake/views/widgets/form_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -138,15 +139,6 @@ class CreateWallet extends AbstractView {
   }
 
   FormBuilder? formBuilder;
-
-  // @override
-  // Widget? floatingActionButton(BuildContext context) {
-  //   if (viewModel.selectedCoin == null) return null;
-  //   return FloatingActionButton(
-  //     child: const Icon(Icons.navigate_next),
-  //     onPressed: () => _createWallet(context),
-  //   );
-  // }
 
   bool isFormBad(List<FormElement> form) {
     for (var element in form) {

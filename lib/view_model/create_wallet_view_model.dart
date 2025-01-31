@@ -1,13 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math';
 
-import 'package:crypto/crypto.dart';
-import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/list.dart';
 import 'package:cupcake/utils/config.dart';
+import 'package:cupcake/utils/form/abstract_form_element.dart';
+import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
+import 'package:cupcake/utils/form/pin_form_element.dart';
+import 'package:cupcake/utils/form/plain_value_outcome.dart';
+import 'package:cupcake/utils/form/single_choice_form_element.dart';
+import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/null_if_empty.dart';
-import 'package:cupcake/utils/secure_storage.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/view_model/new_wallet_info_view_model.dart';
 import 'package:cupcake/views/new_wallet_info.dart';
@@ -16,7 +18,6 @@ import 'package:cupcake/views/wallet_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:local_auth/local_auth.dart';
 
 enum CreateMethod {
   any,
@@ -392,207 +393,4 @@ class CreateWalletViewModel extends ViewModel {
     screenName = suggestedTitle ?? screenNameOriginal;
     markNeedsBuild();
   }
-}
-
-String? _defaultValidator(String? input) {
-  return null;
-}
-
-class StringFormElement extends FormElement {
-  StringFormElement(
-    this.label, {
-    String initialText = "",
-    this.password = false,
-    this.validator = _defaultValidator,
-    this.isExtra = false,
-    this.showIf,
-    this.randomNameGenerator = false,
-  }) : ctrl = TextEditingController(text: initialText);
-
-  bool Function()? showIf;
-  TextEditingController ctrl;
-  bool password;
-  @override
-  String label;
-  @override
-  Future<String> get value => Future.value(ctrl.text);
-
-  bool isExtra;
-  bool randomNameGenerator;
-
-  @override
-  bool get isOk => validator(ctrl.text) == null;
-
-  String? Function(String? input) validator;
-}
-
-abstract class ValueOutcome {
-  Future<void> encode(String input);
-  Future<String> decode(String output);
-
-  String get uniqueId => throw UnimplementedError();
-}
-
-class PlainValueOutcome implements ValueOutcome {
-  @override
-  Future<String> decode(String output) => Future.value(output);
-
-  @override
-  Future<void> encode(String input) => Future.value();
-
-  @override
-  String get uniqueId => "undefined";
-}
-
-class FlutterSecureStorageValueOutcome implements ValueOutcome {
-  FlutterSecureStorageValueOutcome(this.key,
-      {required this.canWrite, required this.verifyMatching});
-
-  final String key;
-  final bool canWrite;
-  final bool verifyMatching;
-
-  @override
-  Future<void> encode(String input) async {
-    List<int> bytes = utf8.encode(input);
-    Digest sha512Hash = sha512.convert(bytes);
-    var valInput =
-        await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
-    if (valInput == null) {
-      await secureStorage.write(
-          key: "FlutterSecureStorageValueOutcome._$key",
-          value: sha512Hash.toString());
-      valInput = await secureStorage.read(
-          key: "FlutterSecureStorageValueOutcome._$key");
-    }
-    if (sha512Hash.toString() != valInput && verifyMatching) {
-      throw Exception("Input doesn't match the secure element value");
-    }
-
-    final input_ = await secureStorage.read(key: key);
-    // Do not update secret if it is already set.
-    if (input_ != null) {
-      return;
-    }
-    if (!canWrite) {
-      if (config.debug) {
-        throw Exception(
-            "DEBUG_ONLY: canWrite is false but we tried to flush the value");
-      }
-      return;
-    }
-    var random = Random.secure();
-    var values = List<int>.generate(64, (i) => random.nextInt(256));
-    final pass = base64Url.encode(values);
-    await secureStorage.write(key: key, value: pass);
-    return;
-  }
-
-  @override
-  Future<String> decode(String output) async {
-    List<int> bytes = utf8.encode(output);
-    Digest sha512Hash = sha512.convert(bytes);
-    var valInput =
-        await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
-    if (sha512Hash.toString() != valInput && verifyMatching) {
-      throw Exception("Input doesn't match the secure element value");
-    }
-    final input = await secureStorage.read(key: key);
-    if (input == null) {
-      throw Exception("no secure storage $key found");
-    }
-    return "$input/$output";
-  }
-
-  @override
-  // TODO: implement uniqueId
-  String get uniqueId => key;
-}
-
-final LocalAuthentication auth = LocalAuthentication();
-
-class PinFormElement extends FormElement {
-  PinFormElement({
-    String initialText = "",
-    this.password = false,
-    this.validator = _defaultValidator,
-    required this.valueOutcome,
-    this.onChanged,
-    this.onConfirm,
-    this.showNumboard = true,
-    required this.label,
-  }) : ctrl = TextEditingController(text: initialText);
-
-  Future<void> loadSecureStorageValue(VoidCallback callback) async {
-    if (ctrl.text.isNotEmpty) return;
-    if (!config.biometricEnabled) return;
-    final List<BiometricType> availableBiometrics =
-        await auth.getAvailableBiometrics();
-    final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
-    final bool canAuthenticate =
-        canAuthenticateWithBiometrics || await auth.isDeviceSupported();
-    if (!canAuthenticate) return;
-    if (!availableBiometrics.contains(BiometricType.fingerprint) &&
-        !availableBiometrics.contains(BiometricType.face)) {
-      return;
-    }
-
-    final bool didAuthenticate = await auth.authenticate(
-      localizedReason: 'Authenticate...',
-      options: const AuthenticationOptions(
-          useErrorDialogs: true, biometricOnly: true),
-    );
-    if (!didAuthenticate) return;
-    final value = await secureStorage.read(key: "UI.${valueOutcome.uniqueId}");
-    if (value == null) return;
-    ctrl.text = value;
-    await Future.delayed(Duration.zero);
-    callback();
-  }
-
-  TextEditingController ctrl;
-  bool password;
-  bool showNumboard;
-
-  @override
-  String label;
-
-  ValueOutcome valueOutcome;
-
-  @override
-  Future<String> get value async => await valueOutcome.decode(ctrl.text);
-
-  @override
-  bool get isOk => validator(ctrl.text) == null;
-
-  Future<void> Function(BuildContext context)? onChanged;
-  Future<void> Function(BuildContext context)? onConfirm;
-  Future<void> onConfirmInternal(BuildContext context) async {
-    await valueOutcome.encode(ctrl.text);
-    isConfirmed = true;
-  }
-
-  bool isConfirmed = false;
-  String? Function(String? input) validator;
-}
-
-class SingleChoiceFormElement extends FormElement {
-  SingleChoiceFormElement({required this.title, required this.elements});
-  String title;
-  List<String> elements;
-
-  int currentSelection = 0;
-
-  @override
-  Future<String> get value => Future.value(valueSync);
-  String get valueSync => elements[currentSelection];
-
-  @override
-  bool get isOk => true;
-}
-
-class FormElement {
-  bool get isOk => true;
-  String get label => throw UnimplementedError();
-  Future<String> get value => throw UnimplementedError();
 }

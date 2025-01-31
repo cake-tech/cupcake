@@ -1,10 +1,10 @@
-import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/abstract/coin_wallet.dart';
 import 'package:cupcake/view_model/wallet_home_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/barcode_scanner.dart';
 import 'package:cupcake/views/receive.dart';
 import 'package:cupcake/views/widgets/cake_card.dart';
-import 'package:cupcake/views/widgets/drawer_element.dart';
+import 'package:cupcake/views/widgets/drawer_elements.dart';
 import 'package:flutter/material.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 

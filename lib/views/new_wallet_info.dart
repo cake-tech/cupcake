@@ -33,7 +33,9 @@ class NewWalletInfoScreen extends AbstractView {
 
   List<Widget>? _getActionButton() {
     if (viewModel.page.topAction == null &&
-        viewModel.page.topActionText == null) return null;
+        viewModel.page.topActionText == null) {
+      return null;
+    }
     if (viewModel.page.topActionText != null &&
         viewModel.page.topAction == null) {
       return [

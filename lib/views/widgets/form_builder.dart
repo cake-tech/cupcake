@@ -1,11 +1,14 @@
 import 'dart:async';
 
-import 'package:cupcake/utils/alert.dart';
+import 'package:cupcake/utils/alerts/widget_minimal.dart';
 import 'package:cupcake/utils/call_throwable.dart';
 import 'package:cupcake/utils/config.dart';
+import 'package:cupcake/utils/form/abstract_form_element.dart';
+import 'package:cupcake/utils/form/pin_form_element.dart';
+import 'package:cupcake/utils/form/single_choice_form_element.dart';
+import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/random_name.dart';
 import 'package:cupcake/utils/secure_storage.dart';
-import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
 import 'package:cupcake/views/widgets/numerical_keyboard/main.dart';
 import 'package:flutter/material.dart';

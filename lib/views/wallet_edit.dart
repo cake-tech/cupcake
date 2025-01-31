@@ -1,9 +1,9 @@
-import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/abstract/coin_wallet_info.dart';
 import 'package:cupcake/utils/call_throwable.dart';
 import 'package:cupcake/view_model/wallet_edit_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
-import 'package:cupcake/widgets/form_builder.dart';
+import 'package:cupcake/views/widgets/form_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

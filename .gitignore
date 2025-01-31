@@ -47,3 +47,6 @@ lib/l10n/*.dart
 lib/generated/
 lib/gen/*.dart
 missing_translations.txt
+
+# FVM Version Cache
+.fvm/

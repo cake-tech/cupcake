@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/abstract/coin_wallet_info.dart';
 import 'package:cupcake/utils/filesystem.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;

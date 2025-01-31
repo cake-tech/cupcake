@@ -1,12 +1,16 @@
 import 'dart:convert';
 
-import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/abstract/coin.dart';
+import 'package:cupcake/coins/abstract/coin_exception.dart';
+import 'package:cupcake/coins/abstract/coin_wallet.dart';
+import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
 import 'package:cupcake/coins/monero/coin.dart';
+import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/null_if_empty.dart';
 import 'package:cupcake/utils/secure_storage.dart';
-import 'package:cupcake/view_model/barcode_scanner_view_model.dart';
+import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/view_model/unconfirmed_transaction_view_model.dart';
 import 'package:cupcake/view_model/urqr_view_model.dart';
 import 'package:cupcake/views/unconfirmed_transaction.dart';

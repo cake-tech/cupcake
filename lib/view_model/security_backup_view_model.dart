@@ -1,6 +1,8 @@
-import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/abstract/coin_wallet.dart';
+import 'package:cupcake/utils/form/abstract_form_element.dart';
+import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
+import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/view_model/abstract.dart';
-import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:flutter/cupertino.dart';
 
 class SecurityBackupViewModel extends ViewModel {

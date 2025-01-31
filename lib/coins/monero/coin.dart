@@ -1,15 +1,18 @@
 import 'dart:io';
 
-import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/abstract/coin.dart';
+import 'package:cupcake/coins/abstract/coin_exception.dart';
+import 'package:cupcake/coins/abstract/coin_strings.dart';
+import 'package:cupcake/coins/abstract/coin_wallet.dart';
+import 'package:cupcake/coins/abstract/coin_wallet_info.dart';
+import 'package:cupcake/coins/monero/monero_strings.dart';
+import 'package:cupcake/coins/monero/monero_wallet_info.dart';
 import 'package:cupcake/coins/monero/wallet.dart';
+import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/filesystem.dart';
-import 'package:cupcake/views/open_wallet.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:monero/monero.dart' as monero;
 import 'package:path/path.dart' as p;
-import 'package:cupcake/gen/assets.gen.dart';
 import 'package:polyseed/polyseed.dart';
 
 List<monero.wallet> wPtrList = [];
@@ -314,98 +317,4 @@ class Monero implements Coin {
   // monero.dart stuff
   static monero.WalletManager wmPtr =
       monero.WalletManagerFactory_getWalletManager();
-}
-
-class MoneroStrings implements CoinStrings {
-  @override
-  String get nameLowercase => "monero";
-  @override
-  String get nameCapitalized => "Monero";
-  @override
-  String get nameUppercase => "MONERO";
-  @override
-  String get symbolLowercase => "xmr";
-  @override
-  String get symbolUppercase => "XMR";
-  @override
-  String get nameFull => "$nameCapitalized ($symbolUppercase)";
-
-  @override
-  SvgPicture get svg => Assets.coins.xmr.svg();
-}
-
-class MoneroWalletInfo extends CoinWalletInfo {
-  MoneroWalletInfo(String walletName)
-      : _walletName = (() {
-          if (walletName == p.basename(walletName)) {
-            walletName = p.join(Monero.baseDir.path, walletName);
-          }
-          return walletName;
-        }());
-
-  @override
-  Coin get coin => Monero();
-
-  @override
-  Future<bool> checkWalletPassword(String password) async {
-    return monero.WalletManager_verifyWalletPassword(
-      Monero.wmPtr,
-      keysFileName: "$walletName.keys",
-      password: password,
-      noSpendKey: false,
-      kdfRounds: 0,
-    );
-  }
-
-  @override
-  String get walletName => _walletName;
-
-  String _walletName;
-
-  @override
-  Coins get type => coin.type;
-
-  @override
-  void openUI(BuildContext context) {
-    OpenWallet.pushStatic(context, this);
-  }
-
-  @override
-  Future<CoinWallet> openWallet(BuildContext context,
-      {required String password}) async {
-    return await coin.openWallet(
-      this,
-      password: password,
-    );
-  }
-
-  @override
-  Future<void> deleteWallet() async {
-    for (var element in wPtrList) {
-      monero.WalletManager_closeWallet(Monero.wmPtr, element, true);
-    }
-    wPtrList.clear();
-    File(walletName).deleteSync();
-    File("$walletName.keys").deleteSync();
-  }
-
-  @override
-  Future<void> renameWallet(String newName) async {
-    if (p.basename(walletName) == newName) {
-      throw Exception("Wallet wasn't renamed");
-    }
-    for (var element in wPtrList) {
-      monero.WalletManager_closeWallet(Monero.wmPtr, element, true);
-    }
-    wPtrList.clear();
-    final basePath = p.dirname(walletName);
-    File(walletName).copySync(p.join(basePath, newName));
-    File("$walletName.keys").copySync(p.join(basePath, "$newName.keys"));
-    File(walletName).deleteSync();
-    File("$walletName.keys").deleteSync();
-    _walletName = newName;
-  }
-
-  @override
-  bool exists() => File("$walletName.keys").existsSync();
 }
