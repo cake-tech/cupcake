@@ -7,9 +7,9 @@ import 'package:cupcake/views/wallet_home.dart';
 import 'package:flutter/cupertino.dart';
 
 class OpenWalletViewModel extends ViewModel {
-  OpenWalletViewModel({required this.coinInfo});
+  OpenWalletViewModel({required this.coinWalletInfo});
 
-  CoinWalletInfo coinInfo;
+  CoinWalletInfo coinWalletInfo;
 
   @override
   String get screenName => L.enter_password;
@@ -43,23 +43,22 @@ class OpenWalletViewModel extends ViewModel {
   }
 
   Future<void> _openWallet(BuildContext context) async {
-    final coin = await coinInfo.openWallet(
+    final wallet = await coinWalletInfo.openWallet(
       context,
       password: await walletPassword.value,
     );
-    WalletHome.pushStatic(context, coin);
+    WalletHome(coinWallet: wallet).push(context);
   }
 
   Future<bool> checkWalletPassword() async {
     try {
-      return coinInfo.checkWalletPassword(await walletPassword.value);
+      return coinWalletInfo.checkWalletPassword(await walletPassword.value);
     } catch (e) {
       return false;
     }
   }
 
   Future<void> openWalletIfPasswordCorrect(BuildContext context) async {
-    print("called");
     if (await checkWalletPassword()) {
       if (!context.mounted) return;
       openWallet(context);

@@ -42,7 +42,7 @@ class MoneroWalletInfo extends CoinWalletInfo {
 
   @override
   void openUI(BuildContext context) {
-    OpenWallet.pushStatic(context, this);
+    OpenWallet(coinWalletInfo: this).push(context);
   }
 
   @override

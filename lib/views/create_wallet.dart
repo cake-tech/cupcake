@@ -1,3 +1,4 @@
+import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/utils/call_throwable.dart';
 import 'package:cupcake/utils/config.dart';
@@ -6,25 +7,16 @@ import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
 import 'package:cupcake/views/widgets/form_builder.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class CreateWallet extends AbstractView {
-  CreateWallet({super.key, required this.viewModel});
-
-  static Future<void> staticPush(
-      BuildContext context, CreateWalletViewModel viewModel) async {
-    await Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return CreateWallet(
-            viewModel: viewModel,
-          );
-        },
-      ),
-    );
-  }
+  CreateWallet(
+      {super.key,
+      required CreateMethod createMethod,
+      required bool needsPasswordConfirm})
+      : viewModel = CreateWalletViewModel(
+            createMethod: createMethod,
+            needsPasswordConfirm: needsPasswordConfirm);
 
   @override
   final CreateWalletViewModel viewModel;

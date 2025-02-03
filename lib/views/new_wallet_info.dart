@@ -1,22 +1,11 @@
 import 'package:cupcake/view_model/new_wallet_info_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NewWalletInfoScreen extends AbstractView {
-  static void staticPush(
-      BuildContext context, NewWalletInfoViewModel viewModel) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return NewWalletInfoScreen(viewModel: viewModel);
-        },
-      ),
-    );
-  }
-
-  NewWalletInfoScreen({super.key, required this.viewModel});
+  NewWalletInfoScreen({super.key, required List<NewWalletInfoPage> pages})
+      : viewModel = NewWalletInfoViewModel(pages);
 
   @override
   NewWalletInfoViewModel viewModel;

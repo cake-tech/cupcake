@@ -4,24 +4,10 @@ import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/form_builder.dart';
 import 'package:flutter/cupertino.dart';
 
-// ignore: must_be_immutable
 class OpenWallet extends AbstractView {
-  static Future<void> pushStatic(
-      BuildContext context, CoinWalletInfo coin) async {
-    await Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return OpenWallet(
-            OpenWalletViewModel(
-              coinInfo: coin,
-            ),
-          );
-        },
-      ),
-    );
-  }
+  OpenWallet({super.key, required CoinWalletInfo coinWalletInfo})
+      : viewModel = OpenWalletViewModel(coinWalletInfo: coinWalletInfo);
 
-  OpenWallet(this.viewModel, {super.key});
   @override
   final OpenWalletViewModel viewModel;
 

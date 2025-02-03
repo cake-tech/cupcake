@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
       },
       home: CupcakeConfig.instance.initialSetupComplete
           ? HomeScreen(
-              viewModel: HomeScreenViewModel(openLastWallet: true),
+              openLastWallet: true,
             )
           : InitialSetupScreen(),
     );

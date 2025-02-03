@@ -14,15 +14,14 @@ class DrawerElements extends StatelessWidget {
   final CoinWallet coinWallet;
 
   Future<void> _walletList(BuildContext context) async {
-    await HomeScreen.staticPush(
-      context,
+    await HomeScreen(
       openLastWallet: false,
       lastOpenedWallet: coinWallet.walletName,
-    );
+    ).push(context);
   }
 
   Future<void> _securityBackup(BuildContext context) async {
-    await SecurityBackup.staticPush(context, coinWallet);
+    await SecurityBackup(coinWallet: coinWallet).push(context);
   }
 
   Future<void> _exportKeyImages(BuildContext context) async {
@@ -33,7 +32,7 @@ class DrawerElements extends StatelessWidget {
   }
 
   Future<void> _otherSettings(BuildContext context) async {
-    await SettingsView.staticPush(context);
+    await SettingsView().push(context);
   }
 
   @override

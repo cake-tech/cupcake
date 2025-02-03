@@ -1,21 +1,11 @@
 import 'package:cupcake/view_model/urqr_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/urqr.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-//ignore: must_be_immutable
 class AnimatedURPage extends AbstractView {
-  static Future<void> staticPush(
-      BuildContext context, URQRViewModel viewModel) async {
-    await Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) => AnimatedURPage(viewModel: viewModel),
-      ),
-    );
-  }
-
-  AnimatedURPage({super.key, required this.viewModel});
+  AnimatedURPage({super.key, required Map<String, List<String>> urqrList})
+      : viewModel = URQRViewModel(urqrList: urqrList);
 
   @override
   final URQRViewModel viewModel;

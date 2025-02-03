@@ -279,7 +279,7 @@ class CreateWalletViewModel extends ViewModel {
             : () {
                 CupcakeConfig.instance.initialSetupComplete = true;
                 CupcakeConfig.instance.save();
-                WalletHome.pushStatic(context, cw);
+                WalletHome(coinWallet: cw).push(context);
               },
         topActionText: Text(L.next),
         lottieAnimation: Assets.shield.lottie(),
@@ -326,7 +326,7 @@ class CreateWalletViewModel extends ViewModel {
           topAction: () {
             CupcakeConfig.instance.initialSetupComplete = true;
             CupcakeConfig.instance.save();
-            WalletHome.pushStatic(context, cw);
+            WalletHome(coinWallet: cw).push(context);
           },
           topActionText: Text(L.next),
           lottieAnimation: Assets.shield.lottie(),
@@ -374,12 +374,11 @@ class CreateWalletViewModel extends ViewModel {
       throw Exception("context is not mounted, unable to show next screen");
     }
     if (currentForm != _createForm) {
-      WalletHome.pushStatic(context, cw);
+      WalletHome(coinWallet: cw).push(context);
     } else {
-      NewWalletInfoScreen.staticPush(
-        context,
-        NewWalletInfoViewModel(pages),
-      );
+      NewWalletInfoScreen(
+        pages: pages,
+      ).push(context);
     }
   }
 

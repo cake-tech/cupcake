@@ -1,18 +1,17 @@
 import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/themes/base_theme.dart';
-import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/view_model/initial_setup_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/create_wallet.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class InitialSetupScreen extends AbstractView {
+  InitialSetupScreen({super.key});
+
   @override
   InitialSetupViewModel viewModel = InitialSetupViewModel();
 
-  InitialSetupScreen({super.key});
   @override
   Widget? body(BuildContext context) {
     return SafeArea(
@@ -50,24 +49,18 @@ class InitialSetupScreen extends AbstractView {
             LongSecondaryButton(
               text: L.create_new_wallet,
               icon: Icons.add,
-              onPressed: () => CreateWallet.staticPush(
-                context,
-                CreateWalletViewModel(
-                  createMethod: CreateMethod.create,
-                  needsPasswordConfirm: true,
-                ),
-              ),
+              onPressed: () => CreateWallet(
+                createMethod: CreateMethod.create,
+                needsPasswordConfirm: true,
+              ).push(context),
             ),
             LongPrimaryButton(
               text: L.restore_wallet,
               icon: Icons.restore,
-              onPressed: () => CreateWallet.staticPush(
-                context,
-                CreateWalletViewModel(
-                  createMethod: CreateMethod.restore,
-                  needsPasswordConfirm: true,
-                ),
-              ),
+              onPressed: () => CreateWallet(
+                createMethod: CreateMethod.restore,
+                needsPasswordConfirm: true,
+              ).push(context),
             ),
           ],
         ));

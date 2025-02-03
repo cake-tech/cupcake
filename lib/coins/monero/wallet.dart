@@ -14,8 +14,6 @@ import 'package:cupcake/utils/null_if_empty.dart';
 import 'package:cupcake/utils/secure_storage.dart';
 import 'package:cupcake/coins/abstract/address.dart';
 import 'package:cupcake/utils/urqr.dart';
-import 'package:cupcake/view_model/unconfirmed_transaction_view_model.dart';
-import 'package:cupcake/view_model/urqr_view_model.dart';
 import 'package:cupcake/views/animated_qr_page.dart';
 import 'package:cupcake/views/unconfirmed_transaction.dart';
 import 'package:flutter/cupertino.dart';
@@ -81,15 +79,12 @@ class MoneroWallet implements CoinWallet {
             max_fragment_length: CupcakeConfig.instance.maxFragmentLength,
             all: false)
         .split("\n");
-    await AnimatedURPage.staticPush(
-      context,
-      URQRViewModel(
-        urqrList: {
-          "Partial Key Images": someImages,
-          "All Key Images": allImages,
-        },
-      ),
-    );
+    await AnimatedURPage(
+      urqrList: {
+        "Partial Key Images": someImages,
+        "All Key Images": allImages,
+      },
+    ).push(context);
   }
 
   @override
@@ -136,32 +131,29 @@ class MoneroWallet implements CoinWallet {
         }
         final fee =
             MoneroAmount(int.parse(monero.UnsignedTransaction_fee(txptr)));
-        await UnconfirmedTransactionView.staticPush(
-          context,
-          UnconfirmedTransactionViewModel(
-            wallet: this,
-            destMap: destMap,
-            fee: fee,
-            confirmCallback: (BuildContext context) async {
-              final signedTx = monero.UnsignedTransaction_signUR(
-                      txptr, CupcakeConfig.instance.maxFragmentLength)
-                  .split("\n");
-              var status = monero.Wallet_status(wptr);
-              if (status != 0) {
-                final error = monero.Wallet_errorString(wptr);
-                throw CoinException(error);
-              }
-              status = monero.UnsignedTransaction_status(txptr);
-              if (status != 0) {
-                final error = monero.UnsignedTransaction_errorString(txptr);
-                throw CoinException(error);
-              }
-              await AnimatedURPage.staticPush(
-                  context, URQRViewModel(urqrList: {"signedTx": signedTx}));
-            },
-            cancelCallback: (BuildContext context) => {},
-          ),
-        );
+        await UnconfirmedTransactionView(
+          wallet: this,
+          destMap: destMap,
+          fee: fee,
+          confirmCallback: (BuildContext context) async {
+            final signedTx = monero.UnsignedTransaction_signUR(
+                    txptr, CupcakeConfig.instance.maxFragmentLength)
+                .split("\n");
+            var status = monero.Wallet_status(wptr);
+            if (status != 0) {
+              final error = monero.Wallet_errorString(wptr);
+              throw CoinException(error);
+            }
+            status = monero.UnsignedTransaction_status(txptr);
+            if (status != 0) {
+              final error = monero.UnsignedTransaction_errorString(txptr);
+              throw CoinException(error);
+            }
+            await AnimatedURPage(urqrList: {"signedTx": signedTx})
+                .push(context);
+          },
+          cancelCallback: (BuildContext context) => {},
+        ).push(context);
         save();
       default:
         throw UnimplementedError("Unable to handle ${ur.tag}.");
