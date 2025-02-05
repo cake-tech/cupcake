@@ -16,7 +16,6 @@ class SettingsView extends AbstractView {
 
   Future<void> postUpdate(BuildContext context) async {
     viewModel.appConfig.save();
-    markNeedsBuild();
   }
 
   @override

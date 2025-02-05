@@ -28,8 +28,20 @@ class CreateWalletViewModel extends ViewModel {
 
   final CreateMethod createMethod;
 
-  bool isPinSet = false;
-  bool showExtra = false;
+  bool _isPinSet = false;
+  bool get isPinSet => _isPinSet;
+  set isPinSet(bool newIsPinSet) { 
+    _isPinSet = newIsPinSet;
+    markNeedsBuild();
+  }
+
+  bool _showExtra = false;
+  bool get showExtra => _showExtra;
+  set showExtra(bool newShowExtra) { 
+    _showExtra = newShowExtra;
+    markNeedsBuild();
+  }
+
 
   @override
   late String screenName = screenNameOriginal;
@@ -42,7 +54,12 @@ class CreateWalletViewModel extends ViewModel {
 
   List<Coin> get coins => walletCoins;
 
-  bool isCreate = true;
+  bool _isCreate = false;
+  bool get isCreate => _isCreate;
+  set isCreate(bool newIsCreate) { 
+    _isCreate = newIsCreate;
+    markNeedsBuild();
+  }
 
   bool get hasAdvancedOptions {
     if (currentForm == null) return false;
@@ -54,18 +71,17 @@ class CreateWalletViewModel extends ViewModel {
     return false;
   }
 
-  void toggleAdvancedOptions() {
-    print("toggling");
-    showExtra = !showExtra;
-    markNeedsBuild();
-  }
-
-  late Coin? selectedCoin = () {
+  late Coin? _selectedCoin = () {
     if (coins.length == 1) {
       return coins[0];
     }
     return null;
   }();
+  Coin? get selectedCoin => _selectedCoin;
+  set selectedCoin(Coin? newSelectedCoin) { 
+    _selectedCoin = newSelectedCoin;
+    markNeedsBuild();
+  }
 
   late StringFormElement walletName = StringFormElement(
     L.wallet_name,
@@ -234,7 +250,6 @@ class CreateWalletViewModel extends ViewModel {
     if ((await walletName.value).isEmpty) {
       throw Exception(L.warning_input_cannot_be_empty);
     }
-    print(currentForm == _createForm);
     final cw = await selectedCoin!.createNewWallet(
       await walletName.value,
       await walletPassword.value,

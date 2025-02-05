@@ -38,7 +38,7 @@ dependencies:
   monero:
     git:
       url: https://github.com/mrcyjanek/monero_c
-      ref: v0.18.3.4-RC9
+      ref: v0.18.3.4-RC10
       path: impls/monero.dart
   path: ^1.9.0
   path_provider: ^2.1.5

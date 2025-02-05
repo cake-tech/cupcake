@@ -24,7 +24,7 @@ class HomeScreen extends AbstractView {
     return FutureBuilder(
       future: viewModel.showLandingInfo,
       builder: (BuildContext context, AsyncSnapshot<bool> value) {
-        if (!value.hasData) return Container(); // TODO: placeholder?
+        if (!value.hasData) return Container();
         if (value.data!) {
           return Text(L.home_no_wallets);
         }
@@ -52,7 +52,7 @@ class HomeScreen extends AbstractView {
       );
   Widget walletsBody(
       BuildContext context, AsyncSnapshot<List<CoinWalletInfo>> wallets) {
-    if (!wallets.hasData) return Container(); // TODO: placeholder?
+    if (!wallets.hasData) return Container();
     return ListView.builder(
         itemCount: wallets.data!.length,
         itemBuilder: (BuildContext context, int index) {
@@ -84,7 +84,7 @@ class HomeScreen extends AbstractView {
                             () => renameWallet(context, wallets.data![index]),
                             "Renaming wallet",
                           );
-                          markNeedsBuild();
+                          viewModel.markNeedsBuild();
                         },
                       ),
                       title: Text(
@@ -114,7 +114,7 @@ class HomeScreen extends AbstractView {
       needsPasswordConfirm: false,
     ).push(context);
     if (!context.mounted) return;
-    markNeedsBuild();
+    viewModel.markNeedsBuild();
   }
 
   @override
@@ -138,12 +138,7 @@ class HomeScreen extends AbstractView {
   }
 
   @override
-  Future<void> initState(BuildContext context) async {
-    await Future.delayed(Duration.zero); // load the screen
-    if (CupcakeConfig.instance.lastWallet == null) return;
-    if (!context.mounted) return;
-    if (!viewModel.openLastWallet) return;
-    if (CupcakeConfig.instance.lastWallet?.exists() != true) return;
-    CupcakeConfig.instance.lastWallet!.openUI(context);
+  Future<void> initState(BuildContext context) {
+    return viewModel.loadInitialState();
   }
 }

@@ -95,8 +95,4 @@ class AbstractView extends StatefulWidget {
   Widget? bottomNavigationBar(BuildContext context) => null;
 
   Widget? floatingActionButton(BuildContext context) => null;
-
-  void markNeedsBuild() {
-    state!.setState(() {});
-  }
 }

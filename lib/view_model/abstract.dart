@@ -5,29 +5,31 @@ class ViewModel {
   String get screenName => "screenName";
 
   AppLocalizations get L {
-    if (_lcache == null && _context == null) {
+    if (_lcache == null && c == null) {
       throw Exception(
           "context is null in view model. Did you forget to register()?");
     }
-    if (_lcache == null && _context?.mounted != true) {
+    if (_lcache == null && c?.mounted != true) {
       throw Exception(
           "context is not mounted. Did you register incorrect context?");
     }
-    _lcache ??= AppLocalizations.of(_context!);
+    _lcache ??= AppLocalizations.of(c!);
     return _lcache!;
   }
 
   AppLocalizations? _lcache;
 
-  BuildContext? _context;
+  BuildContext? c;
   void register(BuildContext context) {
-    _context = context;
+    c = context;
   }
 
+  bool get mounted => c?.mounted??false;
+
   markNeedsBuild() {
-    if (_context == null) {
-      throw Exception("_context is null, did you forget to register(context)?");
+    if (c == null) {
+      throw Exception("c is null, did you forget to register(context)?");
     }
-    (_context as Element).markNeedsBuild();
+    (c as Element).markNeedsBuild();
   }
 }

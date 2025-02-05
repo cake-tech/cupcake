@@ -15,11 +15,20 @@ libs_android_build_ci:
 	./build_moneroc.sh --coin ${COIN} --tag ${MONERO_C_TAG} --triplet aarch64-linux-android --location android/app/src/main/jniLibs/arm64-v8a
 
 libs_ios_download:
-	./build_moneroc.sh --prebuild --coin ${COIN} --tag ${MONERO_C_TAG} --triplet aarch64-apple-ios --location ios
+	./build_moneroc.sh --prebuild --coin ${COIN} --tag ${MONERO_C_TAG} --triplet aarch64-apple-ios --location ios/native_libs/ios-arm64
 	cd ios && ./gen_framework.sh
 libs_ios_build:
 	[[ "x$(shell uname)" == "xDarwin" ]] || exit 1 # Only Darwin hosts can build for iOS, try $(MAKE) libs_ios_download
-	./build_moneroc.sh --coin ${COIN} --tag ${MONERO_C_TAG} --triplet aarch64-apple-ios --location ios
+	./build_moneroc.sh --coin ${COIN} --tag ${MONERO_C_TAG} --triplet aarch64-apple-ios --location ios/native_libs/ios-arm64
+	cd ios && ./gen_framework.sh
+
+libs_iossimulator_download:
+	./build_moneroc.sh --prebuild --coin ${COIN} --tag ${MONERO_C_TAG} --triplet aarch64-apple-iossimulator --location ios/native_libs/ios-arm64-simulator
+	cd ios && ./gen_framework.sh
+
+libs_iossimulator_build:
+	[[ "x$(shell uname)" == "xDarwin" ]] || exit 1 # Only Darwin hosts can build for iOS, try $(MAKE) libs_ios_download
+	./build_moneroc.sh --coin ${COIN} --tag ${MONERO_C_TAG} --triplet aarch64-apple-iossimulator --location ios/native_libs/ios-arm64-simulator
 	cd ios && ./gen_framework.sh
 
 cupcake_android_monero:

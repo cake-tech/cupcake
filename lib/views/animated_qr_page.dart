@@ -18,7 +18,7 @@ class AnimatedURPage extends AbstractView {
         Padding(
           padding: const EdgeInsets.only(top: 64.0, left: 32, right: 32),
           child: URQR(
-            frames: viewModel.urqr..removeWhere((element) => element.isEmpty),
+            frames: viewModel.urqr,
           ),
         ),
         const SizedBox(height: 32),
@@ -28,14 +28,9 @@ class AnimatedURPage extends AbstractView {
   }
 
   List<Widget> _extraButtons() {
-    final Map<String, List<String>> copiedList = {};
-    copiedList.addAll(viewModel.urqrList);
-    copiedList.removeWhere((key, value) =>
-        value.join("\n").trim() == viewModel.urqr.join("\n").trim());
     final List<Widget> toRet = [];
-    final keys = copiedList.keys;
-    for (var key in keys) {
-      toRet.add(_urqrSwitchButton(key, copiedList[key]!));
+    for (var key in viewModel.alternativeCodes) {
+      toRet.add(_urqrSwitchButton(key, viewModel.urqrList[key]!));
     }
     return toRet;
   }
@@ -44,8 +39,7 @@ class AnimatedURPage extends AbstractView {
     return OutlinedButton(
         onPressed: () {
           viewModel.urqr = value;
-          viewModel.markNeedsBuild();
         },
-        child: Text(key));
+        child: Text(key),);
   }
 }

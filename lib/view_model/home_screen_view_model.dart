@@ -12,6 +12,15 @@ class HomeScreenViewModel extends ViewModel {
 
   String? lastOpenedWallet;
 
+  Future<void> loadInitialState() async {
+    await Future.delayed(Duration.zero); // load the screen
+    if (CupcakeConfig.instance.lastWallet == null) return;
+    if (mounted) return;
+    if (!openLastWallet) return;
+    if (CupcakeConfig.instance.lastWallet?.exists() != true) return;
+    CupcakeConfig.instance.lastWallet!.openUI(c!);
+  }
+
   Future<List<CoinWalletInfo>> get wallets async {
     List<CoinWalletInfo> wallets = [];
     for (var coin in walletCoins) {
