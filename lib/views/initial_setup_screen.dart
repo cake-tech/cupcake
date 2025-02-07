@@ -13,7 +13,7 @@ class InitialSetupScreen extends AbstractView {
   InitialSetupViewModel viewModel = InitialSetupViewModel();
 
   @override
-  Widget? body(BuildContext context) {
+  Widget? body(final BuildContext context) {
     return SafeArea(
         minimum: const EdgeInsets.only(bottom: 16),
         child: Column(
@@ -95,7 +95,7 @@ class LongPrimaryButton extends StatelessWidget {
     this.width = double.maxFinite,
   });
 
-  final padding;
+  final EdgeInsets padding;
   final WidgetStateProperty<Color>? backgroundColor;
   final Color textColor;
 
@@ -105,7 +105,7 @@ class LongPrimaryButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final double? width;
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Padding(
       padding: padding,
       child: SizedBox(

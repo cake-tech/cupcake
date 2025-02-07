@@ -11,13 +11,13 @@ import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class SecurityBackup extends AbstractView {
-  SecurityBackup({super.key, required CoinWallet coinWallet})
+  SecurityBackup({super.key, required final CoinWallet coinWallet})
       : viewModel = SecurityBackupViewModel(wallet: coinWallet);
 
   @override
   SecurityBackupViewModel viewModel;
 
-  void _copy(BuildContext context, String value, String key) {
+  void _copy(final BuildContext context, final String value, final String key) {
     Clipboard.setData(ClipboardData(text: value));
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("Copied $key"),
@@ -25,7 +25,7 @@ class SecurityBackup extends AbstractView {
   }
 
   @override
-  Widget? body(BuildContext context) {
+  Widget? body(final BuildContext context) {
     if (viewModel.isLocked) {
       return FormBuilder(
         formElements: viewModel.form,
@@ -38,11 +38,11 @@ class SecurityBackup extends AbstractView {
     final details = viewModel.wallet.seedDetails(L);
     return FutureBuilder(
         future: details,
-        builder: (BuildContext context, snapshot) {
+        builder: (final BuildContext context, final snapshot) {
           if (!snapshot.hasData) return Text(snapshot.error.toString());
           return ListView.builder(
             itemCount: snapshot.data!.length,
-            itemBuilder: (BuildContext context, int index) {
+            itemBuilder: (final BuildContext context, final int index) {
               final d = snapshot.data![index];
               switch (d.type) {
                 case WalletSeedDetailType.text:
@@ -73,9 +73,9 @@ class SecurityBackup extends AbstractView {
   }
 
   Future<void> _showQrCode(
-    BuildContext context,
-    WalletSeedDetail d, {
-    Color color = Colors.black,
+    final BuildContext context,
+    final WalletSeedDetail d, {
+    final Color color = Colors.black,
   }) async {
     await showAlertWidget(
       context: context,
@@ -86,7 +86,14 @@ class SecurityBackup extends AbstractView {
           child: QrImageView(
             data: d.value,
             backgroundColor: color,
-            foregroundColor: Colors.white,
+            dataModuleStyle: QrDataModuleStyle(
+              color: Colors.black,
+              dataModuleShape: QrDataModuleShape.square,
+            ),
+            eyeStyle: QrEyeStyle(
+              color: Colors.black,
+              eyeShape: QrEyeShape.square,
+            ),
           ),
         ),
       ],

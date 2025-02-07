@@ -2,23 +2,24 @@ import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/utils/form/abstract_value_outcome.dart';
 import 'package:cupcake/utils/secure_storage.dart';
-import 'package:cupcake/utils/form/default_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:local_auth/local_auth.dart';
 
 class PinFormElement extends FormElement {
-  PinFormElement({
-    String initialText = "",
-    this.password = false,
-    this.validator = defaultFormValidator,
-    required this.valueOutcome,
-    this.onChanged,
-    this.onConfirm,
-    this.showNumboard = true,
-    required this.label,
-  }) : ctrl = TextEditingController(text: initialText);
-
-  Future<void> loadSecureStorageValue(VoidCallback callback) async {
+  PinFormElement(
+      {final String initialText = "",
+      this.password = false,
+      required this.validator,
+      required this.valueOutcome,
+      this.onChanged,
+      this.onConfirm,
+      this.showNumboard = true,
+      required this.label,
+      required final Future<void> Function(Object e) errorHandler})
+      : ctrl = TextEditingController(text: initialText),
+        _errorHandler = errorHandler;
+  final Future<void> Function(Object e) _errorHandler;
+  Future<void> loadSecureStorageValue(final VoidCallback callback) async {
     if (ctrl.text.isNotEmpty) return;
     if (!CupcakeConfig.instance.biometricEnabled) return;
     final auth = LocalAuthentication();
@@ -62,13 +63,18 @@ class PinFormElement extends FormElement {
   @override
   bool get isOk => validator(ctrl.text) == null;
 
-  Future<void> Function(BuildContext context)? onChanged;
-  Future<void> Function(BuildContext context)? onConfirm;
-  Future<void> onConfirmInternal(BuildContext context) async {
+  Future<void> Function()? onChanged;
+  Future<void> Function()? onConfirm;
+  Future<void> onConfirmInternal(final BuildContext context) async {
     await valueOutcome.encode(ctrl.text);
     isConfirmed = true;
   }
 
   bool isConfirmed = false;
   String? Function(String? input) validator;
+
+  @override
+  Future<void> errorHandler(final Object e) async {
+    await _errorHandler(e);
+  }
 }

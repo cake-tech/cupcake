@@ -5,14 +5,14 @@ import 'package:cupcake/views/widgets/form_builder.dart';
 import 'package:flutter/cupertino.dart';
 
 class OpenWallet extends AbstractView {
-  OpenWallet({super.key, required CoinWalletInfo coinWalletInfo})
+  OpenWallet({super.key, required final CoinWalletInfo coinWalletInfo})
       : viewModel = OpenWalletViewModel(coinWalletInfo: coinWalletInfo);
 
   @override
   final OpenWalletViewModel viewModel;
 
   @override
-  Widget body(BuildContext context) {
+  Widget body(final BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

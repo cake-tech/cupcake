@@ -62,6 +62,9 @@ dependencies:
   crypto: ^3.0.3
   package_info_plus: ^8.1.0
   local_auth: ^2.3.0
+  source_gen: ^2.0.0
+  analyzer: ^6.11.0
+  build: ^2.4.2
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +81,7 @@ dev_dependencies:
   flutter_gen_runner: ^5.8.0
   integration_test:
     sdk: flutter
+
 analyzer:
   exclude:
     - lib/l10n/*.dart

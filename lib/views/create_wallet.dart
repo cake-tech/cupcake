@@ -1,6 +1,5 @@
 import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/gen/assets.gen.dart';
-import 'package:cupcake/utils/call_throwable.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/view_model/create_wallet_view_model.dart';
@@ -12,8 +11,8 @@ import 'package:flutter/material.dart';
 class CreateWallet extends AbstractView {
   CreateWallet(
       {super.key,
-      required CreateMethod createMethod,
-      required bool needsPasswordConfirm})
+      required final CreateMethod createMethod,
+      required final bool needsPasswordConfirm})
       : viewModel = CreateWalletViewModel(
             createMethod: createMethod,
             needsPasswordConfirm: needsPasswordConfirm);
@@ -22,11 +21,11 @@ class CreateWallet extends AbstractView {
   final CreateWalletViewModel viewModel;
 
   @override
-  Widget? body(BuildContext context) {
+  Widget? body(final BuildContext context) {
     if (viewModel.selectedCoin == null) {
       return ListView.builder(
         itemCount: viewModel.coins.length,
-        itemBuilder: (BuildContext context, int index) {
+        itemBuilder: (final BuildContext context, final int index) {
           return InkWell(
             onTap: () {
               viewModel.selectedCoin = viewModel.coins[index];
@@ -45,7 +44,7 @@ class CreateWallet extends AbstractView {
         height: double.maxFinite,
         child: ListView.builder(
           itemCount: viewModel.createMethods.keys.length,
-          itemBuilder: (BuildContext context, int index) {
+          itemBuilder: (final BuildContext context, final int index) {
             final key = viewModel.createMethods.keys.elementAt(index);
             final value = viewModel.createMethods[key];
             return InkWell(
@@ -65,8 +64,8 @@ class CreateWallet extends AbstractView {
     formBuilder = FormBuilder(
       formElements: viewModel.currentForm ?? [],
       scaffoldContext: context,
-      rebuild: (bool val) {
-         viewModel.isPinSet = val;
+      rebuild: (final bool val) {
+        viewModel.isPinSet = val;
       },
       isPinSet: viewModel.isPinSet,
       showExtra: viewModel.showExtra,
@@ -88,7 +87,7 @@ class CreateWallet extends AbstractView {
   }
 
   @override
-  Widget? bottomNavigationBar(BuildContext context) {
+  Widget? bottomNavigationBar(final BuildContext context) {
     if (viewModel.isPinSet) {
       return SafeArea(
           child: Column(
@@ -97,7 +96,7 @@ class CreateWallet extends AbstractView {
           LongPrimaryButton(
             text: L.next,
             icon: null,
-            onPressed: () => _next(context),
+            onPressed: () => _next(),
             backgroundColor: const WidgetStatePropertyAll(Colors.green),
             textColor: Colors.white,
           ),
@@ -117,15 +116,14 @@ class CreateWallet extends AbstractView {
     return null;
   }
 
-  void _next(BuildContext context) async {
-    await callThrowable(context,
-        () async => await viewModel.createWallet(context), L.creating_wallet);
+  void _next() async {
+    await viewModel.createWallet();
   }
 
   FormBuilder? formBuilder;
 
-  bool isFormBad(List<FormElement> form) {
-    for (var element in form) {
+  bool isFormBad(final List<FormElement> form) {
+    for (final element in form) {
       if (!element.isOk) {
         if (CupcakeConfig.instance.debug) {
           print("${element.label} is not valid: ");
@@ -137,9 +135,10 @@ class CreateWallet extends AbstractView {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     viewModel.register(context);
     return Scaffold(
+      key: viewModel.scaffoldKey,
       appBar: appBar,
       body: SingleChildScrollView(child: body(context)),
       floatingActionButton: floatingActionButton(context),

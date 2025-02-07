@@ -12,14 +12,10 @@ class SettingsView extends AbstractView {
   SettingsView({super.key});
 
   @override
-  SettingsViewModel get viewModel => SettingsViewModel();
-
-  Future<void> postUpdate(BuildContext context) async {
-    viewModel.appConfig.save();
-  }
+  SettingsViewModel viewModel = SettingsViewModel();
 
   @override
-  Widget? body(BuildContext context) {
+  Widget? body(final BuildContext context) {
     return Column(
       children: [
         if (CupcakeConfig.instance.debug)
@@ -27,46 +23,54 @@ class SettingsView extends AbstractView {
               title: "Debug",
               subtitleEnabled: "Debug options are enabled",
               subtitleDisabled: "Debug options are disabled",
-              value: viewModel.appConfig.debug,
-              onChange: (bool value) {
-                viewModel.appConfig.debug = value;
-                postUpdate(context);
+              value: viewModel.configDebug,
+              onChange: (final bool value) {
+                viewModel.configDebug = value;
               }),
         IntegerConfigElement(
             title: "Milliseconds for qr code",
             hint:
                 "How many milliseconds should one QR code last before switching to next one",
-            value: viewModel.appConfig.msForQrCode,
-            onChange: (int value) {
-              viewModel.appConfig.msForQrCode = value;
-              postUpdate(context);
+            value: viewModel.configMsForQrCode,
+            onChange: (final int value) {
+              viewModel.configMsForQrCode = value;
             }),
         BooleanConfigElement(
             title: "Biometric auth",
             subtitleEnabled: "Biometrics are enabled",
             subtitleDisabled:
                 "In order to enable biometrics long press confirm button when entering pin",
-            value: viewModel.appConfig.biometricEnabled,
-            onChange: (bool value) async {
+            value: viewModel.configBiometricEnabled,
+            onChange: (final bool value) async {
               if (value) return;
-              viewModel.appConfig.biometricEnabled = false;
+              viewModel.configBiometricEnabled = false;
               final map = await secureStorage.readAll();
-              for (var key in map.keys) {
+              for (final key in map.keys) {
                 if (map[key]!.startsWith("UI.")) {
                   await secureStorage.delete(key: key);
                 }
               }
-              viewModel.appConfig.save();
-              postUpdate(context);
             }),
+        if (viewModel.configDidFoundInsecureBiometric)
+          BooleanConfigElement(
+              title: "Insecure biometric auth",
+              subtitleEnabled:
+                  "Insecure biometric authentication is enabled, it is not recommended"
+                  " and could lead to loss of funds. Make sure that you understand the drawbacks,"
+                  " and when in doubt - keep this setting disabled.",
+              subtitleDisabled:
+                  "Click to enable insecure biometric authentication.",
+              value: viewModel.configCanUseInsecureBiometric,
+              onChange: (final bool value) async {
+                viewModel.configCanUseInsecureBiometric = value;
+              }),
         IntegerConfigElement(
           title: "Max fragment density",
           hint:
               "How many characters of data should fit within a single QR code",
-          value: viewModel.appConfig.maxFragmentLength,
-          onChange: (int value) {
-            viewModel.appConfig.maxFragmentLength = value;
-            postUpdate(context);
+          value: viewModel.configMaxFragmentLength,
+          onChange: (final int value) async {
+            viewModel.configMaxFragmentLength = value;
           },
         ),
         const VersionWidget(),

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/utils/filesystem.dart';
 import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 
 class CupcakeConfig {
@@ -17,6 +18,8 @@ class CupcakeConfig {
     required this.biometricEnabled,
     required this.debug,
     required this.oldSecureStorage,
+    required this.didFoundInsecureBiometric,
+    required this.canUseInsecureBiometric,
   });
   CoinWalletInfo? lastWallet;
   bool initialSetupComplete;
@@ -27,8 +30,10 @@ class CupcakeConfig {
   bool biometricEnabled;
   bool debug;
   Map<String, dynamic> oldSecureStorage;
+  bool didFoundInsecureBiometric;
+  bool canUseInsecureBiometric;
 
-  factory CupcakeConfig.fromJson(Map<String, dynamic> json) {
+  factory CupcakeConfig.fromJson(final Map<String, dynamic> json) {
     return CupcakeConfig(
       lastWallet: CoinWalletInfo.fromJson(json['lastWallet']),
       initialSetupComplete: json['initialSetupComplete'] ?? false,
@@ -39,6 +44,8 @@ class CupcakeConfig {
       biometricEnabled: json['biometricEnabled'] ?? false,
       debug: json['debug'] ?? false,
       oldSecureStorage: json['oldSecureStorage'] ?? {},
+      didFoundInsecureBiometric: json['didFoundInsecureBiometric'] ?? false,
+      canUseInsecureBiometric: json['canUseInsecureBiometric'] ?? false,
     );
   }
 
@@ -53,6 +60,8 @@ class CupcakeConfig {
       'biometricEnabled': biometricEnabled,
       'oldSecureStorage': oldSecureStorage,
       'debug': debug,
+      'didFoundInsecureBiometric': didFoundInsecureBiometric,
+      'canUseInsecureBiometric': canUseInsecureBiometric,
     };
   }
 

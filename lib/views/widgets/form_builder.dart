@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cupcake/utils/alerts/widget_minimal.dart';
-import 'package:cupcake/utils/call_throwable.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
@@ -41,27 +40,31 @@ class _FormBuilderState extends State<FormBuilder> {
   }
 
   String? lastSuggestedTitle = DateTime.now().toIso8601String();
-  void _onLabelChange(String? suggestedTitle) {
+  void _onLabelChange(final String? suggestedTitle) {
     if (suggestedTitle == lastSuggestedTitle) return;
     lastSuggestedTitle = suggestedTitle;
     widget.onLabelChange(suggestedTitle);
   }
 
-  void _pinSet(bool val) {
+  void _pinSet(final bool val) {
     widget.rebuild?.call(val);
     _rebuild();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if ((widget.formElements.isNotEmpty &&
+  bool _displayPinFormElement() {
+    return (widget.formElements.isNotEmpty &&
             (widget.formElements.first is PinFormElement &&
                 (widget.formElements.first as PinFormElement).showNumboard) &&
             !(widget.formElements[0] as PinFormElement).isConfirmed) ||
         widget.formElements.length >= 2 &&
             (widget.formElements[1] is PinFormElement &&
                 (widget.formElements[1] as PinFormElement).showNumboard) &&
-            !(widget.formElements[1] as PinFormElement).isConfirmed) {
+            !(widget.formElements[1] as PinFormElement).isConfirmed;
+  }
+
+  @override
+  Widget build(final BuildContext context) {
+    if (_displayPinFormElement()) {
       var e = widget.formElements.first as PinFormElement;
       int i = 0;
       int count = 0;
@@ -75,13 +78,15 @@ class _FormBuilderState extends State<FormBuilder> {
       }
       _onLabelChange(e.label);
       nextPageCallback() async {
-        final b = await callThrowable(context, () async {
+        try {
           await e.onConfirmInternal(context);
-        }, "Secure storage communication");
-        if (b == false) return;
-        if (!context.mounted) return;
-        _pinSet(count == i);
-        e.onConfirm?.call(context);
+          if (!context.mounted) return;
+          _pinSet(count == i);
+          await e.onConfirm?.call();
+        } catch (err) {
+          await e.errorHandler(err);
+          return;
+        }
       }
 
       unawaited(e.loadSecureStorageValue(nextPageCallback));
@@ -97,8 +102,8 @@ class _FormBuilderState extends State<FormBuilder> {
             decoration: const InputDecoration(
               border: InputBorder.none,
             ),
-            onChanged: (_) {
-              e.onChanged?.call(context);
+            onChanged: (final _) {
+              e.onChanged?.call();
             },
             style: const TextStyle(
               fontSize: 64,
@@ -112,7 +117,7 @@ class _FormBuilderState extends State<FormBuilder> {
               showConfirm: () => e.isOk,
               nextPage: nextPageCallback,
               onConfirmLongPress: () async {
-                final b = await callThrowable(context, () async {
+                try {
                   await e.onConfirmInternal(context);
                   final auth = LocalAuthentication();
 
@@ -125,14 +130,19 @@ class _FormBuilderState extends State<FormBuilder> {
                   if (!canAuthenticate) throw Exception("Can't authenticate");
                   if (!availableBiometrics
                           .contains(BiometricType.fingerprint) &&
-                      !availableBiometrics.contains(BiometricType.face)) {
-                    throw Exception("No biometric auth found");
+                      !availableBiometrics.contains(BiometricType.face) &&
+                      !CupcakeConfig.instance.canUseInsecureBiometric) {
+                    CupcakeConfig.instance.didFoundInsecureBiometric = true;
+                    CupcakeConfig.instance.save();
+                    throw Exception("No secure biometric auth found.");
                   }
 
                   final bool didAuthenticate = await auth.authenticate(
                     localizedReason: 'Authenticate...',
-                    options: const AuthenticationOptions(
-                        useErrorDialogs: true, biometricOnly: true),
+                    options: AuthenticationOptions(
+                        useErrorDialogs: true,
+                        biometricOnly:
+                            !CupcakeConfig.instance.canUseInsecureBiometric),
                   );
                   if (!didAuthenticate) {
                     throw Exception("User didn't authenticate");
@@ -141,11 +151,16 @@ class _FormBuilderState extends State<FormBuilder> {
                       key: "UI.${e.valueOutcome.uniqueId}", value: e.ctrl.text);
                   CupcakeConfig.instance.biometricEnabled = true;
                   CupcakeConfig.instance.save();
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text("Biometric enabled!"),
-                  ));
-                  nextPageCallback();
-                }, "Secure storage communication");
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("Biometric enabled!"),
+                    ));
+                  }
+                  await nextPageCallback();
+                } catch (err) {
+                  await e.errorHandler(err);
+                  return;
+                }
               },
               showComma: false,
             ),
@@ -188,7 +203,7 @@ class _FormBuilderState extends State<FormBuilder> {
                   ),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: e.validator,
-                  onChanged: (_) {
+                  onChanged: (final _) {
                     _rebuild();
                   },
                   textAlign: TextAlign.center,
@@ -230,7 +245,7 @@ class _FormBuilderState extends State<FormBuilder> {
               ),
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: e.validator,
-              onChanged: (_) {
+              onChanged: (final _) {
                 _rebuild();
               },
               textAlign: TextAlign.center,
@@ -263,12 +278,12 @@ class _FormBuilderState extends State<FormBuilder> {
   }
 
   Future<void> _changeSingleChoice(
-      BuildContext context, SingleChoiceFormElement e) async {
+      final BuildContext context, final SingleChoiceFormElement e) async {
     await showAlertWidgetMinimal(
       context: context,
       body: List.generate(
         e.elements.length,
-        (index) {
+        (final index) {
           return InkWell(
             child: LongPrimaryButton(
               text: e.elements[index],

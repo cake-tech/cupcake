@@ -6,14 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class Receive extends AbstractView {
-  Receive({super.key, required CoinWallet coinWallet})
+  Receive({super.key, required final CoinWallet coinWallet})
       : viewModel = ReceiveViewModel(coinWallet);
 
   @override
   final ReceiveViewModel viewModel;
 
   @override
-  Widget? body(BuildContext context) {
+  Widget? body(final BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -29,7 +29,14 @@ class Receive extends AbstractView {
               ),
               child: QrImageView(
                 data: "monero:${viewModel.address}",
-                foregroundColor: Colors.black,
+                dataModuleStyle: QrDataModuleStyle(
+                  color: Colors.black,
+                  dataModuleShape: QrDataModuleShape.square,
+                ),
+                eyeStyle: QrEyeStyle(
+                  color: Colors.black,
+                  eyeShape: QrEyeShape.square,
+                ),
               ),
             ),
           ),

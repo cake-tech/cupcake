@@ -19,7 +19,7 @@ class NumericalKeyboard extends StatelessWidget {
   final VoidCallback? onConfirmLongPress;
   final bool showComma;
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Column(
       children: [
         Row(children: [

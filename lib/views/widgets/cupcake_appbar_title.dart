@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cupcake/gen/assets.gen.dart';
 
 class CupcakeAppbarTitle extends StatelessWidget {
   const CupcakeAppbarTitle({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SvgPicture.asset("assets/icons/icon-white.svg",
-              height: 32, width: 32, color: Colors.white),
+          Assets.icons.iconWhite.svg(
+            width: 32,
+            colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          ),
           const SizedBox(
             width: 12,
           ),

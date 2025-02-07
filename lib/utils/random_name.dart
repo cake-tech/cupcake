@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 final random = Random.secure();
 
-void randomName(TextEditingController ctrl) {
+void randomName(final TextEditingController ctrl) {
   ctrl.text =
       "${adjectives[random.nextInt(adjectives.length)]} ${nouns[random.nextInt(nouns.length)]}";
 }

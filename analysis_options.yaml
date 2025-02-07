@@ -7,3 +7,10 @@ include: package:flutter_lints/flutter.yaml
 linter:
   rules:
     unawaited_futures: true
+    avoid_print: false
+    parameter_assignments: true
+    prefer_const_declarations: true
+    prefer_final_fields: true
+    prefer_final_in_for_each: true
+    prefer_final_locals: true
+    prefer_final_parameters: true

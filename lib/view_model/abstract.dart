@@ -1,7 +1,12 @@
+import 'dart:async';
+
+import 'package:cupcake/coins/abstract/exception.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupcake/utils/alerts/basic.dart';
+import 'package:flutter/material.dart';
 
 class ViewModel {
+  bool canPop = true;
   String get screenName => "screenName";
 
   AppLocalizations get L {
@@ -17,19 +22,58 @@ class ViewModel {
     return _lcache!;
   }
 
-  AppLocalizations? _lcache;
+  BuildContext? _c;
 
-  BuildContext? c;
-  void register(BuildContext context) {
-    c = context;
+  void register(final BuildContext context) {
+    _c = context;
   }
 
-  bool get mounted => c?.mounted??false;
+  AppLocalizations? _lcache;
 
-  markNeedsBuild() {
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  BuildContext? get c => _c ?? scaffoldKey.currentContext;
+  bool get mounted {
+    if (c == null) print("c is null");
+    return c?.mounted ?? false;
+  }
+
+  void markNeedsBuild() {
     if (c == null) {
-      throw Exception("c is null, did you forget to register(context)?");
+      // throw Exception("c is null, did you forget to register(context)?");
+      print("aaa");
+      return;
     }
     (c as Element).markNeedsBuild();
+  }
+
+  Future<void> errorHandler(final Object e) =>
+      callThrowable(() => throw e, L.create_wallet);
+
+  Future<bool> callThrowable(
+      final FutureOr<void> Function() function, final String title) async {
+    if (c == null) return false;
+    if (!mounted) return false;
+    try {
+      await function.call();
+      return true;
+    } on CoinException catch (e) {
+      print(e);
+      await showAlert(
+        context: c!,
+        title: title,
+        body: [e.details ?? "", e.toString()],
+      );
+    } on TypeError catch (e) {
+      print(e);
+      await showAlert(
+          context: c!,
+          title: title,
+          body: [e.toString(), e.stackTrace.toString()]);
+    } catch (e) {
+      print(e);
+      await showAlert(context: c!, title: title, body: [e.toString()]);
+    }
+    return false;
   }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 Future<void> showAlertWidgetMinimal({
-  required BuildContext context,
-  required List<Widget> body,
+  required final BuildContext context,
+  required final List<Widget> body,
 }) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: true,
-    builder: (BuildContext context) {
+    builder: (final BuildContext context) {
       return SizedBox(
         height: 360,
         child: Material(

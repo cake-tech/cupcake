@@ -16,12 +16,12 @@ class BooleanConfigElement extends StatelessWidget {
   final bool value;
   final Function(bool val) onChange;
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return CheckboxListTile(
       title: Text(title),
       subtitle: Text(value ? subtitleEnabled : subtitleDisabled),
       value: value,
-      onChanged: (bool? value) {
+      onChanged: (final bool? value) {
         onChange(value == true);
       },
     );

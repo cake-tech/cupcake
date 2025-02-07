@@ -1,28 +1,30 @@
 import 'package:cupcake/coins/abstract/wallet_info.dart';
+import 'package:cupcake/dev/generate_rebuild.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/string_form_element.dart';
+import 'package:cupcake/utils/form/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:path/path.dart' as p;
 
+part 'wallet_edit_view_model.g.dart';
+
+@GenerateRebuild()
 class WalletEditViewModel extends ViewModel {
   WalletEditViewModel({
     required this.walletInfo,
   });
 
-  CoinWalletInfo walletInfo;
+  final CoinWalletInfo walletInfo;
 
   late StringFormElement walletName = StringFormElement(
     L.wallet_name,
     initialText: p.basename(walletInfo.walletName),
-    validator: (input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      return null;
-    },
+    validator: nonEmptyValidator(L),
     randomNameGenerator: true,
+    errorHandler: errorHandler,
   );
 
   late PinFormElement walletPassword = PinFormElement(
@@ -33,15 +35,13 @@ class WalletEditViewModel extends ViewModel {
       canWrite: false,
       verifyMatching: true,
     ),
-    validator: (String? input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      if (input.length < 4) {
-        return L.warning_password_too_short;
-      }
-      return null;
-    },
+    validator: nonEmptyValidator(
+      L,
+      extra: (final input) =>
+          (input.length < 4) ? L.warning_password_too_short : null,
+    ),
     showNumboard: false,
+    errorHandler: errorHandler,
   );
 
   late final List<FormElement> form = [
@@ -52,16 +52,18 @@ class WalletEditViewModel extends ViewModel {
   @override
   String get screenName => "Edit wallet";
 
-  Future<void> deleteWallet(BuildContext context) async {
+  @ThrowOnUI(message: "Delete wallet")
+  Future<void> $deleteWallet() async {
     if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
       throw Exception("Invalid wallet password");
     }
-    walletInfo.deleteWallet();
-    if (!context.mounted) return;
-    Navigator.of(context).pop();
+    await walletInfo.deleteWallet();
+    if (!mounted) return;
+    Navigator.of(c!).pop();
   }
 
-  Future<void> renameWallet(BuildContext context) async {
+  @ThrowOnUI(message: "Rename wallet")
+  Future<void> $renameWallet() async {
     if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
       throw Exception("Invalid wallet password");
     }
@@ -69,10 +71,8 @@ class WalletEditViewModel extends ViewModel {
       throw Exception("Wallet name is empty");
     }
     await walletInfo.renameWallet(await walletName.value);
-    if (!context.mounted) return;
-    await markNeedsBuild();
-    Navigator.of(context).pop();
+    if (!mounted) return;
+    markNeedsBuild();
+    Navigator.of(c!).pop();
   }
-
-  void titleUpdate(String? suggestedTitle) {}
 }
