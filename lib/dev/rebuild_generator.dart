@@ -171,7 +171,7 @@ ${exposeRebuildableAccessorsMethods.join()}
     ${elm.returnType} get $noPrefix$capitalizedIfIfeelLikeIt => \$$noPrefix.${elm.name};
     set $noPrefix$capitalizedIfIfeelLikeIt(final ${elm.returnType} new$capitalizedIfIfeelLikeIt) { 
       \$$noPrefix.${elm.name} = new$capitalizedIfIfeelLikeIt;
-      ${(extraCode?.isNotEmpty ?? true) ? extraCode : '// no extraCode property'}
+      ${(extraCode?.isNotEmpty ?? false) ? extraCode : '// no extraCode property'}
       markNeedsBuild();
     }
   ''');
