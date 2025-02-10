@@ -3,7 +3,8 @@ import 'package:cupcake/views/widgets/cupcake_appbar_title.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-void catchFatalError(final Object error, final StackTrace? stackTrace) async {
+Future<void> catchFatalError(
+    final Object error, final StackTrace? stackTrace) async {
   final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
   runApp(ErrorHandlerApp(

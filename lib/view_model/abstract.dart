@@ -40,9 +40,7 @@ class ViewModel {
 
   void markNeedsBuild() {
     if (c == null) {
-      // throw Exception("c is null, did you forget to register(context)?");
-      print("aaa");
-      return;
+      throw Exception("c is null, did you forget to register(context)?");
     }
     (c as Element).markNeedsBuild();
   }

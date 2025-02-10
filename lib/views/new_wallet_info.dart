@@ -1,6 +1,8 @@
+import 'package:cupcake/coins/types.dart';
+import 'package:cupcake/utils/new_wallet/info_page.dart';
 import 'package:cupcake/view_model/new_wallet_info_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
-import 'package:cupcake/views/initial_setup_screen.dart';
+import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:flutter/material.dart';
 
 class NewWalletInfoScreen extends AbstractView {

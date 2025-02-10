@@ -4,7 +4,7 @@ import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/utils/alerts/widget.dart';
 import 'package:cupcake/view_model/security_backup_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
-import 'package:cupcake/views/initial_setup_screen.dart';
+import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/form_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,7 +32,7 @@ class SecurityBackup extends AbstractView {
         scaffoldContext: context,
         isPinSet: !viewModel.isLocked,
         showExtra: true,
-        onLabelChange: viewModel.titleUpdate,
+        onLabelChange: null,
       );
     }
     final details = viewModel.wallet.seedDetails(L);
@@ -43,33 +43,38 @@ class SecurityBackup extends AbstractView {
           return ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder: (final BuildContext context, final int index) {
-              final d = snapshot.data![index];
-              switch (d.type) {
-                case WalletSeedDetailType.text:
-                  return ListTile(
-                    onTap: () {
-                      _copy(context, d.value, d.name);
-                    },
-                    title: Text(d.name,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            fontSize: 14, fontWeight: FontWeight.w700)),
-                    subtitle: Text(
-                      d.value,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  );
-                case WalletSeedDetailType.qr:
-                  return LongPrimaryButton(
-                    text: d.name,
-                    icon: Icons.qr_code_rounded,
-                    onPressed: () async {
-                      await _showQrCode(context, d, color: Colors.transparent);
-                    },
-                  );
-              }
+              return _buildElement(context, snapshot.data![index]);
             },
           );
         });
+  }
+
+  Widget _buildElement(final BuildContext context, final WalletSeedDetail d) {
+    switch (d.type) {
+      case WalletSeedDetailType.text:
+        return ListTile(
+          onTap: () {
+            _copy(context, d.value, d.name);
+          },
+          title: Text(d.name,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(fontSize: 14, fontWeight: FontWeight.w700)),
+          subtitle: Text(
+            d.value,
+            style: const TextStyle(color: Colors.white),
+          ),
+        );
+      case WalletSeedDetailType.qr:
+        return LongPrimaryButton(
+          text: d.name,
+          icon: Icons.qr_code_rounded,
+          onPressed: () async {
+            await _showQrCode(context, d, color: Colors.transparent);
+          },
+        );
+    }
   }
 
   Future<void> _showQrCode(

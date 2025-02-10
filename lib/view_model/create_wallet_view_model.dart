@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cupcake/coins/abstract/coin.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/list.dart';
 import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/dev/generate_rebuild.dart';
@@ -12,15 +13,12 @@ import 'package:cupcake/utils/form/plain_value_outcome.dart';
 import 'package:cupcake/utils/form/single_choice_form_element.dart';
 import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/form/validators.dart';
+import 'package:cupcake/utils/new_wallet/info_page.dart';
 import 'package:cupcake/utils/null_if_empty.dart';
 import 'package:cupcake/view_model/abstract.dart';
-import 'package:cupcake/view_model/new_wallet_info_view_model.dart';
 import 'package:cupcake/views/new_wallet_info.dart';
-import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/views/wallet_home.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:cupcake/views/widgets/form_builder.dart';
 
 part 'create_wallet_view_model.g.dart';
 
@@ -217,6 +215,13 @@ class CreateWalletViewModel extends ViewModel {
     secretViewKey,
   ];
 
+  @ThrowOnUI(message: "Failed to complete setup")
+  Future<void> $completeSetup(final CoinWallet cw) async {
+    CupcakeConfig.instance.initialSetupComplete = true;
+    CupcakeConfig.instance.save();
+    await WalletHome(coinWallet: cw).push(c!);
+  }
+
   @ThrowOnUI(L: 'create_wallet')
   Future<void> $createWallet() async {
     if (selectedCoin == null) throw Exception("selectedCoin is null");
@@ -236,125 +241,20 @@ class CreateWalletViewModel extends ViewModel {
     );
 
     final List<NewWalletInfoPage> pages = [
-      NewWalletInfoPage(
-        topText: L.important,
-        topAction: null,
-        topActionText: null,
-        lottieAnimation: Assets.shield.lottie(),
-        actions: [
-          NewWalletAction(
-            type: NewWalletActionType.nextPage,
-            function: null,
-            text: Text(
-              L.understand_show_seed,
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.blue,
-          ),
-        ],
-        texts: [
-          Text(
-            L.important_seed_backup_info(L.seed_length_16_word),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-      NewWalletInfoPage(
-        topText: L.seed,
-        topAction: seedOffset.ctrl.text.isNotEmpty
-            ? null
-            : () {
-                CupcakeConfig.instance.initialSetupComplete = true;
-                CupcakeConfig.instance.save();
-                WalletHome(coinWallet: cw).push(c!);
-              },
-        topActionText: Text(L.next),
-        lottieAnimation: Assets.shield.lottie(),
-        actions: [
-          NewWalletAction(
-            type: NewWalletActionType.function,
-            function: () {
-              Share.share(cw.seed);
-            },
-            text: Text(
-              L.save,
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.green,
-          ),
-          NewWalletAction(
-            type: NewWalletActionType.function,
-            function: () {
-              Clipboard.setData(ClipboardData(text: cw.seed));
-            },
-            text: Text(
-              L.copy,
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.blue,
-          ),
-        ],
-        texts: [
-          Text(
-            cw.walletName,
-            style: const TextStyle(
-                fontSize: 26, fontWeight: FontWeight.w500, color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-          Text(
-            "${cw.seed}\n\n\n\n${L.write_down_notice}",
-            textAlign: TextAlign.center,
-          ),
-        ],
+      NewWalletInfoPage.preShowSeedPage(L),
+      NewWalletInfoPage.writeDownNotice(
+        L,
+        nextCallback:
+            seedOffset.ctrl.text.isNotEmpty ? null : () => completeSetup(cw),
+        text: seed.ctrl.text,
+        title: L.seed,
       ),
       if (seedOffset.ctrl.text.isNotEmpty)
-        NewWalletInfoPage(
-          topText: L.wallet_passphrase,
-          topAction: () {
-            CupcakeConfig.instance.initialSetupComplete = true;
-            CupcakeConfig.instance.save();
-            WalletHome(coinWallet: cw).push(c!);
-          },
-          topActionText: Text(L.next),
-          lottieAnimation: Assets.shield.lottie(),
-          actions: [
-            NewWalletAction(
-              type: NewWalletActionType.function,
-              function: () {
-                Share.share(cw.seed);
-              },
-              text: Text(
-                L.save,
-                style: const TextStyle(color: Colors.white),
-              ),
-              backgroundColor: Colors.green,
-            ),
-            NewWalletAction(
-              type: NewWalletActionType.function,
-              function: () {
-                Clipboard.setData(ClipboardData(text: cw.seed));
-              },
-              text: Text(
-                L.copy,
-                style: const TextStyle(color: Colors.white),
-              ),
-              backgroundColor: Colors.blue,
-            ),
-          ],
-          texts: [
-            Text(
-              cw.walletName,
-              style: const TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              "${seedOffset.ctrl.text}\n\n\n\n${L.write_down_notice}",
-              textAlign: TextAlign.center,
-            ),
-          ],
+        NewWalletInfoPage.writeDownNotice(
+          L,
+          nextCallback: () => completeSetup(cw),
+          text: seed.ctrl.text,
+          title: L.wallet_passphrase,
         ),
     ];
     if (!mounted) {
@@ -369,7 +269,18 @@ class CreateWalletViewModel extends ViewModel {
     }
   }
 
-  void titleUpdate(final String? suggestedTitle) async {
+  FormBuilder get formBuilder => FormBuilder(
+        formElements: currentForm ?? [],
+        scaffoldContext: c!,
+        rebuild: (final bool val) {
+          isPinSet = val;
+        },
+        isPinSet: isPinSet,
+        showExtra: showExtra,
+        onLabelChange: titleUpdate,
+      );
+
+  Future<void> titleUpdate(final String? suggestedTitle) async {
     await Future.delayed(Duration.zero); // don't do it on build();
     screenName = suggestedTitle ?? screenNameOriginal;
     markNeedsBuild();

@@ -4,7 +4,6 @@ import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/views/widgets/barcode_scanner/urqr_progress.dart';
 import 'package:fast_scanner/fast_scanner.dart';
-import 'package:flutter/cupertino.dart';
 
 part 'barcode_scanner_view_model.g.dart';
 
@@ -23,7 +22,7 @@ class BarcodeScannerViewModel extends ViewModel {
   @RebuildOnChange()
   List<String> $urCodes = [];
 
-  get ur => URQRData.parse(urCodes);
+  URQRData get ur => URQRData.parse(urCodes);
 
   final CoinWallet wallet;
 
@@ -41,8 +40,7 @@ class BarcodeScannerViewModel extends ViewModel {
     await wallet.handleUR(c!, ur);
   }
 
-  void handleBarcode(
-      final BuildContext context, final BarcodeCapture barcodes) async {
+  Future<void> handleBarcode(final BarcodeCapture barcodes) async {
     for (final barcode in barcodes.barcodes) {
       if (barcode.rawValue!.startsWith("ur:")) {
         print("handleUR: ${ur.progress} : $popped");
@@ -57,7 +55,7 @@ class BarcodeScannerViewModel extends ViewModel {
       }
     }
     if (urCodes.isNotEmpty) return;
-    if (!context.mounted) return;
+    if (!mounted) return;
     barcode = barcodes.barcodes.firstOrNull;
     if (barcode != null && popped != true) {
       popped = true;

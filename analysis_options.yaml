@@ -14,3 +14,7 @@ linter:
     prefer_final_in_for_each: true
     prefer_final_locals: true
     prefer_final_parameters: true
+    avoid_void_async: true
+
+formatter:
+  page_width: 100

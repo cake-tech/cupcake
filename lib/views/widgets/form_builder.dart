@@ -8,7 +8,7 @@ import 'package:cupcake/utils/form/single_choice_form_element.dart';
 import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/random_name.dart';
 import 'package:cupcake/utils/secure_storage.dart';
-import 'package:cupcake/views/initial_setup_screen.dart';
+import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/numerical_keyboard/main.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
@@ -27,7 +27,7 @@ class FormBuilder extends StatefulWidget {
   final List<FormElement> formElements;
   final BuildContext scaffoldContext;
   final void Function(bool isPinSet)? rebuild;
-  final void Function(String? suggestedTitle) onLabelChange;
+  final void Function(String? suggestedTitle)? onLabelChange;
   final bool isPinSet;
   final bool showExtra;
   @override
@@ -43,7 +43,7 @@ class _FormBuilderState extends State<FormBuilder> {
   void _onLabelChange(final String? suggestedTitle) {
     if (suggestedTitle == lastSuggestedTitle) return;
     lastSuggestedTitle = suggestedTitle;
-    widget.onLabelChange(suggestedTitle);
+    widget.onLabelChange?.call(suggestedTitle);
   }
 
   void _pinSet(final bool val) {

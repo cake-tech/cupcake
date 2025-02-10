@@ -12,6 +12,7 @@ class HomeScreenViewModel extends ViewModel {
 
   @override
   String get screenName => L.select_wallet;
+
   final bool openLastWallet;
 
   final String? lastOpenedWallet;

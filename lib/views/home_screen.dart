@@ -2,7 +2,8 @@ import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/view_model/home_screen_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
-import 'package:cupcake/views/initial_setup_screen.dart';
+import 'package:cupcake/views/widgets/buttons/long_primary.dart';
+import 'package:cupcake/views/widgets/buttons/long_secondary.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 
@@ -56,40 +57,43 @@ class HomeScreen extends AbstractView {
         itemBuilder: (final BuildContext context, final int index) {
           final bool isOpen = (wallets.data![index].walletName)
               .contains(viewModel.lastOpenedWallet ?? "");
-          return Card(
-            child: IntrinsicHeight(
-              child: Row(
-                children: [
-                  Container(
-                    width: 3,
-                    color: isOpen ? Colors.blue : Colors.transparent,
-                    height: double.infinity,
-                  ),
-                  Expanded(
-                    child: ListTile(
-                      onTap: () {
-                        wallets.data![index].openUI(context);
-                      },
-                      leading: SizedBox(
-                        width: 32,
-                        child: wallets.data![index].coin.strings.svg,
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.edit_rounded),
-                        onPressed: () async {
-                          await viewModel.renameWallet(wallets.data![index]);
-                        },
-                      ),
-                      title: Text(
-                        p.basename(wallets.data![index].walletName),
-                      ),
-                    ),
-                  ),
-                ],
+          return singleWalletWidget(context, isOpen, wallets.data![index]);
+        });
+  }
+
+  Card singleWalletWidget(final BuildContext context, final bool isOpen,
+      final CoinWalletInfo wallet) {
+    return Card(
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            Container(
+              width: 3,
+              color: isOpen ? Colors.blue : Colors.transparent,
+              height: double.infinity,
+            ),
+            Expanded(
+              child: ListTile(
+                onTap: () {
+                  wallet.openUI(context);
+                },
+                leading: SizedBox(
+                  width: 32,
+                  child: wallet.coin.strings.svg,
+                ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.edit_rounded),
+                  onPressed: () async => await viewModel.renameWallet(wallet),
+                ),
+                title: Text(
+                  p.basename(wallet.walletName),
+                ),
               ),
             ),
-          );
-        });
+          ],
+        ),
+      ),
+    );
   }
 
   @override

@@ -16,12 +16,10 @@ class BarcodeScanner extends AbstractView {
 
   @override
   Widget? body(final BuildContext context) {
-    viewModel.register(context);
     return Stack(
       children: [
         MobileScanner(
-          onDetect: (final BarcodeCapture bc) =>
-              viewModel.handleBarcode(context, bc),
+          onDetect: (final BarcodeCapture bc) => viewModel.handleBarcode(bc),
           controller: viewModel.mobileScannerCtrl,
         ),
         if (viewModel.ur.inputs.isNotEmpty)

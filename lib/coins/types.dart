@@ -10,3 +10,8 @@ enum CreateMethod {
   create,
   restore,
 }
+
+enum NewWalletActionType {
+  nextPage,
+  function,
+}
