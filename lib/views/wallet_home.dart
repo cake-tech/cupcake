@@ -31,8 +31,7 @@ class WalletHome extends AbstractView {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Padding(
-                        padding: EdgeInsets.only(top: 50, bottom: 24)),
+                    const Padding(padding: EdgeInsets.only(top: 50, bottom: 24)),
                     const SizedBox(width: 16),
                     Assets.coins.xmr.svg(width: 50),
                     const SizedBox(width: 16),
@@ -43,9 +42,7 @@ class WalletHome extends AbstractView {
                         Text(
                           viewModel.wallet.walletName,
                           style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         Text(L.primary_account_label),
                       ],
@@ -91,8 +88,7 @@ class WalletHome extends AbstractView {
       child: SizedBox(
         height: 64,
         child: ElevatedButton.icon(
-          onPressed: () =>
-              BarcodeScanner(wallet: viewModel.wallet).push(context),
+          onPressed: () => BarcodeScanner(wallet: viewModel.wallet).push(context),
           icon: const Icon(
             Icons.qr_code_rounded,
             size: 35,

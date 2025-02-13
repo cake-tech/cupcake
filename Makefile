@@ -36,5 +36,9 @@ cupcake_android_monero:
 	dart run build_runner build --delete-conflicting-outputs
 	flutter build apk --dart-define=COIN_MONERO=true
 
+cupcake_ios_monero:
+	dart run build_runner build --delete-conflicting-outputs
+	flutter build ios --no-codesign --dart-define=COIN_MONERO=true
+
 prepare_dev:
 	./.tooling/prepare_dev.sh

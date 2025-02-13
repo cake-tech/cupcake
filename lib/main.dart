@@ -12,9 +12,6 @@ import 'package:cupcake/views/initial_setup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-const String signingKeyExpected = "Please Fill Me On Release :)";
-String signingKeyFound = "";
-
 Future<void> appInit() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeBaseStoragePath();
@@ -32,8 +29,7 @@ Future<void> main() async {
   FlutterError.onError = (final FlutterErrorDetails errorDetails) {
     catchFatalError(errorDetails.exception, null);
   };
-  PlatformDispatcher.instance.onError =
-      (final Object error, final StackTrace stackTrace) {
+  PlatformDispatcher.instance.onError = (final Object error, final StackTrace stackTrace) {
     catchFatalError(error, stackTrace);
     return true;
   };
@@ -66,15 +62,6 @@ class MyApp extends StatelessWidget {
         Locale('en'), // English
         Locale('pl'), // Polish
       ],
-      // builder: (final BuildContext context, final Widget? child) {
-      //   print("a");
-      //   return Stack(
-      //     alignment: AlignmentDirectional.bottomStart,
-      //     children: [
-      //       child ?? const Text("null"),
-      //     ],
-      //   );
-      // },
       home: CupcakeConfig.instance.initialSetupComplete
           ? HomeScreen(
               openLastWallet: true,

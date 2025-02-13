@@ -29,8 +29,7 @@ class SettingsView extends AbstractView {
               }),
         IntegerConfigElement(
             title: "Milliseconds for qr code",
-            hint:
-                "How many milliseconds should one QR code last before switching to next one",
+            hint: "How many milliseconds should one QR code last before switching to next one",
             value: viewModel.configMsForQrCode,
             onChange: (final int value) {
               viewModel.configMsForQrCode = value;
@@ -54,20 +53,17 @@ class SettingsView extends AbstractView {
         if (viewModel.configDidFoundInsecureBiometric)
           BooleanConfigElement(
               title: "Insecure biometric auth",
-              subtitleEnabled:
-                  "Insecure biometric authentication is enabled, it is not recommended"
+              subtitleEnabled: "Insecure biometric authentication is enabled, it is not recommended"
                   " and could lead to loss of funds. Make sure that you understand the drawbacks,"
                   " and when in doubt - keep this setting disabled.",
-              subtitleDisabled:
-                  "Click to enable insecure biometric authentication.",
+              subtitleDisabled: "Click to enable insecure biometric authentication.",
               value: viewModel.configCanUseInsecureBiometric,
               onChange: (final bool value) async {
                 viewModel.configCanUseInsecureBiometric = value;
               }),
         IntegerConfigElement(
           title: "Max fragment density",
-          hint:
-              "How many characters of data should fit within a single QR code",
+          hint: "How many characters of data should fit within a single QR code",
           value: viewModel.configMaxFragmentLength,
           onChange: (final int value) async {
             viewModel.configMaxFragmentLength = value;

@@ -1,6 +1,6 @@
 import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/list.dart';
-import 'package:cupcake/coins/types.dart';
+import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/views/create_wallet.dart';
@@ -60,8 +60,7 @@ class HomeScreenViewModel extends ViewModel {
   }
 
   void toggleSort() {
-    CupcakeConfig.instance.walletSort =
-        (CupcakeConfig.instance.walletSort + 1) % 2;
+    CupcakeConfig.instance.walletSort = (CupcakeConfig.instance.walletSort + 1) % 2;
     CupcakeConfig.instance.save();
     markNeedsBuild();
   }

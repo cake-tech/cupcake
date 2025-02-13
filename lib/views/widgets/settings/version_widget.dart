@@ -18,9 +18,7 @@ class _VersionWidgetState extends State<VersionWidget> {
     final String buildNumber = packageInfo.buildNumber;
     if (!context.mounted) return;
     showAboutDialog(
-        context: context,
-        applicationName: appName,
-        applicationVersion: "$version+$buildNumber");
+        context: context, applicationName: appName, applicationVersion: "$version+$buildNumber");
   }
 
   List<String?> easterEgg = [

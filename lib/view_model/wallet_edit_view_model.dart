@@ -37,8 +37,7 @@ class WalletEditViewModel extends ViewModel {
     ),
     validator: nonEmptyValidator(
       L,
-      extra: (final input) =>
-          (input.length < 4) ? L.warning_password_too_short : null,
+      extra: (final input) => (input.length < 4) ? L.warning_password_too_short : null,
     ),
     showNumboard: false,
     errorHandler: errorHandler,

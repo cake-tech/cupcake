@@ -1,4 +1,4 @@
-import 'package:cupcake/coins/types.dart';
+import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/new_wallet/action.dart';
@@ -8,8 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:share_plus/share_plus.dart';
 
 class NewWalletInfoPage {
-  static NewWalletInfoPage preShowSeedPage(final AppLocalizations L) =>
-      NewWalletInfoPage(
+  static NewWalletInfoPage preShowSeedPage(final AppLocalizations L) => NewWalletInfoPage(
         topText: L.important,
         topAction: null,
         topActionText: null,
@@ -71,8 +70,7 @@ class NewWalletInfoPage {
         texts: [
           Text(
             title,
-            style: const TextStyle(
-                fontSize: 26, fontWeight: FontWeight.w500, color: Colors.white),
+            style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500, color: Colors.white),
             textAlign: TextAlign.center,
           ),
           Text(

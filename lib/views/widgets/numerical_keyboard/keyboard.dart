@@ -177,8 +177,7 @@ Widget getKeyWidgetPinPad(final Keys key) {
     Keys.a0 ||
     Keys.dot =>
       Text(getKeysChar(key),
-          style: const TextStyle(
-              fontSize: 32, fontWeight: FontWeight.w400, color: Colors.white)),
+          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w400, color: Colors.white)),
     Keys.backspace => const Icon(Icons.backspace),
     Keys.next => const Icon(Icons.check),
     _ => Container(),

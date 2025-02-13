@@ -16,10 +16,9 @@ class ProgressPainter extends CustomPainter {
     const fullAngle = 360.0;
     var startAngle = 0.0;
     for (int i = 0; i < urQrProgress.expectedPartCount.toInt(); i++) {
-      final sweepAngle =
-          (1 / urQrProgress.expectedPartCount) * fullAngle * pi / 180.0;
-      drawSector(canvas, urQrProgress.receivedPartIndexes.contains(i), rect,
-          startAngle, sweepAngle);
+      final sweepAngle = (1 / urQrProgress.expectedPartCount) * fullAngle * pi / 180.0;
+      drawSector(
+          canvas, urQrProgress.receivedPartIndexes.contains(i), rect, startAngle, sweepAngle);
       startAngle += sweepAngle;
     }
   }

@@ -24,11 +24,9 @@ class PinFormElement extends FormElement {
     if (!CupcakeConfig.instance.biometricEnabled) return;
     final auth = LocalAuthentication();
 
-    final List<BiometricType> availableBiometrics =
-        await auth.getAvailableBiometrics();
+    final List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
     final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
-    final bool canAuthenticate =
-        canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+    final bool canAuthenticate = canAuthenticateWithBiometrics || await auth.isDeviceSupported();
     if (!canAuthenticate) return;
     if (!availableBiometrics.contains(BiometricType.fingerprint) &&
         !availableBiometrics.contains(BiometricType.face)) {
@@ -37,8 +35,7 @@ class PinFormElement extends FormElement {
 
     final bool didAuthenticate = await auth.authenticate(
       localizedReason: 'Authenticate...',
-      options: const AuthenticationOptions(
-          useErrorDialogs: true, biometricOnly: true),
+      options: const AuthenticationOptions(useErrorDialogs: true, biometricOnly: true),
     );
     if (!didAuthenticate) return;
     final value = await secureStorage.read(key: "UI.${valueOutcome.uniqueId}");

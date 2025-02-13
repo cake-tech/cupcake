@@ -1,9 +1,9 @@
-// lib/rebuild_generator.dart
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-// import 'package:cupcake/utils/config.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'package:cupcake/dev/generate_rebuild.dart';
@@ -11,8 +11,8 @@ import 'package:cupcake/utils/capitalize.dart';
 
 class RebuildClassGenerator extends GeneratorForAnnotation<GenerateRebuild> {
   @override
-  FutureOr<String> generateForAnnotatedElement(final Element element,
-      final ConstantReader annotation, final BuildStep buildStep) async {
+  FutureOr<String> generateForAnnotatedElement(
+      final Element element, final ConstantReader annotation, final BuildStep buildStep) async {
     if (element is! ClassElement) {
       throw InvalidGenerationSourceError(
         'Generator cannot target `${element.displayName}`. '
@@ -25,8 +25,7 @@ class RebuildClassGenerator extends GeneratorForAnnotation<GenerateRebuild> {
 
     final rebuildMethods = await _rebuildOnChangePart(classElement);
     final throwOnUiMethods = await _throwOnUiPart(classElement);
-    final exposeRebuildableAccessorsMethods =
-        await _exposeRebuildableAccessorsPart(classElement);
+    final exposeRebuildableAccessorsMethods = await _exposeRebuildableAccessorsPart(classElement);
     final fileName = buildStep.inputId.uri.pathSegments.last;
 
     return '''
@@ -47,8 +46,7 @@ ${exposeRebuildableAccessorsMethods.join()}
 ''';
   }
 
-  Future<List<String>> _rebuildOnChangePart(
-      final ClassElement classElement) async {
+  Future<List<String>> _rebuildOnChangePart(final ClassElement classElement) async {
     final rebuildMethods = <String>[];
     for (final field in classElement.fields) {
       final hasRebuildOnChange = field.metadata.any((final meta) {
@@ -79,14 +77,12 @@ ${exposeRebuildableAccessorsMethods.join()}
     for (final field in classElement.methods) {
       final hasThrowOnUI = field.metadata.any((final meta) {
         final constantValue = meta.computeConstantValue();
-        return constantValue != null &&
-            constantValue.type?.getDisplayString() == ThrowOnUI.name;
+        return constantValue != null && constantValue.type?.getDisplayString() == ThrowOnUI.name;
       });
       if (!hasThrowOnUI) continue;
       final throwOnUIMeta = field.metadata.firstWhere((final meta) {
         final constantValue = meta.computeConstantValue();
-        return constantValue != null &&
-            constantValue.type?.getDisplayString() == ThrowOnUI.name;
+        return constantValue != null && constantValue.type?.getDisplayString() == ThrowOnUI.name;
       });
       final constantValue = throwOnUIMeta.computeConstantValue();
 
@@ -94,8 +90,7 @@ ${exposeRebuildableAccessorsMethods.join()}
       final translationField = constantValue?.getField('L')?.toStringValue();
 
       if (messageField != null && translationField != null) {
-        throw Exception(
-            "ThrowOnUI() cannot have message and L at the same time");
+        throw Exception("ThrowOnUI() cannot have message and L at the same time");
       }
       String? alertTitle;
       if (messageField != null) {
@@ -108,10 +103,7 @@ ${exposeRebuildableAccessorsMethods.join()}
 
       final fieldName = field.displayName;
       final fieldType = field.type.getDisplayString().split(" ")[0];
-      final fieldArgs = field.type
-          .getDisplayString()
-          .split(" ")[1]
-          .replaceAll("Function", "");
+      final fieldArgs = field.type.getDisplayString().split(" ")[1].replaceAll("Function", "");
       final methodSuffix = fieldName[0].toUpperCase() + fieldName.substring(1);
       final noPrefix = methodSuffix.substring(1);
       throwOnUiMethods.add('''
@@ -128,31 +120,26 @@ ${exposeRebuildableAccessorsMethods.join()}
     return throwOnUiMethods;
   }
 
-  Future<List<String>> _exposeRebuildableAccessorsPart(
-      final ClassElement classElement) async {
+  Future<List<String>> _exposeRebuildableAccessorsPart(final ClassElement classElement) async {
     final rebuildMethods = <String>[];
     // classElement.methods
     for (final field in classElement.accessors) {
       final hasExposeRebuildableAccessors = field.metadata.any((final meta) {
         final constantValue = meta.computeConstantValue();
         return constantValue != null &&
-            constantValue.type?.getDisplayString() ==
-                ExposeRebuildableAccessors.name;
+            constantValue.type?.getDisplayString() == ExposeRebuildableAccessors.name;
       });
       if (!hasExposeRebuildableAccessors) continue;
-      final exposeRebuildableAccessorsMeta =
-          field.metadata.firstWhere((final meta) {
+      final exposeRebuildableAccessorsMeta = field.metadata.firstWhere((final meta) {
         final constantValue = meta.computeConstantValue();
         return constantValue != null &&
-            constantValue.type?.getDisplayString() ==
-                ExposeRebuildableAccessors.name;
+            constantValue.type?.getDisplayString() == ExposeRebuildableAccessors.name;
       });
       final fieldName = field.displayName;
       // Capitalize the field name for the method name.
       final methodSuffix = fieldName[0].toUpperCase() + fieldName.substring(1);
       final noPrefix = methodSuffix.substring(1);
-      final constantValue =
-          exposeRebuildableAccessorsMeta.computeConstantValue();
+      final constantValue = exposeRebuildableAccessorsMeta.computeConstantValue();
 
       String? extraCode = constantValue?.getField('extraCode')?.toStringValue();
 
@@ -165,8 +152,7 @@ ${exposeRebuildableAccessorsMethods.join()}
         if (extraCode != null && !extraCode.endsWith(';')) {
           extraCode = "$extraCode;";
         }
-        final capitalizedIfIfeelLikeIt =
-            noPrefix.isEmpty ? elm.name : elm.name.capitalize();
+        final capitalizedIfIfeelLikeIt = noPrefix.isEmpty ? elm.name : elm.name.capitalize();
         rebuildMethods.add('''
     ${elm.returnType} get $noPrefix$capitalizedIfIfeelLikeIt => \$$noPrefix.${elm.name};
     set $noPrefix$capitalizedIfIfeelLikeIt(final ${elm.returnType} new$capitalizedIfIfeelLikeIt) { 

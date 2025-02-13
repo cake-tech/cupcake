@@ -25,10 +25,7 @@ class BarcodeScanner extends AbstractView {
         if (viewModel.ur.inputs.isNotEmpty)
           Center(
             child: Text("${viewModel.ur.inputs.length}/${viewModel.ur.count}",
-                style: Theme.of(context)
-                    .textTheme
-                    .displayLarge
-                    ?.copyWith(color: Colors.white)),
+                style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white)),
           ),
         SizedBox(
           child: Center(

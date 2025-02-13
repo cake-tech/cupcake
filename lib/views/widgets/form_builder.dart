@@ -68,8 +68,7 @@ class _FormBuilderState extends State<FormBuilder> {
       var e = widget.formElements.first as PinFormElement;
       int i = 0;
       int count = 0;
-      if (widget.formElements.length >= 2 &&
-          (widget.formElements[1] is PinFormElement)) {
+      if (widget.formElements.length >= 2 && (widget.formElements[1] is PinFormElement)) {
         count++;
       }
       if (e.isConfirmed) {
@@ -123,13 +122,11 @@ class _FormBuilderState extends State<FormBuilder> {
 
                   final List<BiometricType> availableBiometrics =
                       await auth.getAvailableBiometrics();
-                  final bool canAuthenticateWithBiometrics =
-                      await auth.canCheckBiometrics;
-                  final bool canAuthenticate = canAuthenticateWithBiometrics ||
-                      await auth.isDeviceSupported();
+                  final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+                  final bool canAuthenticate =
+                      canAuthenticateWithBiometrics || await auth.isDeviceSupported();
                   if (!canAuthenticate) throw Exception("Can't authenticate");
-                  if (!availableBiometrics
-                          .contains(BiometricType.fingerprint) &&
+                  if (!availableBiometrics.contains(BiometricType.fingerprint) &&
                       !availableBiometrics.contains(BiometricType.face) &&
                       !CupcakeConfig.instance.canUseInsecureBiometric) {
                     CupcakeConfig.instance.didFoundInsecureBiometric = true;
@@ -141,8 +138,7 @@ class _FormBuilderState extends State<FormBuilder> {
                     localizedReason: 'Authenticate...',
                     options: AuthenticationOptions(
                         useErrorDialogs: true,
-                        biometricOnly:
-                            !CupcakeConfig.instance.canUseInsecureBiometric),
+                        biometricOnly: !CupcakeConfig.instance.canUseInsecureBiometric),
                   );
                   if (!didAuthenticate) {
                     throw Exception("User didn't authenticate");
@@ -181,8 +177,7 @@ class _FormBuilderState extends State<FormBuilder> {
         }
         children.add(
           Padding(
-            padding:
-                const EdgeInsets.only(bottom: 16.0, left: 12.0, right: 12.0),
+            padding: const EdgeInsets.only(bottom: 16.0, left: 12.0, right: 12.0),
             child: Stack(
               alignment: AlignmentDirectional.topEnd,
               children: [
@@ -226,8 +221,7 @@ class _FormBuilderState extends State<FormBuilder> {
         if (e.showNumboard) continue;
         children.add(
           Padding(
-            padding:
-                const EdgeInsets.only(bottom: 16.0, left: 12.0, right: 12.0),
+            padding: const EdgeInsets.only(bottom: 16.0, left: 12.0, right: 12.0),
             child: TextFormField(
               controller: e.ctrl,
               obscureText: true,

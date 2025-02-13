@@ -19,8 +19,7 @@ class Receive extends AbstractView {
       child: Column(
         children: [
           Padding(
-            padding:
-                const EdgeInsets.only(top: 8, left: 48, right: 48, bottom: 32),
+            padding: const EdgeInsets.only(top: 8, left: 48, right: 48, bottom: 32),
             child: Container(
               padding: const EdgeInsets.all(10.0),
               decoration: BoxDecoration(

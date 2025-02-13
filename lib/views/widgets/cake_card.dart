@@ -16,8 +16,7 @@ class CakeCard extends StatelessWidget {
         bottom: 4,
         right: 16,
       ),
-      this.firmPadding =
-          const EdgeInsets.only(top: 24.0, left: 24.0, bottom: 24, right: 24)});
+      this.firmPadding = const EdgeInsets.only(top: 24.0, left: 24.0, bottom: 24, right: 24)});
 
   final Widget child;
   final EdgeInsets internalPadding;

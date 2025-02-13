@@ -30,6 +30,8 @@ abstract class CoinWallet {
 
   String get seed;
 
+  String get passphrase;
+
   String get primaryAddress;
 
   String get walletName;

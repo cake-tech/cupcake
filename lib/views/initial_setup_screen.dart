@@ -1,4 +1,4 @@
-import 'package:cupcake/coins/types.dart';
+import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/view_model/initial_setup_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/create_wallet.dart';
@@ -20,8 +20,7 @@ class InitialSetupScreen extends AbstractView {
       child: Column(
         children: [
           Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 64.0, vertical: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 24),
               child: Assets.cakeLanding.lottie()),
           Text(L.welcome_to,
               style: Theme.of(context).textTheme.displaySmall?.copyWith(

@@ -8,9 +8,9 @@
 To build:
 
 ```bash
-$ make libs_android_build # or libs_android_download
-$ make prepare_dev # load dev signing key
-$ make cupcake_android_monero
+$ make libs_android_build # or libs_android_download, libs_ios_build, libs_ios_download
+$ make prepare_dev # load dev signing key (not required on iOS)
+$ make cupcake_android_monero # or cupcake_
 ```
 
 ### Adding other coins

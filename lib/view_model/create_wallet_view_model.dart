@@ -2,19 +2,18 @@ import 'dart:async';
 
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/coins/abstract/wallet_creation.dart';
 import 'package:cupcake/coins/list.dart';
-import 'package:cupcake/coins/types.dart';
+import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/dev/generate_rebuild.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/plain_value_outcome.dart';
-import 'package:cupcake/utils/form/single_choice_form_element.dart';
 import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/form/validators.dart';
 import 'package:cupcake/utils/new_wallet/info_page.dart';
-import 'package:cupcake/utils/null_if_empty.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/views/new_wallet_info.dart';
 import 'package:cupcake/views/wallet_home.dart';
@@ -41,15 +40,11 @@ class CreateWalletViewModel extends ViewModel {
   late String screenName = screenNameOriginal;
 
   String get screenNameOriginal => switch (createMethod) {
-        CreateMethod.any => L.create_wallet,
         CreateMethod.create => L.create_wallet,
         CreateMethod.restore => L.restore_wallet,
       };
 
   List<Coin> get coins => walletCoins;
-
-  @RebuildOnChange()
-  bool $isCreate = false;
 
   bool get hasAdvancedOptions {
     if (currentForm == null) return false;
@@ -76,30 +71,19 @@ class CreateWalletViewModel extends ViewModel {
     errorHandler: errorHandler,
   );
 
-  late SingleChoiceFormElement walletSeedType = SingleChoiceFormElement(
-    title: L.seed_type,
-    elements: [
-      L.seed_type_polyseed,
-      L.seed_type_legacy,
-    ],
-    errorHandler: errorHandler,
-  );
-
   late PinFormElement walletPasswordInitial = PinFormElement(
     label: L.wallet_password,
     password: true,
     valueOutcome: PlainValueOutcome(),
     validator: nonEmptyValidator(
       L,
-      extra: (final input) =>
-          (input.length < 4) ? L.warning_password_too_short : null,
+      extra: (final input) => (input.length < 4) ? L.warning_password_too_short : null,
     ),
     errorHandler: errorHandler,
   );
 
   late PinFormElement walletPassword = PinFormElement(
-    label:
-        (needsPasswordConfirm) ? L.wallet_password_repeat : L.wallet_password,
+    label: (needsPasswordConfirm) ? L.wallet_password_repeat : L.wallet_password,
     password: true,
     valueOutcome: FlutterSecureStorageValueOutcome(
       "secure.wallet_password",
@@ -121,55 +105,6 @@ class CreateWalletViewModel extends ViewModel {
     errorHandler: errorHandler,
   );
 
-  late StringFormElement seed = StringFormElement(
-    L.wallet_seed,
-    password: false,
-    validator: nonEmptyValidator(
-      L,
-      extra: (final input) =>
-          (selectedCoin?.isSeedSomewhatLegit(input) ?? false)
-              ? L.warning_seed_incorrect_length
-              : null,
-    ),
-    errorHandler: errorHandler,
-  );
-
-  late StringFormElement walletAddress = StringFormElement(
-    L.primary_address_label,
-    password: true,
-    validator: nonEmptyValidator(L),
-    errorHandler: errorHandler,
-  );
-
-  late StringFormElement secretSpendKey = StringFormElement(
-    L.secret_spend_key,
-    password: true,
-    validator: nonEmptyValidator(L),
-    errorHandler: errorHandler,
-  );
-
-  late StringFormElement secretViewKey = StringFormElement(
-    L.secret_view_key,
-    password: true,
-    validator: nonEmptyValidator(L),
-    errorHandler: errorHandler,
-  );
-
-  late StringFormElement restoreHeight = StringFormElement(
-    L.restore_height,
-    password: true,
-    validator: nonEmptyValidator(L),
-    errorHandler: errorHandler,
-  );
-
-  late StringFormElement seedOffset = StringFormElement(
-    L.seed_offset,
-    password: true,
-    isExtra: true,
-    validator: nonEmptyValidator(L),
-    errorHandler: errorHandler,
-  );
-
   @RebuildOnChange()
   late List<FormElement>? $currentForm = () {
     if (createMethods.length == 1) {
@@ -178,42 +113,26 @@ class CreateWalletViewModel extends ViewModel {
     return null;
   }();
 
-  Map<String, List<FormElement>> get createMethods => {
-        if ([CreateMethod.any, CreateMethod.create].contains(createMethod))
-          L.option_create_new_wallet: _createForm,
-        if ([CreateMethod.any, CreateMethod.restore]
-            .contains(createMethod)) ...{
-          L.option_create_seed: _restoreSeedForm,
-          L.option_create_keys: _restoreFormKeysForm,
-        },
-      };
+  WalletCreation? creationMethod;
+  Map<String, List<FormElement>> get createMethods {
+    if (creationMethod == null || creationMethod!.coin != selectedCoin) {
+      creationMethod = selectedCoin!.creationMethod(L);
+      creationMethod!.wipe();
+    }
+    final form = creationMethod!.createMethods(createMethod);
+    final Map<String, List<FormElement>> toRet = {};
+    for (final key in form.keys) {
+      toRet[key] = [
+        if (needsPasswordConfirm) walletPasswordInitial,
+        walletPassword,
+        walletName,
+      ];
+      toRet[key]!.addAll(form[key]!);
+    }
+    return toRet;
+  }
 
   final bool needsPasswordConfirm;
-
-  late final List<FormElement> _createForm = [
-    if (needsPasswordConfirm) walletPasswordInitial,
-    walletPassword,
-    walletName,
-    walletSeedType,
-    seedOffset
-  ];
-
-  late final List<FormElement> _restoreSeedForm = [
-    if (needsPasswordConfirm) walletPasswordInitial,
-    walletPassword,
-    walletName,
-    seed,
-    seedOffset
-  ];
-
-  late final List<FormElement> _restoreFormKeysForm = [
-    if (needsPasswordConfirm) walletPasswordInitial,
-    walletPassword,
-    walletName,
-    walletAddress,
-    secretSpendKey,
-    secretViewKey,
-  ];
 
   @ThrowOnUI(message: "Failed to complete setup")
   Future<void> $completeSetup(final CoinWallet cw) async {
@@ -228,40 +147,55 @@ class CreateWalletViewModel extends ViewModel {
     if ((await walletName.value).isEmpty) {
       throw Exception(L.warning_input_cannot_be_empty);
     }
-    final cw = await selectedCoin!.createNewWallet(
+
+    if (await walletPassword.value == await walletPasswordInitial.value) {
+      throw Exception("Wallet password doesn't match");
+    }
+
+    final outcome = await creationMethod!.create(
+      createMethod,
       await walletName.value,
       await walletPassword.value,
-      primaryAddress: (await walletAddress.value).nullIfEmpty(),
-      createWallet: (currentForm == _createForm),
-      seed: (await seed.value).nullIfEmpty(),
-      restoreHeight: int.tryParse(await restoreHeight.value),
-      viewKey: (await secretViewKey.value).nullIfEmpty(),
-      spendKey: (await secretSpendKey.value).nullIfEmpty(),
-      seedOffsetOrEncryption: (await seedOffset.value).nullIfEmpty(),
     );
+
+    if (outcome == null) {
+      throw Exception("Unable to create wallet using any known methods");
+    }
+
+    if (!outcome.success) {
+      if (outcome.message == null || outcome.message?.isEmpty == true) {
+        throw Exception(
+            "Wallet creation failed, and status indicated failure but message was empty");
+      }
+      throw Exception(outcome.message);
+    }
+
+    if (outcome.wallet == null) {
+      throw Exception("Wallet is null but there is no indication of failure");
+    }
 
     final List<NewWalletInfoPage> pages = [
       NewWalletInfoPage.preShowSeedPage(L),
       NewWalletInfoPage.writeDownNotice(
         L,
         nextCallback:
-            seedOffset.ctrl.text.isNotEmpty ? null : () => completeSetup(cw),
-        text: seed.ctrl.text,
+            outcome.wallet!.passphrase.isEmpty ? () => completeSetup(outcome.wallet) : null,
+        text: outcome.wallet!.seed,
         title: L.seed,
       ),
-      if (seedOffset.ctrl.text.isNotEmpty)
+      if (outcome.wallet!.passphrase.isNotEmpty)
         NewWalletInfoPage.writeDownNotice(
           L,
-          nextCallback: () => completeSetup(cw),
-          text: seed.ctrl.text,
+          nextCallback: () => completeSetup(outcome.wallet!),
+          text: outcome.wallet!.passphrase,
           title: L.wallet_passphrase,
         ),
     ];
     if (!mounted) {
       throw Exception("context is not mounted, unable to show next screen");
     }
-    if (currentForm != _createForm) {
-      await WalletHome(coinWallet: cw).push(c!);
+    if (outcome.method == CreateMethod.restore) {
+      await WalletHome(coinWallet: outcome.wallet!).push(c!);
     } else {
       await NewWalletInfoScreen(
         pages: pages,

@@ -1,6 +1,6 @@
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
-import 'package:cupcake/coins/types.dart';
+import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/alerts/widget.dart';
 import 'package:cupcake/view_model/security_backup_view_model.dart';
 import 'package:cupcake/views/abstract.dart';

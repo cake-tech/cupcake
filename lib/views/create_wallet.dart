@@ -1,4 +1,4 @@
-import 'package:cupcake/coins/types.dart';
+import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
@@ -11,8 +11,7 @@ class CreateWallet extends AbstractView {
       required final CreateMethod createMethod,
       required final bool needsPasswordConfirm})
       : viewModel = CreateWalletViewModel(
-            createMethod: createMethod,
-            needsPasswordConfirm: needsPasswordConfirm);
+            createMethod: createMethod, needsPasswordConfirm: needsPasswordConfirm);
 
   @override
   final CreateWalletViewModel viewModel;

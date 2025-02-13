@@ -21,9 +21,7 @@ class _URQRState extends State<URQR> {
   void initState() {
     super.initState();
     setState(() {
-      t = Timer.periodic(
-          Duration(milliseconds: CupcakeConfig.instance.msForQrCode),
-          (final timer) {
+      t = Timer.periodic(Duration(milliseconds: CupcakeConfig.instance.msForQrCode), (final timer) {
         _nextFrame();
       });
     });

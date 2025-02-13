@@ -1,4 +1,4 @@
-import 'package:cupcake/coins/types.dart';
+import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/new_wallet/info_page.dart';
 import 'package:cupcake/view_model/new_wallet_info_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
@@ -23,12 +23,10 @@ class NewWalletInfoScreen extends AbstractView {
       );
 
   List<Widget>? _getActionButton() {
-    if (viewModel.page.topAction == null &&
-        viewModel.page.topActionText == null) {
+    if (viewModel.page.topAction == null && viewModel.page.topActionText == null) {
       return null;
     }
-    if (viewModel.page.topActionText != null &&
-        viewModel.page.topAction == null) {
+    if (viewModel.page.topActionText != null && viewModel.page.topAction == null) {
       return [
         TextButton(
           onPressed: () => viewModel.currentPageIndex++,
@@ -72,8 +70,7 @@ class NewWalletInfoScreen extends AbstractView {
       padding: const EdgeInsets.only(left: 32, right: 32, top: 0, bottom: 16),
       child: Column(
         children: [
-          if (viewModel.page.lottieAnimation != null)
-            viewModel.page.lottieAnimation!,
+          if (viewModel.page.lottieAnimation != null) viewModel.page.lottieAnimation!,
           ...viewModel.page.texts,
           const Spacer(),
           SizedBox(

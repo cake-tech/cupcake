@@ -47,8 +47,7 @@ class NumericalKeyboard extends StatelessWidget {
           const Spacer(),
           SingleKey(Keys.backspace, ctrl, rebuild),
           SingleKey(Keys.a0, ctrl, rebuild),
-          if (showConfirm() &&
-              (!showComma || ctrl.text.contains(getKeysChar(Keys.dot))))
+          if (showConfirm() && (!showComma || ctrl.text.contains(getKeysChar(Keys.dot))))
             SingleKey(Keys.next, ctrl, nextPage, longPress: onConfirmLongPress),
           if (showComma && !ctrl.text.contains(getKeysChar(Keys.dot)))
             SingleKey(Keys.dot, ctrl, rebuild),

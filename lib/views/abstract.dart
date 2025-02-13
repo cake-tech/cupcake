@@ -17,6 +17,8 @@ import 'package:flutter/material.dart';
 // and due to the fact that we don't use stateful widget we can directly use
 // viewmodel, without any extra code involved in doing that.
 
+int buildCount = 0;
+
 class _AbstractViewState extends State<AbstractView> {
   _AbstractViewState({required this.realBuild});
 
@@ -24,6 +26,7 @@ class _AbstractViewState extends State<AbstractView> {
 
   @override
   Widget build(final BuildContext context) {
+    print("build count: ${++buildCount}");
     return realBuild(context);
   }
 }

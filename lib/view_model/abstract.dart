@@ -11,12 +11,10 @@ class ViewModel {
 
   AppLocalizations get L {
     if (_lcache == null && c == null) {
-      throw Exception(
-          "context is null in view model. Did you forget to register()?");
+      throw Exception("context is null in view model. Did you forget to register()?");
     }
     if (_lcache == null && c?.mounted != true) {
-      throw Exception(
-          "context is not mounted. Did you register incorrect context?");
+      throw Exception("context is not mounted. Did you register incorrect context?");
     }
     _lcache ??= AppLocalizations.of(c!);
     return _lcache!;
@@ -45,11 +43,9 @@ class ViewModel {
     (c as Element).markNeedsBuild();
   }
 
-  Future<void> errorHandler(final Object e) =>
-      callThrowable(() => throw e, L.create_wallet);
+  Future<void> errorHandler(final Object e) => callThrowable(() => throw e, L.create_wallet);
 
-  Future<bool> callThrowable(
-      final FutureOr<void> Function() function, final String title) async {
+  Future<bool> callThrowable(final FutureOr<void> Function() function, final String title) async {
     if (c == null) return false;
     if (!mounted) return false;
     try {
@@ -64,10 +60,7 @@ class ViewModel {
       );
     } on TypeError catch (e) {
       print(e);
-      await showAlert(
-          context: c!,
-          title: title,
-          body: [e.toString(), e.stackTrace.toString()]);
+      await showAlert(context: c!, title: title, body: [e.toString(), e.stackTrace.toString()]);
     } catch (e) {
       print(e);
       await showAlert(context: c!, title: title, body: [e.toString()]);
