@@ -6,8 +6,12 @@ import 'package:cupcake/views/widgets/form_builder.dart';
 import 'package:flutter/material.dart';
 
 class WalletEdit extends AbstractView {
-  WalletEdit({super.key, required final CoinWalletInfo walletInfo})
-      : viewModel = WalletEditViewModel(walletInfo: walletInfo);
+  WalletEdit({
+    super.key,
+    required final CoinWalletInfo walletInfo,
+  }) : viewModel = WalletEditViewModel(
+          walletInfo: walletInfo,
+        );
 
   @override
   WalletEditViewModel viewModel;
@@ -18,6 +22,7 @@ class WalletEdit extends AbstractView {
       children: [
         const Spacer(),
         FormBuilder(
+          L,
           formElements: viewModel.form,
           scaffoldContext: context,
           isPinSet: false,
@@ -32,14 +37,14 @@ class WalletEdit extends AbstractView {
                 backgroundColor: const WidgetStatePropertyAll(Colors.red),
                 icon: null,
                 onPressed: viewModel.deleteWallet,
-                text: "Delete",
+                text: L.delete,
               ),
             ),
             Expanded(
               child: LongPrimaryButton(
                 icon: null,
                 onPressed: () => viewModel.renameWallet(),
-                text: "Rename",
+                text: L.rename,
               ),
             ),
           ],

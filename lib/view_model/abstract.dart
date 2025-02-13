@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/exception.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/alerts/basic.dart';
@@ -17,6 +18,7 @@ class ViewModel {
       throw Exception("context is not mounted. Did you register incorrect context?");
     }
     _lcache ??= AppLocalizations.of(c!);
+    Coin.L = _lcache!;
     return _lcache!;
   }
 
@@ -45,7 +47,7 @@ class ViewModel {
 
   Future<void> errorHandler(final Object e) => callThrowable(() => throw e, L.create_wallet);
 
-  Future<bool> callThrowable(final FutureOr<void> Function() function, final String title) async {
+  Future<bool> callThrowable(final Future<void> Function() function, final String title) async {
     if (c == null) return false;
     if (!mounted) return false;
     try {

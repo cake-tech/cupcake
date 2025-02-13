@@ -134,7 +134,7 @@ class CreateWalletViewModel extends ViewModel {
 
   final bool needsPasswordConfirm;
 
-  @ThrowOnUI(message: "Failed to complete setup")
+  @ThrowOnUI(L: 'error_failed_to_setup')
   Future<void> $completeSetup(final CoinWallet cw) async {
     CupcakeConfig.instance.initialSetupComplete = true;
     CupcakeConfig.instance.save();
@@ -143,13 +143,13 @@ class CreateWalletViewModel extends ViewModel {
 
   @ThrowOnUI(L: 'create_wallet')
   Future<void> $createWallet() async {
-    if (selectedCoin == null) throw Exception("selectedCoin is null");
+    if (selectedCoin == null) throw Exception(L.error_selected_coin_null);
     if ((await walletName.value).isEmpty) {
       throw Exception(L.warning_input_cannot_be_empty);
     }
 
     if (await walletPassword.value == await walletPasswordInitial.value) {
-      throw Exception("Wallet password doesn't match");
+      throw Exception(L.password_doesnt_match);
     }
 
     final outcome = await creationMethod!.create(
@@ -159,19 +159,18 @@ class CreateWalletViewModel extends ViewModel {
     );
 
     if (outcome == null) {
-      throw Exception("Unable to create wallet using any known methods");
+      throw Exception(L.error_unable_to_create_wallets_using_any_known_methods);
     }
 
     if (!outcome.success) {
       if (outcome.message == null || outcome.message?.isEmpty == true) {
-        throw Exception(
-            "Wallet creation failed, and status indicated failure but message was empty");
+        throw Exception(L.error_status_is_failure_no_message);
       }
       throw Exception(outcome.message);
     }
 
     if (outcome.wallet == null) {
-      throw Exception("Wallet is null but there is no indication of failure");
+      throw Exception(L.error_wallet_is_null_no_indication_of_failure);
     }
 
     final List<NewWalletInfoPage> pages = [
@@ -192,7 +191,7 @@ class CreateWalletViewModel extends ViewModel {
         ),
     ];
     if (!mounted) {
-      throw Exception("context is not mounted, unable to show next screen");
+      throw Exception(L.error_context_not_mounted);
     }
     if (outcome.method == CreateMethod.restore) {
       await WalletHome(coinWallet: outcome.wallet!).push(c!);
@@ -204,6 +203,7 @@ class CreateWalletViewModel extends ViewModel {
   }
 
   FormBuilder get formBuilder => FormBuilder(
+        L,
         formElements: currentForm ?? [],
         scaffoldContext: c!,
         rebuild: (final bool val) {

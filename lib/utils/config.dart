@@ -21,17 +21,6 @@ class CupcakeConfig {
     required this.didFoundInsecureBiometric,
     required this.canUseInsecureBiometric,
   });
-  CoinWalletInfo? lastWallet;
-  bool initialSetupComplete;
-  int walletMigrationLevel;
-  int msForQrCode;
-  int maxFragmentLength;
-  int walletSort;
-  bool biometricEnabled;
-  bool debug;
-  Map<String, dynamic> oldSecureStorage;
-  bool didFoundInsecureBiometric;
-  bool canUseInsecureBiometric;
 
   factory CupcakeConfig.fromJson(final Map<String, dynamic> json) {
     return CupcakeConfig(
@@ -48,6 +37,17 @@ class CupcakeConfig {
       canUseInsecureBiometric: json['canUseInsecureBiometric'] ?? false,
     );
   }
+  CoinWalletInfo? lastWallet;
+  bool initialSetupComplete;
+  int walletMigrationLevel;
+  int msForQrCode;
+  int maxFragmentLength;
+  int walletSort;
+  bool biometricEnabled;
+  bool debug;
+  Map<String, dynamic> oldSecureStorage;
+  bool didFoundInsecureBiometric;
+  bool canUseInsecureBiometric;
 
   Map<String, dynamic> toJson() {
     return {

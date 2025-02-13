@@ -49,25 +49,25 @@ class WalletEditViewModel extends ViewModel {
   ];
 
   @override
-  String get screenName => "Edit wallet";
+  String get screenName => L.edit_wallet;
 
-  @ThrowOnUI(message: "Delete wallet")
+  @ThrowOnUI(L: 'delete_wallet')
   Future<void> $deleteWallet() async {
     if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
-      throw Exception("Invalid wallet password");
+      throw Exception(L.invalid_password);
     }
     await walletInfo.deleteWallet();
     if (!mounted) return;
     Navigator.of(c!).pop();
   }
 
-  @ThrowOnUI(message: "Rename wallet")
+  @ThrowOnUI(L: 'rename_wallet')
   Future<void> $renameWallet() async {
     if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
-      throw Exception("Invalid wallet password");
+      throw Exception(L.invalid_password);
     }
     if ((await walletName.value).isEmpty) {
-      throw Exception("Wallet name is empty");
+      throw Exception(L.error_wallet_name_empty);
     }
     await walletInfo.renameWallet(await walletName.value);
     if (!mounted) return;

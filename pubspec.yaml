@@ -62,11 +62,11 @@ dependencies:
   crypto: ^3.0.3
   package_info_plus: ^8.1.0
   local_auth: ^2.3.0
-
-dev_dependencies:
-  source_gen: ^2.0.0
   analyzer: ^6.11.0
   build: ^2.4.2
+  source_gen: ^2.0.0
+
+dev_dependencies:
   flutter_test:
     sdk: flutter
 

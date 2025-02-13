@@ -7,9 +7,12 @@ import 'package:cupcake/l10n/app_localizations.dart';
 enum Coins { monero, unknown }
 
 abstract class Coin {
+  static late AppLocalizations L;
   Coins get type => Coins.unknown;
 
   CoinStrings get strings;
+
+  String get uriScheme;
 
   bool get isEnabled;
 

@@ -4,9 +4,8 @@ import 'package:cupcake/views/widgets/barcode_scanner/urqr_progress.dart';
 import 'package:flutter/material.dart';
 
 class ProgressPainter extends CustomPainter {
-  final URQrProgress urQrProgress;
-
   ProgressPainter({required this.urQrProgress});
+  final URQrProgress urQrProgress;
 
   @override
   void paint(final Canvas canvas, final Size size) {
@@ -18,13 +17,23 @@ class ProgressPainter extends CustomPainter {
     for (int i = 0; i < urQrProgress.expectedPartCount.toInt(); i++) {
       final sweepAngle = (1 / urQrProgress.expectedPartCount) * fullAngle * pi / 180.0;
       drawSector(
-          canvas, urQrProgress.receivedPartIndexes.contains(i), rect, startAngle, sweepAngle);
+        canvas,
+        urQrProgress.receivedPartIndexes.contains(i),
+        rect,
+        startAngle,
+        sweepAngle,
+      );
       startAngle += sweepAngle;
     }
   }
 
-  void drawSector(final Canvas canvas, final bool isActive, final Rect rect,
-      final double startAngle, final double sweepAngle) {
+  void drawSector(
+    final Canvas canvas,
+    final bool isActive,
+    final Rect rect,
+    final double startAngle,
+    final double sweepAngle,
+  ) {
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 8

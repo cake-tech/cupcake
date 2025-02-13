@@ -19,12 +19,12 @@ import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/form/validators.dart';
 
 class MoneroWalletCreation extends WalletCreation {
-  static MoneroWalletCreation? _instance;
-  MoneroWalletCreation._internal(this.L);
   factory MoneroWalletCreation(final AppLocalizations L) {
     _instance ??= MoneroWalletCreation._internal(L);
     return _instance!;
   }
+  MoneroWalletCreation._internal(this.L);
+  static MoneroWalletCreation? _instance;
 
   @override
   Future<void> wipe() async {
@@ -120,9 +120,13 @@ class MoneroWalletCreation extends WalletCreation {
 
   @override
   Future<CreationOutcome> create(
-      final CreateMethod createMethod, final String walletName, final String walletPassword) async {
+    final CreateMethod createMethod,
+    final String walletName,
+    final String walletPassword,
+  ) async {
     if (createMethod == CreateMethod.create) {
       return CreateMoneroWalletCreationMethod(
+        L,
         progressCallback: null,
         walletPath: coin.getPathForWallet(walletName),
         walletPassword: walletPassword,
@@ -132,12 +136,13 @@ class MoneroWalletCreation extends WalletCreation {
 
     if ((await seed.value).isNotEmpty && (await secretSpendKey.value).isNotEmpty) {
       // This shouldn't happen because of how UI works, but I'd like to be extra sure about it
-      throw Exception("Tried to restore from seed and key at the same time");
+      throw Exception(L.warning_restore_from_seed_and_key);
     }
     if ((await seed.value).isNotEmpty) {
       switch ((await seed.value).split(" ").length) {
         case 16:
           return RestorePolyseedMoneroWalletCreationMethod(
+            L,
             walletPath: coin.getPathForWallet(walletName),
             walletPassword: walletPassword,
             seed: await seed.value,
@@ -145,13 +150,14 @@ class MoneroWalletCreation extends WalletCreation {
           ).create();
         case 25:
           return RestoreLegacyWalletCreationMethod(
+            L,
             walletPath: coin.getPathForWallet(walletName),
             walletPassword: walletPassword,
             seed: await seed.value,
             seedOffsetOrEncryption: await seedOffset.value,
           ).create();
         default:
-          throw Exception("Incorrent number of words present in the seed");
+          throw Exception(L.warning_input_seed_length_invalid);
       }
     }
 
@@ -160,6 +166,7 @@ class MoneroWalletCreation extends WalletCreation {
     print(await secretViewKey.value);
 
     return RestoreFromKeysMoneroWalletCreationMethod(
+      L,
       walletPath: coin.getPathForWallet(walletName),
       walletPassword: walletPassword,
       walletAddress: await walletAddress.value,

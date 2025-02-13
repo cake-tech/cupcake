@@ -1,11 +1,11 @@
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 
 class SingleChoiceFormElement extends FormElement {
-  SingleChoiceFormElement(
-      {required this.title,
-      required this.elements,
-      required final Future<void> Function(Object e) errorHandler})
-      : _errorHandler = errorHandler;
+  SingleChoiceFormElement({
+    required this.title,
+    required this.elements,
+    required final Future<void> Function(Object e) errorHandler,
+  }) : _errorHandler = errorHandler;
   String title;
   List<String> elements;
 

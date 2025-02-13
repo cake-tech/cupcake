@@ -35,7 +35,7 @@ class BarcodeScannerViewModel extends ViewModel {
         percentage: ur.progress,
       );
 
-  @ThrowOnUI(message: "Error handling URQR scan")
+  @ThrowOnUI(L: "error_handling_urqr_scan")
   Future<void> $handleUR() async {
     await wallet.handleUR(c!, ur);
   }
@@ -43,9 +43,7 @@ class BarcodeScannerViewModel extends ViewModel {
   Future<void> handleBarcode(final BarcodeCapture barcodes) async {
     for (final barcode in barcodes.barcodes) {
       if (barcode.rawValue!.startsWith("ur:")) {
-        print("handleUR: ${ur.progress} : $popped");
         if (ur.progress == 1 && !popped) {
-          print("handleUR called");
           popped = true;
           await handleUR();
           return;

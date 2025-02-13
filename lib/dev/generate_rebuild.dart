@@ -5,19 +5,19 @@ class GenerateRebuild {
 }
 
 class RebuildOnChange {
-  static const name = 'RebuildOnChange';
   const RebuildOnChange();
+  static const name = 'RebuildOnChange';
 }
 
 class ThrowOnUI {
+  const ThrowOnUI({this.message, this.L});
   static const name = 'ThrowOnUI';
   final String? L;
   final String? message;
-  const ThrowOnUI({this.message, this.L});
 }
 
 class ExposeRebuildableAccessors {
+  const ExposeRebuildableAccessors({this.extraCode});
   static const name = 'ExposeRebuildableAccessors';
   final String? extraCode;
-  const ExposeRebuildableAccessors({this.extraCode});
 }

@@ -6,8 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class Receive extends AbstractView {
-  Receive({super.key, required final CoinWallet coinWallet})
-      : viewModel = ReceiveViewModel(coinWallet);
+  Receive({
+    super.key,
+    required final CoinWallet coinWallet,
+  }) : viewModel = ReceiveViewModel(
+          coinWallet,
+        );
 
   @override
   final ReceiveViewModel viewModel;
@@ -27,7 +31,7 @@ class Receive extends AbstractView {
                 color: Colors.white,
               ),
               child: QrImageView(
-                data: "monero:${viewModel.address}",
+                data: "${viewModel.uriScheme}:${viewModel.address}",
                 dataModuleStyle: QrDataModuleStyle(
                   color: Colors.black,
                   dataModuleShape: QrDataModuleShape.square,
@@ -59,10 +63,11 @@ class Receive extends AbstractView {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Expanded(
-                        child: SelectableText(
-                      viewModel.address,
-                      style: const TextStyle(color: Colors.white),
-                    )),
+                      child: SelectableText(
+                        viewModel.address,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
                     const Icon(Icons.copy, color: Colors.grey),
                   ],
                 ),

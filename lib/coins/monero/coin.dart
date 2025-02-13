@@ -19,6 +19,9 @@ class Monero implements Coin {
   static List<monero.wallet> wPtrList = [];
 
   @override
+  String get uriScheme => 'monero';
+
+  @override
   bool get isEnabled {
     try {
       monero.isLibOk();
@@ -74,21 +77,23 @@ class Monero implements Coin {
     // Prevent user from slipping outside allowed directory
     final String walletPath = p.join(baseDir.path, walletName);
     if (!walletPath.startsWith(baseDir.path)) {
-      throw Exception("Illegal wallet name: $walletName");
+      throw Exception(Coin.L.error_illegal_wallet_name(walletName));
     }
     return walletPath;
   }
 
   @override
-  Future<CoinWallet> openWallet(final CoinWalletInfo walletInfo,
-      {required final String password}) async {
+  Future<CoinWallet> openWallet(
+    final CoinWalletInfo walletInfo, {
+    required final String password,
+  }) async {
     for (final wptr in wPtrList) {
       monero.WalletManager_closeWallet(wmPtr, wptr, true);
     }
     wPtrList.clear();
     final walletExist = monero.WalletManager_walletExists(wmPtr, walletInfo.walletName);
     if (!walletExist) {
-      throw Exception("Given wallet doesn't exist (${walletInfo.walletName})");
+      throw Exception(Coin.L.error_wallet_doesnt_exist(walletInfo.walletName));
     }
     final wptr =
         monero.WalletManager_openWallet(wmPtr, path: walletInfo.walletName, password: password);

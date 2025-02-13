@@ -18,7 +18,7 @@ class OpenWalletViewModel extends ViewModel {
   String get screenName => L.enter_password;
 
   late PinFormElement walletPassword = PinFormElement(
-    label: "Wallet password",
+    label: L.wallet_password,
     password: true,
     valueOutcome: FlutterSecureStorageValueOutcome(
       "secure.wallet_password",
@@ -34,7 +34,7 @@ class OpenWalletViewModel extends ViewModel {
     errorHandler: errorHandler,
   );
 
-  @ThrowOnUI(message: "Opening wallet")
+  @ThrowOnUI(L: 'opening_wallet')
   Future<void> $openWallet() async {
     final wallet = await coinWalletInfo.openWallet(
       c!,

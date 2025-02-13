@@ -1356,7 +1356,7 @@ final adjectives = [
   "zany",
   "zealous",
   "zesty",
-  "zigzag"
+  "zigzag",
 ];
 final nouns = [
   "aardvark",

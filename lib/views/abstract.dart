@@ -17,8 +17,6 @@ import 'package:flutter/material.dart';
 // and due to the fact that we don't use stateful widget we can directly use
 // viewmodel, without any extra code involved in doing that.
 
-int buildCount = 0;
-
 class _AbstractViewState extends State<AbstractView> {
   _AbstractViewState({required this.realBuild});
 
@@ -26,18 +24,20 @@ class _AbstractViewState extends State<AbstractView> {
 
   @override
   Widget build(final BuildContext context) {
-    print("build count: ${++buildCount}");
     return realBuild(context);
   }
 }
 
 class AbstractView extends StatefulWidget {
+  AbstractView({super.key});
   Future<void> push(final BuildContext context) async {
-    await Navigator.of(context).push(CupertinoPageRoute(
-      builder: (final context) {
-        return this;
-      },
-    ));
+    await Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (final context) {
+          return this;
+        },
+      ),
+    );
   }
 
   final viewModel = ViewModel();
@@ -55,9 +55,7 @@ class AbstractView extends StatefulWidget {
 
   State<AbstractView>? state;
 
-  AbstractView({super.key});
-
-  get appBar => viewModel.screenName.isEmpty
+  AppBar? get appBar => viewModel.screenName.isEmpty
       ? null
       : AppBar(
           title: viewModel.screenName.toLowerCase() != "cupcake"

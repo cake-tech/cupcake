@@ -10,13 +10,13 @@ part 'unconfirmed_transaction_view_model.g.dart';
 
 @GenerateRebuild()
 class UnconfirmedTransactionViewModel extends ViewModel {
-  UnconfirmedTransactionViewModel(
-      {required this.wallet,
-      required this.fee,
-      required this.destMap,
-      required final FutureOr<void> Function() confirmCallback,
-      required final FutureOr<void> Function() cancelCallback})
-      : _confirmCallback = confirmCallback,
+  UnconfirmedTransactionViewModel({
+    required this.wallet,
+    required this.fee,
+    required this.destMap,
+    required final FutureOr<void> Function() confirmCallback,
+    required final FutureOr<void> Function() cancelCallback,
+  })  : _confirmCallback = confirmCallback,
         _cancelCallback = cancelCallback;
 
   final CoinWallet wallet;
@@ -27,9 +27,9 @@ class UnconfirmedTransactionViewModel extends ViewModel {
   final FutureOr<void> Function() _confirmCallback;
   final FutureOr<void> Function() _cancelCallback;
 
-  @ThrowOnUI(message: "Failed to confirm")
+  @ThrowOnUI(L: 'error_unable_to_confirm_transaction')
   Future<void> $confirmCallback() async => await _confirmCallback();
-  @ThrowOnUI(message: "Failed to cancel")
+  @ThrowOnUI(L: 'error_unable_to_cancel')
   Future<void> $cancelCallback() async => await _cancelCallback();
 
   final Amount fee;

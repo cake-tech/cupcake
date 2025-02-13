@@ -8,6 +8,14 @@ import 'package:lottie/lottie.dart';
 import 'package:share_plus/share_plus.dart';
 
 class NewWalletInfoPage {
+  NewWalletInfoPage({
+    required this.topText,
+    required this.topAction,
+    required this.topActionText,
+    required this.lottieAnimation,
+    required this.actions,
+    required this.texts,
+  });
   static NewWalletInfoPage preShowSeedPage(final AppLocalizations L) => NewWalletInfoPage(
         topText: L.important,
         topAction: null,
@@ -79,15 +87,6 @@ class NewWalletInfoPage {
           ),
         ],
       );
-
-  NewWalletInfoPage({
-    required this.topText,
-    required this.topAction,
-    required this.topActionText,
-    required this.lottieAnimation,
-    required this.actions,
-    required this.texts,
-  });
 
   final String topText;
   final VoidCallback? topAction;

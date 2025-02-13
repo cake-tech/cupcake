@@ -8,7 +8,6 @@ import 'package:cupcake/coins/monero/coin.dart';
 import 'package:cupcake/coins/monero/amount.dart';
 import 'package:cupcake/coins/monero/cache_keys.dart';
 import 'package:cupcake/utils/types.dart';
-import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/null_if_empty.dart';
 import 'package:cupcake/utils/secure_storage.dart';
@@ -43,7 +42,7 @@ class MoneroWallet implements CoinWallet {
   @override
   void setAccount(final int accountIndex) {
     if (_accountIndex < getAccountsCount()) {
-      throw Exception("Given index is larger than current account count");
+      throw Exception(Coin.L.error_account_index_higher_than_count);
     }
     _accountIndex = accountIndex;
     save();
@@ -70,16 +69,20 @@ class MoneroWallet implements CoinWallet {
   String getBalanceString() => (getBalance() / 1e12).toStringAsFixed(12);
 
   Future<void> exportKeyImagesUR(final BuildContext context) async {
-    final allImages = monero.Wallet_exportKeyImagesUR(wptr,
-            max_fragment_length: CupcakeConfig.instance.maxFragmentLength, all: true)
-        .split("\n");
-    final someImages = monero.Wallet_exportKeyImagesUR(wptr,
-            max_fragment_length: CupcakeConfig.instance.maxFragmentLength, all: false)
-        .split("\n");
+    final allImages = monero.Wallet_exportKeyImagesUR(
+      wptr,
+      max_fragment_length: CupcakeConfig.instance.maxFragmentLength,
+      all: true,
+    ).split("\n");
+    final someImages = monero.Wallet_exportKeyImagesUR(
+      wptr,
+      max_fragment_length: CupcakeConfig.instance.maxFragmentLength,
+      all: false,
+    ).split("\n");
     await AnimatedURPage(
       urqrList: {
-        "Partial Key Images": someImages,
-        "All Key Images": allImages,
+        Coin.L.partial_key_images: someImages,
+        Coin.L.all_key_images: allImages,
       },
     ).push(context);
   }
@@ -118,7 +121,7 @@ class MoneroWallet implements CoinWallet {
             .toList();
         final addrs = monero.UnsignedTransaction_recipientAddress(txptr).split(";");
         if (amts.length != addrs.length) {
-          throw CoinException("Amount and address length is not equal.");
+          throw CoinException(Coin.L.error_amount_and_address_count_not_equal);
         }
         for (int i = 0; i < amts.length; i++) {
           destMap[Address(addrs[i])] = MoneroAmount(amts[i]);
@@ -148,7 +151,7 @@ class MoneroWallet implements CoinWallet {
         ).push(context);
         save();
       default:
-        throw UnimplementedError("Unable to handle ${ur.tag}.");
+        throw UnimplementedError(Coin.L.error_ur_tag_unsupported(ur.tag));
     }
   }
 
@@ -210,65 +213,65 @@ class MoneroWallet implements CoinWallet {
       );
 
   @override
-  Future<List<WalletSeedDetail>> seedDetails(final AppLocalizations L) async {
+  Future<List<WalletSeedDetail>> seedDetails() async {
     final secrets = await secureStorage.readAll();
     return [
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
-        name: L.primary_address_label,
+        name: Coin.L.primary_address_label,
         value: monero.Wallet_address(wptr, accountIndex: 0, addressIndex: 0),
       ),
       if ((polyseed ?? "").isNotEmpty)
         WalletSeedDetail(
           type: WalletSeedDetailType.text,
-          name: L.seed_screen_wallet_seed_polyseed,
+          name: Coin.L.seed_screen_wallet_seed_polyseed,
           value: polyseed!,
         ),
       if ((polyseedDart ?? "").isNotEmpty && polyseedDart != polyseed)
         WalletSeedDetail(
           type: WalletSeedDetailType.text,
-          name: L.seed_screen_wallet_seed_polyseed_encrypted,
+          name: Coin.L.seed_screen_wallet_seed_polyseed_encrypted,
           value: polyseedDart!,
         ),
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
-        name: L.seed_screen_wallet_seed_legacy,
+        name: Coin.L.seed_screen_wallet_seed_legacy,
         value: legacySeed,
       ),
       if (seedOffset.isNotEmpty)
         WalletSeedDetail(
           type: WalletSeedDetailType.text,
-          name: L.seed_offset,
+          name: Coin.L.seed_offset,
           value: seedOffset,
         ),
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
-        name: L.view_key,
+        name: Coin.L.view_key,
         value: monero.Wallet_publicViewKey(wptr),
       ),
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
-        name: L.secret_view_key,
+        name: Coin.L.secret_view_key,
         value: monero.Wallet_secretViewKey(wptr),
       ),
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
-        name: L.spend_key,
+        name: Coin.L.spend_key,
         value: monero.Wallet_publicSpendKey(wptr),
       ),
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
-        name: L.secret_spend_key,
+        name: Coin.L.secret_spend_key,
         value: monero.Wallet_secretSpendKey(wptr),
       ),
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
-        name: L.restore_height,
+        name: Coin.L.restore_height,
         value: monero.Wallet_getRefreshFromBlockHeight(wptr).toString(),
       ),
       WalletSeedDetail(
         type: WalletSeedDetailType.qr,
-        name: L.view_only_restore_qr,
+        name: Coin.L.view_only_restore_qr,
         value: const JsonEncoder.withIndent('   ').convert({
           "version": 0,
           "primaryAddress": monero.Wallet_address(wptr, accountIndex: 0, addressIndex: 0),
@@ -282,7 +285,10 @@ class MoneroWallet implements CoinWallet {
           (final index) {
             final key = secrets.keys.elementAt(index);
             return WalletSeedDetail(
-                type: WalletSeedDetailType.text, name: key, value: secrets[key] ?? "unknown");
+              type: WalletSeedDetailType.text,
+              name: key,
+              value: secrets[key] ?? "unknown",
+            );
           },
         ),
       if (CupcakeConfig.instance.debug)
@@ -291,10 +297,12 @@ class MoneroWallet implements CoinWallet {
           (final index) {
             final key = CupcakeConfig.instance.toJson().keys.elementAt(index);
             return WalletSeedDetail(
-                type: WalletSeedDetailType.text,
-                name: key,
-                value: const JsonEncoder.withIndent('    ')
-                    .convert(CupcakeConfig.instance.toJson()[key]));
+              type: WalletSeedDetailType.text,
+              name: key,
+              value: const JsonEncoder.withIndent('    ').convert(
+                CupcakeConfig.instance.toJson()[key],
+              ),
+            );
           },
         ),
     ];

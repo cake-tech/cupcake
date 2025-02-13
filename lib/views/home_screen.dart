@@ -8,9 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 
 class HomeScreen extends AbstractView {
-  HomeScreen({super.key, required final bool openLastWallet, final String? lastOpenedWallet})
-      : viewModel =
-            HomeScreenViewModel(openLastWallet: openLastWallet, lastOpenedWallet: lastOpenedWallet);
+  HomeScreen({
+    super.key,
+    required final bool openLastWallet,
+    final String? lastOpenedWallet,
+  }) : viewModel = HomeScreenViewModel(
+          openLastWallet: openLastWallet,
+          lastOpenedWallet: lastOpenedWallet,
+        );
 
   @override
   final HomeScreenViewModel viewModel;
@@ -47,19 +52,25 @@ class HomeScreen extends AbstractView {
         ],
       );
   Widget walletsBody(
-      final BuildContext context, final AsyncSnapshot<List<CoinWalletInfo>> wallets) {
+    final BuildContext context,
+    final AsyncSnapshot<List<CoinWalletInfo>> wallets,
+  ) {
     if (!wallets.hasData) return Container();
     return ListView.builder(
-        itemCount: wallets.data!.length,
-        itemBuilder: (final BuildContext context, final int index) {
-          final bool isOpen =
-              (wallets.data![index].walletName).contains(viewModel.lastOpenedWallet ?? "");
-          return singleWalletWidget(context, isOpen, wallets.data![index]);
-        });
+      itemCount: wallets.data!.length,
+      itemBuilder: (final BuildContext context, final int index) {
+        final bool isOpen =
+            (wallets.data![index].walletName).contains(viewModel.lastOpenedWallet ?? "");
+        return singleWalletWidget(context, isOpen, wallets.data![index]);
+      },
+    );
   }
 
   Card singleWalletWidget(
-      final BuildContext context, final bool isOpen, final CoinWalletInfo wallet) {
+    final BuildContext context,
+    final bool isOpen,
+    final CoinWalletInfo wallet,
+  ) {
     return Card(
       child: IntrinsicHeight(
         child: Row(
@@ -80,7 +91,7 @@ class HomeScreen extends AbstractView {
                 ),
                 trailing: IconButton(
                   icon: const Icon(Icons.edit_rounded),
-                  onPressed: () async => await viewModel.renameWallet(wallet),
+                  onPressed: () => viewModel.renameWallet(wallet),
                 ),
                 title: Text(
                   p.basename(wallet.walletName),
@@ -96,21 +107,22 @@ class HomeScreen extends AbstractView {
   @override
   Widget? bottomNavigationBar(final BuildContext context) {
     return SafeArea(
-        child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        LongPrimaryButton(
-          icon: Icons.add,
-          onPressed: () => viewModel.createWallet(CreateMethod.create),
-          text: L.create_new_wallet,
-        ),
-        LongSecondaryButton(
-          icon: Icons.restore,
-          onPressed: () => viewModel.createWallet(CreateMethod.restore),
-          text: L.restore_wallet,
-        ),
-      ],
-    ));
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          LongPrimaryButton(
+            icon: Icons.add,
+            onPressed: () => viewModel.createWallet(CreateMethod.create),
+            text: L.create_new_wallet,
+          ),
+          LongSecondaryButton(
+            icon: Icons.restore,
+            onPressed: () => viewModel.createWallet(CreateMethod.restore),
+            text: L.restore_wallet,
+          ),
+        ],
+      ),
+    );
   }
 
   @override

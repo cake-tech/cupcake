@@ -9,4 +9,5 @@ class ReceiveViewModel extends ViewModel {
   String get screenName => L.receive;
 
   String get address => wallet.getCurrentAddress;
+  String get uriScheme => wallet.coin.uriScheme;
 }

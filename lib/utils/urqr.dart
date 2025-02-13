@@ -1,11 +1,12 @@
 class URQRData {
-  URQRData(
-      {required this.tag,
-      required this.str,
-      required this.progress,
-      required this.count,
-      required this.error,
-      required this.inputs});
+  URQRData({
+    required this.tag,
+    required this.str,
+    required this.progress,
+    required this.count,
+    required this.error,
+    required this.inputs,
+  });
   final String tag;
   final String str;
   final double progress;

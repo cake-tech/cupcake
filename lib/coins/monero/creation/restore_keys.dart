@@ -3,12 +3,14 @@ import 'dart:ffi';
 import 'package:cupcake/coins/abstract/wallet_creation.dart';
 import 'package:cupcake/coins/monero/coin.dart';
 import 'package:cupcake/coins/monero/wallet_info.dart';
+import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:path/path.dart' as p;
 import 'package:monero/monero.dart' as monero;
 
 class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
-  RestoreFromKeysMoneroWalletCreationMethod({
+  RestoreFromKeysMoneroWalletCreationMethod(
+    this.L, {
     required this.walletPath,
     required this.walletPassword,
     required this.walletAddress,
@@ -17,6 +19,8 @@ class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
     required this.restoreHeight,
     this.progressCallback,
   });
+
+  final AppLocalizations L;
   final ProgressCallback? progressCallback;
   final String walletPath;
   final String walletPassword;
@@ -27,10 +31,7 @@ class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
 
   @override
   Future<CreationOutcome> create() async {
-    progressCallback?.call(description: "Creating wallet");
-    print("create: $walletAddress");
-    print("create: $secretSpendKey");
-    print("create: $secretViewKey");
+    progressCallback?.call(description: L.creating_wallet);
     Pointer<Void> newWptr;
     if (secretViewKey.isNotEmpty) {
       newWptr = monero.WalletManager_createWalletFromKeys(
@@ -53,7 +54,7 @@ class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
         restoreHeight: restoreHeight,
       );
     }
-    progressCallback?.call(description: "Checking status");
+    progressCallback?.call(description: L.checking_status);
     int status = monero.Wallet_status(newWptr);
     if (status != 0) {
       // Fallback to createDeterministicWallet in case when createWalletFromKeys didn't work.
@@ -79,7 +80,7 @@ class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
     }
     monero.Wallet_store(newWptr);
     monero.Wallet_store(newWptr);
-    progressCallback?.call(description: "Wallet created");
+    progressCallback?.call(description: L.wallet_created);
     final wallet = await Monero().openWallet(
       MoneroWalletInfo(p.basename(walletPath)),
       password: walletPassword,

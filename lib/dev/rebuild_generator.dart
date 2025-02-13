@@ -12,7 +12,10 @@ import 'package:cupcake/utils/capitalize.dart';
 class RebuildClassGenerator extends GeneratorForAnnotation<GenerateRebuild> {
   @override
   FutureOr<String> generateForAnnotatedElement(
-      final Element element, final ConstantReader annotation, final BuildStep buildStep) async {
+    final Element element,
+    final ConstantReader annotation,
+    final BuildStep buildStep,
+  ) async {
     if (element is! ClassElement) {
       throw InvalidGenerationSourceError(
         'Generator cannot target `${element.displayName}`. '

@@ -20,13 +20,16 @@ class InitialSetupScreen extends AbstractView {
       child: Column(
         children: [
           Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 24),
-              child: Assets.cakeLanding.lottie()),
-          Text(L.welcome_to,
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  )),
+            padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 24),
+            child: Assets.cakeLanding.lottie(),
+          ),
+          Text(
+            L.welcome_to,
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+          ),
           const SizedBox(height: 8),
           Text(
             "Cupcake",

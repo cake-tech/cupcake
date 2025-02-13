@@ -6,12 +6,14 @@ import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:flutter/material.dart';
 
 class CreateWallet extends AbstractView {
-  CreateWallet(
-      {super.key,
-      required final CreateMethod createMethod,
-      required final bool needsPasswordConfirm})
-      : viewModel = CreateWalletViewModel(
-            createMethod: createMethod, needsPasswordConfirm: needsPasswordConfirm);
+  CreateWallet({
+    super.key,
+    required final CreateMethod createMethod,
+    required final bool needsPasswordConfirm,
+  }) : viewModel = CreateWalletViewModel(
+          createMethod: createMethod,
+          needsPasswordConfirm: needsPasswordConfirm,
+        );
 
   @override
   final CreateWalletViewModel viewModel;
@@ -84,28 +86,29 @@ class CreateWallet extends AbstractView {
   Widget? bottomNavigationBar(final BuildContext context) {
     if (!viewModel.isPinSet) return null;
     return SafeArea(
-        child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        LongPrimaryButton(
-          text: L.next,
-          icon: null,
-          onPressed: viewModel.createWallet,
-          backgroundColor: const WidgetStatePropertyAll(Colors.green),
-          textColor: Colors.white,
-        ),
-        if (viewModel.hasAdvancedOptions)
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
           LongPrimaryButton(
-            text: L.advanced_options,
+            text: L.next,
             icon: null,
-            onPressed: () {
-              viewModel.showExtra = true;
-            },
-            backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+            onPressed: viewModel.createWallet,
+            backgroundColor: const WidgetStatePropertyAll(Colors.green),
+            textColor: Colors.white,
           ),
-        const SizedBox(height: 16),
-      ],
-    ));
+          if (viewModel.hasAdvancedOptions)
+            LongPrimaryButton(
+              text: L.advanced_options,
+              icon: null,
+              onPressed: () {
+                viewModel.showExtra = true;
+              },
+              backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+            ),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
   }
 
   @override

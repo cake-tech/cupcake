@@ -7,8 +7,11 @@ import 'package:cupcake/utils/form/abstract_value_outcome.dart';
 import 'package:cupcake/utils/secure_storage.dart';
 
 class FlutterSecureStorageValueOutcome implements ValueOutcome {
-  FlutterSecureStorageValueOutcome(this.key,
-      {required this.canWrite, required this.verifyMatching});
+  FlutterSecureStorageValueOutcome(
+    this.key, {
+    required this.canWrite,
+    required this.verifyMatching,
+  });
 
   final String key;
   final bool canWrite;
@@ -21,7 +24,9 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
     var valInput = await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
     if (valInput == null) {
       await secureStorage.write(
-          key: "FlutterSecureStorageValueOutcome._$key", value: sha512Hash.toString());
+        key: "FlutterSecureStorageValueOutcome._$key",
+        value: sha512Hash.toString(),
+      );
       valInput = await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
     }
     if (sha512Hash.toString() != valInput && verifyMatching) {

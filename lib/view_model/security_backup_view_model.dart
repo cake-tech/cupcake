@@ -20,7 +20,7 @@ class SecurityBackupViewModel extends ViewModel {
 
   late List<FormElement> form = [
     PinFormElement(
-      label: "Wallet password",
+      label: L.wallet_password,
       password: true,
       valueOutcome: FlutterSecureStorageValueOutcome(
         "secure.wallet_password",
@@ -41,7 +41,7 @@ class SecurityBackupViewModel extends ViewModel {
         isLocked = false;
       },
       errorHandler: errorHandler,
-    )
+    ),
   ];
 
   CoinWallet wallet;

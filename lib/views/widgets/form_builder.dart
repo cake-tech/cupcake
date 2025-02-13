@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/alerts/widget_minimal.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
@@ -14,7 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 
 class FormBuilder extends StatefulWidget {
-  const FormBuilder({
+  const FormBuilder(
+    this.L, {
     super.key,
     required this.formElements,
     required this.scaffoldContext,
@@ -23,6 +25,8 @@ class FormBuilder extends StatefulWidget {
     required this.showExtra,
     required this.onLabelChange,
   });
+
+  final AppLocalizations L;
 
   final List<FormElement> formElements;
   final BuildContext scaffoldContext;
@@ -38,6 +42,8 @@ class _FormBuilderState extends State<FormBuilder> {
   void _rebuild() {
     setState(() {});
   }
+
+  AppLocalizations get L => widget.L;
 
   String? lastSuggestedTitle = DateTime.now().toIso8601String();
   void _onLabelChange(final String? suggestedTitle) {
@@ -76,7 +82,7 @@ class _FormBuilderState extends State<FormBuilder> {
         e = widget.formElements[1] as PinFormElement;
       }
       _onLabelChange(e.label);
-      nextPageCallback() async {
+      Future<void> nextPageCallback() async {
         try {
           await e.onConfirmInternal(context);
           if (!context.mounted) return;
@@ -125,32 +131,37 @@ class _FormBuilderState extends State<FormBuilder> {
                   final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
                   final bool canAuthenticate =
                       canAuthenticateWithBiometrics || await auth.isDeviceSupported();
-                  if (!canAuthenticate) throw Exception("Can't authenticate");
+                  if (!canAuthenticate) throw Exception(L.error_no_biometric_authentication);
                   if (!availableBiometrics.contains(BiometricType.fingerprint) &&
                       !availableBiometrics.contains(BiometricType.face) &&
                       !CupcakeConfig.instance.canUseInsecureBiometric) {
                     CupcakeConfig.instance.didFoundInsecureBiometric = true;
                     CupcakeConfig.instance.save();
-                    throw Exception("No secure biometric auth found.");
+                    throw Exception(L.error_no_secure_biometric);
                   }
 
                   final bool didAuthenticate = await auth.authenticate(
-                    localizedReason: 'Authenticate...',
+                    localizedReason: L.biometric_authenticaion_reason,
                     options: AuthenticationOptions(
-                        useErrorDialogs: true,
-                        biometricOnly: !CupcakeConfig.instance.canUseInsecureBiometric),
+                      useErrorDialogs: true,
+                      biometricOnly: !CupcakeConfig.instance.canUseInsecureBiometric,
+                    ),
                   );
                   if (!didAuthenticate) {
-                    throw Exception("User didn't authenticate");
+                    throw Exception(L.error_didnt_authenticate);
                   }
                   await secureStorage.write(
-                      key: "UI.${e.valueOutcome.uniqueId}", value: e.ctrl.text);
+                    key: "UI.${e.valueOutcome.uniqueId}",
+                    value: e.ctrl.text,
+                  );
                   CupcakeConfig.instance.biometricEnabled = true;
                   CupcakeConfig.instance.save();
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Biometric enabled!"),
-                    ));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(L.biometric_enabled),
+                      ),
+                    );
                   }
                   await nextPageCallback();
                 } catch (err) {
@@ -262,7 +273,7 @@ class _FormBuilderState extends State<FormBuilder> {
         continue;
       }
       children.add(
-        Text("unknown form element: $e"),
+        Text(L.error_unknown_form_element(e)),
       );
     }
     return Column(
@@ -272,7 +283,9 @@ class _FormBuilderState extends State<FormBuilder> {
   }
 
   Future<void> _changeSingleChoice(
-      final BuildContext context, final SingleChoiceFormElement e) async {
+    final BuildContext context,
+    final SingleChoiceFormElement e,
+  ) async {
     await showAlertWidgetMinimal(
       context: context,
       body: List.generate(

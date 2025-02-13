@@ -4,8 +4,12 @@ import 'package:cupcake/views/widgets/urqr.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedURPage extends AbstractView {
-  AnimatedURPage({super.key, required final Map<String, List<String>> urqrList})
-      : viewModel = URQRViewModel(urqrList: urqrList);
+  AnimatedURPage({
+    super.key,
+    required final Map<String, List<String>> urqrList,
+  }) : viewModel = URQRViewModel(
+          urqrList: urqrList,
+        );
 
   @override
   final URQRViewModel viewModel;

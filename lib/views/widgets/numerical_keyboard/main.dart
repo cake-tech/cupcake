@@ -22,37 +22,45 @@ class NumericalKeyboard extends StatelessWidget {
   Widget build(final BuildContext context) {
     return Column(
       children: [
-        Row(children: [
-          const Spacer(),
-          SingleKey(Keys.a1, ctrl, rebuild),
-          SingleKey(Keys.a2, ctrl, rebuild),
-          SingleKey(Keys.a3, ctrl, rebuild),
-          const Spacer(),
-        ]),
-        Row(children: [
-          const Spacer(),
-          SingleKey(Keys.a4, ctrl, rebuild),
-          SingleKey(Keys.a5, ctrl, rebuild),
-          SingleKey(Keys.a6, ctrl, rebuild),
-          const Spacer(),
-        ]),
-        Row(children: [
-          const Spacer(),
-          SingleKey(Keys.a7, ctrl, rebuild),
-          SingleKey(Keys.a8, ctrl, rebuild),
-          SingleKey(Keys.a9, ctrl, rebuild),
-          const Spacer(),
-        ]),
-        Row(children: [
-          const Spacer(),
-          SingleKey(Keys.backspace, ctrl, rebuild),
-          SingleKey(Keys.a0, ctrl, rebuild),
-          if (showConfirm() && (!showComma || ctrl.text.contains(getKeysChar(Keys.dot))))
-            SingleKey(Keys.next, ctrl, nextPage, longPress: onConfirmLongPress),
-          if (showComma && !ctrl.text.contains(getKeysChar(Keys.dot)))
-            SingleKey(Keys.dot, ctrl, rebuild),
-          Spacer(flex: showConfirm() || showComma ? 1 : 3),
-        ]),
+        Row(
+          children: [
+            const Spacer(),
+            SingleKey(Keys.a1, ctrl, rebuild),
+            SingleKey(Keys.a2, ctrl, rebuild),
+            SingleKey(Keys.a3, ctrl, rebuild),
+            const Spacer(),
+          ],
+        ),
+        Row(
+          children: [
+            const Spacer(),
+            SingleKey(Keys.a4, ctrl, rebuild),
+            SingleKey(Keys.a5, ctrl, rebuild),
+            SingleKey(Keys.a6, ctrl, rebuild),
+            const Spacer(),
+          ],
+        ),
+        Row(
+          children: [
+            const Spacer(),
+            SingleKey(Keys.a7, ctrl, rebuild),
+            SingleKey(Keys.a8, ctrl, rebuild),
+            SingleKey(Keys.a9, ctrl, rebuild),
+            const Spacer(),
+          ],
+        ),
+        Row(
+          children: [
+            const Spacer(),
+            SingleKey(Keys.backspace, ctrl, rebuild),
+            SingleKey(Keys.a0, ctrl, rebuild),
+            if (showConfirm() && (!showComma || ctrl.text.contains(getKeysChar(Keys.dot))))
+              SingleKey(Keys.next, ctrl, nextPage, longPress: onConfirmLongPress),
+            if (showComma && !ctrl.text.contains(getKeysChar(Keys.dot)))
+              SingleKey(Keys.dot, ctrl, rebuild),
+            Spacer(flex: showConfirm() || showComma ? 1 : 3),
+          ],
+        ),
       ],
     );
   }
