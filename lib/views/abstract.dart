@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/views/widgets/cupcake_appbar_title.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Since there is no performance penalty for using stateful widgets I would just
@@ -27,8 +28,17 @@ class _AbstractViewState extends State<AbstractView> {
   }
 }
 
-// ignore: must_be_immutable
 class AbstractView extends StatefulWidget {
+  Future<void> push(BuildContext context) async {
+    await Navigator.of(context).push(CupertinoPageRoute(
+      builder: (context) {
+        return this;
+      },
+    ));
+  }
+
+  final viewModel = ViewModel();
+
   @override
   // ignore: no_logic_in_create_state
   State<AbstractView> createState() {
@@ -43,8 +53,6 @@ class AbstractView extends StatefulWidget {
   State<AbstractView>? state;
 
   AbstractView({super.key});
-
-  final viewModel = ViewModel();
 
   get appBar => viewModel.screenName.isEmpty
       ? null

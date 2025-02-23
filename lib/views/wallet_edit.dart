@@ -4,20 +4,14 @@ import 'package:cupcake/view_model/wallet_edit_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
 import 'package:cupcake/views/widgets/form_builder.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class WalletEdit extends AbstractView {
-  WalletEdit({super.key, required this.viewModel});
-  static Future<void> staticPush(
-      BuildContext context, CoinWalletInfo walletInfo) async {
-    await Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (context) =>
-            WalletEdit(viewModel: WalletEditViewModel(walletInfo: walletInfo)),
-      ),
-    );
-  }
+  WalletEdit({super.key, required CoinWalletInfo walletInfo})
+      : viewModel = WalletEditViewModel(walletInfo: walletInfo);
+
+  @override
+  WalletEditViewModel viewModel;
 
   @override
   Widget? body(BuildContext context) {
@@ -67,7 +61,4 @@ class WalletEdit extends AbstractView {
       ],
     );
   }
-
-  @override
-  WalletEditViewModel viewModel;
 }

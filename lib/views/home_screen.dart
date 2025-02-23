@@ -2,35 +2,19 @@ import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/types.dart';
 import 'package:cupcake/utils/call_throwable.dart';
 import 'package:cupcake/utils/config.dart';
-import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/view_model/home_screen_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/create_wallet.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
 import 'package:cupcake/views/wallet_edit.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 
-// ignore: must_be_immutable
 class HomeScreen extends AbstractView {
-  HomeScreen({super.key, required this.viewModel});
-
-  static Future<void> staticPush(BuildContext context,
-      {bool openLastWallet = true, String? lastOpenedWallet}) async {
-    await Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return HomeScreen(
-            viewModel: HomeScreenViewModel(
-              openLastWallet: openLastWallet,
-              lastOpenedWallet: lastOpenedWallet,
-            ),
-          );
-        },
-      ),
-    );
-  }
+  HomeScreen(
+      {super.key, required bool openLastWallet, String? lastOpenedWallet})
+      : viewModel = HomeScreenViewModel(
+            openLastWallet: openLastWallet, lastOpenedWallet: lastOpenedWallet);
 
   @override
   final HomeScreenViewModel viewModel;
@@ -120,18 +104,15 @@ class HomeScreen extends AbstractView {
     canPop = false; // don't allow user to go back to previous wallet
     await viewModel.markNeedsBuild();
     if (!context.mounted) return;
-    await WalletEdit.staticPush(context, walletInfo);
+    await WalletEdit(walletInfo: walletInfo).push(context);
     await viewModel.markNeedsBuild();
   }
 
   Future<void> createWallet(BuildContext context, CreateMethod method) async {
-    await CreateWallet.staticPush(
-      context,
-      CreateWalletViewModel(
-        createMethod: method,
-        needsPasswordConfirm: false,
-      ),
-    );
+    await CreateWallet(
+      createMethod: method,
+      needsPasswordConfirm: false,
+    ).push(context);
     if (!context.mounted) return;
     markNeedsBuild();
   }

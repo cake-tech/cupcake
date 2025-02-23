@@ -17,6 +17,6 @@ class WalletHomeViewModel extends ViewModel {
   String get currentAddress => wallet.getCurrentAddress;
 
   void showScanner(BuildContext context) {
-    BarcodeScanner.pushStatic(context, wallet);
+    BarcodeScanner(wallet: wallet).push(context);
   }
 }

@@ -6,28 +6,16 @@ import 'package:cupcake/view_model/security_backup_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
 import 'package:cupcake/views/widgets/form_builder.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class SecurityBackup extends AbstractView {
-  SecurityBackup({super.key, required this.viewModel});
+  SecurityBackup({super.key, required CoinWallet coinWallet})
+      : viewModel = SecurityBackupViewModel(wallet: coinWallet);
 
-  static Future<void> staticPush(
-      BuildContext context, CoinWallet coinWallet) async {
-    await Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return SecurityBackup(
-            viewModel: SecurityBackupViewModel(
-              wallet: coinWallet,
-            ),
-          );
-        },
-      ),
-    );
-  }
+  @override
+  SecurityBackupViewModel viewModel;
 
   void _copy(BuildContext context, String value, String key) {
     Clipboard.setData(ClipboardData(text: value));
@@ -104,7 +92,4 @@ class SecurityBackup extends AbstractView {
       ],
     );
   }
-
-  @override
-  SecurityBackupViewModel viewModel;
 }

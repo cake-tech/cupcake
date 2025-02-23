@@ -5,24 +5,11 @@ import 'package:cupcake/views/widgets/barcode_scanner/progress_painter.dart';
 import 'package:cupcake/views/widgets/barcode_scanner/switch_camera.dart';
 import 'package:cupcake/views/widgets/barcode_scanner/toggle_flashlight_button.dart';
 import 'package:fast_scanner/fast_scanner.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-//ignore: must_be_immutable
 class BarcodeScanner extends AbstractView {
   BarcodeScanner({super.key, required CoinWallet wallet})
       : viewModel = BarcodeScannerViewModel(wallet: wallet);
-
-  static Future<void> pushStatic(
-      BuildContext context, CoinWallet wallet) async {
-    await Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return BarcodeScanner(wallet: wallet);
-        },
-      ),
-    );
-  }
 
   @override
   final BarcodeScannerViewModel viewModel;

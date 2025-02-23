@@ -1,25 +1,13 @@
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/view_model/receive_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class Receive extends AbstractView {
-  static Future<void> pushStatic(BuildContext context, CoinWallet coin) async {
-    await Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return Receive(
-            ReceiveViewModel(coin),
-          );
-        },
-      ),
-    );
-  }
-
-  Receive(this.viewModel, {super.key});
+  Receive({super.key, required CoinWallet coinWallet})
+      : viewModel = ReceiveViewModel(coinWallet);
 
   @override
   final ReceiveViewModel viewModel;

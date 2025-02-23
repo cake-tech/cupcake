@@ -8,20 +8,9 @@ import 'package:cupcake/views/widgets/drawer_elements.dart';
 import 'package:flutter/material.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 
-// ignore: must_be_immutable
 class WalletHome extends AbstractView {
   WalletHome({super.key, required CoinWallet coinWallet})
       : viewModel = WalletHomeViewModel(wallet: coinWallet);
-
-  static Future<void> pushStatic(BuildContext context, CoinWallet coin) async {
-    await Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return WalletHome(coinWallet: coin);
-        },
-      ),
-    );
-  }
 
   @override
   final WalletHomeViewModel viewModel;
@@ -117,7 +106,7 @@ class WalletHome extends AbstractView {
                   height: 64,
                   child: ElevatedButton.icon(
                     onPressed: () =>
-                        Receive.pushStatic(context, viewModel.wallet),
+                        Receive(coinWallet: viewModel.wallet).push(context),
                     icon: const Icon(Icons.call_received,
                         size: 35, color: Colors.white),
                     label: Text(
@@ -133,7 +122,7 @@ class WalletHome extends AbstractView {
                   height: 64,
                   child: ElevatedButton.icon(
                     onPressed: () =>
-                        BarcodeScanner.pushStatic(context, viewModel.wallet),
+                        BarcodeScanner(wallet: viewModel.wallet).push(context),
                     icon: const Icon(
                       Icons.qr_code_rounded,
                       size: 35,
