@@ -23,9 +23,9 @@ class URQRData {
     };
   }
 
-  static URQRData parse(List<String> urqr_) {
+  static URQRData parse(final List<String> urqr_) {
     final urqr = urqr_.toSet().toList();
-    urqr.sort((s1, s2) {
+    urqr.sort((final s1, final s2) {
       final s1s = s1.split("/");
       final s1frameStr = s1s[1].split("-");
       final s1curFrame = int.parse(s1frameStr[0]);
@@ -38,7 +38,7 @@ class URQRData {
     String tag = '';
     int count = 0;
     String bw = '';
-    for (var elm in urqr) {
+    for (final elm in urqr) {
       final s = elm.substring(elm.indexOf(":") + 1); // strip down ur: prefix
       final s2 = s.split("/");
       tag = s2[0];

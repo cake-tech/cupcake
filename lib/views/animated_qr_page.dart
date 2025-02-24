@@ -4,14 +4,14 @@ import 'package:cupcake/views/widgets/urqr.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedURPage extends AbstractView {
-  AnimatedURPage({super.key, required Map<String, List<String>> urqrList})
+  AnimatedURPage({super.key, required final Map<String, List<String>> urqrList})
       : viewModel = URQRViewModel(urqrList: urqrList);
 
   @override
   final URQRViewModel viewModel;
 
   @override
-  Widget body(BuildContext context) {
+  Widget body(final BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -29,17 +29,18 @@ class AnimatedURPage extends AbstractView {
 
   List<Widget> _extraButtons() {
     final List<Widget> toRet = [];
-    for (var key in viewModel.alternativeCodes) {
+    for (final key in viewModel.alternativeCodes) {
       toRet.add(_urqrSwitchButton(key, viewModel.urqrList[key]!));
     }
     return toRet;
   }
 
-  Widget _urqrSwitchButton(String key, List<String> value) {
+  Widget _urqrSwitchButton(final String key, final List<String> value) {
     return OutlinedButton(
-        onPressed: () {
-          viewModel.urqr = value;
-        },
-        child: Text(key),);
+      onPressed: () {
+        viewModel.urqr = value;
+      },
+      child: Text(key),
+    );
   }
 }

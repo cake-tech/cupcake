@@ -2,15 +2,7 @@
 set -x -e
 cd "$(dirname "$0")"
 cd ..
-dart run build_runner build
-pushd lib
-  for dir in coins themes utils view_model views;
-  do
-    pushd $dir
-      dart fix --apply
-      dart format .
-    popd
-    dart format main.dart
-  done
-popd
+dart run build_runner build --delete-conflicting-outputs
+dart fix --apply .
+dart format .
 flutter gen-l10n

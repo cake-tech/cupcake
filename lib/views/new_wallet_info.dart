@@ -4,7 +4,7 @@ import 'package:cupcake/views/initial_setup_screen.dart';
 import 'package:flutter/material.dart';
 
 class NewWalletInfoScreen extends AbstractView {
-  NewWalletInfoScreen({super.key, required List<NewWalletInfoPage> pages})
+  NewWalletInfoScreen({super.key, required final List<NewWalletInfoPage> pages})
       : viewModel = NewWalletInfoViewModel(pages);
 
   @override
@@ -29,7 +29,7 @@ class NewWalletInfoScreen extends AbstractView {
         viewModel.page.topAction == null) {
       return [
         TextButton(
-          onPressed: viewModel.nextPage,
+          onPressed: () => viewModel.currentPageIndex++,
           child: viewModel.page.topActionText!,
         ),
       ];
@@ -43,12 +43,12 @@ class NewWalletInfoScreen extends AbstractView {
   }
 
   List<Widget> _getBottomActionButtons() {
-    return List.generate(viewModel.page.actions.length, (index) {
+    return List.generate(viewModel.page.actions.length, (final index) {
       final action = viewModel.page.actions[index];
       final isLast = index + 1 == viewModel.page.actions.length;
       final callback = switch (action.type) {
         NewWalletActionType.function => action.function!,
-        NewWalletActionType.nextPage => viewModel.nextPage,
+        NewWalletActionType.nextPage => () => viewModel.currentPageIndex++,
       };
       return Expanded(
         child: LongPrimaryButton(
@@ -64,7 +64,7 @@ class NewWalletInfoScreen extends AbstractView {
   }
 
   @override
-  Widget? body(BuildContext context) {
+  Widget? body(final BuildContext context) {
     return SafeArea(
         child: Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, top: 0, bottom: 16),

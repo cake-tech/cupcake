@@ -23,15 +23,15 @@ class _AbstractViewState extends State<AbstractView> {
   Widget Function(BuildContext context) realBuild;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return realBuild(context);
   }
 }
 
 class AbstractView extends StatefulWidget {
-  Future<void> push(BuildContext context) async {
+  Future<void> push(final BuildContext context) async {
     await Navigator.of(context).push(CupertinoPageRoute(
-      builder: (context) {
+      builder: (final context) {
         return this;
       },
     ));
@@ -48,7 +48,7 @@ class AbstractView extends StatefulWidget {
 
   AppLocalizations get L => viewModel.L;
 
-  Future<void> initState(BuildContext context) async {}
+  Future<void> initState(final BuildContext context) async {}
 
   State<AbstractView>? state;
 
@@ -66,15 +66,15 @@ class AbstractView extends StatefulWidget {
           automaticallyImplyLeading: canPop,
         );
 
-  Widget? body(BuildContext context) => null;
+  Widget? body(final BuildContext context) => null;
 
   bool _internalIsInitStateCalled = false;
 
-  bool canPop = true;
+  bool get canPop => viewModel.canPop;
 
   Drawer? drawer;
 
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     viewModel.register(context);
     if (!_internalIsInitStateCalled) {
       _internalIsInitStateCalled = true;
@@ -83,6 +83,7 @@ class AbstractView extends StatefulWidget {
     return PopScope(
       canPop: canPop,
       child: Scaffold(
+        key: viewModel.scaffoldKey,
         appBar: appBar,
         body: body(context),
         endDrawer: drawer,
@@ -92,7 +93,7 @@ class AbstractView extends StatefulWidget {
     );
   }
 
-  Widget? bottomNavigationBar(BuildContext context) => null;
+  Widget? bottomNavigationBar(final BuildContext context) => null;
 
-  Widget? floatingActionButton(BuildContext context) => null;
+  Widget? floatingActionButton(final BuildContext context) => null;
 }

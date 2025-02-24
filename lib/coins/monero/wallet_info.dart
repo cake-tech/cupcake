@@ -22,7 +22,7 @@ class MoneroWalletInfo extends CoinWalletInfo {
   Coin get coin => Monero();
 
   @override
-  Future<bool> checkWalletPassword(String password) async {
+  Future<bool> checkWalletPassword(final String password) async {
     return monero.WalletManager_verifyWalletPassword(
       Monero.wmPtr,
       keysFileName: "$walletName.keys",
@@ -41,13 +41,13 @@ class MoneroWalletInfo extends CoinWalletInfo {
   Coins get type => coin.type;
 
   @override
-  void openUI(BuildContext context) {
+  void openUI(final BuildContext context) {
     OpenWallet(coinWalletInfo: this).push(context);
   }
 
   @override
-  Future<CoinWallet> openWallet(BuildContext context,
-      {required String password}) async {
+  Future<CoinWallet> openWallet(final BuildContext context,
+      {required final String password}) async {
     return await coin.openWallet(
       this,
       password: password,
@@ -56,7 +56,7 @@ class MoneroWalletInfo extends CoinWalletInfo {
 
   @override
   Future<void> deleteWallet() async {
-    for (var element in Monero.wPtrList) {
+    for (final element in Monero.wPtrList) {
       monero.WalletManager_closeWallet(Monero.wmPtr, element, true);
     }
     Monero.wPtrList.clear();
@@ -65,11 +65,11 @@ class MoneroWalletInfo extends CoinWalletInfo {
   }
 
   @override
-  Future<void> renameWallet(String newName) async {
+  Future<void> renameWallet(final String newName) async {
     if (p.basename(walletName) == newName) {
       throw Exception("Wallet wasn't renamed");
     }
-    for (var element in Monero.wPtrList) {
+    for (final element in Monero.wPtrList) {
       monero.WalletManager_closeWallet(Monero.wmPtr, element, true);
     }
     Monero.wPtrList.clear();

@@ -1,5 +1,4 @@
 import 'package:cupcake/coins/abstract/wallet_info.dart';
-import 'package:cupcake/utils/call_throwable.dart';
 import 'package:cupcake/view_model/wallet_edit_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
@@ -7,14 +6,14 @@ import 'package:cupcake/views/widgets/form_builder.dart';
 import 'package:flutter/material.dart';
 
 class WalletEdit extends AbstractView {
-  WalletEdit({super.key, required CoinWalletInfo walletInfo})
+  WalletEdit({super.key, required final CoinWalletInfo walletInfo})
       : viewModel = WalletEditViewModel(walletInfo: walletInfo);
 
   @override
   WalletEditViewModel viewModel;
 
   @override
-  Widget? body(BuildContext context) {
+  Widget? body(final BuildContext context) {
     return Column(
       children: [
         const Spacer(),
@@ -23,7 +22,7 @@ class WalletEdit extends AbstractView {
           scaffoldContext: context,
           isPinSet: false,
           showExtra: true,
-          onLabelChange: viewModel.titleUpdate,
+          onLabelChange: (final _) {}, // do we need this?
         ),
         const Spacer(),
         Row(
@@ -32,12 +31,8 @@ class WalletEdit extends AbstractView {
               child: LongPrimaryButton(
                 backgroundColor: const WidgetStatePropertyAll(Colors.red),
                 icon: null,
-                onPressed: () {
-                  callThrowable(
-                    context,
-                    () => viewModel.deleteWallet(context),
-                    "Deleting wallet",
-                  );
+                onPressed: () async {
+                  await viewModel.deleteWallet();
                 },
                 text: "Delete",
               ),
@@ -45,12 +40,11 @@ class WalletEdit extends AbstractView {
             Expanded(
               child: LongPrimaryButton(
                 icon: null,
-                onPressed: () {
-                  for (var element in viewModel.form) {
+                onPressed: () async {
+                  for (final element in viewModel.form) {
                     if (!element.isOk) continue;
                   }
-                  callThrowable(context, () => viewModel.renameWallet(context),
-                      "Rename wallet");
+                  await viewModel.renameWallet();
                 },
                 text: "Rename",
               ),

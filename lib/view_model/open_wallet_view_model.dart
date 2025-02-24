@@ -1,15 +1,18 @@
 import 'package:cupcake/coins/abstract/wallet_info.dart';
-import 'package:cupcake/utils/call_throwable.dart';
+import 'package:cupcake/dev/generate_rebuild.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
+import 'package:cupcake/utils/form/validators.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/views/wallet_home.dart';
-import 'package:flutter/cupertino.dart';
 
+part 'open_wallet_view_model.g.dart';
+
+@GenerateRebuild()
 class OpenWalletViewModel extends ViewModel {
   OpenWalletViewModel({required this.coinWalletInfo});
 
-  CoinWalletInfo coinWalletInfo;
+  final CoinWalletInfo coinWalletInfo;
 
   @override
   String get screenName => L.enter_password;
@@ -22,32 +25,23 @@ class OpenWalletViewModel extends ViewModel {
       canWrite: false,
       verifyMatching: true,
     ),
-    validator: (String? input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      if (input.length < 4) {
-        return L.warning_password_too_short;
-      }
-      return null;
-    },
+    validator: nonEmptyValidator(
+      L,
+      extra: (final input) =>
+          (input.length < 4) ? L.warning_password_too_short : null,
+    ),
     onChanged: openWalletIfPasswordCorrect,
     onConfirm: openWallet,
+    errorHandler: errorHandler,
   );
 
-  Future<void> openWallet(BuildContext context) async {
-    callThrowable(
-      context,
-      () async => await _openWallet(context),
-      L.opening_wallet,
-    );
-  }
-
-  Future<void> _openWallet(BuildContext context) async {
+  @ThrowOnUI(message: "Opening wallet")
+  Future<void> $openWallet() async {
     final wallet = await coinWalletInfo.openWallet(
-      context,
+      c!,
       password: await walletPassword.value,
     );
-    WalletHome(coinWallet: wallet).push(context);
+    await WalletHome(coinWallet: wallet).push(c!);
   }
 
   Future<bool> checkWalletPassword() async {
@@ -58,12 +52,12 @@ class OpenWalletViewModel extends ViewModel {
     }
   }
 
-  Future<void> openWalletIfPasswordCorrect(BuildContext context) async {
+  Future<void> openWalletIfPasswordCorrect() async {
     if (await checkWalletPassword()) {
-      if (!context.mounted) return;
-      openWallet(context);
+      if (!mounted) return;
+      return openWallet();
     }
   }
 
-  void titleUpdate(String? suggestedTitle) {}
+  void titleUpdate(final String? suggestedTitle) {}
 }

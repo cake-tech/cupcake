@@ -54,9 +54,9 @@ class Monero implements Coin {
     // }
     // final retWallets = wallets.map((e) => MoneroWalletInfo(e)).toList();
     // retWallets.removeWhere((element) => element.walletName.trim().isEmpty);
-    List<CoinWalletInfo> retWallets = [];
+    final List<CoinWalletInfo> retWallets = [];
     final list = baseDir.listSync(recursive: true, followLinks: true);
-    for (var element in list) {
+    for (final element in list) {
       if (element.absolute.path.endsWith(".keys")) continue;
       if (!monero.WalletManager_walletExists(wmPtr, element.absolute.path)) {
         continue;
@@ -67,10 +67,10 @@ class Monero implements Coin {
   }
 
   Future<void> createMoneroWallet({
-    required ProgressCallback? progressCallback,
-    required String walletPath,
-    required String walletPassword,
-    required String seedOffsetOrEncryption,
+    required final ProgressCallback? progressCallback,
+    required final String walletPath,
+    required final String walletPassword,
+    required final String seedOffsetOrEncryption,
   }) async {
     progressCallback?.call(description: "Generating polyseed");
     final newSeed = monero.Wallet_createPolyseed();
@@ -106,11 +106,11 @@ class Monero implements Coin {
   }
 
   Future<void> createMoneroWalletPolyseed({
-    required ProgressCallback? progressCallback,
-    required String walletPath,
-    required String walletPassword,
+    required final ProgressCallback? progressCallback,
+    required final String walletPath,
+    required final String walletPassword,
     required String seed,
-    required String seedOffsetOrEncryption,
+    required final String seedOffsetOrEncryption,
   }) async {
     progressCallback?.call(description: "Creating wallet");
     final lang = PolyseedLang.getByPhrase(seed);
@@ -153,11 +153,11 @@ class Monero implements Coin {
   }
 
   Future<void> createMoneroWalletSeed({
-    required ProgressCallback? progressCallback,
-    required String walletPath,
-    required String walletPassword,
-    required String seed,
-    required String seedOffsetOrEncryption,
+    required final ProgressCallback? progressCallback,
+    required final String walletPath,
+    required final String walletPassword,
+    required final String seed,
+    required final String seedOffsetOrEncryption,
   }) async {
     progressCallback?.call(description: "Creating wallet");
     final newWptr = monero.WalletManager_recoveryWallet(
@@ -185,13 +185,13 @@ class Monero implements Coin {
   }
 
   Future<void> createMoneroWalletKeys({
-    required ProgressCallback? progressCallback,
-    required String walletPath,
-    required String walletPassword,
-    required String walletAddress,
-    required String secretSpendKey,
-    required String secretViewKey,
-    required int restoreHeight,
+    required final ProgressCallback? progressCallback,
+    required final String walletPath,
+    required final String walletPassword,
+    required final String walletAddress,
+    required final String secretSpendKey,
+    required final String secretViewKey,
+    required final int restoreHeight,
   }) async {
     progressCallback?.call(description: "Creating wallet");
     final newWptr = monero.WalletManager_createWalletFromKeys(wmPtr,
@@ -217,16 +217,16 @@ class Monero implements Coin {
 
   @override
   Future<CoinWallet> createNewWallet(
-    String walletName,
-    String walletPassword, {
-    ProgressCallback? progressCallback,
-    required bool? createWallet,
-    required String? seed,
-    required int? restoreHeight,
-    required String? primaryAddress,
-    required String? viewKey,
-    required String? spendKey,
-    required String? seedOffsetOrEncryption,
+    final String walletName,
+    final String walletPassword, {
+    final ProgressCallback? progressCallback,
+    required final bool? createWallet,
+    required final String? seed,
+    required final int? restoreHeight,
+    required final String? primaryAddress,
+    required final String? viewKey,
+    required final String? spendKey,
+    required final String? seedOffsetOrEncryption,
   }) async {
     progressCallback?.call(
         title: "Creating new wallet", description: "Initializing...");
@@ -289,9 +289,9 @@ class Monero implements Coin {
   }
 
   @override
-  Future<CoinWallet> openWallet(CoinWalletInfo walletInfo,
-      {required String password}) async {
-    for (var wptr in wPtrList) {
+  Future<CoinWallet> openWallet(final CoinWalletInfo walletInfo,
+      {required final String password}) async {
+    for (final wptr in wPtrList) {
       monero.WalletManager_closeWallet(wmPtr, wptr, true);
     }
     wPtrList.clear();
@@ -318,4 +318,10 @@ class Monero implements Coin {
   // monero.dart stuff
   static monero.WalletManager wmPtr =
       monero.WalletManagerFactory_getWalletManager();
+
+  @override
+  bool isSeedSomewhatLegit(final String seed) {
+    final length = seed.split(" ").length;
+    return [16, 25].contains(length);
+  }
 }

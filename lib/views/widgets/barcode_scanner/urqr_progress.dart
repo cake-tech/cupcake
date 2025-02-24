@@ -11,7 +11,7 @@ class URQrProgress {
     required this.percentage,
   });
 
-  bool equals(URQrProgress? progress) {
+  bool equals(final URQrProgress? progress) {
     if (progress == null) {
       return false;
     }

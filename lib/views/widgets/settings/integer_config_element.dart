@@ -17,7 +17,7 @@ class IntegerConfigElement extends StatelessWidget {
   final Function(int val) onChange;
   late final ctrl = TextEditingController(text: value.toString());
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ListTile(
       title: Text(title),
       onLongPress: () {
@@ -26,7 +26,7 @@ class IntegerConfigElement extends StatelessWidget {
       },
       subtitle: TextField(
         controller: ctrl,
-        onSubmitted: (String value) {
+        onSubmitted: (final String value) {
           final i = int.tryParse(value);
           if (i == null) return;
           onChange(i);

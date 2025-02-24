@@ -1,0 +1,16 @@
+targets:
+  $default:
+    builders:
+      cupcake|rebuild_generator:
+        generate_for:
+          include:
+            - lib/**.dart
+            - example/**.dart
+
+builders:
+  rebuild_generator:
+    import: "package:cupcake/dev/rebuild_generator.dart"
+    builder_factories: ["rebuildBuilder"]
+    build_extensions: {".dart": [".g.dart"]}
+    auto_apply: dependents
+    build_to: source

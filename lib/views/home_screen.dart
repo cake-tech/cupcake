@@ -1,18 +1,16 @@
 import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/types.dart';
-import 'package:cupcake/utils/call_throwable.dart';
-import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/view_model/home_screen_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
-import 'package:cupcake/views/create_wallet.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
-import 'package:cupcake/views/wallet_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 
 class HomeScreen extends AbstractView {
   HomeScreen(
-      {super.key, required bool openLastWallet, String? lastOpenedWallet})
+      {super.key,
+      required final bool openLastWallet,
+      final String? lastOpenedWallet})
       : viewModel = HomeScreenViewModel(
             openLastWallet: openLastWallet, lastOpenedWallet: lastOpenedWallet);
 
@@ -20,10 +18,10 @@ class HomeScreen extends AbstractView {
   final HomeScreenViewModel viewModel;
 
   @override
-  Widget? body(BuildContext context) {
+  Widget? body(final BuildContext context) {
     return FutureBuilder(
       future: viewModel.showLandingInfo,
-      builder: (BuildContext context, AsyncSnapshot<bool> value) {
+      builder: (final BuildContext context, final AsyncSnapshot<bool> value) {
         if (!value.hasData) return Container();
         if (value.data!) {
           return Text(L.home_no_wallets);
@@ -50,13 +48,13 @@ class HomeScreen extends AbstractView {
           ),
         ],
       );
-  Widget walletsBody(
-      BuildContext context, AsyncSnapshot<List<CoinWalletInfo>> wallets) {
+  Widget walletsBody(final BuildContext context,
+      final AsyncSnapshot<List<CoinWalletInfo>> wallets) {
     if (!wallets.hasData) return Container();
     return ListView.builder(
         itemCount: wallets.data!.length,
-        itemBuilder: (BuildContext context, int index) {
-          bool isOpen = (wallets.data![index].walletName)
+        itemBuilder: (final BuildContext context, final int index) {
+          final bool isOpen = (wallets.data![index].walletName)
               .contains(viewModel.lastOpenedWallet ?? "");
           return Card(
             child: IntrinsicHeight(
@@ -79,12 +77,7 @@ class HomeScreen extends AbstractView {
                       trailing: IconButton(
                         icon: const Icon(Icons.edit_rounded),
                         onPressed: () async {
-                          await callThrowable(
-                            context,
-                            () => renameWallet(context, wallets.data![index]),
-                            "Renaming wallet",
-                          );
-                          viewModel.markNeedsBuild();
+                          await viewModel.renameWallet(wallets.data![index]);
                         },
                       ),
                       title: Text(
@@ -99,38 +92,20 @@ class HomeScreen extends AbstractView {
         });
   }
 
-  Future<void> renameWallet(
-      BuildContext context, CoinWalletInfo walletInfo) async {
-    canPop = false; // don't allow user to go back to previous wallet
-    await viewModel.markNeedsBuild();
-    if (!context.mounted) return;
-    await WalletEdit(walletInfo: walletInfo).push(context);
-    await viewModel.markNeedsBuild();
-  }
-
-  Future<void> createWallet(BuildContext context, CreateMethod method) async {
-    await CreateWallet(
-      createMethod: method,
-      needsPasswordConfirm: false,
-    ).push(context);
-    if (!context.mounted) return;
-    viewModel.markNeedsBuild();
-  }
-
   @override
-  Widget? bottomNavigationBar(BuildContext context) {
+  Widget? bottomNavigationBar(final BuildContext context) {
     return SafeArea(
         child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         LongPrimaryButton(
           icon: Icons.add,
-          onPressed: () => createWallet(context, CreateMethod.create),
+          onPressed: () => viewModel.createWallet(CreateMethod.create),
           text: L.create_new_wallet,
         ),
         LongSecondaryButton(
           icon: Icons.restore,
-          onPressed: () => createWallet(context, CreateMethod.restore),
+          onPressed: () => viewModel.createWallet(CreateMethod.restore),
           text: L.restore_wallet,
         ),
       ],
@@ -138,7 +113,7 @@ class HomeScreen extends AbstractView {
   }
 
   @override
-  Future<void> initState(BuildContext context) {
-    return viewModel.loadInitialState();
+  Future<void> initState(final BuildContext context) {
+    return viewModel.loadInitialState(context);
   }
 }

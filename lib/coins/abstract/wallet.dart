@@ -9,7 +9,7 @@ abstract class CoinWallet {
 
   Coin get coin;
 
-  Future<void> handleUR(BuildContext context, URQRData ur) =>
+  Future<void> handleUR(final BuildContext context, final URQRData ur) =>
       throw UnimplementedError();
 
   bool get hasAccountSupport => false;
@@ -18,7 +18,7 @@ abstract class CoinWallet {
 
   int getAccountsCount();
 
-  void setAccount(int accountIndex);
+  void setAccount(final int accountIndex);
 
   int getAccountId();
 
@@ -40,6 +40,6 @@ abstract class CoinWallet {
 
   Future<void> close();
 
-  Future<List<WalletSeedDetail>> seedDetails(AppLocalizations L) =>
+  Future<List<WalletSeedDetail>> seedDetails(final AppLocalizations L) =>
       throw UnimplementedError();
 }

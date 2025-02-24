@@ -80,7 +80,7 @@ enum Keys {
   dot
 }
 
-String getKeysChar(Keys key) {
+String getKeysChar(final Keys key) {
   return switch (key) {
     Keys.a0 => "0",
     Keys.a1 => "1",
@@ -162,7 +162,7 @@ String getKeysChar(Keys key) {
   };
 }
 
-Widget getKeyWidgetPinPad(Keys key) {
+Widget getKeyWidgetPinPad(final Keys key) {
   return switch (key) {
     Keys.a0 ||
     Keys.a1 ||
@@ -185,7 +185,7 @@ Widget getKeyWidgetPinPad(Keys key) {
   };
 }
 
-Widget getKeyWidgetKeyboard(Keys key, Color? color) {
+Widget getKeyWidgetKeyboard(final Keys key, final Color? color) {
   return SizedBox(
     height: 32,
     child: switch (key) {

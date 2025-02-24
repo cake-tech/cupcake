@@ -10,13 +10,13 @@ class VersionWidget extends StatefulWidget {
 }
 
 class _VersionWidgetState extends State<VersionWidget> {
-  Future<void> showWidget(BuildContext context) async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  Future<void> showWidget(final BuildContext context) async {
+    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-    String appName = packageInfo.appName;
-    String packageName = packageInfo.packageName;
-    String version = packageInfo.version;
-    String buildNumber = packageInfo.buildNumber;
+    final String appName = packageInfo.appName;
+    final String version = packageInfo.version;
+    final String buildNumber = packageInfo.buildNumber;
+    if (!context.mounted) return;
     showAboutDialog(
         context: context,
         applicationName: appName,
@@ -73,7 +73,7 @@ class _VersionWidgetState extends State<VersionWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ListTile(
       title: const Text("About the app"),
       subtitle: subtitle == null ? null : Text(subtitle ?? "..."),
