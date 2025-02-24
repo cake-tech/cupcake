@@ -5,7 +5,7 @@ Future<void> showAlert({
   required final String title,
   required final List<String> body,
   final String ok = "ok",
-}) async {
+}) {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!

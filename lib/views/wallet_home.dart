@@ -9,8 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 
 class WalletHome extends AbstractView {
-  WalletHome({super.key, required final CoinWallet coinWallet})
-      : viewModel = WalletHomeViewModel(wallet: coinWallet);
+  WalletHome({
+    super.key,
+    required final CoinWallet coinWallet,
+  }) : viewModel = WalletHomeViewModel(
+          wallet: coinWallet,
+        );
 
   @override
   final WalletHomeViewModel viewModel;
@@ -31,8 +35,7 @@ class WalletHome extends AbstractView {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Padding(
-                        padding: EdgeInsets.only(top: 50, bottom: 24)),
+                    const Padding(padding: EdgeInsets.only(top: 50, bottom: 24)),
                     const SizedBox(width: 16),
                     Assets.coins.xmr.svg(width: 50),
                     const SizedBox(width: 16),
@@ -43,13 +46,14 @@ class WalletHome extends AbstractView {
                         Text(
                           viewModel.wallet.walletName,
                           style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                         Text(L.primary_account_label),
                       ],
-                    )
+                    ),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -67,77 +71,91 @@ class WalletHome extends AbstractView {
     return Column(
       children: [
         const SizedBox(height: 40),
-        CakeCard(
-            child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  L.balance,
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall!
-                      .copyWith(fontSize: 12, fontWeight: FontWeight.w400),
-                ),
-                Text(
-                  viewModel.balance,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontSize: 24, fontWeight: FontWeight.w900),
-                ),
-              ],
-            ),
-            const Spacer(),
-            SizedBox.square(
-              dimension: 42,
-              child: viewModel.coin.strings.svg,
-            ),
-          ],
-        )),
-        CakeCard(
-          firmPadding: const EdgeInsets.all(12),
-          child: Row(
+        _currencyInfo(context),
+        _actions(context),
+      ],
+    );
+  }
+
+  CakeCard _actions(final BuildContext context) {
+    return CakeCard(
+      firmPadding: const EdgeInsets.all(12),
+      child: Row(
+        children: [
+          _actionReceive(context),
+          const SizedBox(width: 8),
+          _actionScan(context),
+        ],
+      ),
+    );
+  }
+
+  Expanded _actionScan(final BuildContext context) {
+    return Expanded(
+      child: SizedBox(
+        height: 64,
+        child: ElevatedButton.icon(
+          onPressed: () => BarcodeScanner(wallet: viewModel.wallet).push(context),
+          icon: const Icon(
+            Icons.qr_code_rounded,
+            size: 35,
+            color: Colors.white,
+          ),
+          label: Text(
+            L.scan,
+            style: const TextStyle(color: Colors.white, fontSize: 18),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Expanded _actionReceive(final BuildContext context) {
+    return Expanded(
+      child: SizedBox(
+        height: 64,
+        child: ElevatedButton.icon(
+          onPressed: () => Receive(coinWallet: viewModel.wallet).push(context),
+          icon: const Icon(Icons.call_received, size: 35, color: Colors.white),
+          label: Text(
+            L.receive,
+            style: const TextStyle(color: Colors.white, fontSize: 18),
+          ),
+        ),
+      ),
+    );
+  }
+
+  CakeCard _currencyInfo(final BuildContext context) {
+    return CakeCard(
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: SizedBox(
-                  height: 64,
-                  child: ElevatedButton.icon(
-                    onPressed: () =>
-                        Receive(coinWallet: viewModel.wallet).push(context),
-                    icon: const Icon(Icons.call_received,
-                        size: 35, color: Colors.white),
-                    label: Text(
-                      L.receive,
-                      style: const TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                  ),
-                ),
+              Text(
+                L.balance,
+                style: Theme.of(context)
+                    .textTheme
+                    .displaySmall!
+                    .copyWith(fontSize: 12, fontWeight: FontWeight.w400),
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: SizedBox(
-                  height: 64,
-                  child: ElevatedButton.icon(
-                    onPressed: () =>
-                        BarcodeScanner(wallet: viewModel.wallet).push(context),
-                    icon: const Icon(
-                      Icons.qr_code_rounded,
-                      size: 35,
-                      color: Colors.white,
-                    ),
-                    label: Text(
-                      L.scan,
-                      style: const TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                  ),
-                ),
+              Text(
+                viewModel.balance,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(fontSize: 24, fontWeight: FontWeight.w900),
               ),
             ],
           ),
-        ),
-      ],
+          const Spacer(),
+          SizedBox.square(
+            dimension: 42,
+            child: viewModel.coin.strings.svg,
+          ),
+        ],
+      ),
     );
   }
 }

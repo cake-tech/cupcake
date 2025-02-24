@@ -37,8 +37,7 @@ class IntegerConfigElement extends StatelessWidget {
           : IconButton(
               icon: const Icon(Icons.info),
               onPressed: () {
-                showAlertWidget(
-                    context: context, title: title, body: [Text(hint ?? "")]);
+                showAlertWidget(context: context, title: title, body: [Text(hint ?? "")]);
               },
             ),
     );

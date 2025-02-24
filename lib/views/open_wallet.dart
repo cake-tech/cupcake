@@ -5,8 +5,12 @@ import 'package:cupcake/views/widgets/form_builder.dart';
 import 'package:flutter/cupertino.dart';
 
 class OpenWallet extends AbstractView {
-  OpenWallet({super.key, required final CoinWalletInfo coinWalletInfo})
-      : viewModel = OpenWalletViewModel(coinWalletInfo: coinWalletInfo);
+  OpenWallet({
+    super.key,
+    required final CoinWalletInfo coinWalletInfo,
+  }) : viewModel = OpenWalletViewModel(
+          coinWalletInfo: coinWalletInfo,
+        );
 
   @override
   final OpenWalletViewModel viewModel;
@@ -17,6 +21,7 @@ class OpenWallet extends AbstractView {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         FormBuilder(
+          L,
           formElements: [
             viewModel.walletPassword,
           ],

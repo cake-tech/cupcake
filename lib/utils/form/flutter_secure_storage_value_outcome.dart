@@ -7,8 +7,11 @@ import 'package:cupcake/utils/form/abstract_value_outcome.dart';
 import 'package:cupcake/utils/secure_storage.dart';
 
 class FlutterSecureStorageValueOutcome implements ValueOutcome {
-  FlutterSecureStorageValueOutcome(this.key,
-      {required this.canWrite, required this.verifyMatching});
+  FlutterSecureStorageValueOutcome(
+    this.key, {
+    required this.canWrite,
+    required this.verifyMatching,
+  });
 
   final String key;
   final bool canWrite;
@@ -18,14 +21,13 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
   Future<void> encode(final String input) async {
     final List<int> bytes = utf8.encode(input);
     final Digest sha512Hash = sha512.convert(bytes);
-    var valInput =
-        await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
+    var valInput = await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
     if (valInput == null) {
       await secureStorage.write(
-          key: "FlutterSecureStorageValueOutcome._$key",
-          value: sha512Hash.toString());
-      valInput = await secureStorage.read(
-          key: "FlutterSecureStorageValueOutcome._$key");
+        key: "FlutterSecureStorageValueOutcome._$key",
+        value: sha512Hash.toString(),
+      );
+      valInput = await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
     }
     if (sha512Hash.toString() != valInput && verifyMatching) {
       throw Exception("Input doesn't match the secure element value");
@@ -38,8 +40,7 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
     }
     if (!canWrite) {
       if (CupcakeConfig.instance.debug) {
-        throw Exception(
-            "DEBUG_ONLY: canWrite is false but we tried to flush the value");
+        throw Exception("DEBUG_ONLY: canWrite is false but we tried to flush the value");
       }
       return;
     }
@@ -54,8 +55,7 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
   Future<String> decode(final String output) async {
     final List<int> bytes = utf8.encode(output);
     final Digest sha512Hash = sha512.convert(bytes);
-    final valInput =
-        await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
+    final valInput = await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
     if (sha512Hash.toString() != valInput && verifyMatching) {
       throw Exception("Input doesn't match the secure element value");
     }

@@ -5,8 +5,7 @@ AndroidOptions _getAndroidOptions() => const AndroidOptions(
       encryptedSharedPreferences: true,
     );
 
-final FlutterSecureStorage secureStorage =
-    FlutterSecureStorage(aOptions: _getAndroidOptions());
+final FlutterSecureStorage secureStorage = FlutterSecureStorage(aOptions: _getAndroidOptions());
 
 Future<void> setWalletPin(final String password) async {
   final pin = await secureStorage.read(key: SecureStorageKey.pin);

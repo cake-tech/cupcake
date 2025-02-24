@@ -10,7 +10,7 @@ class SettingsViewModel extends ViewModel {
   SettingsViewModel();
 
   @override
-  String get screenName => "Settings";
+  String get screenName => L.settings;
 
   @ExposeRebuildableAccessors(extraCode: r'$config.save()')
   CupcakeConfig get $config => CupcakeConfig.instance;

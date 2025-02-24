@@ -1,13 +1,17 @@
 import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/view_model/wallet_edit_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
-import 'package:cupcake/views/initial_setup_screen.dart';
+import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/form_builder.dart';
 import 'package:flutter/material.dart';
 
 class WalletEdit extends AbstractView {
-  WalletEdit({super.key, required final CoinWalletInfo walletInfo})
-      : viewModel = WalletEditViewModel(walletInfo: walletInfo);
+  WalletEdit({
+    super.key,
+    required final CoinWalletInfo walletInfo,
+  }) : viewModel = WalletEditViewModel(
+          walletInfo: walletInfo,
+        );
 
   @override
   WalletEditViewModel viewModel;
@@ -18,6 +22,7 @@ class WalletEdit extends AbstractView {
       children: [
         const Spacer(),
         FormBuilder(
+          L,
           formElements: viewModel.form,
           scaffoldContext: context,
           isPinSet: false,
@@ -31,22 +36,15 @@ class WalletEdit extends AbstractView {
               child: LongPrimaryButton(
                 backgroundColor: const WidgetStatePropertyAll(Colors.red),
                 icon: null,
-                onPressed: () async {
-                  await viewModel.deleteWallet();
-                },
-                text: "Delete",
+                onPressed: viewModel.deleteWallet,
+                text: L.delete,
               ),
             ),
             Expanded(
               child: LongPrimaryButton(
                 icon: null,
-                onPressed: () async {
-                  for (final element in viewModel.form) {
-                    if (!element.isOk) continue;
-                  }
-                  await viewModel.renameWallet();
-                },
-                text: "Rename",
+                onPressed: () => viewModel.renameWallet(),
+                text: L.rename,
               ),
             ),
           ],

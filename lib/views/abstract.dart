@@ -29,12 +29,15 @@ class _AbstractViewState extends State<AbstractView> {
 }
 
 class AbstractView extends StatefulWidget {
+  AbstractView({super.key});
   Future<void> push(final BuildContext context) async {
-    await Navigator.of(context).push(CupertinoPageRoute(
-      builder: (final context) {
-        return this;
-      },
-    ));
+    await Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (final context) {
+          return this;
+        },
+      ),
+    );
   }
 
   final viewModel = ViewModel();
@@ -52,9 +55,7 @@ class AbstractView extends StatefulWidget {
 
   State<AbstractView>? state;
 
-  AbstractView({super.key});
-
-  get appBar => viewModel.screenName.isEmpty
+  AppBar? get appBar => viewModel.screenName.isEmpty
       ? null
       : AppBar(
           title: viewModel.screenName.toLowerCase() != "cupcake"

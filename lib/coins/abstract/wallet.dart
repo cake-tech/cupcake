@@ -1,6 +1,5 @@
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
-import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/urqr.dart';
 import 'package:flutter/widgets.dart';
 
@@ -30,6 +29,8 @@ abstract class CoinWallet {
 
   String get seed;
 
+  String get passphrase;
+
   String get primaryAddress;
 
   String get walletName;
@@ -40,6 +41,5 @@ abstract class CoinWallet {
 
   Future<void> close();
 
-  Future<List<WalletSeedDetail>> seedDetails(final AppLocalizations L) =>
-      throw UnimplementedError();
+  Future<List<WalletSeedDetail>> seedDetails() => throw UnimplementedError();
 }

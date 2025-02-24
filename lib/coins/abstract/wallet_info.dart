@@ -18,8 +18,7 @@ abstract class CoinWalletInfo {
 
   bool exists();
 
-  Future<CoinWallet> openWallet(final BuildContext context,
-      {required final String password});
+  Future<CoinWallet> openWallet(final BuildContext context, {required final String password});
 
   Map<String, dynamic> toJson() {
     return {

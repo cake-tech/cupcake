@@ -6,7 +6,11 @@ enum WalletSeedDetailType {
 }
 
 enum CreateMethod {
-  any,
   create,
   restore,
+}
+
+enum NewWalletActionType {
+  nextPage,
+  function,
 }

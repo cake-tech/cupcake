@@ -1,3 +1,4 @@
+import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -18,9 +19,10 @@ class _VersionWidgetState extends State<VersionWidget> {
     final String buildNumber = packageInfo.buildNumber;
     if (!context.mounted) return;
     showAboutDialog(
-        context: context,
-        applicationName: appName,
-        applicationVersion: "$version+$buildNumber");
+      context: context,
+      applicationName: appName,
+      applicationVersion: "$version+$buildNumber",
+    );
   }
 
   List<String?> easterEgg = [
@@ -74,8 +76,9 @@ class _VersionWidgetState extends State<VersionWidget> {
 
   @override
   Widget build(final BuildContext context) {
+    final L = AppLocalizations.of(context)!;
     return ListTile(
-      title: const Text("About the app"),
+      title: Text(L.about_the_app),
       subtitle: subtitle == null ? null : Text(subtitle ?? "..."),
       onTap: subtitle != null ? _debugTrigger : () => showWidget(context),
       onLongPress: _debugTrigger,

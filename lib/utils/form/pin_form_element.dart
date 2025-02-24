@@ -6,17 +6,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:local_auth/local_auth.dart';
 
 class PinFormElement extends FormElement {
-  PinFormElement(
-      {final String initialText = "",
-      this.password = false,
-      required this.validator,
-      required this.valueOutcome,
-      this.onChanged,
-      this.onConfirm,
-      this.showNumboard = true,
-      required this.label,
-      required final Future<void> Function(Object e) errorHandler})
-      : ctrl = TextEditingController(text: initialText),
+  PinFormElement({
+    final String initialText = "",
+    this.password = false,
+    required this.validator,
+    required this.valueOutcome,
+    this.onChanged,
+    this.onConfirm,
+    this.showNumboard = true,
+    required this.label,
+    required final Future<void> Function(Object e) errorHandler,
+  })  : ctrl = TextEditingController(text: initialText),
         _errorHandler = errorHandler;
   final Future<void> Function(Object e) _errorHandler;
   Future<void> loadSecureStorageValue(final VoidCallback callback) async {
@@ -24,11 +24,9 @@ class PinFormElement extends FormElement {
     if (!CupcakeConfig.instance.biometricEnabled) return;
     final auth = LocalAuthentication();
 
-    final List<BiometricType> availableBiometrics =
-        await auth.getAvailableBiometrics();
+    final List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
     final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
-    final bool canAuthenticate =
-        canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+    final bool canAuthenticate = canAuthenticateWithBiometrics || await auth.isDeviceSupported();
     if (!canAuthenticate) return;
     if (!availableBiometrics.contains(BiometricType.fingerprint) &&
         !availableBiometrics.contains(BiometricType.face)) {
@@ -37,8 +35,7 @@ class PinFormElement extends FormElement {
 
     final bool didAuthenticate = await auth.authenticate(
       localizedReason: 'Authenticate...',
-      options: const AuthenticationOptions(
-          useErrorDialogs: true, biometricOnly: true),
+      options: const AuthenticationOptions(useErrorDialogs: true, biometricOnly: true),
     );
     if (!didAuthenticate) return;
     final value = await secureStorage.read(key: "UI.${valueOutcome.uniqueId}");
@@ -58,7 +55,7 @@ class PinFormElement extends FormElement {
   ValueOutcome valueOutcome;
 
   @override
-  Future<String> get value async => await valueOutcome.decode(ctrl.text);
+  Future<String> get value => valueOutcome.decode(ctrl.text);
 
   @override
   bool get isOk => validator(ctrl.text) == null;

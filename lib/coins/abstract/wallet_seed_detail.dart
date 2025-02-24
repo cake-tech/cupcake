@@ -1,4 +1,4 @@
-import 'package:cupcake/coins/types.dart';
+import 'package:cupcake/utils/types.dart';
 
 class WalletSeedDetail {
   WalletSeedDetail({

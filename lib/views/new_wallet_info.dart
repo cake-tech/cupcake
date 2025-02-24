@@ -1,11 +1,15 @@
+import 'package:cupcake/utils/types.dart';
+import 'package:cupcake/utils/new_wallet/info_page.dart';
 import 'package:cupcake/view_model/new_wallet_info_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
-import 'package:cupcake/views/initial_setup_screen.dart';
+import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:flutter/material.dart';
 
 class NewWalletInfoScreen extends AbstractView {
-  NewWalletInfoScreen({super.key, required final List<NewWalletInfoPage> pages})
-      : viewModel = NewWalletInfoViewModel(pages);
+  NewWalletInfoScreen({
+    super.key,
+    required final List<NewWalletInfoPage> pages,
+  }) : viewModel = NewWalletInfoViewModel(pages);
 
   @override
   NewWalletInfoViewModel viewModel;
@@ -21,12 +25,10 @@ class NewWalletInfoScreen extends AbstractView {
       );
 
   List<Widget>? _getActionButton() {
-    if (viewModel.page.topAction == null &&
-        viewModel.page.topActionText == null) {
+    if (viewModel.page.topAction == null && viewModel.page.topActionText == null) {
       return null;
     }
-    if (viewModel.page.topActionText != null &&
-        viewModel.page.topAction == null) {
+    if (viewModel.page.topActionText != null && viewModel.page.topAction == null) {
       return [
         TextButton(
           onPressed: () => viewModel.currentPageIndex++,
@@ -66,23 +68,23 @@ class NewWalletInfoScreen extends AbstractView {
   @override
   Widget? body(final BuildContext context) {
     return SafeArea(
-        child: Padding(
-      padding: const EdgeInsets.only(left: 32, right: 32, top: 0, bottom: 16),
-      child: Column(
-        children: [
-          if (viewModel.page.lottieAnimation != null)
-            viewModel.page.lottieAnimation!,
-          ...viewModel.page.texts,
-          const Spacer(),
-          SizedBox(
-            width: double.maxFinite,
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: _getBottomActionButtons(),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 32, right: 32, top: 0, bottom: 16),
+        child: Column(
+          children: [
+            if (viewModel.page.lottieAnimation != null) viewModel.page.lottieAnimation!,
+            ...viewModel.page.texts,
+            const Spacer(),
+            SizedBox(
+              width: double.maxFinite,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: _getBottomActionButtons(),
+              ),
             ),
-          )
-        ],
+          ],
+        ),
       ),
-    ));
+    );
   }
 }

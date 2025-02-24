@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class URQR extends StatefulWidget {
-  URQR({super.key, required this.frames});
+  URQR({
+    super.key,
+    required this.frames,
+  });
 
   List<String> frames;
 
@@ -22,10 +25,11 @@ class _URQRState extends State<URQR> {
     super.initState();
     setState(() {
       t = Timer.periodic(
-          Duration(milliseconds: CupcakeConfig.instance.msForQrCode),
-          (final timer) {
-        _nextFrame();
-      });
+        Duration(milliseconds: CupcakeConfig.instance.msForQrCode),
+        (final timer) {
+          _nextFrame();
+        },
+      );
     });
   }
 

@@ -8,29 +8,30 @@ import 'package:fast_scanner/fast_scanner.dart';
 import 'package:flutter/material.dart';
 
 class BarcodeScanner extends AbstractView {
-  BarcodeScanner({super.key, required final CoinWallet wallet})
-      : viewModel = BarcodeScannerViewModel(wallet: wallet);
+  BarcodeScanner({
+    super.key,
+    required final CoinWallet wallet,
+  }) : viewModel = BarcodeScannerViewModel(
+          wallet: wallet,
+        );
 
   @override
   final BarcodeScannerViewModel viewModel;
 
   @override
   Widget? body(final BuildContext context) {
-    viewModel.register(context);
     return Stack(
       children: [
         MobileScanner(
-          onDetect: (final BarcodeCapture bc) =>
-              viewModel.handleBarcode(context, bc),
+          onDetect: (final BarcodeCapture bc) => viewModel.handleBarcode(bc),
           controller: viewModel.mobileScannerCtrl,
         ),
         if (viewModel.ur.inputs.isNotEmpty)
           Center(
-            child: Text("${viewModel.ur.inputs.length}/${viewModel.ur.count}",
-                style: Theme.of(context)
-                    .textTheme
-                    .displayLarge
-                    ?.copyWith(color: Colors.white)),
+            child: Text(
+              "${viewModel.ur.inputs.length}/${viewModel.ur.count}",
+              style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
+            ),
           ),
         SizedBox(
           child: Center(

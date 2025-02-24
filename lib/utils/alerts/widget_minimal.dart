@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 Future<void> showAlertWidgetMinimal({
   required final BuildContext context,
   required final List<Widget> body,
-}) async {
+}) {
   return showDialog<void>(
     context: context,
     barrierDismissible: true,

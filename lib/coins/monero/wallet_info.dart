@@ -46,28 +46,31 @@ class MoneroWalletInfo extends CoinWalletInfo {
   }
 
   @override
-  Future<CoinWallet> openWallet(final BuildContext context,
-      {required final String password}) async {
-    return await coin.openWallet(
+  Future<CoinWallet> openWallet(
+    final BuildContext context, {
+    required final String password,
+  }) {
+    return coin.openWallet(
       this,
       password: password,
     );
   }
 
   @override
-  Future<void> deleteWallet() async {
+  Future<void> deleteWallet() {
     for (final element in Monero.wPtrList) {
       monero.WalletManager_closeWallet(Monero.wmPtr, element, true);
     }
     Monero.wPtrList.clear();
     File(walletName).deleteSync();
     File("$walletName.keys").deleteSync();
+    return Future.value();
   }
 
   @override
   Future<void> renameWallet(final String newName) async {
     if (p.basename(walletName) == newName) {
-      throw Exception("Wallet wasn't renamed");
+      throw Exception(Coin.L.error_wallet_name_unchanged);
     }
     for (final element in Monero.wPtrList) {
       monero.WalletManager_closeWallet(Monero.wmPtr, element, true);
@@ -76,6 +79,8 @@ class MoneroWalletInfo extends CoinWalletInfo {
     final basePath = p.dirname(walletName);
     File(walletName).copySync(p.join(basePath, newName));
     File("$walletName.keys").copySync(p.join(basePath, "$newName.keys"));
+    // Copy and delete later, if anything throws below we end up with copied walled,
+    // instead of nuking the wallet
     File(walletName).deleteSync();
     File("$walletName.keys").deleteSync();
     _walletName = newName;
