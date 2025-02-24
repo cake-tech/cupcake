@@ -50,11 +50,12 @@ class DrawerElements extends StatelessWidget {
           text: L.security_and_backup,
           action: _securityBackup,
         ),
-        DrawerElement(
-          svg: Assets.drawerIcons.exportKeyImages.svg(),
-          text: L.export_key_images,
-          action: _exportKeyImages,
-        ),
+        if (coinWallet is MoneroWallet)
+            DrawerElement(
+              svg: Assets.drawerIcons.exportKeyImages.svg(),
+              text: L.export_key_images,
+              action: _exportKeyImages,
+            ),
         DrawerElement(
           svg: Assets.drawerIcons.otherSettings.svg(),
           text: L.other_settings,
