@@ -9,7 +9,7 @@ class SingleKey extends StatelessWidget {
   final VoidCallback? callback;
   final VoidCallback? longPress;
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Expanded(
       flex: 2,
       child: Container(

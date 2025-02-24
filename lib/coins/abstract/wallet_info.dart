@@ -12,14 +12,14 @@ abstract class CoinWalletInfo {
 
   Coin get coin;
 
-  void openUI(BuildContext context);
+  void openUI(final BuildContext context);
 
-  Future<bool> checkWalletPassword(String password);
+  Future<bool> checkWalletPassword(final String password);
 
   bool exists();
 
-  Future<CoinWallet> openWallet(BuildContext context,
-      {required String password});
+  Future<CoinWallet> openWallet(final BuildContext context,
+      {required final String password});
 
   Map<String, dynamic> toJson() {
     return {
@@ -29,7 +29,7 @@ abstract class CoinWalletInfo {
     };
   }
 
-  static CoinWalletInfo? fromJson(Map<String, dynamic>? json) {
+  static CoinWalletInfo? fromJson(final Map<String, dynamic>? json) {
     if (json == null) return null;
     final type = Coins.values[json["typeIndex"] as int];
     final walletName = (json["walletName"] as String);
@@ -43,5 +43,5 @@ abstract class CoinWalletInfo {
 
   Future<void> deleteWallet();
 
-  Future<void> renameWallet(String newName);
+  Future<void> renameWallet(final String newName);
 }

@@ -13,30 +13,30 @@ class DrawerElements extends StatelessWidget {
 
   final CoinWallet coinWallet;
 
-  Future<void> _walletList(BuildContext context) async {
+  Future<void> _walletList(final BuildContext context) async {
     await HomeScreen(
       openLastWallet: false,
       lastOpenedWallet: coinWallet.walletName,
     ).push(context);
   }
 
-  Future<void> _securityBackup(BuildContext context) async {
+  Future<void> _securityBackup(final BuildContext context) async {
     await SecurityBackup(coinWallet: coinWallet).push(context);
   }
 
-  Future<void> _exportKeyImages(BuildContext context) async {
+  Future<void> _exportKeyImages(final BuildContext context) async {
     if (coinWallet is! MoneroWallet) {
       throw Exception("coinWallet is not monero - we can't export key images");
     }
     await (coinWallet as MoneroWallet).exportKeyImagesUR(context);
   }
 
-  Future<void> _otherSettings(BuildContext context) async {
+  Future<void> _otherSettings(final BuildContext context) async {
     await SettingsView().push(context);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final L = AppLocalizations.of(context)!;
     return Column(
       children: [

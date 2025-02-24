@@ -15,18 +15,20 @@ abstract class Coin {
   Future<List<CoinWalletInfo>> get coinWallets;
 
   Future<CoinWallet> createNewWallet(
-    String walletName,
-    String walletPassword, {
-    ProgressCallback? progressCallback,
-    required bool? createWallet,
-    required String? seed,
-    required int? restoreHeight,
-    required String? primaryAddress,
-    required String? viewKey,
-    required String? spendKey,
-    required String? seedOffsetOrEncryption,
+    final String walletName,
+    final String walletPassword, {
+    final ProgressCallback? progressCallback,
+    required final bool? createWallet,
+    required final String? seed,
+    required final int? restoreHeight,
+    required final String? primaryAddress,
+    required final String? viewKey,
+    required final String? spendKey,
+    required final String? seedOffsetOrEncryption,
   });
 
-  Future<CoinWallet> openWallet(CoinWalletInfo walletInfo,
-      {required String password});
+  bool isSeedSomewhatLegit(final String seed);
+
+  Future<CoinWallet> openWallet(final CoinWalletInfo walletInfo,
+      {required final String password});
 }

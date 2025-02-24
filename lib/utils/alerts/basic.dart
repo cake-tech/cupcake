@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
 Future<void> showAlert({
-  required BuildContext context,
-  required String title,
-  required List<String> body,
-  String ok = "ok",
+  required final BuildContext context,
+  required final String title,
+  required final List<String> body,
+  final String ok = "ok",
 }) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!
-    builder: (BuildContext context) {
+    builder: (final BuildContext context) {
       return AlertDialog(
         title: Text(title),
         content: SingleChildScrollView(
           child: ListBody(
             children: body
                 .map(
-                  (e) => Text(
+                  (final e) => Text(
                     e,
                     style: const TextStyle(color: Colors.white),
                   ),

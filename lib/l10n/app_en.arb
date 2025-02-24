@@ -63,6 +63,7 @@
   "restore_height": "Restore height",
   "seed_offset": "Seed offset",
   "view_only_restore_qr": "Restore View-Only Wallet",
+  "seed_length_16_word": "16 word",
   "seed_screen_wallet_seed_polyseed": "Wallet seed (Polyseed)",
   "seed_screen_wallet_seed_polyseed_encrypted": "Wallet seed (Polyseed [Encrypted])",
   "seed_screen_wallet_seed_legacy": "Wallet seed (Legacy)",

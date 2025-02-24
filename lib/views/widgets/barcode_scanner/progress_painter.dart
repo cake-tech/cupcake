@@ -9,14 +9,14 @@ class ProgressPainter extends CustomPainter {
   ProgressPainter({required this.urQrProgress});
 
   @override
-  void paint(Canvas canvas, Size size) {
+  void paint(final Canvas canvas, final Size size) {
     final c = Offset(size.width / 2.0, size.height / 2.0);
     final radius = size.width * 0.9;
     final rect = Rect.fromCenter(center: c, width: radius, height: radius);
     const fullAngle = 360.0;
     var startAngle = 0.0;
     for (int i = 0; i < urQrProgress.expectedPartCount.toInt(); i++) {
-      var sweepAngle =
+      final sweepAngle =
           (1 / urQrProgress.expectedPartCount) * fullAngle * pi / 180.0;
       drawSector(canvas, urQrProgress.receivedPartIndexes.contains(i), rect,
           startAngle, sweepAngle);
@@ -24,8 +24,8 @@ class ProgressPainter extends CustomPainter {
     }
   }
 
-  void drawSector(Canvas canvas, bool isActive, Rect rect, double startAngle,
-      double sweepAngle) {
+  void drawSector(final Canvas canvas, final bool isActive, final Rect rect,
+      final double startAngle, final double sweepAngle) {
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 8
@@ -36,7 +36,7 @@ class ProgressPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant ProgressPainter oldDelegate) {
+  bool shouldRepaint(covariant final ProgressPainter oldDelegate) {
     return urQrProgress != oldDelegate.urQrProgress;
   }
 }

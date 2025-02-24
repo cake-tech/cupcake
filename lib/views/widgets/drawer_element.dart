@@ -1,4 +1,3 @@
-import 'package:cupcake/utils/call_throwable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -15,7 +14,7 @@ class DrawerElement extends StatelessWidget {
   final Future<void> Function(BuildContext context) action;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 5, left: 20, bottom: 5),
       child: TextButton(
@@ -30,8 +29,8 @@ class DrawerElement extends StatelessWidget {
             ),
           ),
         ),
-        onPressed: () {
-          callThrowable(context, () async => await action(context), text);
+        onPressed: () async {
+          await action(context);
         },
         child: Padding(
           padding: const EdgeInsets.all(16.0),

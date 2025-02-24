@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 
 class WalletHome extends AbstractView {
-  WalletHome({super.key, required CoinWallet coinWallet})
+  WalletHome({super.key, required final CoinWallet coinWallet})
       : viewModel = WalletHomeViewModel(wallet: coinWallet);
 
   @override
@@ -19,7 +19,6 @@ class WalletHome extends AbstractView {
   bool get canPop => false;
 
   @override
-  // TODO: implement drawer
   Drawer? get drawer => Drawer(
         child: SingleChildScrollView(
           child: SafeArea(
@@ -64,7 +63,7 @@ class WalletHome extends AbstractView {
       );
 
   @override
-  Widget? body(BuildContext context) {
+  Widget? body(final BuildContext context) {
     return Column(
       children: [
         const SizedBox(height: 40),

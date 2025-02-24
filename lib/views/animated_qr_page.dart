@@ -4,21 +4,21 @@ import 'package:cupcake/views/widgets/urqr.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedURPage extends AbstractView {
-  AnimatedURPage({super.key, required Map<String, List<String>> urqrList})
+  AnimatedURPage({super.key, required final Map<String, List<String>> urqrList})
       : viewModel = URQRViewModel(urqrList: urqrList);
 
   @override
   final URQRViewModel viewModel;
 
   @override
-  Widget body(BuildContext context) {
+  Widget body(final BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 64.0, left: 32, right: 32),
           child: URQR(
-            frames: viewModel.urqr..removeWhere((element) => element.isEmpty),
+            frames: viewModel.urqr,
           ),
         ),
         const SizedBox(height: 32),
@@ -28,24 +28,19 @@ class AnimatedURPage extends AbstractView {
   }
 
   List<Widget> _extraButtons() {
-    final Map<String, List<String>> copiedList = {};
-    copiedList.addAll(viewModel.urqrList);
-    copiedList.removeWhere((key, value) =>
-        value.join("\n").trim() == viewModel.urqr.join("\n").trim());
     final List<Widget> toRet = [];
-    final keys = copiedList.keys;
-    for (var key in keys) {
-      toRet.add(_urqrSwitchButton(key, copiedList[key]!));
+    for (final key in viewModel.alternativeCodes) {
+      toRet.add(_urqrSwitchButton(key, viewModel.urqrList[key]!));
     }
     return toRet;
   }
 
-  Widget _urqrSwitchButton(String key, List<String> value) {
+  Widget _urqrSwitchButton(final String key, final List<String> value) {
     return OutlinedButton(
-        onPressed: () {
-          viewModel.urqr = value;
-          viewModel.markNeedsBuild();
-        },
-        child: Text(key));
+      onPressed: () {
+        viewModel.urqr = value;
+      },
+      child: Text(key),
+    );
   }
 }

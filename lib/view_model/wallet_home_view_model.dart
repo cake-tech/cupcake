@@ -2,7 +2,6 @@ import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/views/barcode_scanner.dart';
-import 'package:flutter/cupertino.dart';
 
 class WalletHomeViewModel extends ViewModel {
   WalletHomeViewModel({required this.wallet});
@@ -16,7 +15,7 @@ class WalletHomeViewModel extends ViewModel {
   String get balance => wallet.getBalanceString();
   String get currentAddress => wallet.getCurrentAddress;
 
-  void showScanner(BuildContext context) {
-    BarcodeScanner(wallet: wallet).push(context);
+  void showScanner() {
+    BarcodeScanner(wallet: wallet).push(c!);
   }
 }

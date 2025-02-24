@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cupcake/coins/abstract/address.dart';
 import 'package:cupcake/coins/abstract/amount.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
-import 'package:cupcake/utils/call_throwable.dart';
 import 'package:cupcake/view_model/unconfirmed_transaction_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +10,11 @@ import 'package:flutter/material.dart';
 class UnconfirmedTransactionView extends AbstractView {
   UnconfirmedTransactionView({
     super.key,
-    required CoinWallet wallet,
-    required Amount fee,
-    required Map<Address, Amount> destMap,
-    required FutureOr<void> Function(BuildContext) confirmCallback,
-    required FutureOr<void> Function(BuildContext) cancelCallback,
+    required final CoinWallet wallet,
+    required final Amount fee,
+    required final Map<Address, Amount> destMap,
+    required final FutureOr<void> Function() confirmCallback,
+    required final FutureOr<void> Function() cancelCallback,
   }) : viewModel = UnconfirmedTransactionViewModel(
           wallet: wallet,
           fee: fee,
@@ -28,11 +27,11 @@ class UnconfirmedTransactionView extends AbstractView {
   final UnconfirmedTransactionViewModel viewModel;
 
   @override
-  Widget? body(BuildContext context) {
+  Widget? body(final BuildContext context) {
     final keys = viewModel.destMap.keys.toList();
     return ListView.builder(
       itemCount: keys.length,
-      itemBuilder: (BuildContext context, int index) {
+      itemBuilder: (final BuildContext context, final int index) {
         final key = keys[index];
         final value = viewModel.destMap[key]!;
         return ListTile(
@@ -44,7 +43,7 @@ class UnconfirmedTransactionView extends AbstractView {
   }
 
   @override
-  Widget? bottomNavigationBar(BuildContext context) {
+  Widget? bottomNavigationBar(final BuildContext context) {
     return BottomNavigationBar(
       items: [
         BottomNavigationBarItem(
@@ -58,17 +57,13 @@ class UnconfirmedTransactionView extends AbstractView {
             icon: const Icon(Icons.check_circle, color: Colors.green),
             label: L.confirm),
       ],
-      onTap: (int index) async {
+      onTap: (final int index) async {
         if (index == 0) {
-          await callThrowable(context,
-              () async => await viewModel.cancelCallback(context), L.canceling);
+          viewModel.cancelCallback();
           if (!context.mounted) return;
           Navigator.of(context).pop();
         } else {
-          await callThrowable(
-              context,
-              () async => await viewModel.confirmCallback(context),
-              L.confirming);
+          await viewModel.confirmCallback();
           if (!context.mounted) return;
           Navigator.of(context).pop();
         }

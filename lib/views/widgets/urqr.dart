@@ -22,7 +22,8 @@ class _URQRState extends State<URQR> {
     super.initState();
     setState(() {
       t = Timer.periodic(
-          Duration(milliseconds: CupcakeConfig.instance.msForQrCode), (timer) {
+          Duration(milliseconds: CupcakeConfig.instance.msForQrCode),
+          (final timer) {
         _nextFrame();
       });
     });
@@ -41,7 +42,7 @@ class _URQRState extends State<URQR> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -54,7 +55,14 @@ class _URQRState extends State<URQR> {
               color: Colors.white,
             ),
             child: QrImageView(
-              foregroundColor: Colors.black,
+              dataModuleStyle: QrDataModuleStyle(
+                color: Colors.black,
+                dataModuleShape: QrDataModuleShape.square,
+              ),
+              eyeStyle: QrEyeStyle(
+                color: Colors.black,
+                eyeShape: QrEyeShape.square,
+              ),
               data: widget.frames[frame % widget.frames.length],
               version: -1,
               size: 275,

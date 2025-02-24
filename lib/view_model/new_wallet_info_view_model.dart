@@ -1,6 +1,9 @@
+import 'package:cupcake/dev/generate_rebuild.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lottie/lottie.dart';
+
+part 'new_wallet_info_view_model.g.dart';
 
 enum NewWalletActionType {
   nextPage,
@@ -40,19 +43,17 @@ class NewWalletInfoPage {
   List<Widget> texts;
 }
 
+@GenerateRebuild()
 class NewWalletInfoViewModel extends ViewModel {
   NewWalletInfoViewModel(this.pages);
 
   @override
   String get screenName => page.topText;
 
-  NewWalletInfoPage get page => pages[currentPageIndex];
+  NewWalletInfoPage get page => pages[currentPageIndex % pages.length];
 
-  List<NewWalletInfoPage> pages;
-  int currentPageIndex = 0;
+  final List<NewWalletInfoPage> pages;
 
-  void nextPage() {
-    currentPageIndex++;
-    markNeedsBuild();
-  }
+  @RebuildOnChange()
+  int $currentPageIndex = 0;
 }

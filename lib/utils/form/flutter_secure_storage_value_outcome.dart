@@ -15,9 +15,9 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
   final bool verifyMatching;
 
   @override
-  Future<void> encode(String input) async {
-    List<int> bytes = utf8.encode(input);
-    Digest sha512Hash = sha512.convert(bytes);
+  Future<void> encode(final String input) async {
+    final List<int> bytes = utf8.encode(input);
+    final Digest sha512Hash = sha512.convert(bytes);
     var valInput =
         await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
     if (valInput == null) {
@@ -43,18 +43,18 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
       }
       return;
     }
-    var random = Random.secure();
-    var values = List<int>.generate(64, (i) => random.nextInt(256));
+    final random = Random.secure();
+    final values = List<int>.generate(64, (final i) => random.nextInt(256));
     final pass = base64Url.encode(values);
     await secureStorage.write(key: key, value: pass);
     return;
   }
 
   @override
-  Future<String> decode(String output) async {
-    List<int> bytes = utf8.encode(output);
-    Digest sha512Hash = sha512.convert(bytes);
-    var valInput =
+  Future<String> decode(final String output) async {
+    final List<int> bytes = utf8.encode(output);
+    final Digest sha512Hash = sha512.convert(bytes);
+    final valInput =
         await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
     if (sha512Hash.toString() != valInput && verifyMatching) {
       throw Exception("Input doesn't match the secure element value");

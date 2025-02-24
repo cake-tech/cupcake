@@ -1,7 +1,11 @@
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 
 class SingleChoiceFormElement extends FormElement {
-  SingleChoiceFormElement({required this.title, required this.elements});
+  SingleChoiceFormElement(
+      {required this.title,
+      required this.elements,
+      required final Future<void> Function(Object e) errorHandler})
+      : _errorHandler = errorHandler;
   String title;
   List<String> elements;
 
@@ -13,4 +17,11 @@ class SingleChoiceFormElement extends FormElement {
 
   @override
   bool get isOk => true;
+
+  final Future<void> Function(Object e) _errorHandler;
+  @override
+  Future<void> errorHandler(final Object e) => _errorHandler(e);
+
+  @override
+  String get label => valueSync;
 }

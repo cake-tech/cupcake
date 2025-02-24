@@ -8,13 +8,13 @@ AndroidOptions _getAndroidOptions() => const AndroidOptions(
 final FlutterSecureStorage secureStorage =
     FlutterSecureStorage(aOptions: _getAndroidOptions());
 
-Future<void> setWalletPin(String password) async {
+Future<void> setWalletPin(final String password) async {
   final pin = await secureStorage.read(key: SecureStorageKey.pin);
   if (pin != null) throw Exception("${SecureStorageKey.pin} is not null");
   await secureStorage.write(key: SecureStorageKey.pin, value: password);
 }
 
-Future<bool> verifyWalletPin(String password) async {
+Future<bool> verifyWalletPin(final String password) async {
   final pin = await secureStorage.read(key: SecureStorageKey.pin);
   if (pin == null) throw Exception("${SecureStorageKey.pin} is null");
   if (pin == password) return true;

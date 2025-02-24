@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/list.dart';
 import 'package:cupcake/coins/types.dart';
+import 'package:cupcake/dev/generate_rebuild.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
@@ -10,6 +11,7 @@ import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/plain_value_outcome.dart';
 import 'package:cupcake/utils/form/single_choice_form_element.dart';
 import 'package:cupcake/utils/form/string_form_element.dart';
+import 'package:cupcake/utils/form/validators.dart';
 import 'package:cupcake/utils/null_if_empty.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/view_model/new_wallet_info_view_model.dart';
@@ -20,6 +22,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
+part 'create_wallet_view_model.g.dart';
+
+@GenerateRebuild()
 class CreateWalletViewModel extends ViewModel {
   CreateWalletViewModel({
     required this.createMethod,
@@ -28,8 +33,11 @@ class CreateWalletViewModel extends ViewModel {
 
   final CreateMethod createMethod;
 
-  bool isPinSet = false;
-  bool showExtra = false;
+  @RebuildOnChange()
+  bool $isPinSet = false;
+
+  @RebuildOnChange()
+  bool $showExtra = false;
 
   @override
   late String screenName = screenNameOriginal;
@@ -42,7 +50,8 @@ class CreateWalletViewModel extends ViewModel {
 
   List<Coin> get coins => walletCoins;
 
-  bool isCreate = true;
+  @RebuildOnChange()
+  bool $isCreate = false;
 
   bool get hasAdvancedOptions {
     if (currentForm == null) return false;
@@ -54,13 +63,8 @@ class CreateWalletViewModel extends ViewModel {
     return false;
   }
 
-  void toggleAdvancedOptions() {
-    print("toggling");
-    showExtra = !showExtra;
-    markNeedsBuild();
-  }
-
-  late Coin? selectedCoin = () {
+  @RebuildOnChange()
+  late Coin? $selectedCoin = () {
     if (coins.length == 1) {
       return coins[0];
     }
@@ -69,12 +73,9 @@ class CreateWalletViewModel extends ViewModel {
 
   late StringFormElement walletName = StringFormElement(
     L.wallet_name,
-    validator: (String? input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      return null;
-    },
+    validator: nonEmptyValidator(L),
     randomNameGenerator: true,
+    errorHandler: errorHandler,
   );
 
   late SingleChoiceFormElement walletSeedType = SingleChoiceFormElement(
@@ -83,20 +84,19 @@ class CreateWalletViewModel extends ViewModel {
       L.seed_type_polyseed,
       L.seed_type_legacy,
     ],
+    errorHandler: errorHandler,
   );
 
   late PinFormElement walletPasswordInitial = PinFormElement(
     label: L.wallet_password,
     password: true,
     valueOutcome: PlainValueOutcome(),
-    validator: (String? input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      if (input.length < 4) {
-        return L.warning_password_too_short;
-      }
-      return null;
-    },
+    validator: nonEmptyValidator(
+      L,
+      extra: (final input) =>
+          (input.length < 4) ? L.warning_password_too_short : null,
+    ),
+    errorHandler: errorHandler,
   );
 
   late PinFormElement walletPassword = PinFormElement(
@@ -108,84 +108,72 @@ class CreateWalletViewModel extends ViewModel {
       canWrite: true,
       verifyMatching: true,
     ),
-    validator: (String? input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      if (input.length < 4) {
-        return L.warning_password_too_short;
-      }
-      if (input != walletPasswordInitial.ctrl.text && needsPasswordConfirm) {
-        return L.password_doesnt_match;
-      }
-      return null;
-    },
+    validator: nonEmptyValidator(
+      L,
+      extra: (final String input) {
+        if (input.length < 4) {
+          return L.warning_password_too_short;
+        }
+        if (input != walletPasswordInitial.ctrl.text && needsPasswordConfirm) {
+          return L.password_doesnt_match;
+        }
+        return null;
+      },
+    ),
+    errorHandler: errorHandler,
   );
 
   late StringFormElement seed = StringFormElement(
     L.wallet_seed,
     password: false,
-    validator: (String? input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      if (input.split(" ").length != 16 && input.split(" ").length != 25) {
-        return L.warning_seed_incorrect_length;
-      }
-      return null;
-    },
+    validator: nonEmptyValidator(
+      L,
+      extra: (final input) =>
+          (selectedCoin?.isSeedSomewhatLegit(input) ?? false)
+              ? L.warning_seed_incorrect_length
+              : null,
+    ),
+    errorHandler: errorHandler,
   );
 
   late StringFormElement walletAddress = StringFormElement(
     L.primary_address_label,
     password: true,
-    validator: (String? input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      return null;
-    },
+    validator: nonEmptyValidator(L),
+    errorHandler: errorHandler,
   );
 
   late StringFormElement secretSpendKey = StringFormElement(
     L.secret_spend_key,
     password: true,
-    validator: (String? input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      return null;
-    },
+    validator: nonEmptyValidator(L),
+    errorHandler: errorHandler,
   );
 
   late StringFormElement secretViewKey = StringFormElement(
     L.secret_view_key,
     password: true,
-    validator: (String? input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      return null;
-    },
+    validator: nonEmptyValidator(L),
+    errorHandler: errorHandler,
   );
 
   late StringFormElement restoreHeight = StringFormElement(
     L.restore_height,
     password: true,
-    validator: (String? input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      return null;
-    },
+    validator: nonEmptyValidator(L),
+    errorHandler: errorHandler,
   );
 
   late StringFormElement seedOffset = StringFormElement(
     L.seed_offset,
     password: true,
     isExtra: true,
-    validator: (String? input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      return null;
-    },
+    validator: nonEmptyValidator(L),
+    errorHandler: errorHandler,
   );
 
-  late List<FormElement>? currentForm = () {
+  @RebuildOnChange()
+  late List<FormElement>? $currentForm = () {
     if (createMethods.length == 1) {
       return createMethods[createMethods.keys.first];
     }
@@ -202,7 +190,7 @@ class CreateWalletViewModel extends ViewModel {
         },
       };
 
-  bool needsPasswordConfirm;
+  final bool needsPasswordConfirm;
 
   late final List<FormElement> _createForm = [
     if (needsPasswordConfirm) walletPasswordInitial,
@@ -229,12 +217,12 @@ class CreateWalletViewModel extends ViewModel {
     secretViewKey,
   ];
 
-  Future<void> createWallet(BuildContext context) async {
+  @ThrowOnUI(L: 'create_wallet')
+  Future<void> $createWallet() async {
     if (selectedCoin == null) throw Exception("selectedCoin is null");
     if ((await walletName.value).isEmpty) {
       throw Exception(L.warning_input_cannot_be_empty);
     }
-    print(currentForm == _createForm);
     final cw = await selectedCoin!.createNewWallet(
       await walletName.value,
       await walletPassword.value,
@@ -266,8 +254,7 @@ class CreateWalletViewModel extends ViewModel {
         ],
         texts: [
           Text(
-            L.important_seed_backup_info(
-                "16 word"), // TODO: translate it better?
+            L.important_seed_backup_info(L.seed_length_16_word),
             textAlign: TextAlign.center,
           ),
         ],
@@ -279,7 +266,7 @@ class CreateWalletViewModel extends ViewModel {
             : () {
                 CupcakeConfig.instance.initialSetupComplete = true;
                 CupcakeConfig.instance.save();
-                WalletHome(coinWallet: cw).push(context);
+                WalletHome(coinWallet: cw).push(c!);
               },
         topActionText: Text(L.next),
         lottieAnimation: Assets.shield.lottie(),
@@ -326,7 +313,7 @@ class CreateWalletViewModel extends ViewModel {
           topAction: () {
             CupcakeConfig.instance.initialSetupComplete = true;
             CupcakeConfig.instance.save();
-            WalletHome(coinWallet: cw).push(context);
+            WalletHome(coinWallet: cw).push(c!);
           },
           topActionText: Text(L.next),
           lottieAnimation: Assets.shield.lottie(),
@@ -364,25 +351,25 @@ class CreateWalletViewModel extends ViewModel {
               textAlign: TextAlign.center,
             ),
             Text(
-              "${seedOffset.value}\n\n\n\n${L.write_down_notice}",
+              "${seedOffset.ctrl.text}\n\n\n\n${L.write_down_notice}",
               textAlign: TextAlign.center,
             ),
           ],
         ),
     ];
-    if (!context.mounted) {
+    if (!mounted) {
       throw Exception("context is not mounted, unable to show next screen");
     }
     if (currentForm != _createForm) {
-      WalletHome(coinWallet: cw).push(context);
+      await WalletHome(coinWallet: cw).push(c!);
     } else {
-      NewWalletInfoScreen(
+      await NewWalletInfoScreen(
         pages: pages,
-      ).push(context);
+      ).push(c!);
     }
   }
 
-  void titleUpdate(String? suggestedTitle) async {
+  void titleUpdate(final String? suggestedTitle) async {
     await Future.delayed(Duration.zero); // don't do it on build();
     screenName = suggestedTitle ?? screenNameOriginal;
     markNeedsBuild();

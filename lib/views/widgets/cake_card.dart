@@ -24,7 +24,7 @@ class CakeCard extends StatelessWidget {
   final EdgeInsets externalPadding;
   final EdgeInsets firmPadding;
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Padding(
       padding: externalPadding,
       child: SizedBox(
