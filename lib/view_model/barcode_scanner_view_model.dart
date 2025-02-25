@@ -11,6 +11,7 @@ class BarcodeScannerViewModel = BarcodeScannerViewModelBase with _$BarcodeScanne
 
 abstract class BarcodeScannerViewModelBase with ViewModel, Store {
   BarcodeScannerViewModelBase({required this.wallet});
+
   @override
   String get screenName => L.scan;
 
@@ -23,38 +24,31 @@ abstract class BarcodeScannerViewModelBase with ViewModel, Store {
   @observable
   List<String> urCodes = [];
 
-  URQRData get ur => URQRData.parse(urCodes);
-
   final CoinWallet wallet;
 
   final MobileScannerController mobileScannerCtrl = MobileScannerController();
 
-  URQrProgress get urQrProgress => URQrProgress(
-        expectedPartCount: ur.count - 1,
-        processedPartsCount: ur.inputs.length,
-        receivedPartIndexes: urParts(),
-        percentage: ur.progress,
-      );
-
+  @action
   Future<void> handleUR() async {
     await callThrowable(
       () async {
-        await wallet.handleUR(c!, ur);
+        await wallet.handleUR(c!, URQRData.parse(urCodes));
       },
       L.error_handling_urqr_scan,
     );
   }
 
+  @action
   Future<void> handleBarcode(final BarcodeCapture barcodes) async {
     for (final barcode in barcodes.barcodes) {
       if (barcode.rawValue!.startsWith("ur:")) {
-        if (ur.progress == 1 && !popped) {
+        if (URQRData.parse(urCodes).progress == 1 && !popped) {
           popped = true;
           await handleUR();
           return;
         }
         if (urCodes.contains(barcode.rawValue)) return;
-        urCodes.add(barcode.rawValue!);
+        urCodes = [...urCodes, barcode.rawValue!];
       }
     }
     if (urCodes.isNotEmpty) return;
@@ -66,9 +60,10 @@ abstract class BarcodeScannerViewModelBase with ViewModel, Store {
     }
   }
 
+  @action
   List<int> urParts() {
     final List<int> l = [];
-    for (final inp in ur.inputs) {
+    for (final inp in URQRData.parse(urCodes).inputs) {
       try {
         l.add(int.parse(inp.split("/")[1].split("-")[0]));
       } catch (e) {

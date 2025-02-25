@@ -1,9 +1,11 @@
 import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/view_model/barcode_scanner_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/barcode_scanner/progress_painter.dart';
 import 'package:cupcake/views/widgets/barcode_scanner/switch_camera.dart';
 import 'package:cupcake/views/widgets/barcode_scanner/toggle_flashlight_button.dart';
+import 'package:cupcake/views/widgets/barcode_scanner/urqr_progress.dart';
 import 'package:fast_scanner/fast_scanner.dart';
 import 'package:flutter/material.dart';
 
@@ -20,16 +22,17 @@ class BarcodeScanner extends AbstractView {
 
   @override
   Widget? body(final BuildContext context) {
+    final ur = URQRData.parse(viewModel.urCodes);
     return Stack(
       children: [
         MobileScanner(
           onDetect: (final BarcodeCapture bc) => viewModel.handleBarcode(bc),
           controller: viewModel.mobileScannerCtrl,
         ),
-        if (viewModel.ur.inputs.isNotEmpty)
+        if (ur.inputs.isNotEmpty)
           Center(
             child: Text(
-              "${viewModel.ur.inputs.length}/${viewModel.ur.count}",
+              "${ur.inputs.length}/${ur.count}",
               style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
             ),
           ),
@@ -40,7 +43,7 @@ class BarcodeScanner extends AbstractView {
               height: 250,
               child: CustomPaint(
                 painter: ProgressPainter(
-                  urQrProgress: viewModel.urQrProgress,
+                  urQrProgress: URQrProgress.fromURQRData(ur),
                 ),
               ),
             ),
