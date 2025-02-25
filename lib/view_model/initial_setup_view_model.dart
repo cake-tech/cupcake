@@ -1,6 +1,6 @@
 import 'package:cupcake/view_model/abstract.dart';
 
-class InitialSetupViewModel extends ViewModel {
+class InitialSetupViewModel with ViewModel {
   @override
   String get screenName => "";
 }

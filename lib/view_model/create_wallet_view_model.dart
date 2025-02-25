@@ -5,7 +5,6 @@ import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_creation.dart';
 import 'package:cupcake/coins/list.dart';
 import 'package:cupcake/utils/types.dart';
-import 'package:cupcake/dev/generate_rebuild.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
@@ -17,35 +16,39 @@ import 'package:cupcake/utils/new_wallet/info_page.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/views/new_wallet_info.dart';
 import 'package:cupcake/views/wallet_home.dart';
-import 'package:cupcake/views/widgets/form_builder.dart';
+import 'package:mobx/mobx.dart';
 
 part 'create_wallet_view_model.g.dart';
 
-@GenerateRebuild()
-class CreateWalletViewModel extends ViewModel {
-  CreateWalletViewModel({
+class CreateWalletViewModel = CreateWalletViewModelBase with _$CreateWalletViewModel;
+
+abstract class CreateWalletViewModelBase with ViewModel, Store {
+  CreateWalletViewModelBase({
     required this.createMethod,
     required this.needsPasswordConfirm,
   });
 
   final CreateMethod createMethod;
 
-  @RebuildOnChange()
-  bool $isPinSet = false;
+  @observable
+  bool isPinSet = false;
 
-  @RebuildOnChange()
-  bool $showExtra = false;
+  @observable
+  bool showExtra = false;
 
   @override
   late String screenName = screenNameOriginal;
 
+  @computed
   String get screenNameOriginal => switch (createMethod) {
         CreateMethod.create => L.create_wallet,
         CreateMethod.restore => L.restore_wallet,
       };
 
+  @computed
   List<Coin> get coins => walletCoins;
 
+  @computed
   bool get hasAdvancedOptions {
     if (currentForm == null) return false;
     for (final elm in currentForm!) {
@@ -56,22 +59,22 @@ class CreateWalletViewModel extends ViewModel {
     return false;
   }
 
-  @RebuildOnChange()
-  late Coin? $selectedCoin = () {
+  @observable
+  late Coin? selectedCoin = () {
     if (coins.length == 1) {
       return coins[0];
     }
     return null;
   }();
 
-  late StringFormElement walletName = StringFormElement(
+  late final StringFormElement walletName = StringFormElement(
     L.wallet_name,
     validator: nonEmptyValidator(L),
     randomNameGenerator: true,
     errorHandler: errorHandler,
   );
 
-  late PinFormElement walletPasswordInitial = PinFormElement(
+  late final PinFormElement walletPasswordInitial = PinFormElement(
     label: L.wallet_password,
     password: true,
     valueOutcome: PlainValueOutcome(),
@@ -82,7 +85,7 @@ class CreateWalletViewModel extends ViewModel {
     errorHandler: errorHandler,
   );
 
-  late PinFormElement walletPassword = PinFormElement(
+  late final PinFormElement walletPassword = PinFormElement(
     label: (needsPasswordConfirm) ? L.wallet_password_repeat : L.wallet_password,
     password: true,
     valueOutcome: FlutterSecureStorageValueOutcome(
@@ -105,15 +108,18 @@ class CreateWalletViewModel extends ViewModel {
     errorHandler: errorHandler,
   );
 
-  @RebuildOnChange()
-  late List<FormElement>? $currentForm = () {
+  @observable
+  late List<FormElement>? currentForm = () {
     if (createMethods.length == 1) {
       return createMethods[createMethods.keys.first];
     }
     return null;
   }();
 
+  @observable
   WalletCreation? creationMethod;
+
+  @computed
   Map<String, List<FormElement>> get createMethods {
     if (creationMethod == null || creationMethod!.coin != selectedCoin) {
       creationMethod = selectedCoin!.creationMethod(L);
@@ -134,15 +140,30 @@ class CreateWalletViewModel extends ViewModel {
 
   final bool needsPasswordConfirm;
 
-  @ThrowOnUI(L: 'error_failed_to_setup')
-  Future<void> $completeSetup(final CoinWallet cw) async {
-    CupcakeConfig.instance.initialSetupComplete = true;
-    CupcakeConfig.instance.save();
-    await WalletHome(coinWallet: cw).push(c!);
+  @action
+  Future<void> completeSetup(final CoinWallet cw) async {
+    await callThrowable(
+      () async {
+        CupcakeConfig.instance.initialSetupComplete = true;
+        CupcakeConfig.instance.save();
+        await WalletHome(coinWallet: cw).push(c!);
+      },
+      L.error_failed_to_setup,
+    );
   }
 
-  @ThrowOnUI(L: 'create_wallet')
-  Future<void> $createWallet() async {
+  @action
+  Future<void> createWallet() async {
+    await callThrowable(
+      () async {
+        await _createWallet();
+      },
+      L.create_wallet,
+    );
+  }
+
+  @action
+  Future<void> _createWallet() async {
     if (selectedCoin == null) throw Exception(L.error_selected_coin_null);
     if ((await walletName.value).isEmpty) {
       throw Exception(L.warning_input_cannot_be_empty);
@@ -178,7 +199,7 @@ class CreateWalletViewModel extends ViewModel {
       NewWalletInfoPage.writeDownNotice(
         L,
         nextCallback:
-            outcome.wallet!.passphrase.isEmpty ? () => completeSetup(outcome.wallet) : null,
+            outcome.wallet!.passphrase.isEmpty ? () => completeSetup(outcome.wallet!) : null,
         text: outcome.wallet!.seed,
         title: L.seed,
       ),
@@ -202,21 +223,8 @@ class CreateWalletViewModel extends ViewModel {
     }
   }
 
-  FormBuilder get formBuilder => FormBuilder(
-        L,
-        formElements: currentForm ?? [],
-        scaffoldContext: c!,
-        rebuild: (final bool val) {
-          isPinSet = val;
-        },
-        isPinSet: isPinSet,
-        showExtra: showExtra,
-        onLabelChange: titleUpdate,
-      );
-
   Future<void> titleUpdate(final String? suggestedTitle) async {
     await Future.delayed(Duration.zero); // don't do it on build();
     screenName = suggestedTitle ?? screenNameOriginal;
-    markNeedsBuild();
   }
 }

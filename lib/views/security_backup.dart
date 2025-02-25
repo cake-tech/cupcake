@@ -2,6 +2,7 @@ import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/alerts/widget.dart';
+import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:cupcake/view_model/security_backup_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
@@ -34,12 +35,13 @@ class SecurityBackup extends AbstractView {
   Widget? body(final BuildContext context) {
     if (viewModel.isLocked) {
       return FormBuilder(
-        L,
-        formElements: viewModel.form,
-        scaffoldContext: context,
-        isPinSet: !viewModel.isLocked,
-        showExtra: true,
-        onLabelChange: null,
+        viewModel: FormBuilderViewModel(
+          formElements: viewModel.form,
+          scaffoldContext: context,
+          isPinSet: !viewModel.isLocked,
+          showExtra: true,
+          onLabelChange: null,
+        ),
       );
     }
     final details = viewModel.wallet.seedDetails();

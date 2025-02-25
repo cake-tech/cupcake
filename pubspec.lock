@@ -310,6 +310,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_mobx:
+    dependency: "direct main"
+    description:
+      name: flutter_mobx
+      sha256: ba5e93467866a2991259dc51cffd41ef45f695c667c2b8e7b087bf24118b50fe
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -634,15 +642,39 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  mobx:
+    dependency: "direct main"
+    description:
+      name: mobx
+      sha256: bf1a90e5bcfd2851fc6984e20eef69557c65d9e4d0a88f5be4cf72c9819ce6b0
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.0"
+  mobx_codegen:
+    dependency: "direct dev"
+    description:
+      name: mobx_codegen
+      sha256: "990da80722f7d7c0017dec92040b31545d625b15d40204c36a1e63d167c73cdc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.7.0"
   monero:
     dependency: "direct main"
     description:
       path: "impls/monero.dart"
-      ref: "v0.18.3.4-RC12"
+      ref: "v0.18.4.0-RC1"
       resolved-ref: "9d9b1f2f2373fc9a99c6556a93eea63fe343cf58"
       url: "https://github.com/mrcyjanek/monero_c"
     source: git
     version: "0.0.0"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   package_config:
     dependency: transitive
     description:
@@ -795,6 +827,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.3"
+  provider:
+    dependency: transitive
+    description:
+      name: provider
+      sha256: c8a055ee5ce3fd98d6fc872478b03823ffdb448699c6ebdbbc71d59b596fd48c
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.2"
   pub_semver:
     dependency: transitive
     description:
@@ -868,10 +908,10 @@ packages:
     dependency: "direct main"
     description:
       name: source_gen
-      sha256: "35c8150ece9e8c8d263337a265153c3329667640850b9304861faea59fc98f6b"
+      sha256: "14658ba5f669685cd3d63701d01b31ea748310f7ab854e471962670abcf57832"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "1.5.0"
   source_span:
     dependency: transitive
     description:

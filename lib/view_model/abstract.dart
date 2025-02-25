@@ -6,7 +6,7 @@ import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/alerts/basic.dart';
 import 'package:flutter/material.dart';
 
-class ViewModel {
+mixin ViewModel {
   bool canPop = true;
   String get screenName => "screenName";
 
@@ -36,13 +36,6 @@ class ViewModel {
   bool get mounted {
     if (c == null) print("c is null");
     return c?.mounted ?? false;
-  }
-
-  void markNeedsBuild() {
-    if (c == null) {
-      throw Exception("c is null, did you forget to register(context)?");
-    }
-    (c as Element).markNeedsBuild();
   }
 
   Future<void> errorHandler(final Object e) => callThrowable(() => throw e, L.create_wallet);

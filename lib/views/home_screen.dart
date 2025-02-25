@@ -22,6 +22,7 @@ class HomeScreen extends AbstractView {
 
   @override
   Widget? body(final BuildContext context) {
+    final _ = viewModel.varWalletSort; // work around for mobx not updating
     return FutureBuilder(
       future: viewModel.showLandingInfo,
       builder: (final BuildContext context, final AsyncSnapshot<bool> value) {
@@ -30,7 +31,7 @@ class HomeScreen extends AbstractView {
           return Text(L.home_no_wallets);
         }
         return FutureBuilder(
-          future: viewModel.wallets,
+          future: viewModel.wallets(viewModel.varWalletSort),
           builder: walletsBody,
         );
       },

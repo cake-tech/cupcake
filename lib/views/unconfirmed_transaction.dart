@@ -63,9 +63,9 @@ class UnconfirmedTransactionView extends AbstractView {
       ],
       onTap: (final int index) async {
         if (index == 0) {
-          await viewModel.cancelCallback();
+          await viewModel.cancel();
         } else {
-          await viewModel.confirmCallback();
+          await viewModel.confirm();
         }
       },
     );

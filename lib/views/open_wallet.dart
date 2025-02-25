@@ -1,4 +1,5 @@
 import 'package:cupcake/coins/abstract/wallet_info.dart';
+import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:cupcake/view_model/open_wallet_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/form_builder.dart';
@@ -21,14 +22,16 @@ class OpenWallet extends AbstractView {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         FormBuilder(
-          L,
-          formElements: [
-            viewModel.walletPassword,
-          ],
-          scaffoldContext: context,
-          isPinSet: false,
-          showExtra: false,
-          onLabelChange: viewModel.titleUpdate,
+          viewModel: FormBuilderViewModel(
+            formElements: [
+              viewModel.walletPassword,
+            ],
+            scaffoldContext: context,
+            isPinSet: false,
+            showExtra: false,
+            toggleIsPinSet: (final bool val) {},
+            onLabelChange: (final String? _) {},
+          ),
         ),
       ],
     );

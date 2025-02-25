@@ -1,26 +1,27 @@
 import 'package:cupcake/coins/abstract/wallet.dart';
-import 'package:cupcake/dev/generate_rebuild.dart';
 import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/views/widgets/barcode_scanner/urqr_progress.dart';
 import 'package:fast_scanner/fast_scanner.dart';
+import 'package:mobx/mobx.dart';
 
 part 'barcode_scanner_view_model.g.dart';
 
-@GenerateRebuild()
-class BarcodeScannerViewModel extends ViewModel {
-  BarcodeScannerViewModel({required this.wallet});
+class BarcodeScannerViewModel = BarcodeScannerViewModelBase with _$BarcodeScannerViewModel;
+
+abstract class BarcodeScannerViewModelBase with ViewModel, Store {
+  BarcodeScannerViewModelBase({required this.wallet});
   @override
   String get screenName => L.scan;
 
-  @RebuildOnChange()
-  Barcode? $barcode;
+  @observable
+  Barcode? barcode;
 
-  @RebuildOnChange()
-  bool $popped = false;
+  @observable
+  bool popped = false;
 
-  @RebuildOnChange()
-  List<String> $urCodes = [];
+  @observable
+  List<String> urCodes = [];
 
   URQRData get ur => URQRData.parse(urCodes);
 
@@ -35,9 +36,13 @@ class BarcodeScannerViewModel extends ViewModel {
         percentage: ur.progress,
       );
 
-  @ThrowOnUI(L: "error_handling_urqr_scan")
-  Future<void> $handleUR() async {
-    await wallet.handleUR(c!, ur);
+  Future<void> handleUR() async {
+    await callThrowable(
+      () async {
+        await wallet.handleUR(c!, ur);
+      },
+      L.error_handling_urqr_scan,
+    );
   }
 
   Future<void> handleBarcode(final BarcodeCapture barcodes) async {

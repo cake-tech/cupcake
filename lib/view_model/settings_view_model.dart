@@ -1,17 +1,27 @@
-import 'package:cupcake/coins/abstract/wallet_info.dart';
-import 'package:cupcake/dev/generate_rebuild.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/view_model/abstract.dart';
+import 'package:mobx/mobx.dart';
 
 part 'settings_view_model.g.dart';
 
-@GenerateRebuild()
-class SettingsViewModel extends ViewModel {
-  SettingsViewModel();
+class SettingsViewModel = SettingsViewModelBase with _$SettingsViewModel;
+
+abstract class SettingsViewModelBase with ViewModel, Store {
+  SettingsViewModelBase();
 
   @override
   String get screenName => L.settings;
 
-  @ExposeRebuildableAccessors(extraCode: r'$config.save()')
-  CupcakeConfig get $config => CupcakeConfig.instance;
+  @observable
+  CupcakeConfig config = CupcakeConfig.instance;
+
+  @observable
+  int saveCount = 0;
+
+  @action
+  void save() {
+    saveCount++;
+    config.save();
+    config = CupcakeConfig.instance;
+  }
 }

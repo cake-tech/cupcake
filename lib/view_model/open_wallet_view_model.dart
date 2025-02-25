@@ -1,16 +1,17 @@
 import 'package:cupcake/coins/abstract/wallet_info.dart';
-import 'package:cupcake/dev/generate_rebuild.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/validators.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/views/wallet_home.dart';
+import 'package:mobx/mobx.dart';
 
 part 'open_wallet_view_model.g.dart';
 
-@GenerateRebuild()
-class OpenWalletViewModel extends ViewModel {
-  OpenWalletViewModel({required this.coinWalletInfo});
+class OpenWalletViewModel = OpenWalletViewModelBase with _$OpenWalletViewModel;
+
+abstract class OpenWalletViewModelBase with ViewModel, Store {
+  OpenWalletViewModelBase({required this.coinWalletInfo});
 
   final CoinWalletInfo coinWalletInfo;
 
@@ -34,15 +35,21 @@ class OpenWalletViewModel extends ViewModel {
     errorHandler: errorHandler,
   );
 
-  @ThrowOnUI(L: 'opening_wallet')
-  Future<void> $openWallet() async {
-    final wallet = await coinWalletInfo.openWallet(
-      c!,
-      password: await walletPassword.value,
+  @action
+  Future<void> openWallet() async {
+    await callThrowable(
+      () async {
+        final wallet = await coinWalletInfo.openWallet(
+          c!,
+          password: await walletPassword.value,
+        );
+        await WalletHome(coinWallet: wallet).push(c!);
+      },
+      L.opening_wallet,
     );
-    await WalletHome(coinWallet: wallet).push(c!);
   }
 
+  @action
   Future<bool> checkWalletPassword() async {
     try {
       return coinWalletInfo.checkWalletPassword(await walletPassword.value);
@@ -51,12 +58,11 @@ class OpenWalletViewModel extends ViewModel {
     }
   }
 
+  @action
   Future<void> openWalletIfPasswordCorrect() async {
     if (await checkWalletPassword()) {
       if (!mounted) return;
       return openWallet();
     }
   }
-
-  void titleUpdate(final String? suggestedTitle) {}
 }

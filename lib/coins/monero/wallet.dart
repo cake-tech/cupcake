@@ -89,7 +89,6 @@ class MoneroWallet implements CoinWallet {
 
   @override
   Future<void> handleUR(final BuildContext context, final URQRData ur) async {
-    print("handling: ${ur.tag}");
     switch (ur.tag) {
       case "xmr-keyimage" || "xmr-txsigned":
         throw Exception("Unable to handle ${ur.tag}. This is a offline wallet");
