@@ -161,10 +161,6 @@ class MoneroWalletCreation extends WalletCreation {
       }
     }
 
-    print(await walletAddress.value);
-    print(await secretSpendKey.value);
-    print(await secretViewKey.value);
-
     return RestoreFromKeysMoneroWalletCreationMethod(
       L,
       walletPath: coin.getPathForWallet(walletName),

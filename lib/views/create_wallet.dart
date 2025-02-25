@@ -1,9 +1,12 @@
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/view_model/create_wallet_view_model.dart';
+import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
+import 'package:cupcake/views/widgets/form_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 class CreateWallet extends AbstractView {
   CreateWallet({
@@ -76,7 +79,18 @@ class CreateWallet extends AbstractView {
           ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: viewModel.formBuilder,
+          child: FormBuilder(
+            viewModel: FormBuilderViewModel(
+              formElements: viewModel.currentForm!,
+              scaffoldContext: context,
+              isPinSet: viewModel.isPinSet,
+              toggleIsPinSet: (final bool val) {
+                viewModel.isPinSet = val;
+              },
+              showExtra: viewModel.showExtra,
+              onLabelChange: viewModel.titleUpdate,
+            ),
+          ),
         ),
       ],
     );
@@ -114,12 +128,16 @@ class CreateWallet extends AbstractView {
   @override
   Widget build(final BuildContext context) {
     viewModel.register(context);
-    return Scaffold(
-      key: viewModel.scaffoldKey,
-      appBar: appBar,
-      body: SingleChildScrollView(child: body(context)),
-      floatingActionButton: floatingActionButton(context),
-      bottomNavigationBar: bottomNavigationBar(context),
+    return Observer(
+      builder: (final BuildContext context) {
+        return Scaffold(
+          key: viewModel.scaffoldKey,
+          appBar: appBar,
+          body: SingleChildScrollView(child: body(context)),
+          floatingActionButton: floatingActionButton(context),
+          bottomNavigationBar: bottomNavigationBar(context),
+        );
+      },
     );
   }
 }

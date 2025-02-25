@@ -5,6 +5,7 @@ import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/views/widgets/cupcake_appbar_title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 // Since there is no performance penalty for using stateful widgets I would just
 // use them everywhere, but honestly all I need in stateless widgets is easy
@@ -18,9 +19,16 @@ import 'package:flutter/material.dart';
 // viewmodel, without any extra code involved in doing that.
 
 class _AbstractViewState extends State<AbstractView> {
-  _AbstractViewState({required this.realBuild});
+  _AbstractViewState({required this.realBuild, required this.realInitState});
 
   Widget Function(BuildContext context) realBuild;
+  void Function(BuildContext context) realInitState;
+
+  @override
+  void initState() {
+    realInitState(context);
+    super.initState();
+  }
 
   @override
   Widget build(final BuildContext context) {
@@ -40,12 +48,12 @@ class AbstractView extends StatefulWidget {
     );
   }
 
-  final viewModel = ViewModel();
+  late final ViewModel viewModel = throw UnimplementedError();
 
   @override
   // ignore: no_logic_in_create_state
   State<AbstractView> createState() {
-    state ??= _AbstractViewState(realBuild: build);
+    state ??= _AbstractViewState(realBuild: build, realInitState: initState);
     return state!;
   }
 
@@ -69,27 +77,25 @@ class AbstractView extends StatefulWidget {
 
   Widget? body(final BuildContext context) => null;
 
-  bool _internalIsInitStateCalled = false;
-
   bool get canPop => viewModel.canPop;
 
   Drawer? drawer;
 
   Widget build(final BuildContext context) {
     viewModel.register(context);
-    if (!_internalIsInitStateCalled) {
-      _internalIsInitStateCalled = true;
-      unawaited(initState(context));
-    }
     return PopScope(
       canPop: canPop,
-      child: Scaffold(
-        key: viewModel.scaffoldKey,
-        appBar: appBar,
-        body: body(context),
-        endDrawer: drawer,
-        floatingActionButton: floatingActionButton(context),
-        bottomNavigationBar: bottomNavigationBar(context),
+      child: Observer(
+        builder: (final BuildContext context) {
+          return Scaffold(
+            key: viewModel.scaffoldKey,
+            appBar: appBar,
+            body: body(context),
+            endDrawer: drawer,
+            floatingActionButton: floatingActionButton(context),
+            bottomNavigationBar: bottomNavigationBar(context),
+          );
+        },
       ),
     );
   }

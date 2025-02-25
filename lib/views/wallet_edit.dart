@@ -1,4 +1,5 @@
 import 'package:cupcake/coins/abstract/wallet_info.dart';
+import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:cupcake/view_model/wallet_edit_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
@@ -22,12 +23,13 @@ class WalletEdit extends AbstractView {
       children: [
         const Spacer(),
         FormBuilder(
-          L,
-          formElements: viewModel.form,
-          scaffoldContext: context,
-          isPinSet: false,
-          showExtra: true,
-          onLabelChange: (final _) {}, // do we need this?
+          viewModel: FormBuilderViewModel(
+            formElements: viewModel.form,
+            scaffoldContext: context,
+            isPinSet: false,
+            showExtra: true,
+            onLabelChange: (final _) {},
+          ),
         ),
         const Spacer(),
         Row(

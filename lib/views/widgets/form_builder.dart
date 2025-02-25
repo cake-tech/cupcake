@@ -1,92 +1,71 @@
 import 'dart:async';
 
-import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/alerts/widget_minimal.dart';
 import 'package:cupcake/utils/config.dart';
-import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/single_choice_form_element.dart';
 import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/random_name.dart';
 import 'package:cupcake/utils/secure_storage.dart';
+import 'package:cupcake/view_model/form_builder_view_model.dart';
+import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/numerical_keyboard/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:local_auth/local_auth.dart';
 
-class FormBuilder extends StatefulWidget {
-  const FormBuilder(
-    this.L, {
-    super.key,
-    required this.formElements,
-    required this.scaffoldContext,
-    this.rebuild,
-    required this.isPinSet,
-    required this.showExtra,
-    required this.onLabelChange,
-  });
+class FormBuilder extends AbstractView {
+  FormBuilder({super.key, required this.viewModel});
 
-  final AppLocalizations L;
-
-  final List<FormElement> formElements;
-  final BuildContext scaffoldContext;
-  final void Function(bool isPinSet)? rebuild;
-  final void Function(String? suggestedTitle)? onLabelChange;
-  final bool isPinSet;
-  final bool showExtra;
   @override
-  State<FormBuilder> createState() => _FormBuilderState();
-}
-
-class _FormBuilderState extends State<FormBuilder> {
-  void _rebuild() {
-    setState(() {});
-  }
-
-  AppLocalizations get L => widget.L;
+  final FormBuilderViewModel viewModel;
 
   String? lastSuggestedTitle = DateTime.now().toIso8601String();
   void _onLabelChange(final String? suggestedTitle) {
     if (suggestedTitle == lastSuggestedTitle) return;
     lastSuggestedTitle = suggestedTitle;
-    widget.onLabelChange?.call(suggestedTitle);
-  }
-
-  void _pinSet(final bool val) {
-    widget.rebuild?.call(val);
-    _rebuild();
+    viewModel.onLabelChange(suggestedTitle);
   }
 
   bool _displayPinFormElement() {
-    return (widget.formElements.isNotEmpty &&
-            (widget.formElements.first is PinFormElement &&
-                (widget.formElements.first as PinFormElement).showNumboard) &&
-            !(widget.formElements[0] as PinFormElement).isConfirmed) ||
-        widget.formElements.length >= 2 &&
-            (widget.formElements[1] is PinFormElement &&
-                (widget.formElements[1] as PinFormElement).showNumboard) &&
-            !(widget.formElements[1] as PinFormElement).isConfirmed;
+    return (viewModel.formElements.isNotEmpty &&
+            (viewModel.formElements.first is PinFormElement &&
+                (viewModel.formElements.first as PinFormElement).showNumboard) &&
+            !(viewModel.formElements[0] as PinFormElement).isConfirmed) ||
+        viewModel.formElements.length >= 2 &&
+            (viewModel.formElements[1] is PinFormElement &&
+                (viewModel.formElements[1] as PinFormElement).showNumboard) &&
+            !(viewModel.formElements[1] as PinFormElement).isConfirmed;
   }
 
   @override
   Widget build(final BuildContext context) {
+    return Observer(
+      builder: (final context) => _build(context),
+    );
+  }
+
+  Widget _build(final BuildContext context) {
+    final _ = viewModel.currentPageDoNotUse; // very silly way to force a rebuild
     if (_displayPinFormElement()) {
-      var e = widget.formElements.first as PinFormElement;
+      var e = viewModel.formElements.first as PinFormElement;
       int i = 0;
       int count = 0;
-      if (widget.formElements.length >= 2 && (widget.formElements[1] is PinFormElement)) {
+      if (viewModel.formElements.length >= 2 && (viewModel.formElements[1] is PinFormElement)) {
         count++;
       }
       if (e.isConfirmed) {
         i++;
-        e = widget.formElements[1] as PinFormElement;
+        e = viewModel.formElements[1] as PinFormElement;
       }
       _onLabelChange(e.label);
       Future<void> nextPageCallback() async {
         try {
           await e.onConfirmInternal(context);
           if (!context.mounted) return;
-          _pinSet(count == i);
+          viewModel.currentPageDoNotUse++;
+          viewModel.isPinSet = (count == i);
           await e.onConfirm?.call();
         } catch (err) {
           await e.errorHandler(err);
@@ -94,7 +73,13 @@ class _FormBuilderState extends State<FormBuilder> {
         }
       }
 
+      // don't worry about this, it just simulates user input and clicks "next" button.
+      // by reading secure storage element.
+      // This way just "bypassing" pin screen won't help, you need to actually enter the pin.
+      // be that from secure storage or by actually entering it.
       unawaited(e.loadSecureStorageValue(nextPageCallback));
+      // We can probably move this somewhere else, but I like it here.
+
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -115,10 +100,9 @@ class _FormBuilderState extends State<FormBuilder> {
             ),
           ),
           const SizedBox(height: 32),
-          if (MediaQuery.of(widget.scaffoldContext).viewInsets.bottom == 0)
+          if (MediaQuery.of(viewModel.scaffoldContext).viewInsets.bottom == 0)
             NumericalKeyboard(
               ctrl: e.ctrl,
-              rebuild: _rebuild,
               showConfirm: () => e.isOk,
               nextPage: nextPageCallback,
               onConfirmLongPress: () async {
@@ -176,9 +160,9 @@ class _FormBuilderState extends State<FormBuilder> {
       );
     }
     _onLabelChange(null);
-    final showExtra = widget.showExtra;
+    final showExtra = viewModel.showExtra;
     final List<Widget> children = [];
-    for (final e in widget.formElements) {
+    for (final e in viewModel.formElements) {
       if (e is StringFormElement) {
         if (e.showIf?.call() == false) continue;
         if (e.isExtra && !showExtra) {
@@ -209,9 +193,7 @@ class _FormBuilderState extends State<FormBuilder> {
                   ),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: e.validator,
-                  onChanged: (final _) {
-                    _rebuild();
-                  },
+                  onChanged: (final _) {},
                   textAlign: TextAlign.center,
                 ),
                 if (e.randomNameGenerator)
@@ -250,9 +232,7 @@ class _FormBuilderState extends State<FormBuilder> {
               ),
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: e.validator,
-              onChanged: (final _) {
-                _rebuild();
-              },
+              onChanged: (final _) {},
               textAlign: TextAlign.center,
             ),
           ),
@@ -297,7 +277,6 @@ class _FormBuilderState extends State<FormBuilder> {
               icon: null,
               onPressed: () {
                 e.currentSelection = index;
-                _rebuild();
                 Navigator.of(context).pop();
               },
             ),

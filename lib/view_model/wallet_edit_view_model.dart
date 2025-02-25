@@ -1,5 +1,4 @@
 import 'package:cupcake/coins/abstract/wallet_info.dart';
-import 'package:cupcake/dev/generate_rebuild.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
@@ -8,12 +7,14 @@ import 'package:cupcake/utils/form/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:path/path.dart' as p;
+import 'package:mobx/mobx.dart';
 
 part 'wallet_edit_view_model.g.dart';
 
-@GenerateRebuild()
-class WalletEditViewModel extends ViewModel {
-  WalletEditViewModel({
+class WalletEditViewModel = WalletEditViewModelBase with _$WalletEditViewModel;
+
+abstract class WalletEditViewModelBase with ViewModel, Store {
+  WalletEditViewModelBase({
     required this.walletInfo,
   });
 
@@ -51,27 +52,34 @@ class WalletEditViewModel extends ViewModel {
   @override
   String get screenName => L.edit_wallet;
 
-  @ThrowOnUI(L: 'delete_wallet')
-  Future<void> $deleteWallet() async {
-    if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
-      throw Exception(L.invalid_password);
-    }
-    await walletInfo.deleteWallet();
-    if (!mounted) return;
-    Navigator.of(c!).pop();
+  Future<bool> deleteWallet() {
+    return callThrowable(
+      () async {
+        if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
+          throw Exception(L.invalid_password);
+        }
+        await walletInfo.deleteWallet();
+        if (!mounted) return;
+        Navigator.of(c!).pop();
+      },
+      L.delete_wallet,
+    );
   }
 
-  @ThrowOnUI(L: 'rename_wallet')
-  Future<void> $renameWallet() async {
-    if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
-      throw Exception(L.invalid_password);
-    }
-    if ((await walletName.value).isEmpty) {
-      throw Exception(L.error_wallet_name_empty);
-    }
-    await walletInfo.renameWallet(await walletName.value);
-    if (!mounted) return;
-    markNeedsBuild();
-    Navigator.of(c!).pop();
+  Future<bool> renameWallet() {
+    return callThrowable(
+      () async {
+        if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
+          throw Exception(L.invalid_password);
+        }
+        if ((await walletName.value).isEmpty) {
+          throw Exception(L.error_wallet_name_empty);
+        }
+        await walletInfo.renameWallet(await walletName.value);
+        if (!mounted) return;
+        Navigator.of(c!).pop();
+      },
+      L.rename_wallet,
+    );
   }
 }

@@ -1,7 +1,12 @@
 import 'package:cupcake/view_model/abstract.dart';
+import 'package:mobx/mobx.dart';
 
-class URQRViewModel extends ViewModel {
-  URQRViewModel({
+part 'urqr_view_model.g.dart';
+
+class URQRViewModel = URQRViewModelBase with _$URQRViewModel;
+
+abstract class URQRViewModelBase with ViewModel, Store {
+  URQRViewModelBase({
     required this.urqrList,
   });
 
@@ -10,14 +15,18 @@ class URQRViewModel extends ViewModel {
 
   final Map<String, List<String>> urqrList;
 
-  // @RebuildOnChange() - not using here due to custom ..removeWhere
+  @observable
   late List<String> _urqr = urqrList[urqrList.keys.first]!;
+
+  @computed
   List<String> get urqr => _urqr..removeWhere((final elm) => elm.isEmpty);
+
+  @computed
   set urqr(final List<String> newUrqr) {
     _urqr = newUrqr;
-    markNeedsBuild();
   }
 
+  @computed
   List<String> get alternativeCodes {
     final Map<String, List<String>> copiedList = {};
     copiedList.addAll(urqrList);

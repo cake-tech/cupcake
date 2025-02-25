@@ -1,13 +1,21 @@
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/view_model/abstract.dart';
+import 'package:mobx/mobx.dart';
 
-class ReceiveViewModel extends ViewModel {
-  ReceiveViewModel(this.wallet);
+part 'receive_view_model.g.dart';
+
+class ReceiveViewModel = ReceiveViewModelBase with _$ReceiveViewModel;
+
+abstract class ReceiveViewModelBase with ViewModel, Store {
+  ReceiveViewModelBase(this.wallet);
   final CoinWallet wallet;
 
   @override
   String get screenName => L.receive;
 
+  @computed
   String get address => wallet.getCurrentAddress;
+
+  @computed
   String get uriScheme => wallet.coin.uriScheme;
 }
