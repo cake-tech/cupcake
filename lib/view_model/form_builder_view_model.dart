@@ -14,7 +14,6 @@ abstract class FormBuilderViewModelBase with ViewModel, Store {
     final void Function(String? suggestedTitle)? onLabelChange,
     final void Function(bool val)? toggleIsPinSet,
     required final bool isPinSet,
-    required this.showExtra,
   })  : _onLabelChange = onLabelChange,
         _toggleIsPinSet = toggleIsPinSet,
         _isPinSet = isPinSet;
@@ -49,7 +48,4 @@ abstract class FormBuilderViewModelBase with ViewModel, Store {
     _isPinSet = val;
     toggleIsPinSet(val);
   }
-
-  @observable
-  bool showExtra;
 }

@@ -64,6 +64,7 @@ class CreateWallet extends AbstractView {
 
   @override
   Widget? body(final BuildContext context) {
+    final _ = viewModel.showExtra; // force rebuild in mobx
     if (viewModel.selectedCoin == null) {
       return _selectCoin(context);
     }
@@ -80,6 +81,7 @@ class CreateWallet extends AbstractView {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: FormBuilder(
+            showExtra: viewModel.showExtra,
             viewModel: FormBuilderViewModel(
               formElements: viewModel.currentForm!,
               scaffoldContext: context,
@@ -87,7 +89,6 @@ class CreateWallet extends AbstractView {
               toggleIsPinSet: (final bool val) {
                 viewModel.isPinSet = val;
               },
-              showExtra: viewModel.showExtra,
               onLabelChange: viewModel.titleUpdate,
             ),
           ),
@@ -99,6 +100,7 @@ class CreateWallet extends AbstractView {
   @override
   Widget? bottomNavigationBar(final BuildContext context) {
     if (!viewModel.isPinSet) return null;
+    final _ = viewModel.showExtra; // force rebuild in mobx
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -115,7 +117,7 @@ class CreateWallet extends AbstractView {
               text: L.advanced_options,
               icon: null,
               onPressed: () {
-                viewModel.showExtra = true;
+                viewModel.showExtra = !viewModel.showExtra;
               },
               backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
             ),

@@ -23,11 +23,11 @@ class WalletEdit extends AbstractView {
       children: [
         const Spacer(),
         FormBuilder(
+          showExtra: true,
           viewModel: FormBuilderViewModel(
             formElements: viewModel.form,
             scaffoldContext: context,
             isPinSet: false,
-            showExtra: true,
             onLabelChange: (final _) {},
           ),
         ),

@@ -35,11 +35,11 @@ class SecurityBackup extends AbstractView {
   Widget? body(final BuildContext context) {
     if (viewModel.isLocked) {
       return FormBuilder(
+        showExtra: true,
         viewModel: FormBuilderViewModel(
           formElements: viewModel.form,
           scaffoldContext: context,
           isPinSet: !viewModel.isLocked,
-          showExtra: true,
           onLabelChange: null,
         ),
       );

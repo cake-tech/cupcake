@@ -77,6 +77,12 @@ class MoneroWalletInfo extends CoinWalletInfo {
     }
     Monero.wPtrList.clear();
     final basePath = p.dirname(walletName);
+    if (File(p.join(basePath, newName)).existsSync()) {
+      throw Exception(Coin.L.error_wallet_name_already_exists);
+    }
+    if (File(p.join(basePath, "$newName.keys")).existsSync()) {
+      throw Exception(Coin.L.error_wallet_name_already_exists);
+    }
     File(walletName).copySync(p.join(basePath, newName));
     File("$walletName.keys").copySync(p.join(basePath, "$newName.keys"));
     // Copy and delete later, if anything throws below we end up with copied walled,
