@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/alerts/widget_minimal.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
@@ -8,18 +9,20 @@ import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/random_name.dart';
 import 'package:cupcake/utils/secure_storage.dart';
 import 'package:cupcake/view_model/form_builder_view_model.dart';
-import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/numerical_keyboard/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:local_auth/local_auth.dart';
 
-class FormBuilder extends AbstractView {
-  FormBuilder({super.key, required this.viewModel});
+class FormBuilder extends StatelessWidget {
+  FormBuilder({super.key, required this.viewModel, required this.showExtra});
 
-  @override
+  late AppLocalizations L;
+
   final FormBuilderViewModel viewModel;
+
+  final bool showExtra;
 
   String? lastSuggestedTitle = DateTime.now().toIso8601String();
   void _onLabelChange(final String? suggestedTitle) {
@@ -41,6 +44,7 @@ class FormBuilder extends AbstractView {
 
   @override
   Widget build(final BuildContext context) {
+    L = AppLocalizations.of(context)!;
     return Observer(
       builder: (final context) => _build(context),
     );
@@ -160,7 +164,6 @@ class FormBuilder extends AbstractView {
       );
     }
     _onLabelChange(null);
-    final showExtra = viewModel.showExtra;
     final List<Widget> children = [];
     for (final e in viewModel.formElements) {
       if (e is StringFormElement) {

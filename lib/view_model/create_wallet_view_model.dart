@@ -37,6 +37,7 @@ abstract class CreateWalletViewModelBase with ViewModel, Store {
   bool showExtra = false;
 
   @override
+  @observable
   late String screenName = screenNameOriginal;
 
   @computed
@@ -224,7 +225,6 @@ abstract class CreateWalletViewModelBase with ViewModel, Store {
   }
 
   Future<void> titleUpdate(final String? suggestedTitle) async {
-    await Future.delayed(Duration.zero); // don't do it on build();
     screenName = suggestedTitle ?? screenNameOriginal;
   }
 }

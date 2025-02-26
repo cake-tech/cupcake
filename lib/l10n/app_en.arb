@@ -39,6 +39,7 @@
   "error_ur_tag_unsupported": "Unable to handle {urTag}",
   "error_wallet_doesnt_exist": "Given wallet doesn't exist {walletName}",
   "error_wallet_is_null_no_indication_of_failure": "Wallet creation failed, and status indicated failure but message was empty",
+  "error_wallet_name_already_exists": "Wallet with this name already exists",
   "error_wallet_name_empty": "Wallet name is empty",
   "error_wallet_name_unchanged": "Wallet wasn't renamed because the name is not different",
   "export_key_images": "Export key images",

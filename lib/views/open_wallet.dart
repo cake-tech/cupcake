@@ -22,13 +22,13 @@ class OpenWallet extends AbstractView {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         FormBuilder(
+          showExtra: false,
           viewModel: FormBuilderViewModel(
             formElements: [
               viewModel.walletPassword,
             ],
             scaffoldContext: context,
             isPinSet: false,
-            showExtra: false,
             toggleIsPinSet: (final bool val) {},
             onLabelChange: (final String? _) {},
           ),
