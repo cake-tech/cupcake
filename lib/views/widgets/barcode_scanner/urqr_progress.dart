@@ -23,7 +23,8 @@ class URQrProgress {
     return URQrProgress(
       expectedPartCount: ur.count,
       processedPartsCount: ur.inputs.length,
-      receivedPartIndexes: ur.inputs.map((final e) => int.tryParse(e.split("/")[1].split("-")[0]) ?? 0).toList(),
+      receivedPartIndexes:
+          ur.inputs.map((final e) => int.tryParse(e.split("/")[1].split("-")[0]) ?? 0).toList(),
       percentage: ur.progress,
     );
   }
