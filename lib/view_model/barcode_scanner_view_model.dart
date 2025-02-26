@@ -1,7 +1,6 @@
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/view_model/abstract.dart';
-import 'package:cupcake/views/widgets/barcode_scanner/urqr_progress.dart';
 import 'package:fast_scanner/fast_scanner.dart';
 import 'package:mobx/mobx.dart';
 
