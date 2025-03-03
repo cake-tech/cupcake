@@ -29,8 +29,6 @@ class OpenWallet extends AbstractView {
             ],
             scaffoldContext: context,
             isPinSet: false,
-            toggleIsPinSet: (final bool val) {},
-            onLabelChange: (final String? _) {},
           ),
         ),
       ],

@@ -40,7 +40,6 @@ class SecurityBackup extends AbstractView {
           formElements: viewModel.form,
           scaffoldContext: context,
           isPinSet: !viewModel.isLocked,
-          onLabelChange: null,
         ),
       );
     }

@@ -12,7 +12,7 @@ part 'home_screen_view_model.g.dart';
 
 class HomeScreenViewModel = HomeScreenViewModelBase with _$HomeScreenViewModel;
 
-abstract class HomeScreenViewModelBase with ViewModel, Store {
+abstract class HomeScreenViewModelBase extends ViewModel with Store {
   HomeScreenViewModelBase({required this.openLastWallet, this.lastOpenedWallet});
 
   @override
@@ -29,7 +29,6 @@ abstract class HomeScreenViewModelBase with ViewModel, Store {
     return WalletEdit(walletInfo: walletInfo).push(c!);
   }
 
-  @action
   Future<void> createWallet(final CreateMethod method) async {
     if (!mounted) return;
     return CreateWallet(
@@ -38,7 +37,6 @@ abstract class HomeScreenViewModelBase with ViewModel, Store {
     ).push(c!);
   }
 
-  @action
   Future<void> loadInitialState(final BuildContext context) async {
     await Future.delayed(Duration.zero); // load the screen
     if (CupcakeConfig.instance.lastWallet == null) return;
@@ -48,7 +46,6 @@ abstract class HomeScreenViewModelBase with ViewModel, Store {
     return CupcakeConfig.instance.lastWallet!.openUI(context);
   }
 
-  @action
   Future<List<CoinWalletInfo>> wallets(final int sort) async {
     final List<CoinWalletInfo> wallets = [];
     for (final coin in walletCoins) {
@@ -68,7 +65,6 @@ abstract class HomeScreenViewModelBase with ViewModel, Store {
   @observable
   int varWalletSort = CupcakeConfig.instance.walletSort;
 
-  @computed
   set walletSort(final int value) {
     varWalletSort = value;
     CupcakeConfig.instance.walletSort = value;
@@ -80,5 +76,6 @@ abstract class HomeScreenViewModelBase with ViewModel, Store {
     walletSort = (varWalletSort + 1) % 2;
   }
 
+  @computed
   Future<bool> get showLandingInfo async => (await wallets(varWalletSort)).isEmpty;
 }

@@ -8,7 +8,7 @@ part 'wallet_home_view_model.g.dart';
 
 class WalletHomeViewModel = WalletHomeViewModelBase with _$WalletHomeViewModel;
 
-abstract class WalletHomeViewModelBase with ViewModel, Store {
+abstract class WalletHomeViewModelBase extends ViewModel with Store {
   WalletHomeViewModelBase({required this.wallet});
 
   final CoinWallet wallet;

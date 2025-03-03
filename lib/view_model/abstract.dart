@@ -6,7 +6,7 @@ import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/alerts/basic.dart';
 import 'package:flutter/material.dart';
 
-mixin ViewModel {
+abstract class ViewModel {
   bool canPop = true;
   String get screenName => "screenName";
 

@@ -8,7 +8,7 @@ part 'barcode_scanner_view_model.g.dart';
 
 class BarcodeScannerViewModel = BarcodeScannerViewModelBase with _$BarcodeScannerViewModel;
 
-abstract class BarcodeScannerViewModelBase with ViewModel, Store {
+abstract class BarcodeScannerViewModelBase extends ViewModel with Store {
   BarcodeScannerViewModelBase({required this.wallet});
 
   @override
