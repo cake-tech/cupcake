@@ -13,7 +13,7 @@ part 'wallet_edit_view_model.g.dart';
 
 class WalletEditViewModel = WalletEditViewModelBase with _$WalletEditViewModel;
 
-abstract class WalletEditViewModelBase with ViewModel, Store {
+abstract class WalletEditViewModelBase extends ViewModel with Store {
   WalletEditViewModelBase({
     required this.walletInfo,
   });

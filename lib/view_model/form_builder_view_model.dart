@@ -7,7 +7,7 @@ part 'form_builder_view_model.g.dart';
 
 class FormBuilderViewModel = FormBuilderViewModelBase with _$FormBuilderViewModel;
 
-abstract class FormBuilderViewModelBase with ViewModel, Store {
+abstract class FormBuilderViewModelBase extends ViewModel with Store {
   FormBuilderViewModelBase({
     required this.formElements,
     required this.scaffoldContext,

@@ -10,7 +10,7 @@ part 'open_wallet_view_model.g.dart';
 
 class OpenWalletViewModel = OpenWalletViewModelBase with _$OpenWalletViewModel;
 
-abstract class OpenWalletViewModelBase with ViewModel, Store {
+abstract class OpenWalletViewModelBase extends ViewModel with Store {
   OpenWalletViewModelBase({required this.coinWalletInfo});
 
   final CoinWalletInfo coinWalletInfo;
@@ -35,7 +35,6 @@ abstract class OpenWalletViewModelBase with ViewModel, Store {
     errorHandler: errorHandler,
   );
 
-  @action
   Future<void> openWallet() async {
     await callThrowable(
       () async {
@@ -49,7 +48,6 @@ abstract class OpenWalletViewModelBase with ViewModel, Store {
     );
   }
 
-  @action
   Future<bool> checkWalletPassword() async {
     try {
       return coinWalletInfo.checkWalletPassword(await walletPassword.value);
@@ -58,7 +56,6 @@ abstract class OpenWalletViewModelBase with ViewModel, Store {
     }
   }
 
-  @action
   Future<void> openWalletIfPasswordCorrect() async {
     if (await checkWalletPassword()) {
       if (!mounted) return;

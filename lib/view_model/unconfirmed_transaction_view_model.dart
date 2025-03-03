@@ -11,7 +11,7 @@ part 'unconfirmed_transaction_view_model.g.dart';
 class UnconfirmedTransactionViewModel = UnconfirmedTransactionViewModelBase
     with _$UnconfirmedTransactionViewModel;
 
-abstract class UnconfirmedTransactionViewModelBase with ViewModel, Store {
+abstract class UnconfirmedTransactionViewModelBase extends ViewModel with Store {
   UnconfirmedTransactionViewModelBase({
     required this.wallet,
     required this.fee,

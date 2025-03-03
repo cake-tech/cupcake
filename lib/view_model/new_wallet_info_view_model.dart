@@ -6,7 +6,7 @@ part 'new_wallet_info_view_model.g.dart';
 
 class NewWalletInfoViewModel = NewWalletInfoViewModelBase with _$NewWalletInfoViewModel;
 
-abstract class NewWalletInfoViewModelBase with ViewModel, Store {
+abstract class NewWalletInfoViewModelBase extends ViewModel with Store {
   NewWalletInfoViewModelBase(this.pages);
 
   @override

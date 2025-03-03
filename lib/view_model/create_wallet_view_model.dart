@@ -22,7 +22,7 @@ part 'create_wallet_view_model.g.dart';
 
 class CreateWalletViewModel = CreateWalletViewModelBase with _$CreateWalletViewModel;
 
-abstract class CreateWalletViewModelBase with ViewModel, Store {
+abstract class CreateWalletViewModelBase extends ViewModel with Store {
   CreateWalletViewModelBase({
     required this.createMethod,
     required this.needsPasswordConfirm,
@@ -40,7 +40,6 @@ abstract class CreateWalletViewModelBase with ViewModel, Store {
   @observable
   late String screenName = screenNameOriginal;
 
-  @computed
   String get screenNameOriginal => switch (createMethod) {
         CreateMethod.create => L.create_wallet,
         CreateMethod.restore => L.restore_wallet,

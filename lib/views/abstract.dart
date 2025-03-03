@@ -5,7 +5,6 @@ import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/views/widgets/cupcake_appbar_title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 
 // Since there is no performance penalty for using stateful widgets I would just
 // use them everywhere, but honestly all I need in stateless widgets is easy
@@ -85,17 +84,13 @@ class AbstractView extends StatefulWidget {
     viewModel.register(context);
     return PopScope(
       canPop: canPop,
-      child: Observer(
-        builder: (final BuildContext context) {
-          return Scaffold(
-            key: viewModel.scaffoldKey,
-            appBar: appBar,
-            body: body(context),
-            endDrawer: drawer,
-            floatingActionButton: floatingActionButton(context),
-            bottomNavigationBar: bottomNavigationBar(context),
-          );
-        },
+      child: Scaffold(
+        key: viewModel.scaffoldKey,
+        appBar: appBar,
+        body: body(context),
+        endDrawer: drawer,
+        floatingActionButton: floatingActionButton(context),
+        bottomNavigationBar: bottomNavigationBar(context),
       ),
     );
   }

@@ -8,6 +8,7 @@ import 'package:cupcake/views/widgets/barcode_scanner/toggle_flashlight_button.d
 import 'package:cupcake/views/widgets/barcode_scanner/urqr_progress.dart';
 import 'package:fast_scanner/fast_scanner.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 class BarcodeScanner extends AbstractView {
   BarcodeScanner({
@@ -22,34 +23,38 @@ class BarcodeScanner extends AbstractView {
 
   @override
   Widget? body(final BuildContext context) {
-    final ur = URQRData.parse(viewModel.urCodes);
-    return Stack(
-      children: [
-        MobileScanner(
-          onDetect: (final BarcodeCapture bc) => viewModel.handleBarcode(bc),
-          controller: viewModel.mobileScannerCtrl,
-        ),
-        if (ur.inputs.isNotEmpty)
-          Center(
-            child: Text(
-              "${ur.inputs.length}/${ur.count}",
-              style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
+    return Observer(
+      builder: (final BuildContext context) {
+        final ur = URQRData.parse(viewModel.urCodes);
+        return Stack(
+          children: [
+            MobileScanner(
+              onDetect: (final BarcodeCapture bc) => viewModel.handleBarcode(bc),
+              controller: viewModel.mobileScannerCtrl,
             ),
-          ),
-        SizedBox(
-          child: Center(
-            child: SizedBox(
-              width: 250,
-              height: 250,
-              child: CustomPaint(
-                painter: ProgressPainter(
-                  urQrProgress: URQrProgress.fromURQRData(ur),
+            if (ur.inputs.isNotEmpty)
+              Center(
+                child: Text(
+                  "${ur.inputs.length}/${ur.count}",
+                  style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
+                ),
+              ),
+            SizedBox(
+              child: Center(
+                child: SizedBox(
+                  width: 250,
+                  height: 250,
+                  child: CustomPaint(
+                    painter: ProgressPainter(
+                      urQrProgress: URQrProgress.fromURQRData(ur),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 

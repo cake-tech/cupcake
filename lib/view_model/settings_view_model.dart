@@ -6,7 +6,7 @@ part 'settings_view_model.g.dart';
 
 class SettingsViewModel = SettingsViewModelBase with _$SettingsViewModel;
 
-abstract class SettingsViewModelBase with ViewModel, Store {
+abstract class SettingsViewModelBase extends ViewModel with Store {
   SettingsViewModelBase();
 
   @override

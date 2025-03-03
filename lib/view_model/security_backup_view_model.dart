@@ -10,7 +10,7 @@ part 'security_backup_view_model.g.dart';
 
 class SecurityBackupViewModel = SecurityBackupViewModelBase with _$SecurityBackupViewModel;
 
-abstract class SecurityBackupViewModelBase with ViewModel, Store {
+abstract class SecurityBackupViewModelBase extends ViewModel with Store {
   SecurityBackupViewModelBase({required this.wallet});
 
   @override

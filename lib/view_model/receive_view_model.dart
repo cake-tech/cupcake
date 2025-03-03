@@ -6,7 +6,7 @@ part 'receive_view_model.g.dart';
 
 class ReceiveViewModel = ReceiveViewModelBase with _$ReceiveViewModel;
 
-abstract class ReceiveViewModelBase with ViewModel, Store {
+abstract class ReceiveViewModelBase extends ViewModel with Store {
   ReceiveViewModelBase(this.wallet);
   final CoinWallet wallet;
 

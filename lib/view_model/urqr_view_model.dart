@@ -5,7 +5,7 @@ part 'urqr_view_model.g.dart';
 
 class URQRViewModel = URQRViewModelBase with _$URQRViewModel;
 
-abstract class URQRViewModelBase with ViewModel, Store {
+abstract class URQRViewModelBase extends ViewModel with Store {
   URQRViewModelBase({
     required this.urqrList,
   });

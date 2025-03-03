@@ -52,6 +52,7 @@ class SettingsView extends AbstractView {
                 await secureStorage.delete(key: key);
               }
             }
+            viewModel.save();
           },
         ),
         if (viewModel.config.didFoundInsecureBiometric)
