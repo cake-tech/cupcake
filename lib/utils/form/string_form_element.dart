@@ -1,8 +1,13 @@
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:mobx/mobx.dart';
 
-class StringFormElement extends FormElement {
-  StringFormElement(
+part 'string_form_element.g.dart';
+
+class StringFormElement = StringFormElementBase with _$StringFormElement;
+
+abstract class StringFormElementBase extends FormElement with Store {
+  StringFormElementBase(
     this.label, {
     final String initialText = "",
     this.password = false,
@@ -19,12 +24,17 @@ class StringFormElement extends FormElement {
   bool password;
   @override
   String label;
+
+  @computed
   @override
   Future<String> get value => Future.value(ctrl.text);
 
+  @observable
   bool isExtra;
+
   bool randomNameGenerator;
 
+  @computed
   @override
   bool get isOk => validator(ctrl.text) == null;
 

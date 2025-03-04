@@ -27,7 +27,6 @@ abstract class BarcodeScannerViewModelBase extends ViewModel with Store {
 
   final MobileScannerController mobileScannerCtrl = MobileScannerController();
 
-  @action
   Future<void> handleUR() async {
     await callThrowable(
       () async {
@@ -59,7 +58,6 @@ abstract class BarcodeScannerViewModelBase extends ViewModel with Store {
     }
   }
 
-  @action
   List<int> urParts() {
     final List<int> l = [];
     for (final inp in URQRData.parse(urCodes).inputs) {
