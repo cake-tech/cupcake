@@ -140,7 +140,6 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
 
   final bool needsPasswordConfirm;
 
-  @action
   Future<void> completeSetup(final CoinWallet cw) async {
     await callThrowable(
       () async {
@@ -152,7 +151,6 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     );
   }
 
-  @action
   Future<void> createWallet() async {
     await callThrowable(
       () async {
@@ -162,7 +160,6 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     );
   }
 
-  @action
   Future<void> _createWallet() async {
     if (selectedCoin == null) throw Exception(L.error_selected_coin_null);
     if ((await walletName.value).isEmpty) {

@@ -62,7 +62,7 @@ class AbstractView extends StatefulWidget {
 
   State<AbstractView>? state;
 
-  AppBar? get appBar => viewModel.screenName.isEmpty
+  PreferredSizeWidget? get appBar => viewModel.screenName.isEmpty
       ? null
       : AppBar(
           title: viewModel.screenName.toLowerCase() != "cupcake"

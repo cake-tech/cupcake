@@ -4,6 +4,7 @@ import 'package:cupcake/view_model/new_wallet_info_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 class NewWalletInfoScreen extends AbstractView {
   NewWalletInfoScreen({
@@ -18,10 +19,15 @@ class NewWalletInfoScreen extends AbstractView {
   bool get canPop => false;
 
   @override
-  AppBar? get appBar => AppBar(
-        title: Text(viewModel.screenName),
-        automaticallyImplyLeading: canPop,
-        actions: _getActionButton(),
+  PreferredSizeWidget? get appBar => PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Observer(
+          builder: (final context) => AppBar(
+            title: Text(viewModel.screenName),
+            automaticallyImplyLeading: canPop,
+            actions: _getActionButton(),
+          ),
+        ),
       );
 
   List<Widget>? _getActionButton() {
@@ -70,19 +76,21 @@ class NewWalletInfoScreen extends AbstractView {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.only(left: 32, right: 32, top: 0, bottom: 16),
-        child: Column(
-          children: [
-            if (viewModel.page.lottieAnimation != null) viewModel.page.lottieAnimation!,
-            ...viewModel.page.texts,
-            const Spacer(),
-            SizedBox(
-              width: double.maxFinite,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: _getBottomActionButtons(),
+        child: Observer(
+          builder: (final context) => Column(
+            children: [
+              if (viewModel.page.lottieAnimation != null) viewModel.page.lottieAnimation!,
+              ...viewModel.page.texts,
+              const Spacer(),
+              SizedBox(
+                width: double.maxFinite,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: _getBottomActionButtons(),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

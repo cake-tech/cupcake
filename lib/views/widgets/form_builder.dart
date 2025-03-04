@@ -51,7 +51,6 @@ class FormBuilder extends StatelessWidget {
   }
 
   Widget _build(final BuildContext context) {
-    final _ = viewModel.currentPageDoNotUse; // very silly way to force a rebuild
     if (_displayPinFormElement()) {
       var e = viewModel.formElements.first as PinFormElement;
       int i = 0;
@@ -68,7 +67,6 @@ class FormBuilder extends StatelessWidget {
         try {
           await e.onConfirmInternal(context);
           if (!context.mounted) return;
-          viewModel.currentPageDoNotUse++;
           viewModel.isPinSet = (count == i);
           await e.onConfirm?.call();
         } catch (err) {

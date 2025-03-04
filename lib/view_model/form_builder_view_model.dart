@@ -18,10 +18,6 @@ abstract class FormBuilderViewModelBase extends ViewModel with Store {
         _toggleIsPinSet = toggleIsPinSet,
         _isPinSet = isPinSet;
 
-  // Used to force a rebuild
-  @observable
-  int currentPageDoNotUse = 0;
-
   @observable
   List<FormElement> formElements;
 

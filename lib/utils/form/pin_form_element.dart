@@ -4,9 +4,14 @@ import 'package:cupcake/utils/form/abstract_value_outcome.dart';
 import 'package:cupcake/utils/secure_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mobx/mobx.dart';
 
-class PinFormElement extends FormElement {
-  PinFormElement({
+part 'pin_form_element.g.dart';
+
+class PinFormElement = PinFormElementBase with _$PinFormElement;
+
+abstract class PinFormElementBase extends FormElement with Store {
+  PinFormElementBase({
     final String initialText = "",
     this.password = false,
     required this.validator,
@@ -19,6 +24,8 @@ class PinFormElement extends FormElement {
   })  : ctrl = TextEditingController(text: initialText),
         _errorHandler = errorHandler;
   final Future<void> Function(Object e) _errorHandler;
+
+  @action
   Future<void> loadSecureStorageValue(final VoidCallback callback) async {
     if (ctrl.text.isNotEmpty) return;
     if (!CupcakeConfig.instance.biometricEnabled) return;
@@ -46,27 +53,33 @@ class PinFormElement extends FormElement {
   }
 
   TextEditingController ctrl;
-  bool password;
-  bool showNumboard;
+
+  final bool password;
+  final bool showNumboard;
 
   @override
-  String label;
+  final String label;
 
-  ValueOutcome valueOutcome;
+  final ValueOutcome valueOutcome;
 
+  @computed
   @override
   Future<String> get value => valueOutcome.decode(ctrl.text);
 
+  @computed
   @override
   bool get isOk => validator(ctrl.text) == null;
 
   Future<void> Function()? onChanged;
   Future<void> Function()? onConfirm;
+
+  @action
   Future<void> onConfirmInternal(final BuildContext context) async {
     await valueOutcome.encode(ctrl.text);
     isConfirmed = true;
   }
 
+  @observable
   bool isConfirmed = false;
   String? Function(String? input) validator;
 
