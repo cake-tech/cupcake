@@ -84,6 +84,7 @@ class MoneroWallet implements CoinWallet {
         Coin.L.partial_key_images: someImages,
         Coin.L.all_key_images: allImages,
       },
+      currentWallet: this,
     ).push(context);
   }
 
@@ -144,7 +145,10 @@ class MoneroWallet implements CoinWallet {
               final error = monero.UnsignedTransaction_errorString(txptr);
               throw CoinException(error);
             }
-            await AnimatedURPage(urqrList: {"signedTx": signedTx}).push(context);
+            await AnimatedURPage(
+              urqrList: {"signedTx": signedTx},
+              currentWallet: this,
+            ).push(context);
           },
           cancelCallback: () => {},
         ).push(context);
