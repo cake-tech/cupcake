@@ -1,3 +1,4 @@
+import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:mobx/mobx.dart';
 
@@ -8,13 +9,14 @@ class URQRViewModel = URQRViewModelBase with _$URQRViewModel;
 abstract class URQRViewModelBase extends ViewModel with Store {
   URQRViewModelBase({
     required this.urqrList,
+    required this.currentWallet,
   });
 
   @override
   String get screenName => "URQR";
 
   final Map<String, List<String>> urqrList;
-
+  final CoinWallet currentWallet;
   @observable
   late List<String> _urqr = urqrList[urqrList.keys.first]!;
 

@@ -1,5 +1,8 @@
+import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/view_model/urqr_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
+import 'package:cupcake/views/wallet_home.dart';
+import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/urqr.dart';
 import 'package:flutter/material.dart';
 
@@ -7,12 +10,17 @@ class AnimatedURPage extends AbstractView {
   AnimatedURPage({
     super.key,
     required final Map<String, List<String>> urqrList,
+    required final CoinWallet currentWallet,
   }) : viewModel = URQRViewModel(
           urqrList: urqrList,
+          currentWallet: currentWallet,
         );
 
   @override
   final URQRViewModel viewModel;
+
+  @override
+  bool get canPop => false;
 
   @override
   Widget body(final BuildContext context) {
@@ -45,6 +53,17 @@ class AnimatedURPage extends AbstractView {
         viewModel.urqr = value;
       },
       child: Text(key),
+    );
+  }
+
+  @override
+  Widget? bottomNavigationBar(final BuildContext context) {
+    return LongPrimaryButton(
+      icon: Icons.home,
+      text: "Home",
+      onPressed: () async {
+        await WalletHome(coinWallet: viewModel.currentWallet).push(context);
+      },
     );
   }
 }
