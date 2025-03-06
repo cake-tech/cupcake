@@ -9,6 +9,7 @@ import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/form_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class SecurityBackup extends AbstractView {
@@ -22,8 +23,9 @@ class SecurityBackup extends AbstractView {
   @override
   SecurityBackupViewModel viewModel;
 
-  void _copy(final BuildContext context, final String value, final String key) {
-    Clipboard.setData(ClipboardData(text: value));
+  Future<void> _copy(final BuildContext context, final String value, final String key) async {
+    await Clipboard.setData(ClipboardData(text: value));
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(L.copied(key)),
@@ -33,25 +35,34 @@ class SecurityBackup extends AbstractView {
 
   @override
   Widget? body(final BuildContext context) {
-    if (viewModel.isLocked) {
-      return FormBuilder(
-        showExtra: true,
-        viewModel: FormBuilderViewModel(
-          formElements: viewModel.form,
-          scaffoldContext: context,
-          isPinSet: !viewModel.isLocked,
-        ),
-      );
-    }
-    final details = viewModel.wallet.seedDetails();
-    return FutureBuilder(
-      future: details,
-      builder: (final BuildContext context, final snapshot) {
-        if (!snapshot.hasData) return Text(snapshot.error.toString());
-        return ListView.builder(
-          itemCount: snapshot.data!.length,
-          itemBuilder: (final BuildContext context, final int index) {
-            return _buildElement(context, snapshot.data![index]);
+    return Observer(
+      builder: (final BuildContext context) {
+        if (viewModel.isLocked) {
+          return FormBuilder(
+            showExtra: true,
+            viewModel: FormBuilderViewModel(
+              formElements: viewModel.form,
+              scaffoldContext: context,
+              isPinSet: !viewModel.isLocked,
+            ),
+          );
+        }
+        final details = viewModel.wallet.seedDetails();
+        return FutureBuilder(
+          future: details,
+          builder: (final BuildContext context, final snapshot) {
+            if (!snapshot.hasData) {
+              if (snapshot.error != null) {
+                return Text(snapshot.error.toString());
+              }
+              return const Center(child: CircularProgressIndicator());
+            }
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (final BuildContext context, final int index) {
+                return _buildElement(context, snapshot.data![index]);
+              },
+            );
           },
         );
       },
@@ -62,8 +73,8 @@ class SecurityBackup extends AbstractView {
     switch (d.type) {
       case WalletSeedDetailType.text:
         return ListTile(
-          onTap: () {
-            _copy(context, d.value, d.name);
+          onTap: () async {
+            await _copy(context, d.value, d.name);
           },
           title: Text(
             d.name,
