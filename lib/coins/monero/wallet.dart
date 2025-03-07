@@ -85,7 +85,7 @@ class MoneroWallet implements CoinWallet {
         Coin.L.all_key_images: allImages,
       },
       currentWallet: this,
-    ).push(context);
+    ).pushReplacement(context);
   }
 
   @override
@@ -148,10 +148,10 @@ class MoneroWallet implements CoinWallet {
             await AnimatedURPage(
               urqrList: {"signedTx": signedTx},
               currentWallet: this,
-            ).push(context);
+            ).pushReplacement(context);
           },
           cancelCallback: () => {},
-        ).push(context);
+        ).pushReplacement(context);
         save();
       default:
         throw UnimplementedError(Coin.L.error_ur_tag_unsupported(ur.tag));
