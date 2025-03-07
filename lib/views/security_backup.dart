@@ -93,7 +93,7 @@ class SecurityBackup extends AbstractView {
           text: d.name,
           icon: Icons.qr_code_rounded,
           onPressed: () async {
-            await _showQrCode(context, d, color: Colors.transparent);
+            await _showQrCode(context, d, color: Colors.transparent, color2: Colors.white);
           },
         );
     }
@@ -103,6 +103,7 @@ class SecurityBackup extends AbstractView {
     final BuildContext context,
     final WalletSeedDetail d, {
     final Color color = Colors.black,
+    final Color? color2,
   }) async {
     await showAlertWidget(
       context: context,
@@ -114,11 +115,11 @@ class SecurityBackup extends AbstractView {
             data: d.value,
             backgroundColor: color,
             dataModuleStyle: QrDataModuleStyle(
-              color: Colors.black,
+              color: color2 ?? Colors.black,
               dataModuleShape: QrDataModuleShape.square,
             ),
             eyeStyle: QrEyeStyle(
-              color: Colors.black,
+              color: color2 ?? Colors.black,
               eyeShape: QrEyeShape.square,
             ),
           ),

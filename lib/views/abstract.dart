@@ -47,6 +47,16 @@ class AbstractView extends StatefulWidget {
     );
   }
 
+  Future<void> pushReplacement(final BuildContext context) async {
+    await Navigator.of(context).pushReplacement(
+      CupertinoPageRoute(
+        builder: (final context) {
+          return this;
+        },
+      ),
+    );
+  }
+
   late final ViewModel viewModel = throw UnimplementedError();
 
   @override
