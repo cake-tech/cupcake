@@ -12,16 +12,27 @@ abstract class SettingsViewModelBase extends ViewModel with Store {
   @override
   String get screenName => L.settings;
 
-  @observable
-  CupcakeConfig config = CupcakeConfig.instance;
+  final CupcakeConfig _config = CupcakeConfig.instance;
 
   @observable
-  int saveCount = 0;
+  late bool debug = _config.debug;
+  @observable
+  late int msForQrCode = _config.msForQrCode;
+  @observable
+  late bool biometricEnabled = _config.biometricEnabled;
+  @observable
+  late bool canUseInsecureBiometric = _config.canUseInsecureBiometric;
+
+  @observable
+  late int maxFragmentLength = _config.maxFragmentLength;
 
   @action
   void save() {
-    saveCount++;
-    config.save();
-    config = CupcakeConfig.instance;
+    _config.debug = debug;
+    _config.msForQrCode = msForQrCode;
+    _config.biometricEnabled = biometricEnabled;
+    _config.canUseInsecureBiometric = canUseInsecureBiometric;
+    _config.maxFragmentLength = maxFragmentLength;
+    _config.save();
   }
 }

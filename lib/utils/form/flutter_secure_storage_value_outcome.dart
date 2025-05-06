@@ -57,7 +57,9 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
     final Digest sha512Hash = sha512.convert(bytes);
     final valInput = await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
     if (sha512Hash.toString() != valInput && verifyMatching) {
-      throw Exception("Input doesn't match the secure element value");
+      return "";
+      // NOTE: Fallback to user input if the secure element value is not matching.
+      // throw Exception("Input doesn't match the secure element value for $key ($valInput != $sha512Hash)");
     }
     final input = await secureStorage.read(key: key);
     if (input == null) {
