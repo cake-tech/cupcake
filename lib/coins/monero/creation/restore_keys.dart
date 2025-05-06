@@ -1,12 +1,10 @@
-import 'dart:ffi';
-
 import 'package:cupcake/coins/abstract/wallet_creation.dart';
 import 'package:cupcake/coins/monero/coin.dart';
 import 'package:cupcake/coins/monero/wallet_info.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:path/path.dart' as p;
-import 'package:monero/monero.dart' as monero;
+import 'package:monero/src/wallet2.dart';
 
 class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
   RestoreFromKeysMoneroWalletCreationMethod(
@@ -32,10 +30,9 @@ class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
   @override
   Future<CreationOutcome> create() async {
     progressCallback?.call(description: L.creating_wallet);
-    Pointer<Void> newWptr;
+    Wallet2Wallet newWptr;
     if (secretViewKey.isNotEmpty) {
-      newWptr = monero.WalletManager_createWalletFromKeys(
-        Monero.wmPtr,
+      newWptr = Monero.wm.createWalletFromKeys(
         path: walletPath,
         password: walletPassword,
         restoreHeight: restoreHeight,
@@ -44,8 +41,7 @@ class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
         spendKeyString: secretSpendKey,
       );
     } else {
-      newWptr = monero.WalletManager_createDeterministicWalletFromSpendKey(
-        Monero.wmPtr,
+      newWptr = Monero.wm.createDeterministicWalletFromSpendKey(
         path: walletPath,
         password: walletPassword,
         language: "English",
@@ -55,11 +51,10 @@ class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
       );
     }
     progressCallback?.call(description: L.checking_status);
-    int status = monero.Wallet_status(newWptr);
+    int status = newWptr.status();
     if (status != 0) {
       // Fallback to createDeterministicWallet in case when createWalletFromKeys didn't work.
-      newWptr = monero.WalletManager_createDeterministicWalletFromSpendKey(
-        Monero.wmPtr,
+      newWptr = Monero.wm.createDeterministicWalletFromSpendKey(
         path: walletPath,
         password: walletPassword,
         language: "English",
@@ -67,19 +62,19 @@ class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
         newWallet: true,
         restoreHeight: restoreHeight,
       );
-      status = monero.Wallet_status(newWptr);
+      status = newWptr.status();
     }
 
     if (status != 0) {
-      final error = monero.Wallet_errorString(newWptr);
+      final error = newWptr.errorString();
       return CreationOutcome(
         method: CreateMethod.restore,
         success: false,
         message: error,
       );
     }
-    monero.Wallet_store(newWptr);
-    monero.Wallet_store(newWptr);
+    newWptr.store();
+    newWptr.store();
     progressCallback?.call(description: L.wallet_created);
     final wallet = await Monero().openWallet(
       MoneroWalletInfo(p.basename(walletPath)),
