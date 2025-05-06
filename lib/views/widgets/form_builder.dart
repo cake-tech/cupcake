@@ -120,6 +120,8 @@ class FormBuilder extends StatelessWidget {
                   if (!canAuthenticate) throw Exception(L.error_no_biometric_authentication);
                   if (!availableBiometrics.contains(BiometricType.fingerprint) &&
                       !availableBiometrics.contains(BiometricType.face) &&
+                      !availableBiometrics.contains(BiometricType.iris) &&
+                      !availableBiometrics.contains(BiometricType.strong) &&
                       !CupcakeConfig.instance.canUseInsecureBiometric) {
                     CupcakeConfig.instance.didFoundInsecureBiometric = true;
                     CupcakeConfig.instance.save();
