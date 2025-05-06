@@ -662,8 +662,8 @@ packages:
     dependency: "direct main"
     description:
       path: "impls/monero.dart"
-      ref: "v0.18.4.0-RC1"
-      resolved-ref: "9d9b1f2f2373fc9a99c6556a93eea63fe343cf58"
+      ref: "v0.18.4.0-RC4"
+      resolved-ref: a479a569bc25dd1e9701436404a46f0f509096a4
       url: "https://github.com/mrcyjanek/monero_c"
     source: git
     version: "0.0.0"
@@ -767,10 +767,10 @@ packages:
     dependency: transitive
     description:
       name: petitparser
-      sha256: "07c8f0b1913bcde1ff0d26e57ace2f3012ccbf2b204e070290dad3bb22797646"
+      sha256: c15605cd28af66339f8eb6fbe0e541bfe2d1b72d5825efc6598f3e0a31b9ad27
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.0"
+    version: "6.0.2"
   platform:
     dependency: transitive
     description:

@@ -12,11 +12,13 @@ import 'package:cupcake/coins/monero/wallet.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/filesystem.dart';
-import 'package:monero/monero.dart' as monero;
 import 'package:path/path.dart' as p;
+import 'package:monero/src/monero.dart' as api;
+import 'package:monero/src/wallet2.dart';
+import 'package:monero/monero.dart' as monero;
 
 class Monero implements Coin {
-  static List<monero.wallet> wPtrList = [];
+  static List<Wallet2Wallet> wPtrList = [];
 
   @override
   String get uriScheme => 'monero';
@@ -24,6 +26,7 @@ class Monero implements Coin {
   @override
   bool get isEnabled {
     try {
+      // ignore: deprecated_member_use
       monero.isLibOk();
       return true;
     } catch (e) {
@@ -59,7 +62,7 @@ class Monero implements Coin {
     final list = baseDir.listSync(recursive: true, followLinks: true);
     for (final element in list) {
       if (element.absolute.path.endsWith(".keys")) continue;
-      if (!monero.WalletManager_walletExists(wmPtr, element.absolute.path)) {
+      if (!wm.walletExists(element.absolute.path)) {
         continue;
       }
       retWallets.add(MoneroWalletInfo(element.absolute.path));
@@ -88,30 +91,29 @@ class Monero implements Coin {
     required final String password,
   }) async {
     for (final wptr in wPtrList) {
-      monero.WalletManager_closeWallet(wmPtr, wptr, true);
+      wm.closeWallet(wptr, true);
     }
     wPtrList.clear();
-    final walletExist = monero.WalletManager_walletExists(wmPtr, walletInfo.walletName);
+    final walletExist = wm.walletExists(walletInfo.walletName);
     if (!walletExist) {
       throw Exception(Coin.L.error_wallet_doesnt_exist(walletInfo.walletName));
     }
-    final wptr =
-        monero.WalletManager_openWallet(wmPtr, path: walletInfo.walletName, password: password);
-    final status = monero.Wallet_status(wptr);
+    final w = wm.openWallet(path: walletInfo.walletName, password: password);
+    final status = w.status();
     if (status != 0) {
-      final error = monero.Wallet_errorString(wptr);
+      final error = w.errorString();
       throw Exception(error);
     }
     CupcakeConfig.instance.lastWallet = walletInfo;
     CupcakeConfig.instance.save();
-    return MoneroWallet(wptr);
+    return MoneroWallet(w);
   }
 
   @override
   Coins get type => Coins.monero;
 
   // monero.dart stuff
-  static monero.WalletManager wmPtr = monero.WalletManagerFactory_getWalletManager();
+  static Wallet2WalletManager wm = api.MoneroWalletManagerFactory().getWalletManager();
 
   @override
   bool isSeedSomewhatLegit(final String seed) {

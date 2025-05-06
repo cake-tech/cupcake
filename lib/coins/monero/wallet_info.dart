@@ -6,7 +6,6 @@ import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/monero/coin.dart';
 import 'package:cupcake/views/open_wallet.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:monero/monero.dart' as monero;
 import 'package:path/path.dart' as p;
 
 class MoneroWalletInfo extends CoinWalletInfo {
@@ -23,8 +22,7 @@ class MoneroWalletInfo extends CoinWalletInfo {
 
   @override
   Future<bool> checkWalletPassword(final String password) async {
-    return monero.WalletManager_verifyWalletPassword(
-      Monero.wmPtr,
+    return Monero.wm.verifyWalletPassword(
       keysFileName: "$walletName.keys",
       password: password,
       noSpendKey: false,
@@ -59,7 +57,7 @@ class MoneroWalletInfo extends CoinWalletInfo {
   @override
   Future<void> deleteWallet() {
     for (final element in Monero.wPtrList) {
-      monero.WalletManager_closeWallet(Monero.wmPtr, element, true);
+      Monero.wm.closeWallet(element, true);
     }
     Monero.wPtrList.clear();
     File(walletName).deleteSync();
@@ -73,7 +71,7 @@ class MoneroWalletInfo extends CoinWalletInfo {
       throw Exception(Coin.L.error_wallet_name_unchanged);
     }
     for (final element in Monero.wPtrList) {
-      monero.WalletManager_closeWallet(Monero.wmPtr, element, true);
+      Monero.wm.closeWallet(element, true);
     }
     Monero.wPtrList.clear();
     final basePath = p.dirname(walletName);
