@@ -35,10 +35,7 @@ abstract class PinFormElementBase extends FormElement with Store {
     final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
     final bool canAuthenticate = canAuthenticateWithBiometrics || await auth.isDeviceSupported();
     if (!canAuthenticate) return;
-    if (!availableBiometrics.contains(BiometricType.fingerprint) &&
-        !availableBiometrics.contains(BiometricType.face) &&
-        !availableBiometrics.contains(BiometricType.iris) &&
-        !availableBiometrics.contains(BiometricType.strong) &&
+    if (!availableBiometrics.contains(BiometricType.strong) &&
         !CupcakeConfig.instance.canUseInsecureBiometric) {
       return;
     }
