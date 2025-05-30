@@ -8,10 +8,19 @@ import 'package:package_info_plus/package_info_plus.dart';
 // this page is to collect error when thing didn't go exactly as expected.
 // Ideally users will nevel see this :)
 
-Future<void> catchFatalError(final Object error, final StackTrace? stackTrace) async {
+Future<void> catchFatalError(
+  final Object error,
+  final StackTrace? stackTrace,
+) async {
   final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-  runApp(ErrorHandlerApp(error: error, stackTrace: stackTrace, packageInfo: packageInfo));
+  runApp(
+    ErrorHandlerApp(
+      error: error,
+      stackTrace: stackTrace,
+      packageInfo: packageInfo,
+    ),
+  );
 }
 
 class ErrorHandlerApp extends StatelessWidget {

@@ -9,6 +9,7 @@ import 'package:cupcake/utils/filesystem.dart';
 import 'package:cupcake/utils/secure_storage.dart';
 import 'package:cupcake/views/home_screen.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -26,13 +27,15 @@ Future<void> appInit() async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FlutterError.onError = (final FlutterErrorDetails errorDetails) {
-    catchFatalError(errorDetails.exception, null);
-  };
-  PlatformDispatcher.instance.onError = (final Object error, final StackTrace stackTrace) {
-    catchFatalError(error, stackTrace);
-    return true;
-  };
+  if (!kDebugMode) {
+    FlutterError.onError = (final FlutterErrorDetails errorDetails) {
+      catchFatalError(errorDetails.exception, null);
+    };
+    PlatformDispatcher.instance.onError = (final Object error, final StackTrace stackTrace) {
+      catchFatalError(error, stackTrace);
+      return true;
+    };
+  }
   await _main();
 }
 

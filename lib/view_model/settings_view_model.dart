@@ -1,3 +1,4 @@
+import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:mobx/mobx.dart';
@@ -7,13 +8,14 @@ part 'settings_view_model.g.dart';
 class SettingsViewModel = SettingsViewModelBase with _$SettingsViewModel;
 
 abstract class SettingsViewModelBase extends ViewModel with Store {
-  SettingsViewModelBase();
+  SettingsViewModelBase({required this.wallet});
 
   @override
   String get screenName => L.settings;
 
   final CupcakeConfig _config = CupcakeConfig.instance;
 
+  final CoinWallet wallet;
   @observable
   late bool debug = _config.debug;
   @observable

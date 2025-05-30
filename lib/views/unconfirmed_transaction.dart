@@ -13,7 +13,7 @@ class UnconfirmedTransactionView extends AbstractView {
     required final CoinWallet wallet,
     required final Amount fee,
     required final Map<Address, Amount> destMap,
-    required final FutureOr<void> Function() confirmCallback,
+    required final FutureOr<void> Function(BuildContext context) confirmCallback,
     required final FutureOr<void> Function() cancelCallback,
   }) : viewModel = UnconfirmedTransactionViewModel(
           wallet: wallet,
@@ -65,7 +65,7 @@ class UnconfirmedTransactionView extends AbstractView {
         if (index == 0) {
           await viewModel.cancel();
         } else {
-          await viewModel.confirm();
+          await viewModel.confirm(context);
         }
       },
     );

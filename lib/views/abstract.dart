@@ -35,6 +35,8 @@ class _AbstractViewState extends State<AbstractView> {
   }
 }
 
+class ViewModelSimple extends ViewModel {}
+
 class AbstractView extends StatefulWidget {
   AbstractView({super.key});
   Future<void> push(final BuildContext context) async {
@@ -57,7 +59,7 @@ class AbstractView extends StatefulWidget {
     );
   }
 
-  late final ViewModel viewModel = throw UnimplementedError();
+  final ViewModel viewModel = ViewModelSimple();
 
   @override
   // ignore: no_logic_in_create_state

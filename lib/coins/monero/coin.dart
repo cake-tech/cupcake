@@ -12,12 +12,14 @@ import 'package:cupcake/coins/monero/wallet.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/filesystem.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as p;
 import 'package:monero/src/monero.dart' as api;
 import 'package:monero/src/wallet2.dart';
 import 'package:monero/monero.dart' as monero;
 
 class Monero implements Coin {
+  Monero();
   static List<Wallet2Wallet> wPtrList = [];
 
   @override
@@ -104,8 +106,6 @@ class Monero implements Coin {
       final error = w.errorString();
       throw Exception(error);
     }
-    CupcakeConfig.instance.lastWallet = walletInfo;
-    CupcakeConfig.instance.save();
     return MoneroWallet(w);
   }
 
@@ -123,4 +123,7 @@ class Monero implements Coin {
 
   @override
   WalletCreation creationMethod(final AppLocalizations L) => MoneroWalletCreation(L);
+
+  @override
+  Map<String, Function(BuildContext context, CoinWallet wallet)> debugOptions = {};
 }

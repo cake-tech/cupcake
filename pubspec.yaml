@@ -54,7 +54,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
-
   vector_graphics: any
   flutter_gen: any
   polyseed: ^0.0.6
@@ -67,6 +66,14 @@ dependencies:
   source_gen: ^1.0.0
   mobx: ^2.5.0
   flutter_mobx: ^2.3.0
+  drift: ^2.26.1
+  drift_flutter: ^0.2.4
+  bdk_flutter: ^0.31.2
+  dart_pg: ^2.0.0
+  ur:
+    git:
+      url: https://github.com/bukata-sa/bc-ur-dart
+      ref: 5738f70d0ec3d50977ac3dd01fed62939600238b
 
 dev_dependencies:
   flutter_test:
@@ -79,11 +86,15 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
   flutter_asset_generator: ^1.2.0
-  build_runner: ^2.4.9
+  build_runner: ^2.4.15
   flutter_gen_runner: ^5.8.0
   integration_test:
     sdk: flutter
   mobx_codegen: ^2.7.0
+  drift_dev: ^2.26.0
+
+dependency_overrides:
+  web: ^0.5.0
 
 analyzer:
   exclude:
@@ -107,6 +118,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/coins/btc.svg
     - assets/coins/xmr.svg
     - assets/icons/icon-white.svg
     - assets/shield.json

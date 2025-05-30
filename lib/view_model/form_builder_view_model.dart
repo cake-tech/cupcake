@@ -61,7 +61,9 @@ abstract class FormBuilderViewModelBase extends ViewModel with Store {
       final List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
       final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
       final bool canAuthenticate = canAuthenticateWithBiometrics || await auth.isDeviceSupported();
-      if (!canAuthenticate) throw Exception(L.error_no_biometric_authentication);
+      if (!canAuthenticate) {
+        throw Exception(L.error_no_biometric_authentication);
+      }
       if (!availableBiometrics.contains(BiometricType.strong) &&
           !CupcakeConfig.instance.canUseInsecureBiometric) {
         CupcakeConfig.instance.didFoundInsecureBiometric = true;

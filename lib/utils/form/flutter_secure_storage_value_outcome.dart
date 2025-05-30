@@ -27,7 +27,9 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
         key: "FlutterSecureStorageValueOutcome._$key",
         value: sha512Hash.toString(),
       );
-      valInput = await secureStorage.read(key: "FlutterSecureStorageValueOutcome._$key");
+      valInput = await secureStorage.read(
+        key: "FlutterSecureStorageValueOutcome._$key",
+      );
     }
     if (sha512Hash.toString() != valInput && verifyMatching) {
       throw Exception("Input doesn't match the secure element value");
@@ -40,7 +42,9 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
     }
     if (!canWrite) {
       if (CupcakeConfig.instance.debug) {
-        throw Exception("DEBUG_ONLY: canWrite is false but we tried to flush the value");
+        throw Exception(
+          "DEBUG_ONLY: canWrite is false but we tried to flush the value",
+        );
       }
       return;
     }

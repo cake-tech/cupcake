@@ -10,7 +10,6 @@ import 'package:cupcake/coins/monero/cache_keys.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/null_if_empty.dart';
-import 'package:cupcake/utils/secure_storage.dart';
 import 'package:cupcake/coins/abstract/address.dart';
 import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/views/animated_qr_page.dart';
@@ -130,7 +129,7 @@ class MoneroWallet implements CoinWallet {
           wallet: this,
           destMap: destMap,
           fee: fee,
-          confirmCallback: () async {
+          confirmCallback: (final BuildContext context) async {
             final signedTx = tx.signUR(CupcakeConfig.instance.maxFragmentLength).split("\n");
             var status = wallet.status();
             if (status != 0) {
@@ -199,7 +198,9 @@ class MoneroWallet implements CoinWallet {
   @override
   Future<void> close() {
     Monero.wm.closeWallet(wallet, true);
-    Monero.wPtrList.removeWhere((final element) => element.ffiAddress() == wallet.ffiAddress());
+    Monero.wPtrList.removeWhere(
+      (final element) => element.ffiAddress() == wallet.ffiAddress(),
+    );
     return Future.value();
   }
 
@@ -211,7 +212,6 @@ class MoneroWallet implements CoinWallet {
 
   @override
   Future<List<WalletSeedDetail>> seedDetails() async {
-    final secrets = await secureStorage.readAll();
     return [
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
@@ -276,32 +276,6 @@ class MoneroWallet implements CoinWallet {
           "restoreHeight": wallet.getRefreshFromBlockHeight(),
         }),
       ),
-      if (CupcakeConfig.instance.debug)
-        ...List.generate(
-          secrets.keys.length,
-          (final index) {
-            final key = secrets.keys.elementAt(index);
-            return WalletSeedDetail(
-              type: WalletSeedDetailType.text,
-              name: key,
-              value: secrets[key] ?? "unknown",
-            );
-          },
-        ),
-      if (CupcakeConfig.instance.debug)
-        ...List.generate(
-          CupcakeConfig.instance.toJson().keys.length,
-          (final index) {
-            final key = CupcakeConfig.instance.toJson().keys.elementAt(index);
-            return WalletSeedDetail(
-              type: WalletSeedDetailType.text,
-              name: key,
-              value: const JsonEncoder.withIndent('    ').convert(
-                CupcakeConfig.instance.toJson()[key],
-              ),
-            );
-          },
-        ),
     ];
   }
 }
