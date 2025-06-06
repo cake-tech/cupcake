@@ -114,6 +114,14 @@ class Bitcoin implements Coin {
         databaseConfig: DatabaseConfig.memory(),
       ),
     );
+    wallets.add(
+      await Wallet.create(
+        descriptor: internalDescriptor84,
+        changeDescriptor: externalDescriptor84,
+        network: Network.bitcoin,
+        databaseConfig: DatabaseConfig.memory(),
+      ),
+    );
     final externalDescriptor44 = await Descriptor.newBip44(
       secretKey: descriptorSecretKey,
       network: Network.bitcoin,
@@ -129,6 +137,15 @@ class Bitcoin implements Coin {
       await Wallet.create(
         descriptor: externalDescriptor44,
         changeDescriptor: internalDescriptor44,
+        network: Network.bitcoin,
+        databaseConfig: DatabaseConfig.memory(),
+      ),
+    );
+
+    wallets.add(
+      await Wallet.create(
+        descriptor: internalDescriptor44,
+        changeDescriptor: externalDescriptor44,
         network: Network.bitcoin,
         databaseConfig: DatabaseConfig.memory(),
       ),
@@ -153,6 +170,14 @@ class Bitcoin implements Coin {
         databaseConfig: DatabaseConfig.memory(),
       ),
     );
+    wallets.add(
+      await Wallet.create(
+        descriptor: internalDescriptor49,
+        changeDescriptor: externalDescriptor49,
+        network: Network.bitcoin,
+        databaseConfig: DatabaseConfig.memory(),
+      ),
+    );
 
     final externalDescriptor86 = await Descriptor.newBip86(
       secretKey: descriptorSecretKey,
@@ -169,6 +194,14 @@ class Bitcoin implements Coin {
       await Wallet.create(
         descriptor: externalDescriptor86,
         changeDescriptor: internalDescriptor86,
+        network: Network.bitcoin,
+        databaseConfig: DatabaseConfig.memory(),
+      ),
+    );
+    wallets.add(
+      await Wallet.create(
+        descriptor: internalDescriptor86,
+        changeDescriptor: externalDescriptor86,
         network: Network.bitcoin,
         databaseConfig: DatabaseConfig.memory(),
       ),
