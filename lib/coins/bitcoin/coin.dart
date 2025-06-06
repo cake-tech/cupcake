@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bdk_flutter/bdk_flutter.dart';
@@ -213,11 +214,18 @@ class Bitcoin implements Coin {
             .asString();
     xpub = xpub.substring(xpub.indexOf("]") + 1, xpub.lastIndexOf("/"));
 
-    for (final wallet in wallets) {
-      for (var i = 0; i < 1000; i++) {
-        wallet.getAddress(addressIndex: AddressIndex.increase());
+    unawaited(() async {
+      final start = Stopwatch()..start();
+      print("generating addresses");
+      for (final wallet in wallets) {
+        // generate addresses, or otherwise it will fail to sign
+        for (var i = 0; i < 10000; i++) {
+          await Future.delayed(Duration.zero);
+          wallet.getAddress(addressIndex: AddressIndex.increase());
+        }
       }
-    }
+      print("addresses generated in: ${start.elapsedMilliseconds / 1000}s");
+    }());
     return BDKWalletWrapper(
       wallets: wallets,
       mnemonic: m,
