@@ -15,7 +15,6 @@ class SettingsView extends AbstractView {
 
   @override
   Widget? body(final BuildContext context) {
-    final _ = viewModel.saveCount; // work around for mobx not updating
     return Column(
       children: [
         if (viewModel.config.debug)

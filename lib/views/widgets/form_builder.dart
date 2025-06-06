@@ -2,18 +2,15 @@ import 'dart:async';
 
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/alerts/widget_minimal.dart';
-import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/single_choice_form_element.dart';
 import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/random_name.dart';
-import 'package:cupcake/utils/secure_storage.dart';
 import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/numerical_keyboard/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:local_auth/local_auth.dart';
 
 class FormBuilder extends StatelessWidget {
   FormBuilder({super.key, required this.viewModel, required this.showExtra});
@@ -107,54 +104,7 @@ class FormBuilder extends StatelessWidget {
               ctrl: e.ctrl,
               showConfirm: () => e.isOk,
               nextPage: nextPageCallback,
-              onConfirmLongPress: () async {
-                try {
-                  await e.onConfirmInternal(context);
-                  final auth = LocalAuthentication();
-
-                  final List<BiometricType> availableBiometrics =
-                      await auth.getAvailableBiometrics();
-                  final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
-                  final bool canAuthenticate =
-                      canAuthenticateWithBiometrics || await auth.isDeviceSupported();
-                  if (!canAuthenticate) throw Exception(L.error_no_biometric_authentication);
-                  if (!availableBiometrics.contains(BiometricType.fingerprint) &&
-                      !availableBiometrics.contains(BiometricType.face) &&
-                      !CupcakeConfig.instance.canUseInsecureBiometric) {
-                    CupcakeConfig.instance.didFoundInsecureBiometric = true;
-                    CupcakeConfig.instance.save();
-                    throw Exception(L.error_no_secure_biometric);
-                  }
-
-                  final bool didAuthenticate = await auth.authenticate(
-                    localizedReason: L.biometric_authenticaion_reason,
-                    options: AuthenticationOptions(
-                      useErrorDialogs: true,
-                      biometricOnly: !CupcakeConfig.instance.canUseInsecureBiometric,
-                    ),
-                  );
-                  if (!didAuthenticate) {
-                    throw Exception(L.error_didnt_authenticate);
-                  }
-                  await secureStorage.write(
-                    key: "UI.${e.valueOutcome.uniqueId}",
-                    value: e.ctrl.text,
-                  );
-                  CupcakeConfig.instance.biometricEnabled = true;
-                  CupcakeConfig.instance.save();
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(L.biometric_enabled),
-                      ),
-                    );
-                  }
-                  await nextPageCallback();
-                } catch (err) {
-                  await e.errorHandler(err);
-                  return;
-                }
-              },
+              onConfirmLongPress: () => viewModel.enableSystemAuth(e, nextPageCallback),
               showComma: false,
             ),
           const SizedBox(height: 128),

@@ -25,31 +25,36 @@ class URQRData {
   }
 
   static URQRData parse(final List<String> urqr_) {
-    final urqr = urqr_.toSet().toList();
-    urqr.sort((final s1, final s2) {
-      final s1s = s1.split("/");
-      final s1frameStr = s1s[1].split("-");
-      final s1curFrame = int.parse(s1frameStr[0]);
-      final s2s = s2.split("/");
-      final s2frameStr = s2s[1].split("-");
-      final s2curFrame = int.parse(s2frameStr[0]);
-      return s1curFrame - s2curFrame;
-    });
-
+    String? error;
     String tag = '';
     int count = 0;
     String bw = '';
-    for (final elm in urqr) {
-      final s = elm.substring(elm.indexOf(":") + 1); // strip down ur: prefix
-      final s2 = s.split("/");
-      tag = s2[0];
-      final frameStr = s2[1].split("-");
-      // final curFrame = int.parse(frameStr[0]);
-      count = int.parse(frameStr[1]);
-      final byteWords = s2[2];
-      bw += byteWords;
+    List<String> urqr = [];
+    try {
+      urqr = urqr_.toSet().toList();
+      urqr.sort((final s1, final s2) {
+        final s1s = s1.split("/");
+        final s1frameStr = s1s[1].split("-");
+        final s1curFrame = int.parse(s1frameStr[0]);
+        final s2s = s2.split("/");
+        final s2frameStr = s2s[1].split("-");
+        final s2curFrame = int.parse(s2frameStr[0]);
+        return s1curFrame - s2curFrame;
+      });
+
+      for (final elm in urqr) {
+        final s = elm.substring(elm.indexOf(":") + 1); // strip down ur: prefix
+        final s2 = s.split("/");
+        tag = s2[0];
+        final frameStr = s2[1].split("-");
+        // final curFrame = int.parse(frameStr[0]);
+        count = int.parse(frameStr[1]);
+        final byteWords = s2[2];
+        bw += byteWords;
+      }
+    } catch (e) {
+      error = e.toString();
     }
-    String? error;
 
     return URQRData(
       tag: tag,

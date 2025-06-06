@@ -166,7 +166,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
       throw Exception(L.warning_input_cannot_be_empty);
     }
 
-    if (await walletPassword.value == await walletPasswordInitial.value) {
+    if (await walletPassword.value != await walletPasswordInitial.value) {
       throw Exception(L.password_doesnt_match);
     }
 

@@ -64,7 +64,6 @@ class CreateWallet extends AbstractView {
 
   @override
   Widget? body(final BuildContext context) {
-    final _ = viewModel.showExtra; // force rebuild in mobx
     if (viewModel.selectedCoin == null) {
       return _selectCoin(context);
     }
@@ -100,7 +99,6 @@ class CreateWallet extends AbstractView {
   @override
   Widget? bottomNavigationBar(final BuildContext context) {
     if (!viewModel.isPinSet) return null;
-    final _ = viewModel.showExtra; // force rebuild in mobx
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
