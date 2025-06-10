@@ -35,8 +35,8 @@ class MainActivity : FlutterActivity() {
             val packageInfo: PackageInfo
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
-                val signatures = packageInfo.signingInfo.apkContentsSigners
-                if (signatures.isNotEmpty()) {
+                val signatures = packageInfo.signingInfo?.apkContentsSigners
+                if (signatures?.isNotEmpty() == true) {
                     val md = MessageDigest.getInstance("SHA-1")
                     val publicKey = md.digest(signatures[0].toByteArray())
                     return Base64.encodeToString(publicKey, Base64.DEFAULT)
@@ -45,7 +45,7 @@ class MainActivity : FlutterActivity() {
                 @Suppress("DEPRECATION")
                 packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
                 val signatures = packageInfo.signatures
-                if (signatures.isNotEmpty()) {
+                if (signatures?.isNotEmpty() == true) {
                     val md = MessageDigest.getInstance("SHA-1")
                     val publicKey = md.digest(signatures[0].toByteArray())
                     return Base64.encodeToString(publicKey, Base64.DEFAULT)

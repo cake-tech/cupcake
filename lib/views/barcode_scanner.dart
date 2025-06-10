@@ -1,63 +1,60 @@
-import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/view_model/barcode_scanner_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/barcode_scanner/progress_painter.dart';
 import 'package:cupcake/views/widgets/barcode_scanner/switch_camera.dart';
 import 'package:cupcake/views/widgets/barcode_scanner/toggle_flashlight_button.dart';
+import 'package:cupcake/views/widgets/barcode_scanner/urqr_progress.dart';
 import 'package:fast_scanner/fast_scanner.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
-//ignore: must_be_immutable
 class BarcodeScanner extends AbstractView {
-  BarcodeScanner({super.key, required CoinWallet wallet})
-      : viewModel = BarcodeScannerViewModel(wallet: wallet);
-
-  static Future<void> pushStatic(
-      BuildContext context, CoinWallet wallet) async {
-    await Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return BarcodeScanner(wallet: wallet);
-        },
-      ),
-    );
-  }
+  BarcodeScanner({
+    super.key,
+    required final CoinWallet wallet,
+  }) : viewModel = BarcodeScannerViewModel(
+          wallet: wallet,
+        );
 
   @override
   final BarcodeScannerViewModel viewModel;
 
   @override
-  Widget? body(BuildContext context) {
-    viewModel.register(context);
-    return Stack(
-      children: [
-        MobileScanner(
-          onDetect: (BarcodeCapture bc) => viewModel.handleBarcode(context, bc),
-          controller: viewModel.mobileScannerCtrl,
-        ),
-        if (viewModel.ur.inputs.isNotEmpty)
-          Center(
-            child: Text("${viewModel.ur.inputs.length}/${viewModel.ur.count}",
-                style: Theme.of(context)
-                    .textTheme
-                    .displayLarge
-                    ?.copyWith(color: Colors.white)),
-          ),
-        SizedBox(
-          child: Center(
-            child: SizedBox(
-              width: 250,
-              height: 250,
-              child: CustomPaint(
-                painter: ProgressPainter(
-                  urQrProgress: viewModel.urQrProgress,
+  Widget? body(final BuildContext context) {
+    return Observer(
+      builder: (final BuildContext context) {
+        final ur = URQRData.parse(viewModel.urCodes);
+        return Stack(
+          children: [
+            MobileScanner(
+              onDetect: (final BarcodeCapture bc) => viewModel.handleBarcode(bc),
+              controller: viewModel.mobileScannerCtrl,
+            ),
+            if (ur.inputs.isNotEmpty)
+              Center(
+                child: Text(
+                  "${ur.inputs.length}/${ur.count}",
+                  style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
+                ),
+              ),
+            SizedBox(
+              child: Center(
+                child: SizedBox(
+                  width: 250,
+                  height: 250,
+                  child: CustomPaint(
+                    painter: ProgressPainter(
+                      urQrProgress: URQrProgress.fromURQRData(ur),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 

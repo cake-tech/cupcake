@@ -1,25 +1,31 @@
-import 'package:cupcake/coins/abstract.dart';
-import 'package:cupcake/view_model/create_wallet_view_model.dart';
+import 'package:cupcake/coins/abstract/wallet_info.dart';
+import 'package:cupcake/utils/form/abstract_form_element.dart';
+import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
+import 'package:cupcake/utils/form/pin_form_element.dart';
+import 'package:cupcake/utils/form/string_form_element.dart';
+import 'package:cupcake/utils/form/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:path/path.dart' as p;
+import 'package:mobx/mobx.dart';
 
-class WalletEditViewModel extends ViewModel {
-  WalletEditViewModel({
+part 'wallet_edit_view_model.g.dart';
+
+class WalletEditViewModel = WalletEditViewModelBase with _$WalletEditViewModel;
+
+abstract class WalletEditViewModelBase extends ViewModel with Store {
+  WalletEditViewModelBase({
     required this.walletInfo,
   });
 
-  CoinWalletInfo walletInfo;
+  final CoinWalletInfo walletInfo;
 
   late StringFormElement walletName = StringFormElement(
     L.wallet_name,
     initialText: p.basename(walletInfo.walletName),
-    validator: (input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      return null;
-    },
+    validator: nonEmptyValidator(L),
     randomNameGenerator: true,
+    errorHandler: errorHandler,
   );
 
   late PinFormElement walletPassword = PinFormElement(
@@ -30,15 +36,12 @@ class WalletEditViewModel extends ViewModel {
       canWrite: false,
       verifyMatching: true,
     ),
-    validator: (String? input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      if (input.length < 4) {
-        return L.warning_password_too_short;
-      }
-      return null;
-    },
+    validator: nonEmptyValidator(
+      L,
+      extra: (final input) => (input.length < 4) ? L.warning_password_too_short : null,
+    ),
     showNumboard: false,
+    errorHandler: errorHandler,
   );
 
   late final List<FormElement> form = [
@@ -47,29 +50,36 @@ class WalletEditViewModel extends ViewModel {
   ];
 
   @override
-  String get screenName => "Edit wallet";
+  String get screenName => L.edit_wallet;
 
-  Future<void> deleteWallet(BuildContext context) async {
-    if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
-      throw Exception("Invalid wallet password");
-    }
-    walletInfo.deleteWallet();
-    if (!context.mounted) return;
-    Navigator.of(context).pop();
+  Future<bool> deleteWallet() {
+    return callThrowable(
+      () async {
+        if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
+          throw Exception(L.invalid_password);
+        }
+        await walletInfo.deleteWallet();
+        if (!mounted) return;
+        Navigator.of(c!).pop();
+      },
+      L.delete_wallet,
+    );
   }
 
-  Future<void> renameWallet(BuildContext context) async {
-    if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
-      throw Exception("Invalid wallet password");
-    }
-    if ((await walletName.value).isEmpty) {
-      throw Exception("Wallet name is empty");
-    }
-    await walletInfo.renameWallet(await walletName.value);
-    if (!context.mounted) return;
-    await markNeedsBuild();
-    Navigator.of(context).pop();
+  Future<bool> renameWallet() {
+    return callThrowable(
+      () async {
+        if (!(await walletInfo.checkWalletPassword(await walletPassword.value))) {
+          throw Exception(L.invalid_password);
+        }
+        if ((await walletName.value).isEmpty) {
+          throw Exception(L.error_wallet_name_empty);
+        }
+        await walletInfo.renameWallet(await walletName.value);
+        if (!mounted) return;
+        Navigator.of(c!).pop();
+      },
+      L.rename_wallet,
+    );
   }
-
-  void titleUpdate(String? suggestedTitle) {}
 }

@@ -1,11 +1,27 @@
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/view_model/abstract.dart';
+import 'package:mobx/mobx.dart';
 
-class SettingsViewModel extends ViewModel {
-  SettingsViewModel();
+part 'settings_view_model.g.dart';
+
+class SettingsViewModel = SettingsViewModelBase with _$SettingsViewModel;
+
+abstract class SettingsViewModelBase extends ViewModel with Store {
+  SettingsViewModelBase();
 
   @override
-  String get screenName => "Settings";
+  String get screenName => L.settings;
 
-  CupcakeConfig get appConfig => config;
+  @observable
+  CupcakeConfig config = CupcakeConfig.instance;
+
+  @observable
+  int saveCount = 0;
+
+  @action
+  void save() {
+    saveCount++;
+    config.save();
+    config = CupcakeConfig.instance;
+  }
 }

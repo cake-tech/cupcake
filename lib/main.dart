@@ -1,30 +1,42 @@
+import 'dart:async';
+import 'dart:ui';
+
 import 'package:cupcake/l10n/app_localizations.dart';
+import 'package:cupcake/panic_handler.dart';
 import 'package:cupcake/themes/base_theme.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/filesystem.dart';
 import 'package:cupcake/utils/secure_storage.dart';
-import 'package:cupcake/view_model/home_screen_view_model.dart';
 import 'package:cupcake/views/home_screen.dart';
 import 'package:cupcake/views/initial_setup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-const String signingKeyExpected = "Please Fill Me On Release :)";
-late String signingKeyFound = "";
-
 Future<void> appInit() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeBaseStoragePath();
-  if (config.initialSetupComplete == false) {
+  if (CupcakeConfig.instance.initialSetupComplete == false) {
     final oldSecureStorage = await secureStorage.readAll();
     final date = DateTime.now().toIso8601String();
-    config.oldSecureStorage[date] = oldSecureStorage;
-    config.save();
+    CupcakeConfig.instance.oldSecureStorage[date] = oldSecureStorage;
+    CupcakeConfig.instance.save();
     await secureStorage.deleteAll();
   }
 }
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  FlutterError.onError = (final FlutterErrorDetails errorDetails) {
+    catchFatalError(errorDetails.exception, null);
+  };
+  PlatformDispatcher.instance.onError = (final Object error, final StackTrace stackTrace) {
+    catchFatalError(error, stackTrace);
+    return true;
+  };
+  await _main();
+}
+
+Future<void> _main() async {
   await appInit();
   runApp(const MyApp());
 }
@@ -34,12 +46,12 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Cup Cake',
+      title: 'Cupcake',
       themeMode: ThemeMode.dark,
-      darkTheme: darkBaseTheme,
+      darkTheme: BaseTheme.darkBaseTheme,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -50,17 +62,9 @@ class MyApp extends StatelessWidget {
         Locale('en'), // English
         Locale('pl'), // Polish
       ],
-      builder: (BuildContext context, Widget? child) {
-        return Stack(
-          alignment: AlignmentDirectional.bottomStart,
-          children: [
-            child ?? const Text("null"),
-          ],
-        );
-      },
-      home: config.initialSetupComplete
+      home: CupcakeConfig.instance.initialSetupComplete
           ? HomeScreen(
-              viewModel: HomeScreenViewModel(openLastWallet: true),
+              openLastWallet: true,
             )
           : InitialSetupScreen(),
     );

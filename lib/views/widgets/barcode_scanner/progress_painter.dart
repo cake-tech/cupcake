@@ -1,30 +1,39 @@
 import 'dart:math';
 
+import 'package:cupcake/views/widgets/barcode_scanner/urqr_progress.dart';
 import 'package:flutter/material.dart';
 
 class ProgressPainter extends CustomPainter {
+  ProgressPainter({required this.urQrProgress});
   final URQrProgress urQrProgress;
 
-  ProgressPainter({required this.urQrProgress});
-
   @override
-  void paint(Canvas canvas, Size size) {
+  void paint(final Canvas canvas, final Size size) {
     final c = Offset(size.width / 2.0, size.height / 2.0);
     final radius = size.width * 0.9;
     final rect = Rect.fromCenter(center: c, width: radius, height: radius);
     const fullAngle = 360.0;
     var startAngle = 0.0;
     for (int i = 0; i < urQrProgress.expectedPartCount.toInt(); i++) {
-      var sweepAngle =
-          (1 / urQrProgress.expectedPartCount) * fullAngle * pi / 180.0;
-      drawSector(canvas, urQrProgress.receivedPartIndexes.contains(i), rect,
-          startAngle, sweepAngle);
+      final sweepAngle = (1 / urQrProgress.expectedPartCount) * fullAngle * pi / 180.0;
+      drawSector(
+        canvas,
+        urQrProgress.receivedPartIndexes.contains(i),
+        rect,
+        startAngle,
+        sweepAngle,
+      );
       startAngle += sweepAngle;
     }
   }
 
-  void drawSector(Canvas canvas, bool isActive, Rect rect, double startAngle,
-      double sweepAngle) {
+  void drawSector(
+    final Canvas canvas,
+    final bool isActive,
+    final Rect rect,
+    final double startAngle,
+    final double sweepAngle,
+  ) {
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 8
@@ -35,28 +44,7 @@ class ProgressPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant ProgressPainter oldDelegate) {
+  bool shouldRepaint(covariant final ProgressPainter oldDelegate) {
     return urQrProgress != oldDelegate.urQrProgress;
-  }
-}
-
-class URQrProgress {
-  int expectedPartCount;
-  int processedPartsCount;
-  List<int> receivedPartIndexes;
-  double percentage;
-
-  URQrProgress({
-    required this.expectedPartCount,
-    required this.processedPartsCount,
-    required this.receivedPartIndexes,
-    required this.percentage,
-  });
-
-  bool equals(URQrProgress? progress) {
-    if (progress == null) {
-      return false;
-    }
-    return processedPartsCount == progress.processedPartsCount;
   }
 }

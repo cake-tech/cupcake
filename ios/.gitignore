@@ -35,3 +35,5 @@ Runner/GeneratedPluginRegistrant.*
 
 libwallet2_api_c.dylib
 MoneroWallet.framework/MoneroWallet
+monero_libwallet2_api_c.dylib
+MoneroWallet.xcframework

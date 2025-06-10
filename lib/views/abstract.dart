@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/view_model/abstract.dart';
+import 'package:cupcake/views/widgets/cupcake_appbar_title.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 // Since there is no performance penalty for using stateful widgets I would just
 // use them everywhere, but honestly all I need in stateless widgets is easy
@@ -17,36 +18,61 @@ import 'package:flutter_svg/svg.dart';
 // viewmodel, without any extra code involved in doing that.
 
 class _AbstractViewState extends State<AbstractView> {
-  _AbstractViewState({required this.realBuild});
+  _AbstractViewState({required this.realBuild, required this.realInitState});
 
   Widget Function(BuildContext context) realBuild;
+  void Function(BuildContext context) realInitState;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    realInitState(context);
+    super.initState();
+  }
+
+  @override
+  Widget build(final BuildContext context) {
     return realBuild(context);
   }
 }
 
-// ignore: must_be_immutable
 class AbstractView extends StatefulWidget {
+  AbstractView({super.key});
+  Future<void> push(final BuildContext context) async {
+    await Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (final context) {
+          return this;
+        },
+      ),
+    );
+  }
+
+  Future<void> pushReplacement(final BuildContext context) async {
+    await Navigator.of(context).pushReplacement(
+      CupertinoPageRoute(
+        builder: (final context) {
+          return this;
+        },
+      ),
+    );
+  }
+
+  late final ViewModel viewModel = throw UnimplementedError();
+
   @override
   // ignore: no_logic_in_create_state
   State<AbstractView> createState() {
-    state ??= _AbstractViewState(realBuild: build);
+    state ??= _AbstractViewState(realBuild: build, realInitState: initState);
     return state!;
   }
 
   AppLocalizations get L => viewModel.L;
 
-  Future<void> initState(BuildContext context) async {}
+  Future<void> initState(final BuildContext context) async {}
 
   State<AbstractView>? state;
 
-  AbstractView({super.key});
-
-  final viewModel = ViewModel();
-
-  get appBar => viewModel.screenName.isEmpty
+  PreferredSizeWidget? get appBar => viewModel.screenName.isEmpty
       ? null
       : AppBar(
           title: viewModel.screenName.toLowerCase() != "cupcake"
@@ -58,26 +84,18 @@ class AbstractView extends StatefulWidget {
           automaticallyImplyLeading: canPop,
         );
 
-  Widget? body(BuildContext context) => null;
+  Widget? body(final BuildContext context) => null;
 
-  bool _internalIsInitStateCalled = false;
-
-  bool canPop = true;
+  bool get canPop => viewModel.canPop;
 
   Drawer? drawer;
 
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     viewModel.register(context);
-    if (!_internalIsInitStateCalled) {
-      _internalIsInitStateCalled = true;
-      unawaited(initState(context));
-    }
     return PopScope(
       canPop: canPop,
-      onPopInvoked: (bool pop) {
-        print(pop);
-      },
       child: Scaffold(
+        key: viewModel.scaffoldKey,
         appBar: appBar,
         body: body(context),
         endDrawer: drawer,
@@ -87,41 +105,7 @@ class AbstractView extends StatefulWidget {
     );
   }
 
-  Widget? bottomNavigationBar(BuildContext context) => null;
+  Widget? bottomNavigationBar(final BuildContext context) => null;
 
-  Widget? floatingActionButton(BuildContext context) => null;
-
-  void markNeedsBuild() {
-    state!.setState(() {});
-  }
-}
-
-class CupcakeAppbarTitle extends StatelessWidget {
-  const CupcakeAppbarTitle({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset("assets/icons/icon-white.svg",
-              height: 32, width: 32, color: Colors.white),
-          const SizedBox(
-            width: 12,
-          ),
-          const Text(
-            "Cupcake",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 28,
-              color: Colors.white,
-            ),
-          ),
-          const Spacer(),
-        ],
-      ),
-    );
-  }
+  Widget? floatingActionButton(final BuildContext context) => null;
 }

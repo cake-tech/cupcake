@@ -1,69 +1,65 @@
-import 'package:cupcake/coins/abstract.dart';
-import 'package:cupcake/utils/call_throwable.dart';
+import 'package:cupcake/coins/abstract/wallet_info.dart';
+import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
+import 'package:cupcake/utils/form/pin_form_element.dart';
+import 'package:cupcake/utils/form/validators.dart';
 import 'package:cupcake/view_model/abstract.dart';
-import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/views/wallet_home.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:mobx/mobx.dart';
 
-class OpenWalletViewModel extends ViewModel {
-  OpenWalletViewModel({required this.coinInfo});
+part 'open_wallet_view_model.g.dart';
 
-  CoinWalletInfo coinInfo;
+class OpenWalletViewModel = OpenWalletViewModelBase with _$OpenWalletViewModel;
+
+abstract class OpenWalletViewModelBase extends ViewModel with Store {
+  OpenWalletViewModelBase({required this.coinWalletInfo});
+
+  final CoinWalletInfo coinWalletInfo;
 
   @override
   String get screenName => L.enter_password;
 
   late PinFormElement walletPassword = PinFormElement(
-    label: "Wallet password",
+    label: L.wallet_password,
     password: true,
     valueOutcome: FlutterSecureStorageValueOutcome(
       "secure.wallet_password",
       canWrite: false,
       verifyMatching: true,
     ),
-    validator: (String? input) {
-      if (input == null) return L.warning_input_cannot_be_null;
-      if (input == "") return L.warning_input_cannot_be_empty;
-      if (input.length < 4) {
-        return L.warning_password_too_short;
-      }
-      return null;
-    },
+    validator: nonEmptyValidator(
+      L,
+      extra: (final input) => (input.length < 4) ? L.warning_password_too_short : null,
+    ),
     onChanged: openWalletIfPasswordCorrect,
     onConfirm: openWallet,
+    errorHandler: errorHandler,
   );
 
-  Future<void> openWallet(BuildContext context) async {
-    callThrowable(
-      context,
-      () async => await _openWallet(context),
+  Future<void> openWallet() async {
+    await callThrowable(
+      () async {
+        final wallet = await coinWalletInfo.openWallet(
+          c!,
+          password: await walletPassword.value,
+        );
+        await WalletHome(coinWallet: wallet).push(c!);
+      },
       L.opening_wallet,
     );
   }
 
-  Future<void> _openWallet(BuildContext context) async {
-    final coin = await coinInfo.openWallet(
-      context,
-      password: await walletPassword.value,
-    );
-    WalletHome.pushStatic(context, coin);
-  }
-
   Future<bool> checkWalletPassword() async {
     try {
-      return coinInfo.checkWalletPassword(await walletPassword.value);
+      return coinWalletInfo.checkWalletPassword(await walletPassword.value);
     } catch (e) {
       return false;
     }
   }
 
-  Future<void> openWalletIfPasswordCorrect(BuildContext context) async {
-    print("called");
+  Future<void> openWalletIfPasswordCorrect() async {
     if (await checkWalletPassword()) {
-      if (!context.mounted) return;
-      openWallet(context);
+      if (!mounted) return;
+      return openWallet();
     }
   }
-
-  void titleUpdate(String? suggestedTitle) {}
 }

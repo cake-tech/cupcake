@@ -2,58 +2,79 @@ import 'package:cupcake/views/widgets/numerical_keyboard/keyboard.dart';
 import 'package:cupcake/views/widgets/numerical_keyboard/single_key.dart';
 import 'package:flutter/cupertino.dart';
 
-class NumericalKeyboard extends StatelessWidget {
+class NumericalKeyboard extends StatefulWidget {
   const NumericalKeyboard({
     super.key,
     required this.ctrl,
-    required this.rebuild,
     required this.showConfirm,
     required this.nextPage,
     required this.onConfirmLongPress,
     required this.showComma,
   });
   final TextEditingController ctrl;
-  final VoidCallback rebuild;
   final bool Function() showConfirm;
   final VoidCallback? nextPage;
   final VoidCallback? onConfirmLongPress;
   final bool showComma;
+
   @override
-  Widget build(BuildContext context) {
+  State<NumericalKeyboard> createState() => _NumericalKeyboardState();
+}
+
+class _NumericalKeyboardState extends State<NumericalKeyboard> {
+  void rebuild() {
+    setState(() {});
+  }
+
+  @override
+  Widget build(final BuildContext context) {
     return Column(
       children: [
-        Row(children: [
-          const Spacer(),
-          SingleKey(Keys.a1, ctrl, rebuild),
-          SingleKey(Keys.a2, ctrl, rebuild),
-          SingleKey(Keys.a3, ctrl, rebuild),
-          const Spacer(),
-        ]),
-        Row(children: [
-          const Spacer(),
-          SingleKey(Keys.a4, ctrl, rebuild),
-          SingleKey(Keys.a5, ctrl, rebuild),
-          SingleKey(Keys.a6, ctrl, rebuild),
-          const Spacer(),
-        ]),
-        Row(children: [
-          const Spacer(),
-          SingleKey(Keys.a7, ctrl, rebuild),
-          SingleKey(Keys.a8, ctrl, rebuild),
-          SingleKey(Keys.a9, ctrl, rebuild),
-          const Spacer(),
-        ]),
-        Row(children: [
-          const Spacer(),
-          SingleKey(Keys.backspace, ctrl, rebuild),
-          SingleKey(Keys.a0, ctrl, rebuild),
-          if (showConfirm() &&
-              (!showComma || ctrl.text.contains(getKeysChar(Keys.dot))))
-            SingleKey(Keys.next, ctrl, nextPage, longPress: onConfirmLongPress),
-          if (showComma && !ctrl.text.contains(getKeysChar(Keys.dot)))
-            SingleKey(Keys.dot, ctrl, rebuild),
-          Spacer(flex: showConfirm() || showComma ? 1 : 3),
-        ]),
+        Row(
+          children: [
+            const Spacer(),
+            SingleKey(Keys.a1, widget.ctrl, rebuild),
+            SingleKey(Keys.a2, widget.ctrl, rebuild),
+            SingleKey(Keys.a3, widget.ctrl, rebuild),
+            const Spacer(),
+          ],
+        ),
+        Row(
+          children: [
+            const Spacer(),
+            SingleKey(Keys.a4, widget.ctrl, rebuild),
+            SingleKey(Keys.a5, widget.ctrl, rebuild),
+            SingleKey(Keys.a6, widget.ctrl, rebuild),
+            const Spacer(),
+          ],
+        ),
+        Row(
+          children: [
+            const Spacer(),
+            SingleKey(Keys.a7, widget.ctrl, rebuild),
+            SingleKey(Keys.a8, widget.ctrl, rebuild),
+            SingleKey(Keys.a9, widget.ctrl, rebuild),
+            const Spacer(),
+          ],
+        ),
+        Row(
+          children: [
+            const Spacer(),
+            SingleKey(Keys.backspace, widget.ctrl, rebuild),
+            SingleKey(Keys.a0, widget.ctrl, rebuild),
+            if (widget.showConfirm() &&
+                (!widget.showComma || widget.ctrl.text.contains(getKeysChar(Keys.dot))))
+              SingleKey(
+                Keys.next,
+                widget.ctrl,
+                widget.nextPage,
+                longPress: widget.onConfirmLongPress,
+              ),
+            if (widget.showComma && !widget.ctrl.text.contains(getKeysChar(Keys.dot)))
+              SingleKey(Keys.dot, widget.ctrl, rebuild),
+            Spacer(flex: widget.showConfirm() || widget.showComma ? 1 : 3),
+          ],
+        ),
       ],
     );
   }

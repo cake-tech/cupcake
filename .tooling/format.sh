@@ -2,15 +2,20 @@
 set -x -e
 cd "$(dirname "$0")"
 cd ..
-dart run build_runner build
-pushd lib
-  for dir in coins themes utils view_model views widgets;
-  do
-    pushd $dir
-      dart fix --apply
-      dart format .
-    popd
-    dart format main.dart
-  done
+
+pushd lib/l10n
+    for file in *.arb;
+    do
+        jq 'to_entries 
+            | group_by(.key | sub("^@"; ""))
+            | map( sort_by(.key | startswith("@")) | map({ (.key): .value }) | add )
+            | add' $file > $file.tmp || rm $file.tmp
+        mv $file.tmp $file
+    done
 popd
+
+dart run build_runner build --delete-conflicting-outputs
+dart fix --apply .
+dart format .
+
 flutter gen-l10n

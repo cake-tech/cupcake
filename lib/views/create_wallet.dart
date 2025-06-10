@@ -1,24 +1,61 @@
+import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/gen/assets.gen.dart';
-import 'package:cupcake/utils/call_throwable.dart';
-import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/view_model/create_wallet_view_model.dart';
+import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
-import 'package:cupcake/views/initial_setup_screen.dart';
-import 'package:cupcake/widgets/form_builder.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupcake/views/widgets/buttons/long_primary.dart';
+import 'package:cupcake/views/widgets/form_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
-// ignore: must_be_immutable
 class CreateWallet extends AbstractView {
-  CreateWallet({super.key, required this.viewModel});
+  CreateWallet({
+    super.key,
+    required final CreateMethod createMethod,
+    required final bool needsPasswordConfirm,
+  }) : viewModel = CreateWalletViewModel(
+          createMethod: createMethod,
+          needsPasswordConfirm: needsPasswordConfirm,
+        );
 
-  static Future<void> staticPush(
-      BuildContext context, CreateWalletViewModel viewModel) async {
-    await Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return CreateWallet(
-            viewModel: viewModel,
+  @override
+  final CreateWalletViewModel viewModel;
+
+  Widget _selectCoin(final BuildContext context) {
+    return ListView.builder(
+      itemCount: viewModel.coins.length,
+      itemBuilder: (final BuildContext context, final int index) {
+        return InkWell(
+          onTap: () {
+            viewModel.selectedCoin = viewModel.coins[index];
+          },
+          child: Card(
+            child: ListTile(
+              title: Text(viewModel.coins[index].strings.nameFull),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _createMethod(final BuildContext context) {
+    return SizedBox(
+      height: double.maxFinite,
+      child: ListView.builder(
+        itemCount: viewModel.createMethods.keys.length,
+        itemBuilder: (final BuildContext context, final int index) {
+          final key = viewModel.createMethods.keys.elementAt(index);
+          final value = viewModel.createMethods[key];
+          return InkWell(
+            onTap: () {
+              viewModel.currentForm = value;
+            },
+            child: Card(
+              child: ListTile(
+                title: Text(key),
+              ),
+            ),
           );
         },
       ),
@@ -26,67 +63,13 @@ class CreateWallet extends AbstractView {
   }
 
   @override
-  final CreateWalletViewModel viewModel;
-
-  void setPinSet(BuildContext context, bool val) {
-    viewModel.isPinSet = val;
-    markNeedsBuild();
-  }
-
-  @override
-  Widget? body(BuildContext context) {
+  Widget? body(final BuildContext context) {
     if (viewModel.selectedCoin == null) {
-      return ListView.builder(
-        itemCount: viewModel.coins.length,
-        itemBuilder: (BuildContext context, int index) {
-          return InkWell(
-            onTap: () {
-              viewModel.selectedCoin = viewModel.coins[index];
-              markNeedsBuild();
-            },
-            child: Card(
-              child: ListTile(
-                title: Text(viewModel.coins[index].strings.nameFull),
-              ),
-            ),
-          );
-        },
-      );
+      return _selectCoin(context);
     }
     if (viewModel.currentForm == null) {
-      return SizedBox(
-        height: double.maxFinite,
-        child: ListView.builder(
-          itemCount: viewModel.createMethods.keys.length,
-          itemBuilder: (BuildContext context, int index) {
-            final key = viewModel.createMethods.keys.elementAt(index);
-            final value = viewModel.createMethods[key];
-            return InkWell(
-              onTap: () {
-                viewModel.currentForm = value;
-                markNeedsBuild();
-              },
-              child: Card(
-                child: ListTile(
-                  title: Text(key),
-                ),
-              ),
-            );
-          },
-        ),
-      );
+      return _createMethod(context);
     }
-    formBuilder = FormBuilder(
-      formElements: viewModel.currentForm ?? [],
-      scaffoldContext: context,
-      rebuild: (bool val) {
-        setPinSet(context, val);
-        markNeedsBuild();
-      },
-      isPinSet: viewModel.isPinSet,
-      showExtra: viewModel.showExtra,
-      onLabelChange: viewModel.titleUpdate,
-    );
     return Column(
       children: [
         if (viewModel.isPinSet)
@@ -96,23 +79,34 @@ class CreateWallet extends AbstractView {
           ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: formBuilder,
+          child: FormBuilder(
+            showExtra: viewModel.showExtra,
+            viewModel: FormBuilderViewModel(
+              formElements: viewModel.currentForm!,
+              scaffoldContext: context,
+              isPinSet: viewModel.isPinSet,
+              toggleIsPinSet: (final bool val) {
+                viewModel.isPinSet = val;
+              },
+              onLabelChange: viewModel.titleUpdate,
+            ),
+          ),
         ),
       ],
     );
   }
 
   @override
-  Widget? bottomNavigationBar(BuildContext context) {
-    if (viewModel.isPinSet) {
-      return SafeArea(
-          child: Column(
+  Widget? bottomNavigationBar(final BuildContext context) {
+    if (!viewModel.isPinSet) return null;
+    return SafeArea(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           LongPrimaryButton(
             text: L.next,
             icon: null,
-            onPressed: () => _next(context),
+            onPressed: viewModel.createWallet,
             backgroundColor: const WidgetStatePropertyAll(Colors.green),
             textColor: Colors.white,
           ),
@@ -121,53 +115,29 @@ class CreateWallet extends AbstractView {
               text: L.advanced_options,
               icon: null,
               onPressed: () {
-                viewModel.toggleAdvancedOptions();
-              }, // TODO: passphrase
+                viewModel.showExtra = !viewModel.showExtra;
+              },
               backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
             ),
           const SizedBox(height: 16),
         ],
-      ));
-    }
-    return null;
-  }
-
-  void _next(BuildContext context) async {
-    await callThrowable(context,
-        () async => await viewModel.createWallet(context), L.creating_wallet);
-  }
-
-  FormBuilder? formBuilder;
-
-  // @override
-  // Widget? floatingActionButton(BuildContext context) {
-  //   if (viewModel.selectedCoin == null) return null;
-  //   return FloatingActionButton(
-  //     child: const Icon(Icons.navigate_next),
-  //     onPressed: () => _createWallet(context),
-  //   );
-  // }
-
-  bool isFormBad(List<FormElement> form) {
-    for (var element in form) {
-      if (!element.isOk) {
-        if (config.debug) {
-          print("${element.label} is not valid: ");
-        }
-        return true;
-      }
-    }
-    return false;
+      ),
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     viewModel.register(context);
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(child: body(context)),
-      floatingActionButton: floatingActionButton(context),
-      bottomNavigationBar: bottomNavigationBar(context),
+    return Observer(
+      builder: (final BuildContext context) {
+        return Scaffold(
+          key: viewModel.scaffoldKey,
+          appBar: appBar,
+          body: SingleChildScrollView(child: body(context)),
+          floatingActionButton: floatingActionButton(context),
+          bottomNavigationBar: bottomNavigationBar(context),
+        );
+      },
     );
   }
 }

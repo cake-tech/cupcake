@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
 
 # IntelliJ related
@@ -47,3 +49,7 @@ lib/l10n/*.dart
 lib/generated/
 lib/gen/*.dart
 missing_translations.txt
+
+# FVM Version Cache
+.fvm/
+*.g.dart

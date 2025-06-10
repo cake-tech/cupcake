@@ -38,17 +38,17 @@ dependencies:
   monero:
     git:
       url: https://github.com/mrcyjanek/monero_c
-      ref: v0.18.3.4-RC2
+      ref: v0.18.4.0-RC1
       path: impls/monero.dart
-  path: 1.9.0
-  path_provider: 2.1.5
-  path_provider_android: 2.2.12
-  qr_flutter: 4.1.0
+  path: ^1.9.0
+  path_provider: ^2.1.5
+  path_provider_android: ^2.2.12
+  qr_flutter: ^4.1.0
   fast_scanner:
     git:
       url: https://github.com/MrCyjaneK/fast_scanner
-      ref: 0e398b047118f8734e1ded799ee0191d4232b1fe
-  flutter_svg: 2.0.10+1
+      ref: 69b3276b090fa6ac01b4483ca3adca93a8e615be
+  flutter_svg: ^2.0.17
   lottie: ^3.1.2
   share_plus: ^10.0.0
   flutter_localizations:
@@ -62,6 +62,11 @@ dependencies:
   crypto: ^3.0.3
   package_info_plus: ^8.1.0
   local_auth: ^2.3.0
+  analyzer: ^6.11.0
+  build: ^2.4.2
+  source_gen: ^1.0.0
+  mobx: ^2.5.0
+  flutter_mobx: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -72,12 +77,14 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
-  flutter_asset_generator: 1.2.0
+  flutter_lints: ^5.0.0
+  flutter_asset_generator: ^1.2.0
   build_runner: ^2.4.9
   flutter_gen_runner: ^5.8.0
   integration_test:
     sdk: flutter
+  mobx_codegen: ^2.7.0
+
 analyzer:
   exclude:
     - lib/l10n/*.dart

@@ -7,10 +7,10 @@ class SwitchCameraButton extends StatelessWidget {
   final MobileScannerController controller;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: controller,
-      builder: (context, state, child) {
+      builder: (final context, final state, final child) {
         if (!state.isInitialized || !state.isRunning) {
           return const SizedBox.shrink();
         }

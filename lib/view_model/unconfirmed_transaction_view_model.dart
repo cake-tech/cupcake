@@ -1,42 +1,42 @@
 import 'dart:async';
 
-import 'package:cupcake/coins/abstract.dart';
+import 'package:cupcake/coins/abstract/address.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/coins/abstract/amount.dart';
 import 'package:cupcake/view_model/abstract.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:mobx/mobx.dart';
 
-class Address {
-  Address(this.address);
-  final String address;
+part 'unconfirmed_transaction_view_model.g.dart';
 
-  @override
-  String toString() {
-    return address;
-  }
-}
+class UnconfirmedTransactionViewModel = UnconfirmedTransactionViewModelBase
+    with _$UnconfirmedTransactionViewModel;
 
-class Amount {
-  Amount(this.amount);
-  final int amount;
-
-  @override
-  String toString() => "$amount";
-}
-
-class UnconfirmedTransactionViewModel extends ViewModel {
-  UnconfirmedTransactionViewModel(
-      {required this.wallet,
-      required this.fee,
-      required this.destMap,
-      required this.confirmCallback,
-      required this.cancelCallback});
+abstract class UnconfirmedTransactionViewModelBase extends ViewModel with Store {
+  UnconfirmedTransactionViewModelBase({
+    required this.wallet,
+    required this.fee,
+    required this.destMap,
+    required final FutureOr<void> Function() confirmCallback,
+    required final FutureOr<void> Function() cancelCallback,
+  })  : _confirmCallback = confirmCallback,
+        _cancelCallback = cancelCallback;
 
   final CoinWallet wallet;
 
   @override
   late String screenName = wallet.coin.strings.nameFull;
 
-  final FutureOr<void> Function(BuildContext context) confirmCallback;
-  final FutureOr<void> Function(BuildContext context) cancelCallback;
+  final FutureOr<void> Function() _confirmCallback;
+  final FutureOr<void> Function() _cancelCallback;
+
+  Future<void> confirm() => callThrowable(
+        () async => await _confirmCallback(),
+        L.error_unable_to_confirm_transaction,
+      );
+  Future<void> cancel() => callThrowable(
+        () async => await _cancelCallback(),
+        L.error_unable_to_cancel,
+      );
 
   final Amount fee;
   final Map<Address, Amount> destMap;
