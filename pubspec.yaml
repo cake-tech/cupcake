@@ -74,6 +74,10 @@ dependencies:
     git:
       url: https://github.com/bukata-sa/bc-ur-dart
       ref: 5738f70d0ec3d50977ac3dd01fed62939600238b
+  applock:
+    git:
+      url: https://github.com/mrcyjanek/applock
+      ref: e411aab23b4a4eb473845709323f4910e7e08307
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:applock/applock.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/panic_handler.dart';
 import 'package:cupcake/themes/base_theme.dart';
@@ -36,10 +37,10 @@ Future<void> main() async {
       return true;
     };
   }
-  await _main();
+  await AppLock.instance.registerAppStart(BaseTheme.darkBaseTheme, $main);
 }
 
-Future<void> _main() async {
+Future<void> $main() async {
   await appInit();
   runApp(const MyApp());
 }
