@@ -133,7 +133,7 @@ class CreateWallet extends AbstractView {
         return Scaffold(
           key: viewModel.scaffoldKey,
           appBar: appBar,
-          body: SingleChildScrollView(child: body(context)),
+          body: body(context),
           floatingActionButton: floatingActionButton(context),
           bottomNavigationBar: bottomNavigationBar(context),
         );

@@ -7,5 +7,6 @@ class MoneroAmount implements Amount {
   final int amount;
 
   @override
+  // ignore: deprecated_member_use
   String toString() => monero.Wallet_displayAmount(amount);
 }

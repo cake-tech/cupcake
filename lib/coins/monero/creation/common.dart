@@ -110,7 +110,10 @@ class MoneroWalletCreation extends WalletCreation {
   ];
 
   @override
-  Map<String, List<FormElement>> createMethods(final CreateMethod createMethod) => {
+  Map<String, List<FormElement>> createMethods(
+    final CreateMethod createMethod,
+  ) =>
+      {
         if ([CreateMethod.create].contains(createMethod)) L.option_create_new_wallet: createForm,
         if ([CreateMethod.restore].contains(createMethod)) ...{
           L.option_create_seed: restoreSeedForm,

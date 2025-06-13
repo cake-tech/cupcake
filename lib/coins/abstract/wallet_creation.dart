@@ -11,7 +11,7 @@ import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 
 abstract class WalletCreation {
-  Coin get coin => throw UnimplementedError();
+  Coin get coin;
   Future<CreationOutcome?> create(
     final CreateMethod createMethod,
     final String walletName,
@@ -39,7 +39,9 @@ class CreationOutcome {
     this.message,
   }) :
         // We must provide a detailed feedback regarding why creation failed
-        assert((success == false && message != null && message.isNotEmpty) || success);
+        assert(
+          (success == false && message != null && message.isNotEmpty) || success,
+        );
   final bool success;
   final CoinWallet? wallet;
   final CreateMethod method;

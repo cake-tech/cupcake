@@ -8,7 +8,7 @@ class BaseTheme {
 
   static final darkBaseTheme = ThemeData.dark(useMaterial3: true).copyWith(
     scaffoldBackgroundColor: baseBackgroundColor,
-    cardTheme: const CardTheme(
+    cardTheme: const CardThemeData(
       color: onBackgroundColor,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(

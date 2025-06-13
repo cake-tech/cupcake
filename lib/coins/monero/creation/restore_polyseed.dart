@@ -5,7 +5,6 @@ import 'package:cupcake/coins/monero/wallet_info.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:path/path.dart' as p;
-import 'package:monero/monero.dart' as monero;
 import 'package:polyseed/polyseed.dart';
 
 class RestorePolyseedMoneroWalletCreationMethod extends CreationMethod {
@@ -44,8 +43,7 @@ class RestorePolyseedMoneroWalletCreationMethod extends CreationMethod {
       seed = dartPolyseed.encode(lang, coin);
       offset = "";
     }
-    final newWptr = monero.WalletManager_createWalletFromPolyseed(
-      Monero.wmPtr,
+    final newWptr = Monero.wm.createWalletFromPolyseed(
       path: walletPath,
       password: walletPassword,
       mnemonic: seed,
@@ -56,22 +54,21 @@ class RestorePolyseedMoneroWalletCreationMethod extends CreationMethod {
     );
     Monero.wPtrList.add(newWptr);
     progressCallback?.call(description: L.checking_status);
-    final status = monero.Wallet_status(newWptr);
+    final status = newWptr.status();
     if (status != 0) {
-      final error = monero.Wallet_errorString(newWptr);
+      final error = newWptr.errorString();
       return CreationOutcome(
         method: CreateMethod.restore,
         success: false,
         message: error,
       );
     }
-    monero.Wallet_setCacheAttribute(
-      newWptr,
+    newWptr.setCacheAttribute(
       key: MoneroCacheKeys.seedOffsetCacheKey,
       value: seedOffsetOrEncryption,
     );
-    monero.Wallet_store(newWptr);
-    monero.Wallet_store(newWptr);
+    newWptr.store();
+    newWptr.store();
     progressCallback?.call(description: L.wallet_created);
     final wallet = await Monero().openWallet(
       MoneroWalletInfo(p.basename(walletPath)),

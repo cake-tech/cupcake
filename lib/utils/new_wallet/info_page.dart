@@ -78,7 +78,11 @@ class NewWalletInfoPage {
         texts: [
           Text(
             title,
-            style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500, color: Colors.white),
+            style: const TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
             textAlign: TextAlign.center,
           ),
           Text(

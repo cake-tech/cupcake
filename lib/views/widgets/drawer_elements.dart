@@ -32,7 +32,7 @@ class DrawerElements extends StatelessWidget {
   }
 
   Future<void> _otherSettings(final BuildContext context) async {
-    await SettingsView().push(context);
+    await SettingsView(wallet: coinWallet).push(context);
   }
 
   @override

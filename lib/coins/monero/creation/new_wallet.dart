@@ -25,10 +25,10 @@ class CreateMoneroWalletCreationMethod extends CreationMethod {
   @override
   Future<CreationOutcome> create() async {
     progressCallback?.call(description: L.generating_polyseed);
+    // ignore: deprecated_member_use
     final newSeed = monero.Wallet_createPolyseed();
     progressCallback?.call(description: L.creating_wallet);
-    final newWptr = monero.WalletManager_createWalletFromPolyseed(
-      Monero.wmPtr,
+    final newWptr = Monero.wm.createWalletFromPolyseed(
       path: walletPath,
       password: walletPassword,
       mnemonic: newSeed,
@@ -38,22 +38,21 @@ class CreateMoneroWalletCreationMethod extends CreationMethod {
       kdfRounds: 1,
     );
     progressCallback?.call(description: L.checking_status);
-    final status = monero.Wallet_status(newWptr);
+    final status = newWptr.status();
     if (status != 0) {
-      final error = monero.Wallet_errorString(newWptr);
+      final error = newWptr.errorString();
       return CreationOutcome(
         method: CreateMethod.create,
         success: false,
         message: error,
       );
     }
-    monero.Wallet_setCacheAttribute(
-      newWptr,
+    newWptr.setCacheAttribute(
       key: MoneroCacheKeys.seedOffsetCacheKey,
       value: seedOffsetOrEncryption,
     );
-    monero.Wallet_store(newWptr);
-    monero.Wallet_store(newWptr);
+    newWptr.store();
+    newWptr.store();
     Monero.wPtrList.add(newWptr);
     progressCallback?.call(description: L.wallet_created);
     final wallet = await Monero().openWallet(

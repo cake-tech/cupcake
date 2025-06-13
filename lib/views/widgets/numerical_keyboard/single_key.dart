@@ -2,7 +2,13 @@ import 'package:cupcake/views/widgets/numerical_keyboard/keyboard.dart';
 import 'package:flutter/material.dart';
 
 class SingleKey extends StatelessWidget {
-  const SingleKey(this.keyId, this.ctrl, this.callback, {super.key, this.longPress});
+  const SingleKey(
+    this.keyId,
+    this.ctrl,
+    this.callback, {
+    super.key,
+    this.longPress,
+  });
   final Keys keyId;
   final TextEditingController ctrl;
   final VoidCallback? callback;

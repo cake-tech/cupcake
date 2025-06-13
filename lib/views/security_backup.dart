@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
+import 'package:cupcake/utils/config.dart';
+import 'package:cupcake/utils/secure_storage.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/alerts/widget.dart';
 import 'package:cupcake/view_model/form_builder_view_model.dart';
@@ -23,7 +27,11 @@ class SecurityBackup extends AbstractView {
   @override
   SecurityBackupViewModel viewModel;
 
-  Future<void> _copy(final BuildContext context, final String value, final String key) async {
+  Future<void> _copy(
+    final BuildContext context,
+    final String value,
+    final String key,
+  ) async {
     await Clipboard.setData(ClipboardData(text: value));
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -47,7 +55,7 @@ class SecurityBackup extends AbstractView {
             ),
           );
         }
-        final details = viewModel.wallet.seedDetails();
+        final details = getDetails();
         return FutureBuilder(
           future: details,
           builder: (final BuildContext context, final snapshot) {
@@ -67,6 +75,43 @@ class SecurityBackup extends AbstractView {
         );
       },
     );
+  }
+
+  Future<List<WalletSeedDetail>> getDetails() async {
+    final details = await viewModel.wallet.seedDetails();
+    if (CupcakeConfig.instance.debug) {
+      final secrets = await secureStorage.readAll();
+
+      details.addAll(
+        List.generate(
+          secrets.keys.length,
+          (final index) {
+            final key = secrets.keys.elementAt(index);
+            return WalletSeedDetail(
+              type: WalletSeedDetailType.text,
+              name: key,
+              value: secrets[key] ?? "unknown",
+            );
+          },
+        ),
+      );
+      details.addAll(
+        List.generate(
+          CupcakeConfig.instance.toJson().keys.length,
+          (final index) {
+            final key = CupcakeConfig.instance.toJson().keys.elementAt(index);
+            return WalletSeedDetail(
+              type: WalletSeedDetailType.text,
+              name: key,
+              value: const JsonEncoder.withIndent('    ').convert(
+                CupcakeConfig.instance.toJson()[key],
+              ),
+            );
+          },
+        ),
+      );
+    }
+    return details;
   }
 
   Widget _buildElement(final BuildContext context, final WalletSeedDetail d) {
@@ -93,7 +138,12 @@ class SecurityBackup extends AbstractView {
           text: d.name,
           icon: Icons.qr_code_rounded,
           onPressed: () async {
-            await _showQrCode(context, d, color: Colors.transparent, color2: Colors.white);
+            await _showQrCode(
+              context,
+              d,
+              color: Colors.transparent,
+              color2: Colors.white,
+            );
           },
         );
     }

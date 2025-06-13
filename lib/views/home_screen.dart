@@ -5,7 +5,6 @@ import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/buttons/long_secondary.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:path/path.dart' as p;
 
 class HomeScreen extends AbstractView {
@@ -32,12 +31,11 @@ class HomeScreen extends AbstractView {
         }
         return FutureBuilder(
           future: viewModel.wallets(viewModel.varWalletSort),
-          builder: (final BuildContext context, final AsyncSnapshot<List<CoinWalletInfo>> wallets) {
-            return Observer(
-              builder: (final BuildContext context) {
-                return walletsBody(context, wallets);
-              },
-            );
+          builder: (
+            final BuildContext context,
+            final AsyncSnapshot<List<CoinWalletInfo>> wallets,
+          ) {
+            return walletsBody(context, wallets);
           },
         );
       },

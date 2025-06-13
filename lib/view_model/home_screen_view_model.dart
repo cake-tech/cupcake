@@ -13,7 +13,10 @@ part 'home_screen_view_model.g.dart';
 class HomeScreenViewModel = HomeScreenViewModelBase with _$HomeScreenViewModel;
 
 abstract class HomeScreenViewModelBase extends ViewModel with Store {
-  HomeScreenViewModelBase({required this.openLastWallet, this.lastOpenedWallet});
+  HomeScreenViewModelBase({
+    required this.openLastWallet,
+    this.lastOpenedWallet,
+  });
 
   @override
   String get screenName => L.select_wallet;

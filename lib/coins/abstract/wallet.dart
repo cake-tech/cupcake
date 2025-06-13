@@ -11,9 +11,9 @@ abstract class CoinWallet {
   Future<void> handleUR(final BuildContext context, final URQRData ur) =>
       throw UnimplementedError();
 
-  bool get hasAccountSupport => false;
+  bool get hasAccountSupport;
 
-  bool get hasAddressesSupport => false;
+  bool get hasAddressesSupport;
 
   int getAccountsCount();
 

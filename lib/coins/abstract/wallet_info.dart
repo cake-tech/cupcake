@@ -1,5 +1,6 @@
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/coins/bitcoin/wallet_info.dart';
 import 'package:cupcake/coins/monero/wallet_info.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:flutter/widgets.dart';
@@ -18,7 +19,10 @@ abstract class CoinWalletInfo {
 
   bool exists();
 
-  Future<CoinWallet> openWallet(final BuildContext context, {required final String password});
+  Future<CoinWallet> openWallet(
+    final BuildContext context, {
+    required final String password,
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -35,6 +39,8 @@ abstract class CoinWalletInfo {
     switch (type) {
       case Coins.monero:
         return MoneroWalletInfo(walletName);
+      case Coins.bitcoin:
+        return BitcoinWalletInfo(walletName);
       case Coins.unknown:
         throw UnimplementedError("unknown coin");
     }

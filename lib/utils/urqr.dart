@@ -1,3 +1,10 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:ur/cbor_lite.dart';
+import 'package:ur/ur.dart';
+import 'package:ur/ur_decoder.dart';
+
 class URQRData {
   URQRData({
     required this.tag,
@@ -13,6 +20,24 @@ class URQRData {
   final int count;
   final String error;
   final List<String> inputs;
+
+  String get base64 => base64Encode(data);
+
+  Uint8List get data {
+    final ur = URDecoder();
+    for (final inp in inputs) {
+      ur.receivePart(inp);
+    }
+    final result = (ur.result as UR);
+    final cbor = result.cbor;
+    final cborDecoder = CBORDecoder(cbor);
+    final (bytesData, len) = cborDecoder.decodeBytes();
+    // final String hex =
+    //     bytesData.map((final byte) => byte.toRadixString(16).padLeft(2, '0')).join(' ');
+    // print(hex);
+    return bytesData;
+  }
+
   Map<String, dynamic> toJson() {
     return {
       "tag": tag,

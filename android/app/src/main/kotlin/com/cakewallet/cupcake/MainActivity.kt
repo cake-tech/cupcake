@@ -5,11 +5,11 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Base64
 import android.util.Log
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity;
 import io.flutter.plugin.common.MethodChannel
 import java.security.MessageDigest
 
-class MainActivity : FlutterActivity() {
+class MainActivity : FlutterFragmentActivity() {
 
     private val CHANNEL = "com.cakewallet.cupcake/key"
 

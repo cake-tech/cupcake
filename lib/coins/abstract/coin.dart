@@ -3,8 +3,9 @@ import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_creation.dart';
 import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
+import 'package:flutter/cupertino.dart';
 
-enum Coins { monero, unknown }
+enum Coins { monero, bitcoin, unknown }
 
 abstract class Coin {
   static late AppLocalizations L;
@@ -20,9 +21,14 @@ abstract class Coin {
 
   bool isSeedSomewhatLegit(final String seed);
 
-  Future<CoinWallet> openWallet(final CoinWalletInfo walletInfo, {required final String password});
+  Future<CoinWallet> openWallet(
+    final CoinWalletInfo walletInfo, {
+    required final String password,
+  });
 
   WalletCreation creationMethod(final AppLocalizations L);
 
   String getPathForWallet(final String walletName);
+
+  Map<String, Function(BuildContext context, CoinWallet wallet)> get debugOptions;
 }
