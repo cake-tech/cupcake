@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bdk_flutter/bdk_flutter.dart';
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
@@ -9,7 +11,7 @@ import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/views/animated_qr_page.dart';
 import 'package:cupcake/views/unconfirmed_transaction.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as p;
 import 'package:ur/cbor_lite.dart';
 import 'package:ur/ur.dart';
@@ -32,7 +34,7 @@ class BDKWalletWrapper {
   Future<bool> sign({required final PartiallySignedTransaction psbt}) async {
     bool ret = false;
     var previous = psbt.asString();
-
+    log(previous);
     for (final w in w) {
       ret = ret ||
           await w.sign(
@@ -40,7 +42,7 @@ class BDKWalletWrapper {
             signOptions: SignOptions(
               trustWitnessUtxo: true,
               allowAllSighashes: true,
-              removePartialSigs: true,
+              removePartialSigs: false,
               tryFinalize: true,
               signWithTapInternalKey: true,
               allowGrinding: true,
@@ -51,7 +53,7 @@ class BDKWalletWrapper {
         print("next is equal to previous, nothing changed");
       } else {
         print("previous different than next");
-        print(next);
+        log(next);
         // ret = true;
         previous = next;
       }
@@ -148,7 +150,7 @@ class BitcoinWallet implements CoinWallet {
               currentWallet: this,
             ).pushReplacement(context);
           },
-          cancelCallback: () => {},
+          cancelCallback: () => Navigator.of(context).pop(),
         ).pushReplacement(context);
         break;
       default:
