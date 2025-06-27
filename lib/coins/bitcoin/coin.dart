@@ -47,7 +47,6 @@ class Bitcoin implements Coin {
 
   @override
   String getPathForWallet(final String walletName) {
-    final baseDir = Directory(p.join(baseStoragePath, strings.symbolLowercase));
     if (!baseDir.existsSync()) {
       baseDir.createSync(recursive: true);
     }
@@ -81,7 +80,7 @@ class Bitcoin implements Coin {
   @override
   bool isSeedSomewhatLegit(final String seed) {
     final length = seed.split(" ").length;
-    return [12].contains(length);
+    return [12, 18, 24].contains(length);
   }
 
   @override
@@ -115,14 +114,7 @@ class Bitcoin implements Coin {
         databaseConfig: DatabaseConfig.memory(),
       ),
     );
-    wallets.add(
-      await Wallet.create(
-        descriptor: internalDescriptor84,
-        changeDescriptor: externalDescriptor84,
-        network: Network.bitcoin,
-        databaseConfig: DatabaseConfig.memory(),
-      ),
-    );
+
     final externalDescriptor44 = await Descriptor.newBip44(
       secretKey: descriptorSecretKey,
       network: Network.bitcoin,
@@ -138,15 +130,6 @@ class Bitcoin implements Coin {
       await Wallet.create(
         descriptor: externalDescriptor44,
         changeDescriptor: internalDescriptor44,
-        network: Network.bitcoin,
-        databaseConfig: DatabaseConfig.memory(),
-      ),
-    );
-
-    wallets.add(
-      await Wallet.create(
-        descriptor: internalDescriptor44,
-        changeDescriptor: externalDescriptor44,
         network: Network.bitcoin,
         databaseConfig: DatabaseConfig.memory(),
       ),
@@ -171,14 +154,6 @@ class Bitcoin implements Coin {
         databaseConfig: DatabaseConfig.memory(),
       ),
     );
-    wallets.add(
-      await Wallet.create(
-        descriptor: internalDescriptor49,
-        changeDescriptor: externalDescriptor49,
-        network: Network.bitcoin,
-        databaseConfig: DatabaseConfig.memory(),
-      ),
-    );
 
     final externalDescriptor86 = await Descriptor.newBip86(
       secretKey: descriptorSecretKey,
@@ -199,14 +174,6 @@ class Bitcoin implements Coin {
         databaseConfig: DatabaseConfig.memory(),
       ),
     );
-    wallets.add(
-      await Wallet.create(
-        descriptor: internalDescriptor86,
-        changeDescriptor: externalDescriptor86,
-        network: Network.bitcoin,
-        databaseConfig: DatabaseConfig.memory(),
-      ),
-    );
 
     String xpub =
         (await (descriptorSecretKey.derive(await DerivationPath.create(path: "m/84'/0'/0'"))))
@@ -221,6 +188,7 @@ class Bitcoin implements Coin {
         // generate addresses, or otherwise it will fail to sign
         for (var i = 0; i < 10000; i++) {
           await Future.delayed(Duration.zero);
+          wallet.getInternalAddress(addressIndex: AddressIndex.increase());
           wallet.getAddress(addressIndex: AddressIndex.increase());
         }
       }

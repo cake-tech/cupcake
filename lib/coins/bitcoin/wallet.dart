@@ -35,9 +35,9 @@ class BDKWalletWrapper {
     bool ret = false;
     var previous = psbt.asString();
     log(previous);
-    for (final w in w) {
+    for (final wallet in w) {
       ret = ret ||
-          await w.sign(
+          await wallet.sign(
             psbt: psbt,
             signOptions: SignOptions(
               trustWitnessUtxo: true,
@@ -54,7 +54,6 @@ class BDKWalletWrapper {
       } else {
         print("previous different than next");
         log(next);
-        // ret = true;
         previous = next;
       }
     }

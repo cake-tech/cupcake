@@ -37,7 +37,7 @@ class RestoreBitcoinWalletCreationMethod extends CreationMethod {
 
     final wallet = await coin.createWalletObject(mnemonic.asString());
     return CreationOutcome(
-      method: CreateMethod.create,
+      method: CreateMethod.restore,
       success: true,
       wallet: BitcoinWallet(
         wallet,

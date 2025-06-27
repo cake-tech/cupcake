@@ -74,7 +74,6 @@ class Monero implements Coin {
 
   @override
   String getPathForWallet(final String walletName) {
-    final baseDir = Directory(p.join(baseStoragePath, strings.symbolLowercase));
     if (!baseDir.existsSync()) {
       baseDir.createSync(recursive: true);
     }
