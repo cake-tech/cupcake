@@ -27,7 +27,7 @@ class CreateBitcoinWalletCreationMethod extends CreationMethod {
   Future<CreationOutcome> create() async {
     progressCallback?.call(description: L.generating_polyseed);
     // ignore: deprecated_member_use
-    final mnemonic = await Mnemonic.create(WordCount.words24);
+    final mnemonic = await Mnemonic.create(WordCount.words12);
 
     final keys = "${Bitcoin().getPathForWallet(p.basename(walletPath))}.keys";
     final keysEncrypted = DefaultEncryption().encryptString(mnemonic.asString(), walletPassword);
