@@ -16,6 +16,7 @@ import 'package:cupcake/utils/new_wallet/info_page.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/views/new_wallet_info.dart';
 import 'package:cupcake/views/wallet_home.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 
 part 'create_wallet_view_model.g.dart';
@@ -166,7 +167,13 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
       throw Exception(L.warning_input_cannot_be_empty);
     }
 
-    if (await walletPassword.value != await walletPasswordInitial.value) {
+    final walletPassword1 = walletPassword.ctrl.text;
+    final walletPassword2 = walletPasswordInitial.ctrl.text;
+    // verify that password match when confirming, ignore otherwise
+    if (walletPassword1 != walletPassword2 && walletPassword2.isNotEmpty) {
+      if (kDebugMode) {
+        throw Exception("${L.password_doesnt_match} /$walletPassword1/$walletPassword2/");
+      }
       throw Exception(L.password_doesnt_match);
     }
 

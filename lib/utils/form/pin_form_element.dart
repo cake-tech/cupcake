@@ -35,15 +35,22 @@ abstract class PinFormElementBase extends FormElement with Store {
     final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
     final bool canAuthenticate = canAuthenticateWithBiometrics || await auth.isDeviceSupported();
     if (!canAuthenticate) return;
-    if (!availableBiometrics.contains(BiometricType.fingerprint) &&
-        !availableBiometrics.contains(BiometricType.face)) {
+    if (!availableBiometrics.contains(BiometricType.strong) &&
+        !CupcakeConfig.instance.canUseInsecureBiometric) {
       return;
     }
-
-    final bool didAuthenticate = await auth.authenticate(
-      localizedReason: 'Authenticate...',
-      options: const AuthenticationOptions(useErrorDialogs: true, biometricOnly: true),
-    );
+    bool didAuthenticate = false;
+    try {
+      didAuthenticate = await auth.authenticate(
+        localizedReason: 'Authenticate...',
+        options: const AuthenticationOptions(
+          useErrorDialogs: true,
+          biometricOnly: true,
+        ),
+      );
+    } catch (e) {
+      didAuthenticate = false;
+    }
     if (!didAuthenticate) return;
     final value = await secureStorage.read(key: "UI.${valueOutcome.uniqueId}");
     if (value == null) return;

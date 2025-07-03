@@ -4,7 +4,6 @@ import 'package:cupcake/coins/monero/wallet_info.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:path/path.dart' as p;
-import 'package:monero/monero.dart' as monero;
 
 class RestoreLegacyWalletCreationMethod extends CreationMethod {
   RestoreLegacyWalletCreationMethod(
@@ -26,8 +25,7 @@ class RestoreLegacyWalletCreationMethod extends CreationMethod {
   @override
   Future<CreationOutcome> create() async {
     progressCallback?.call(description: L.creating_wallet);
-    final newWptr = monero.WalletManager_recoveryWallet(
-      Monero.wmPtr,
+    final newWptr = Monero.wm.recoveryWallet(
       path: walletPath,
       password: walletPassword,
       mnemonic: seed,
@@ -37,17 +35,17 @@ class RestoreLegacyWalletCreationMethod extends CreationMethod {
     );
     Monero.wPtrList.add(newWptr);
     progressCallback?.call(description: L.checking_status);
-    final status = monero.Wallet_status(newWptr);
+    final status = newWptr.status();
     if (status != 0) {
-      final error = monero.Wallet_errorString(newWptr);
+      final error = newWptr.errorString();
       return CreationOutcome(
         method: CreateMethod.restore,
         success: false,
         message: error,
       );
     }
-    monero.Wallet_store(newWptr);
-    monero.Wallet_store(newWptr);
+    newWptr.store();
+    newWptr.store();
     progressCallback?.call(description: L.wallet_created);
     final wallet = await Monero().openWallet(
       MoneroWalletInfo(p.basename(walletPath)),

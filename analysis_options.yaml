@@ -1,5 +1,6 @@
 analyzer:
   errors:
+    implementation_imports: ignore
     must_be_immutable: ignore
     overridden_fields: ignore
   exclude:

@@ -1,4 +1,8 @@
+import 'package:applock/applock.dart';
 import 'package:cupcake/coins/abstract/wallet_info.dart';
+import 'package:cupcake/main.dart';
+import 'package:cupcake/themes/base_theme.dart';
+import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/validators.dart';
@@ -32,7 +36,10 @@ abstract class OpenWalletViewModelBase extends ViewModel with Store {
     ),
     onChanged: openWalletIfPasswordCorrect,
     onConfirm: openWallet,
-    errorHandler: errorHandler,
+    errorHandler: (final Object e) async {
+      await AppLock.instance.fail(BaseTheme.darkBaseTheme, $main); // failed authentication
+      await errorHandler(e);
+    },
   );
 
   Future<void> openWallet() async {
@@ -42,6 +49,9 @@ abstract class OpenWalletViewModelBase extends ViewModel with Store {
           c!,
           password: await walletPassword.value,
         );
+        await AppLock.instance.success();
+        CupcakeConfig.instance.lastWallet = coinWalletInfo;
+        CupcakeConfig.instance.save();
         await WalletHome(coinWallet: wallet).push(c!);
       },
       L.opening_wallet,

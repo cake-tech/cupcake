@@ -32,8 +32,9 @@ abstract class URQRViewModelBase extends ViewModel with Store {
   List<String> get alternativeCodes {
     final Map<String, List<String>> copiedList = {};
     copiedList.addAll(urqrList);
-    copiedList
-        .removeWhere((final key, final value) => value.join("\n").trim() == urqr.join("\n").trim());
+    copiedList.removeWhere(
+      (final key, final value) => value.join("\n").trim() == urqr.join("\n").trim(),
+    );
     final keys = copiedList.keys;
     return keys.toList();
   }

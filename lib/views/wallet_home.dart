@@ -6,7 +6,6 @@ import 'package:cupcake/views/receive.dart';
 import 'package:cupcake/views/widgets/cake_card.dart';
 import 'package:cupcake/views/widgets/drawer_elements.dart';
 import 'package:flutter/material.dart';
-import 'package:cupcake/gen/assets.gen.dart';
 
 class WalletHome extends AbstractView {
   WalletHome({
@@ -35,9 +34,15 @@ class WalletHome extends AbstractView {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Padding(padding: EdgeInsets.only(top: 50, bottom: 24)),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 50, bottom: 24),
+                    ),
                     const SizedBox(width: 16),
-                    Assets.coins.xmr.svg(width: 50),
+                    SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: viewModel.wallet.coin.strings.svg,
+                    ),
                     const SizedBox(width: 16),
                     Column(
                       mainAxisSize: MainAxisSize.min,
