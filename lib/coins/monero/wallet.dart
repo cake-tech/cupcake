@@ -31,6 +31,9 @@ class MoneroWallet implements CoinWallet {
   Coin coin = Monero();
 
   @override
+  List<String> get connectCakeWalletQRCode => [pairQrString];
+
+  @override
   bool get hasAccountSupport => true;
   @override
   bool get hasAddressesSupport => true;
@@ -269,13 +272,15 @@ class MoneroWallet implements CoinWallet {
       WalletSeedDetail(
         type: WalletSeedDetailType.qr,
         name: Coin.L.view_only_restore_qr,
-        value: const JsonEncoder.withIndent('   ').convert({
-          "version": 0,
-          "primaryAddress": primaryAddress,
-          "privateViewKey": wallet.secretViewKey(),
-          "restoreHeight": wallet.getRefreshFromBlockHeight(),
-        }),
+        value: pairQrString,
       ),
     ];
   }
+
+  String get pairQrString => const JsonEncoder.withIndent('   ').convert({
+        "version": 0,
+        "primaryAddress": primaryAddress,
+        "privateViewKey": wallet.secretViewKey(),
+        "restoreHeight": wallet.getRefreshFromBlockHeight(),
+      });
 }

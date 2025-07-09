@@ -97,6 +97,7 @@ class MoneroWalletCreation extends WalletCreation {
       L.seed_type_legacy,
     ],
     errorHandler: errorHandler,
+    isExtra: true,
   );
 
   late List<FormElement> createForm = [walletSeedType, seedOffset];
@@ -110,14 +111,24 @@ class MoneroWalletCreation extends WalletCreation {
   ];
 
   @override
-  Map<String, List<FormElement>> createMethods(
+  Map<String, WalletCreationForm> createMethods(
     final CreateMethod createMethod,
   ) =>
       {
-        if ([CreateMethod.create].contains(createMethod)) L.option_create_new_wallet: createForm,
+        if ([CreateMethod.create].contains(createMethod))
+          L.option_create_new_wallet: WalletCreationForm(
+            method: CreateMethod.create,
+            form: createForm,
+          ),
         if ([CreateMethod.restore].contains(createMethod)) ...{
-          L.option_create_seed: restoreSeedForm,
-          L.option_create_keys: restoreKeysForm,
+          L.option_create_seed: WalletCreationForm(
+            method: CreateMethod.restore,
+            form: restoreSeedForm,
+          ),
+          L.option_create_keys: WalletCreationForm(
+            method: CreateMethod.restore,
+            form: restoreKeysForm,
+          ),
         },
       };
 

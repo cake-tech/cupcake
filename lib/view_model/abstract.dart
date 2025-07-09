@@ -26,6 +26,21 @@ abstract class ViewModel {
     return _lcache!;
   }
 
+  ThemeData get T {
+    if (_tcache == null && c == null) {
+      throw Exception(
+        "context is null in view model. Did you forget to register()?",
+      );
+    }
+    if (_tcache == null && c?.mounted != true) {
+      throw Exception(
+        "context is not mounted. Did you register incorrect context?",
+      );
+    }
+    _tcache ??= Theme.of(c!);
+    return _tcache!;
+  }
+
   BuildContext? _c;
 
   void register(final BuildContext context) {
@@ -33,6 +48,7 @@ abstract class ViewModel {
   }
 
   AppLocalizations? _lcache;
+  ThemeData? _tcache;
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 

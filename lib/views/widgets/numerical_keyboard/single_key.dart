@@ -15,6 +15,7 @@ class SingleKey extends StatelessWidget {
   final VoidCallback? longPress;
   @override
   Widget build(final BuildContext context) {
+    final T = Theme.of(context);
     return Expanded(
       flex: 2,
       child: Container(
@@ -26,7 +27,7 @@ class SingleKey extends StatelessWidget {
         ),
         child: ClipRect(
           child: Material(
-            color: Theme.of(context).scaffoldBackgroundColor,
+            color: Colors.transparent,
             child: InkWell(
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,

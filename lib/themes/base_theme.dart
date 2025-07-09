@@ -45,5 +45,13 @@ class BaseTheme {
       centerTitle: true,
       backgroundColor: Colors.transparent,
     ),
+    colorScheme: ColorScheme.dark(
+      primary: Color(0xff91B0FF),
+      secondary: Color(0xff91A7FF),
+      onPrimary: Color(0xff002860),
+      surface: Color(0xff233461),
+      onSecondaryContainer: Color(0xffBACBFF),
+    ),
+    primaryColor: Color(0xff91B0FF),
   );
 }

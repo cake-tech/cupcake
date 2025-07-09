@@ -11,6 +11,8 @@ abstract class CoinWallet {
   Future<void> handleUR(final BuildContext context, final URQRData ur) =>
       throw UnimplementedError();
 
+  List<String> get connectCakeWalletQRCode;
+
   bool get hasAccountSupport;
 
   bool get hasAddressesSupport;

@@ -29,6 +29,7 @@ abstract class StringFormElementBase extends FormElement with Store {
   @override
   Future<String> get value => Future.value(ctrl.text);
 
+  @override
   @observable
   bool isExtra;
 

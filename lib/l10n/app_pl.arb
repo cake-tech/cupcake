@@ -10,18 +10,12 @@
   "create_new_wallet": "Stwórz nowy portfel",
   "create_wallet": "Stwórz Portfel",
   "creating_wallet": "Tworzenie portfela",
-  "cupcake_slogan": "Przechowuj swoje kryptowaluty jeszcze bezpieczniej",
+  "cupcake_slogan": "Bezpieczeństwo - jeszcze łatwiejsze",
   "enter_password": "Wpisz Hasło",
   "export_key_images": "Exportuj \"key images\"",
   "home_no_wallets": "Nie masz żadnego portfela, rozważ utworzenie nowego",
   "important": "WAŻNE",
-  "important_seed_backup_info": "Na następnej stronie zobaczysz serię {seedDescription}. To jest twój unikalny oraz prywatny klucz, który jest JEDYNYM sposobem na odzyskanie portfela w wypadku uszkodzanie, utraty dostępu do urządzenia lub awarii. Upewnienie się, że ten klucz jest przechowywany w bezpiecznym miejscu poza aplikacją Cupcake jest TWOJĄ odpowiedzialnością.",
-  "@important_seed_backup_info": {
-    "description": "seedDescription should contain phrase like '16 words' or '64 characters",
-    "placeholder": {
-      "seedDescription": "String"
-    }
-  },
+  "important_seed_backup_info": "Na następnej stronie zobaczysz serię słów. To jest twój unikalny oraz prywatny klucz, który jest JEDYNYM sposobem na odzyskanie portfela w wypadku uszkodzanie, utraty dostępu do urządzenia lub awarii. Upewnienie się, że ten klucz jest przechowywany w bezpiecznym miejscu poza aplikacją Cupcake jest TWOJĄ odpowiedzialnością.",
   "next": "Następny",
   "opening_wallet": "Otwieranie portfela",
   "option_create_keys": "Odzyskaj z kluczy",
@@ -50,6 +44,7 @@
   "seed_type_polyseed": "Polyseed (16 słów)",
   "select_wallet": "Wybierz portfel",
   "spend_key": "Klucz wydatków",
+  "to": "w",
   "understand_show_seed": "Rozumiem. Pokaż mi mój klucz.",
   "view_key": "Klucz podglądu",
   "view_only_restore_qr": "Kod QR portfela podglądu",
@@ -65,6 +60,6 @@
   "warning_must_be_a_number": "W pole należy wprowadzić liczbę",
   "warning_password_too_short": "Hasło musi mieć conajmniej 4 znaki",
   "warning_seed_incorrect_length": "Fraza odzyskiwania musi mieć dokładnie 16 lub 25 słów",
-  "welcome_to": "Witaj w",
+  "welcome": "Witaj",
   "write_down_notice": "Zapisz ten klucz na wypadek utraty dostępu do aplikacji"
 }

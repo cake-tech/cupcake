@@ -19,7 +19,7 @@ abstract class HomeScreenViewModelBase extends ViewModel with Store {
   });
 
   @override
-  String get screenName => L.select_wallet;
+  String get screenName => "Cupcake";
 
   final bool openLastWallet;
 

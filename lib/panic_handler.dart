@@ -1,5 +1,4 @@
 import 'package:cupcake/themes/base_theme.dart';
-import 'package:cupcake/views/widgets/cupcake_appbar_title.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -67,7 +66,7 @@ class CupcakeFatalError extends StatelessWidget {
   Widget build(final BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CupcakeAppbarTitle(),
+        title: Text("Oops!"),
       ),
       body: SingleChildScrollView(
         child: Padding(

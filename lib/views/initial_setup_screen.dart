@@ -1,10 +1,8 @@
-import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/view_model/initial_setup_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/create_wallet.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
-import 'package:cupcake/views/widgets/buttons/long_secondary.dart';
 import 'package:flutter/material.dart';
 
 class InitialSetupScreen extends AbstractView {
@@ -14,58 +12,60 @@ class InitialSetupScreen extends AbstractView {
   InitialSetupViewModel viewModel = InitialSetupViewModel();
 
   @override
+  bool get hasBackground => true;
+
+  @override
   Widget? body(final BuildContext context) {
-    return SafeArea(
-      minimum: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 24),
-            child: Assets.cakeLanding.lottie(),
+    return Column(
+      children: [
+        SizedBox(
+          width: double.maxFinite,
+          child: Assets.icons.nightLanding.svg(fit: BoxFit.fitWidth),
+        ),
+        Text(
+          L.welcome,
+          style: T.textTheme.displayLarge?.copyWith(
+            color: T.colorScheme.primary,
+            fontWeight: FontWeight.w700,
+            fontSize: 72,
           ),
-          Text(
-            L.welcome_to,
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            "Cupcake",
-            style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            L.cupcake_slogan,
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
-          const Spacer(),
-          const SizedBox(height: 8),
-          LongSecondaryButton(
-            text: L.create_new_wallet,
-            icon: Icons.add,
-            onPressed: () => CreateWallet(
-              createMethod: CreateMethod.create,
-              needsPasswordConfirm: true,
-            ).push(context),
-          ),
-          LongPrimaryButton(
-            text: L.restore_wallet,
-            icon: Icons.restore,
-            onPressed: () => CreateWallet(
-              createMethod: CreateMethod.restore,
-              needsPasswordConfirm: true,
-            ).push(context),
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              L.to,
+              style: T.textTheme.displaySmall?.copyWith(
+                fontSize: 14,
+              ),
+            ),
+            SizedBox(width: 8),
+            Assets.icons.cupcakeSmallIcon.svg(width: 22),
+            SizedBox(width: 8),
+            Text(
+              "Cupcake",
+              style: T.textTheme.displaySmall?.copyWith(
+                fontSize: 22,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 42),
+        Text(
+          L.cupcake_slogan,
+          style: TextStyle(fontSize: 16),
+        ),
+        const Spacer(),
+        const SizedBox(height: 8),
+        LongPrimaryButton(
+          text: L.set_a_pin,
+          onPressed: () => CreateWallet(
+            createMethod: null,
+            needsPasswordConfirm: true,
+          ).push(context),
+        ),
+      ],
     );
   }
 }

@@ -1,10 +1,13 @@
 import 'package:cupcake/coins/abstract/wallet_info.dart';
+import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/view_model/home_screen_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
+import 'package:cupcake/views/create_wallet.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/buttons/long_secondary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:path/path.dart' as p;
 
 class HomeScreen extends AbstractView {
@@ -16,6 +19,17 @@ class HomeScreen extends AbstractView {
           openLastWallet: openLastWallet,
           lastOpenedWallet: lastOpenedWallet,
         );
+  @override
+  AppBar? get appBar => AppBar(
+        title: Assets.icons.cupcakeNavbar.svg(),
+        automaticallyImplyLeading: canPop,
+        actions: [
+          IconButton(
+            onPressed: viewModel.toggleSort,
+            icon: const Icon(Icons.sort),
+          ),
+        ],
+      );
 
   @override
   final HomeScreenViewModel viewModel;
@@ -27,79 +41,73 @@ class HomeScreen extends AbstractView {
       builder: (final BuildContext context, final AsyncSnapshot<bool> value) {
         if (!value.hasData) return Container();
         if (value.data!) {
-          return Text(L.home_no_wallets);
+          return Center(
+            child: Text(
+              L.home_no_wallets,
+              style: const TextStyle(color: Colors.white),
+            ),
+          );
         }
-        return FutureBuilder(
-          future: viewModel.wallets(viewModel.varWalletSort),
-          builder: (
-            final BuildContext context,
-            final AsyncSnapshot<List<CoinWalletInfo>> wallets,
-          ) {
-            return walletsBody(context, wallets);
+        return Observer(
+          builder: (final context) {
+            return FutureBuilder(
+              future: viewModel.wallets(viewModel.varWalletSort),
+              builder: (
+                final BuildContext context,
+                final AsyncSnapshot<List<CoinWalletInfo>> wallets,
+              ) {
+                return walletsBody(context, wallets);
+              },
+            );
           },
         );
       },
     );
   }
 
-  @override
-  AppBar? get appBar => AppBar(
-        title: Text(
-          viewModel.screenName,
-          style: const TextStyle(color: Colors.white),
-        ),
-        automaticallyImplyLeading: canPop,
-        actions: [
-          IconButton(
-            onPressed: viewModel.toggleSort,
-            icon: const Icon(Icons.sort),
-          ),
-        ],
-      );
   Widget walletsBody(
     final BuildContext context,
     final AsyncSnapshot<List<CoinWalletInfo>> wallets,
   ) {
     if (!wallets.hasData) return Container();
-    return ListView.builder(
-      itemCount: wallets.data!.length,
-      itemBuilder: (final BuildContext context, final int index) {
-        final bool isOpen =
-            (wallets.data![index].walletName).contains(viewModel.lastOpenedWallet ?? "");
-        return singleWalletWidget(context, isOpen, wallets.data![index]);
-      },
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: ListView.separated(
+        itemCount: wallets.data!.length,
+        separatorBuilder: (final context, final index) => const SizedBox(height: 16),
+        itemBuilder: (final BuildContext context, final int index) {
+          return singleWalletWidget(context, wallets.data![index]);
+        },
+      ),
     );
   }
 
-  Card singleWalletWidget(
+  Widget singleWalletWidget(
     final BuildContext context,
-    final bool isOpen,
     final CoinWalletInfo wallet,
   ) {
-    return Card(
-      child: IntrinsicHeight(
+    return GestureDetector(
+      onTap: () => wallet.openUI(context),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1B284A),
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: Row(
           children: [
-            Container(
-              width: 3,
-              color: isOpen ? Colors.blue : Colors.transparent,
-              height: double.infinity,
+            SizedBox.square(
+              dimension: 32,
+              child: wallet.coin.strings.svg,
             ),
+            const SizedBox(width: 16),
             Expanded(
-              child: ListTile(
-                onTap: () {
-                  wallet.openUI(context);
-                },
-                leading: SizedBox(
-                  width: 32,
-                  child: wallet.coin.strings.svg,
-                ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit_rounded),
-                  onPressed: () => viewModel.renameWallet(wallet),
-                ),
-                title: Text(
-                  p.basename(wallet.walletName),
+              child: Text(
+                p.basename(wallet.walletName),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
@@ -111,22 +119,25 @@ class HomeScreen extends AbstractView {
 
   @override
   Widget? bottomNavigationBar(final BuildContext context) {
-    return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          LongPrimaryButton(
-            icon: Icons.add,
-            onPressed: () => viewModel.createWallet(CreateMethod.create),
-            text: L.create_new_wallet,
-          ),
-          LongSecondaryButton(
-            icon: Icons.restore,
-            onPressed: () => viewModel.createWallet(CreateMethod.restore),
-            text: L.restore_wallet,
-          ),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        LongSecondaryButton(
+          T,
+          onPressed: () {
+            CreateWallet(createMethod: CreateMethod.restore, needsPasswordConfirm: false)
+                .push(context);
+          },
+          text: L.restore_wallet,
+        ),
+        LongPrimaryButton(
+          onPressed: () {
+            CreateWallet(createMethod: CreateMethod.create, needsPasswordConfirm: false)
+                .push(context);
+          },
+          text: L.create_new_wallet,
+        ),
+      ],
     );
   }
 

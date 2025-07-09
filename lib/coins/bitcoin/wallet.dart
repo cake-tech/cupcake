@@ -37,7 +37,7 @@ class BDKWalletWrapper {
     log(previous);
     for (final wallet in w) {
       ret = ret ||
-          await wallet.sign(
+          wallet.sign(
             psbt: psbt,
             signOptions: SignOptions(
               trustWitnessUtxo: true,
@@ -68,6 +68,9 @@ class BitcoinWallet implements CoinWallet {
     required final String walletName,
   }) : _walletName = walletName;
   final BDKWalletWrapper wallet;
+
+  @override
+  List<String> get connectCakeWalletQRCode => [publicUri.toString()];
 
   @override
   int get addressIndex => 0;
@@ -117,7 +120,7 @@ class BitcoinWallet implements CoinWallet {
 
         final Map<BitcoinAddress, BitcoinAmount> destMap = {};
         final tx = psbt.extractTx();
-        final outputs = await tx.output();
+        final outputs = tx.output();
         for (final out in outputs) {
           final bdkScript = out.scriptPubkey;
           final script = ScriptBuf(bytes: bdkScript.bytes);

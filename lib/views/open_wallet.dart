@@ -17,6 +17,9 @@ class OpenWallet extends AbstractView {
   final OpenWalletViewModel viewModel;
 
   @override
+  bool get hasBackground => true;
+
+  @override
   Widget body(final BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -6,10 +6,8 @@ class NewWalletAction {
     required this.type,
     required this.function,
     required this.text,
-    required this.backgroundColor,
   });
   final NewWalletActionType type;
-  final VoidCallback? function;
-  final Widget text;
-  final Color backgroundColor;
+  final Function(BuildContext context)? function;
+  final String text;
 }

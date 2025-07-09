@@ -66,7 +66,7 @@ abstract class BDKPSBTViewModelBase extends ViewModel with Store {
       "cHNidP8BAHECAAAAAdKLQbS4HhnB/MuYEqjOEpzd8/kTGraE6NqF0vnB7GPfAAAAAAD/////AlDDAAAAAAAAFgAUaXyHTaChttVprWwbuVyDxduR/Bnj9wEAAAAAABYAFP5EnxiEYlz2AxgEyGDMD8IA192tAAAAAAABAR/DvwIAAAAAABYAFJ+oANsY68w7Ewwy6Yz7s4r5rY7HIgYDOiWkNsuiP6TMX41+GmLqChr/LNCwCsqyRDKTLo7NmtsYAAAAAFQAAIAAAACAAAAAgAAAAAAAAAAAAAAiAgPtwyobZcT8BKCBakO23ImJt+xl+x/GCEIrT7ruxxziZhgAAAAAVAAAgAAAAIAAAACAAQAAACAAAAAA",
     );
     log("previous: ${psbt.asString()}");
-    final output = await w.sign(
+    final output = w.sign(
       psbt: psbt,
       signOptions: SignOptions(
         trustWitnessUtxo: true,

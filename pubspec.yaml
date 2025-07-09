@@ -68,7 +68,7 @@ dependencies:
   flutter_mobx: ^2.3.0
   drift: ^2.26.1
   drift_flutter: ^0.2.4
-  bdk_flutter: ^0.31.2
+  bdk_flutter: ^0.31.3
   dart_pg: ^2.0.0
   ur:
     git:
@@ -77,7 +77,7 @@ dependencies:
   applock:
     git:
       url: https://github.com/mrcyjanek/applock
-      ref: e411aab23b4a4eb473845709323f4910e7e08307
+      ref: 77cc90a7ae3c0c0969afe82df5a9d04cc0387d8d
 
 dev_dependencies:
   flutter_test:
@@ -125,9 +125,23 @@ flutter:
     - assets/coins/btc.svg
     - assets/coins/xmr.svg
     - assets/icons/icon-white.svg
-    - assets/shield.json
-    - assets/cake_landing.json
-    - assets/mobile.json
+    - assets/icons/night_landing.svg
+    - assets/icons/wallet_new.svg
+    - assets/icons/wallet_new_name.svg
+    - assets/icons/cupcake_small_icon.svg
+    - assets/icons/shield_keys.svg
+    - assets/icons/menu_deposit.svg
+    - assets/icons/menu_qr.svg
+    - assets/icons/menu_menu.svg
+    - assets/icons/cupcake_navbar.svg
+    - assets/icons/link_cakewallet.png
+    - assets/icons/warning.svg
+    - assets/icons/nav/cake_dark.svg
+    - assets/icons/nav/cake_light.svg
+    - assets/icons/nav/wallets.svg
+    - assets/icons/nav/seed_and_keys.svg
+    - assets/icons/nav/other_settings.svg
+    - assets/icons/nav/cupcake.svg
     - assets/drawer_icons/address_book.svg
     - assets/drawer_icons/export_key_images.svg
     - assets/drawer_icons/other_settings.svg

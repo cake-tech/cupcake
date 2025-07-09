@@ -25,6 +25,9 @@ abstract class PinFormElementBase extends FormElement with Store {
         _errorHandler = errorHandler;
   final Future<void> Function(Object e) _errorHandler;
 
+  @override
+  bool get isExtra => false;
+
   @action
   Future<void> loadSecureStorageValue(final VoidCallback callback) async {
     if (ctrl.text.isNotEmpty) return;

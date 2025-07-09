@@ -2,9 +2,10 @@ import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/utils/secure_storage.dart';
 import 'package:cupcake/view_model/settings_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
+import 'package:cupcake/views/ui_playground.dart';
+import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/settings/boolean_config_element.dart';
 import 'package:cupcake/views/widgets/settings/integer_config_element.dart';
-import 'package:cupcake/views/widgets/settings/version_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -96,16 +97,23 @@ class SettingsView extends AbstractView {
           },
         ),
         if (viewModel.debug)
-          ...List.generate(viewModel.wallet.coin.debugOptions.length, (final int i) {
-            final key = viewModel.wallet.coin.debugOptions.keys.toList()[i];
-            return ElevatedButton(
-              onPressed: () async {
-                await viewModel.wallet.coin.debugOptions[key]?.call(context, viewModel.wallet);
-              },
-              child: Text(key),
-            );
-          }),
-        const VersionWidget(),
+          LongPrimaryButton(
+            onPressed: () => UIPlayground(wallet: viewModel.wallet).push(context),
+            text: "UI Playground",
+          ),
+        if (viewModel.debug)
+          ...List.generate(
+            viewModel.wallet.coin.debugOptions.length,
+            (final int i) {
+              final key = viewModel.wallet.coin.debugOptions.keys.toList()[i];
+              return ElevatedButton(
+                onPressed: () async {
+                  await viewModel.wallet.coin.debugOptions[key]?.call(context, viewModel.wallet);
+                },
+                child: Text(key),
+              );
+            },
+          ),
       ],
     );
   }

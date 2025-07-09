@@ -15,6 +15,9 @@ class WalletEdit extends AbstractView {
         );
 
   @override
+  bool get hasBackground => true;
+
+  @override
   WalletEditViewModel viewModel;
 
   @override
@@ -35,7 +38,7 @@ class WalletEdit extends AbstractView {
           children: [
             Expanded(
               child: LongPrimaryButton(
-                backgroundColor: const WidgetStatePropertyAll(Colors.red),
+                backgroundColorOverride: const WidgetStatePropertyAll(Colors.red),
                 icon: null,
                 onPressed: viewModel.deleteWallet,
                 text: L.delete,

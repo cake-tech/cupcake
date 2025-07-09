@@ -6,7 +6,6 @@ import 'package:cupcake/coins/abstract/wallet_creation.dart';
 import 'package:cupcake/coins/list.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/config.dart';
-import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/plain_value_outcome.dart';
@@ -29,7 +28,8 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     required this.needsPasswordConfirm,
   });
 
-  final CreateMethod createMethod;
+  @observable
+  CreateMethod? createMethod;
 
   @observable
   bool isPinSet = false;
@@ -44,6 +44,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   String get screenNameOriginal => switch (createMethod) {
         CreateMethod.create => L.create_wallet,
         CreateMethod.restore => L.restore_wallet,
+        null => L.create_new_wallet,
       };
 
   @computed
@@ -52,10 +53,8 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   @computed
   bool get hasAdvancedOptions {
     if (currentForm == null) return false;
-    for (final elm in currentForm!) {
-      if (elm is StringFormElement) {
-        if (elm.isExtra) return true;
-      }
+    for (final elm in currentForm!.form) {
+      if (elm.isExtra) return true;
     }
     return false;
   }
@@ -76,7 +75,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   );
 
   late final PinFormElement walletPasswordInitial = PinFormElement(
-    label: L.wallet_password,
+    label: L.setup_pin,
     password: true,
     valueOutcome: PlainValueOutcome(),
     validator: nonEmptyValidator(
@@ -87,7 +86,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   );
 
   late final PinFormElement walletPassword = PinFormElement(
-    label: (needsPasswordConfirm) ? L.wallet_password_repeat : L.wallet_password,
+    label: L.setup_pin,
     password: true,
     valueOutcome: FlutterSecureStorageValueOutcome(
       "secure.wallet_password",
@@ -110,7 +109,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   );
 
   @observable
-  late List<FormElement>? currentForm = () {
+  late WalletCreationForm? currentForm = () {
     if (createMethods.length == 1) {
       return createMethods[createMethods.keys.first];
     }
@@ -121,20 +120,28 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   WalletCreation? creationMethod;
 
   @computed
-  Map<String, List<FormElement>> get createMethods {
+  Map<String, WalletCreationForm> get createMethods {
     if (creationMethod == null || creationMethod!.coin != selectedCoin) {
       creationMethod = selectedCoin!.creationMethod(L);
       creationMethod!.wipe();
     }
-    final form = creationMethod!.createMethods(createMethod);
-    final Map<String, List<FormElement>> toRet = {};
+    final Map<String, WalletCreationForm> form = {
+      if ([CreateMethod.create, null].contains(createMethod))
+        ...creationMethod!.createMethods(CreateMethod.create),
+      if ([CreateMethod.restore, null].contains(createMethod))
+        ...creationMethod!.createMethods(CreateMethod.restore),
+    };
+    final Map<String, WalletCreationForm> toRet = {};
     for (final key in form.keys) {
-      toRet[key] = [
-        if (needsPasswordConfirm) walletPasswordInitial,
-        walletPassword,
-        walletName,
-      ];
-      toRet[key]!.addAll(form[key]!);
+      toRet[key] = WalletCreationForm(
+        method: form[key]!.method,
+        form: [
+          if (needsPasswordConfirm) walletPasswordInitial,
+          walletPassword,
+          walletName,
+          ...form[key]!.form,
+        ],
+      );
     }
     return toRet;
   }
@@ -146,7 +153,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
       () async {
         CupcakeConfig.instance.initialSetupComplete = true;
         CupcakeConfig.instance.save();
-        await WalletHome(coinWallet: cw).push(c!);
+        await WalletHome(coinWallet: cw).pushReplacement(c!);
       },
       L.error_failed_to_setup,
     );
@@ -178,7 +185,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     }
 
     final outcome = await creationMethod!.create(
-      createMethod,
+      currentForm!.method,
       await walletName.value,
       await walletPassword.value,
     );
@@ -199,17 +206,19 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     }
 
     final List<NewWalletInfoPage> pages = [
-      NewWalletInfoPage.preShowSeedPage(L),
+      NewWalletInfoPage.preShowSeedPage(L, T),
       NewWalletInfoPage.writeDownNotice(
         L,
+        T,
         nextCallback:
             outcome.wallet!.passphrase.isEmpty ? () => completeSetup(outcome.wallet!) : null,
         text: outcome.wallet!.seed,
-        title: L.seed,
+        title: outcome.wallet!.walletName,
       ),
       if (outcome.wallet!.passphrase.isNotEmpty)
         NewWalletInfoPage.writeDownNotice(
           L,
+          T,
           nextCallback: () => completeSetup(outcome.wallet!),
           text: outcome.wallet!.passphrase,
           title: L.wallet_passphrase,

@@ -175,10 +175,9 @@ class Bitcoin implements Coin {
       ),
     );
 
-    String xpub =
-        (await (descriptorSecretKey.derive(await DerivationPath.create(path: "m/84'/0'/0'"))))
-            .toPublic()
-            .asString();
+    String xpub = ((descriptorSecretKey.derive(await DerivationPath.create(path: "m/84'/0'/0'"))))
+        .toPublic()
+        .asString();
     xpub = xpub.substring(xpub.indexOf("]") + 1, xpub.lastIndexOf("/"));
 
     unawaited(() async {

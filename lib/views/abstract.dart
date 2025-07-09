@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/view_model/abstract.dart';
-import 'package:cupcake/views/widgets/cupcake_appbar_title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -39,8 +38,8 @@ class ViewModelSimple extends ViewModel {}
 
 class AbstractView extends StatefulWidget {
   AbstractView({super.key});
-  Future<void> push(final BuildContext context) async {
-    await Navigator.of(context).push(
+  Future<dynamic> push(final BuildContext context) {
+    return Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (final context) {
           return this;
@@ -49,8 +48,8 @@ class AbstractView extends StatefulWidget {
     );
   }
 
-  Future<void> pushReplacement(final BuildContext context) async {
-    await Navigator.of(context).pushReplacement(
+  Future<dynamic> pushReplacement(final BuildContext context) {
+    return Navigator.of(context).pushReplacement(
       CupertinoPageRoute(
         builder: (final context) {
           return this;
@@ -70,27 +69,94 @@ class AbstractView extends StatefulWidget {
 
   AppLocalizations get L => viewModel.L;
 
+  ThemeData get T => viewModel.T;
+
   Future<void> initState(final BuildContext context) async {}
 
   State<AbstractView>? state;
 
+  Widget get popButton {
+    if (!automaticallyImplyLeading) {
+      return Text(""); // No we cannot use Container(), appbar just goes away???
+    }
+    return IconButton(
+      onPressed: () => Navigator.of(viewModel.c!).pop(),
+      icon: Icon(
+        CupertinoIcons.left_chevron,
+        size: 22,
+      ),
+    );
+  }
+
+  bool get automaticallyImplyLeading => canPop;
+
   PreferredSizeWidget? get appBar => viewModel.screenName.isEmpty
       ? null
-      : AppBar(
-          title: viewModel.screenName.toLowerCase() != "cupcake"
-              ? Text(
-                  viewModel.screenName,
-                  style: const TextStyle(color: Colors.white),
-                )
-              : const CupcakeAppbarTitle(),
-          automaticallyImplyLeading: canPop,
+      : CupertinoNavigationBar(
+          enableBackgroundFilterBlur: false,
+          backgroundColor: Colors.transparent,
+          automaticBackgroundVisibility: false,
+          leading: popButton,
+          automaticallyImplyLeading: automaticallyImplyLeading,
+          automaticallyImplyMiddle: false,
+          transitionBetweenRoutes: false,
+          middle: Text(
+            viewModel.screenName,
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontSize: 22),
+          ),
+          border: null,
         );
+  //  AppBar(
+  //       title: viewModel.screenName.toLowerCase() != "cupcake"
+  //           ? Text(
+  //               viewModel.screenName,
+  //               style: const TextStyle(color: Colors.white),
+  //             )
+  //           : const CupcakeAppbarTitle(),
+  //       automaticallyImplyLeading: canPop,
+  //     );
 
   Widget? body(final BuildContext context) => null;
 
-  bool get canPop => viewModel.canPop;
+  bool get hasBackground => false;
 
-  Drawer? drawer;
+  Widget? _body(final BuildContext context) {
+    final b = body(context);
+    if (b == null) return b;
+    final navBar = bottomNavigationBar(context);
+    return Stack(
+      children: [
+        if (hasBackground)
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF1F2E58),
+                  Color(0xFF000D2B),
+                ],
+              ),
+            ),
+          ),
+        Positioned.fill(
+          child: Column(
+            children: [
+              if (appBar != null) appBar!,
+              Expanded(child: b),
+              if (navBar != null)
+                SafeArea(
+                  top: false,
+                  child: navBar,
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  bool get canPop => viewModel.canPop;
 
   Widget build(final BuildContext context) {
     viewModel.register(context);
@@ -98,11 +164,8 @@ class AbstractView extends StatefulWidget {
       canPop: canPop,
       child: Scaffold(
         key: viewModel.scaffoldKey,
-        appBar: appBar,
-        body: body(context),
-        endDrawer: drawer,
+        body: _body(context),
         floatingActionButton: floatingActionButton(context),
-        bottomNavigationBar: bottomNavigationBar(context),
       ),
     );
   }

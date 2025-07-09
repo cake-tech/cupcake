@@ -13,14 +13,23 @@ import 'package:cupcake/utils/form/abstract_form_element.dart';
 abstract class WalletCreation {
   Coin get coin;
   Future<CreationOutcome?> create(
-    final CreateMethod createMethod,
+    @Deprecated("Shouldn't depend on this") final CreateMethod createMethod,
     final String walletName,
     final String walletPassword,
   );
-  Map<String, List<FormElement>> createMethods(final CreateMethod createMethod);
+  Map<String, WalletCreationForm> createMethods(final CreateMethod createMethod);
 
   // wipe function clears all details from WalletCreation form
   void wipe();
+}
+
+class WalletCreationForm {
+  WalletCreationForm({
+    required this.method,
+    required this.form,
+  });
+  CreateMethod method;
+  List<FormElement> form;
 }
 
 // No need for CreationMethod to exist but it makes sure that we follow some internal structure

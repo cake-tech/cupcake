@@ -30,7 +30,7 @@ jobs:
                 make libs_android_download
             - name: Build apk
               run: |
-                flutter build apk
+                flutter build apk --profile
             - name: Upload lib
               uses: actions/upload-artifact@v4
               with:

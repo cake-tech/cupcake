@@ -13,10 +13,13 @@ class NewWalletInfoScreen extends AbstractView {
   }) : viewModel = NewWalletInfoViewModel(pages);
 
   @override
-  NewWalletInfoViewModel viewModel;
+  bool get hasBackground => true;
 
   @override
   bool get canPop => false;
+
+  @override
+  NewWalletInfoViewModel viewModel;
 
   @override
   PreferredSizeWidget? get appBar => PreferredSize(
@@ -50,21 +53,20 @@ class NewWalletInfoScreen extends AbstractView {
     ];
   }
 
-  List<Widget> _getBottomActionButtons() {
+  List<Widget> _getBottomActionButtons(final BuildContext context) {
     return List.generate(viewModel.page.actions.length, (final index) {
       final action = viewModel.page.actions[index];
       final isLast = index + 1 == viewModel.page.actions.length;
-      final callback = switch (action.type) {
+      final Function(BuildContext c) callback = switch (action.type) {
         NewWalletActionType.function => action.function!,
-        NewWalletActionType.nextPage => () => viewModel.currentPageIndex++,
+        NewWalletActionType.nextPage => (final _) => viewModel.currentPageIndex++,
       };
       return Expanded(
         child: LongPrimaryButton(
           padding: EdgeInsets.only(right: isLast ? 0 : 16.0),
-          textWidget: action.text,
+          text: action.text,
           icon: null,
-          onPressed: callback,
-          backgroundColor: WidgetStatePropertyAll(action.backgroundColor),
+          onPressed: () => callback(context),
           width: null,
         ),
       );
@@ -73,24 +75,22 @@ class NewWalletInfoScreen extends AbstractView {
 
   @override
   Widget? body(final BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 32, right: 32, top: 0, bottom: 16),
-        child: Observer(
-          builder: (final context) => Column(
-            children: [
-              if (viewModel.page.lottieAnimation != null) viewModel.page.lottieAnimation!,
-              ...viewModel.page.texts,
-              const Spacer(),
-              SizedBox(
-                width: double.maxFinite,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: _getBottomActionButtons(),
-                ),
+    return Padding(
+      padding: const EdgeInsets.only(left: 32, right: 32, top: 0, bottom: 16),
+      child: Observer(
+        builder: (final context) => Column(
+          children: [
+            if (viewModel.page.svgIcon != null) viewModel.page.svgIcon!,
+            ...viewModel.page.texts,
+            const Spacer(),
+            SizedBox(
+              width: double.maxFinite,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: _getBottomActionButtons(context),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

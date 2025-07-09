@@ -1,16 +1,17 @@
+import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-class VersionWidget extends StatefulWidget {
-  const VersionWidget({super.key});
+class AboutWidget extends StatefulWidget {
+  const AboutWidget({super.key});
 
   @override
-  State<VersionWidget> createState() => _VersionWidgetState();
+  State<AboutWidget> createState() => _AboutWidgetState();
 }
 
-class _VersionWidgetState extends State<VersionWidget> {
+class _AboutWidgetState extends State<AboutWidget> {
   Future<void> showWidget(final BuildContext context) async {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
@@ -55,7 +56,7 @@ class _VersionWidgetState extends State<VersionWidget> {
     "(ノಠ益ಠ)ノ", // Rage Flip
   ];
 
-  String? subtitle;
+  String? title;
 
   Future<void> _debugTrigger() async {
     if (easterEgg.isEmpty) {
@@ -63,25 +64,45 @@ class _VersionWidgetState extends State<VersionWidget> {
       CupcakeConfig.instance.debug = true;
       CupcakeConfig.instance.save();
       setState(() {
-        subtitle = "debug options enabled";
+        title = "debug options enabled";
       });
-      Navigator.of(context).pop();
       return;
     }
     easterEgg.shuffle();
     setState(() {
-      subtitle = easterEgg.removeAt(0);
+      title = easterEgg.removeAt(0);
     });
   }
 
   @override
   Widget build(final BuildContext context) {
     final L = AppLocalizations.of(context)!;
-    return ListTile(
-      title: Text(L.about_the_app),
-      subtitle: subtitle == null ? null : Text(subtitle ?? "..."),
-      onTap: subtitle != null ? _debugTrigger : () => showWidget(context),
+    return GestureDetector(
+      onTap: title != null ? _debugTrigger : () => showWidget(context),
       onLongPress: _debugTrigger,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1B284A),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            SizedBox(width: 16),
+            Assets.icons.nav.cupcake.svg(width: 24, height: 24),
+            const SizedBox(width: 16),
+            Text(
+              title ?? L.about_the_app,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
