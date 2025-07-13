@@ -45,6 +45,7 @@ class FormBuilder extends StatelessWidget {
   Widget build(final BuildContext context) {
     L = AppLocalizations.of(context)!;
     T = Theme.of(context);
+    viewModel.register(context);
     return Observer(
       builder: (final context) => _build(context),
     );

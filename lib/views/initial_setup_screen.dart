@@ -58,14 +58,18 @@ class InitialSetupScreen extends AbstractView {
         ),
         const Spacer(),
         const SizedBox(height: 8),
-        LongPrimaryButton(
-          text: L.set_a_pin,
-          onPressed: () => CreateWallet(
-            createMethod: null,
-            needsPasswordConfirm: true,
-          ).push(context),
-        ),
       ],
+    );
+  }
+
+  @override
+  Widget? bottomNavigationBar(final BuildContext context) {
+    return LongPrimaryButton(
+      text: L.set_a_pin,
+      onPressed: () => CreateWallet(
+        createMethod: null,
+        needsPasswordConfirm: true,
+      ).push(context),
     );
   }
 }

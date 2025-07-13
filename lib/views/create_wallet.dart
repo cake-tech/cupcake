@@ -51,47 +51,50 @@ class CreateWallet extends AbstractView {
   }
 
   Widget _createMethodKind(final BuildContext context) {
-    return SizedBox(
-      height: double.maxFinite,
-      child: Column(
-        children: [
-          SizedBox.square(
-            dimension: 250,
-            child: Assets.icons.walletNew.svg(),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(42.0),
-            child: Text.rich(
-              markdownText(L.wallet_creation_onboard),
-              style: TextStyle(color: T.colorScheme.onSurface, fontSize: 16),
-              textAlign: TextAlign.center,
+    return SafeArea(
+      top: false,
+      child: SizedBox(
+        height: double.maxFinite,
+        child: Column(
+          children: [
+            SizedBox.square(
+              dimension: 250,
+              child: Assets.icons.walletNew.image(),
             ),
-          ),
-          Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 86.0),
-            child: Text(
-              L.wallet_creation_kind_note,
-              textAlign: TextAlign.center,
+            Padding(
+              padding: const EdgeInsets.all(42.0),
+              child: Text.rich(
+                markdownText(L.wallet_creation_onboard),
+                style: TextStyle(color: T.colorScheme.onSurface, fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          LongSecondaryButton(
-            T,
-            onPressed: () {
-              viewModel.createMethod = CreateMethod.create;
-            },
-            text: L.restore_wallet,
-          ),
-          LongPrimaryButton(
-            onPressed: () {
-              viewModel.createMethod = CreateMethod.create;
-            },
-            text: L.create_new_wallet,
-          ),
-        ],
+            Spacer(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 86.0),
+              child: Text(
+                L.wallet_creation_kind_note,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            LongSecondaryButton(
+              T,
+              onPressed: () {
+                viewModel.createMethod = CreateMethod.create;
+              },
+              text: L.restore_wallet,
+            ),
+            LongPrimaryButton(
+              onPressed: () {
+                viewModel.createMethod = CreateMethod.create;
+              },
+              text: L.create_new_wallet,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/view_model/wallet_home_view_model.dart';
@@ -10,6 +12,7 @@ import 'package:cupcake/views/security_backup.dart';
 import 'package:cupcake/views/settings.dart';
 import 'package:cupcake/views/widgets/settings/about_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
 
 class WalletHome extends AbstractView {
   WalletHome({
@@ -69,7 +72,7 @@ class WalletHome extends AbstractView {
                 Color(0xFF000D2B).withAlpha(230),
               ],
             ),
-            borderRadius: BorderRadius.circular(32),
+            borderRadius: BorderRadius.circular(512),
             border: Border.all(
               color: Colors.white.withAlpha(50),
               width: 1,
@@ -129,24 +132,24 @@ class WalletHome extends AbstractView {
           _actionButton(
             context,
             svgAsset: Assets.icons.menuDeposit.svg(
-              width: 64,
-              height: 64,
+              width: 78,
+              height: 78,
             ),
             onPressed: () => Receive(coinWallet: viewModel.wallet).push(context),
           ),
           _actionButton(
             context,
             svgAsset: Assets.icons.menuQr.svg(
-              width: 64,
-              height: 64,
+              width: 78,
+              height: 78,
             ),
             onPressed: () => BarcodeScanner(wallet: viewModel.wallet).push(context),
           ),
           _actionButton(
             context,
             svgAsset: Assets.icons.menuMenu.svg(
-              width: 64,
-              height: 64,
+              width: 78,
+              height: 78,
             ),
             onPressed: () => _showBottomSheet(context),
           ),
@@ -161,7 +164,10 @@ class WalletHome extends AbstractView {
     required final VoidCallback onPressed,
   }) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: () {
+        unawaited(Haptics.vibrate(HapticsType.light));
+        onPressed();
+      },
       child: svgAsset,
     );
   }
@@ -212,15 +218,6 @@ class WalletHome extends AbstractView {
                   backgroundColor: const Color(0xFF1B284A),
                   textColor: Colors.white,
                   onTap: () => ConnectWallet(wallet: viewModel.wallet).push(context),
-                ),
-                const SizedBox(height: 8),
-                _buildBottomSheetCard(
-                  context,
-                  icon: Assets.icons.nav.wallets.svg(width: 24, height: 24),
-                  title: "Wallets",
-                  backgroundColor: const Color(0xFF1B284A),
-                  textColor: Colors.white,
-                  onTap: () => HomeScreen(openLastWallet: false).push(context),
                 ),
                 const SizedBox(height: 8),
                 _buildBottomSheetCard(

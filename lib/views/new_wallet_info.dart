@@ -76,21 +76,30 @@ class NewWalletInfoScreen extends AbstractView {
   @override
   Widget? body(final BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 32, right: 32, top: 0, bottom: 16),
-      child: Observer(
-        builder: (final context) => Column(
-          children: [
-            if (viewModel.page.svgIcon != null) viewModel.page.svgIcon!,
-            ...viewModel.page.texts,
-            const Spacer(),
-            SizedBox(
-              width: double.maxFinite,
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: _getBottomActionButtons(context),
-              ),
-            ),
-          ],
+      padding: const EdgeInsets.only(left: 32, right: 32, top: 0),
+      child: SafeArea(
+        child: Observer(
+          builder: (final context) => Column(
+            children: [
+              if (viewModel.page.svgIcon != null) viewModel.page.svgIcon!,
+              ...viewModel.page.texts,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget? bottomNavigationBar(final BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: SizedBox(
+        width: double.maxFinite,
+        child: Observer(
+          builder: (final context) => Row(
+            children: _getBottomActionButtons(context),
+          ),
         ),
       ),
     );
