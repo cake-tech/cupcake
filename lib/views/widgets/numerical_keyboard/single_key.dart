@@ -15,7 +15,6 @@ class SingleKey extends StatelessWidget {
   final VoidCallback? longPress;
   @override
   Widget build(final BuildContext context) {
-    final T = Theme.of(context);
     return Expanded(
       flex: 2,
       child: Container(

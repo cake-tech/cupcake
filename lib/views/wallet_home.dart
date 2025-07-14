@@ -40,9 +40,10 @@ class WalletHome extends AbstractView {
       children: [
         Column(
           children: [
+            const SizedBox(height: 30),
             _appBar,
             const SizedBox(height: 40),
-            Spacer(flex: 4),
+            Spacer(flex: 2),
             _walletSelector(context),
             const Spacer(flex: 3),
             _bottomActions(context),
@@ -163,11 +164,14 @@ class WalletHome extends AbstractView {
     required final Widget svgAsset,
     required final VoidCallback onPressed,
   }) {
-    return GestureDetector(
-      onTap: () {
+    return TextButton(
+      onPressed: () {
         unawaited(Haptics.vibrate(HapticsType.light));
         onPressed();
       },
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.all(0),
+      ),
       child: svgAsset,
     );
   }
@@ -253,42 +257,35 @@ class WalletHome extends AbstractView {
       child: Stack(
         children: [
           Positioned(
-            top: 20,
+            top: 54,
             left: 20,
-            child: _buildCornerDot(),
+            child: _buildCornerDot(true),
           ),
           Positioned(
-            top: 20,
+            top: 54,
             right: 20,
-            child: _buildCornerDot(),
+            child: _buildCornerDot(true),
           ),
           Positioned(
             bottom: 20,
             left: 20,
-            child: _buildCornerDot(),
+            child: _buildCornerDot(false),
           ),
           Positioned(
             bottom: 20,
             right: 20,
-            child: _buildCornerDot(),
+            child: _buildCornerDot(false),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildCornerDot() {
-    return Container(
-      width: 15,
+  Widget _buildCornerDot(final bool isUp) {
+    final img = isUp ? Assets.icons.dotUp : Assets.icons.dotDown;
+    return img.svg(
       height: 15,
-      decoration: BoxDecoration(
-        color: Colors.white.withAlpha(20),
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.white.withAlpha(40),
-          width: 1,
-        ),
-      ),
+      width: 15,
     );
   }
 
@@ -298,9 +295,15 @@ class WalletHome extends AbstractView {
     required final String title,
     required final VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
+    return TextButton(
+      onPressed: onTap,
+      style: TextButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        padding: EdgeInsets.all(0),
+      ),
+      child: Ink(
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -312,7 +315,7 @@ class WalletHome extends AbstractView {
               Color(0xFF61C5FF),
             ],
           ),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
           children: [
@@ -341,30 +344,29 @@ class WalletHome extends AbstractView {
     required final Color textColor,
     required final VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: backgroundColor,
+    return TextButton(
+      onPressed: onTap,
+      style: TextButton.styleFrom(
+        backgroundColor: backgroundColor,
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        child: Row(
-          children: [
-            SizedBox(width: 16),
-            icon,
-            const SizedBox(width: 16),
-            Text(
-              title,
-              style: TextStyle(
-                color: textColor,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
+        padding: EdgeInsets.all(16),
+      ),
+      child: Row(
+        children: [
+          SizedBox(width: 16),
+          icon,
+          const SizedBox(width: 16),
+          Text(
+            title,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

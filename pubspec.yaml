@@ -126,6 +126,8 @@ flutter:
     - assets/coins/btc.svg
     - assets/coins/xmr.svg
     - assets/icons/icon-white.svg
+    - assets/icons/dot_up.svg
+    - assets/icons/dot_down.svg
     - assets/icons/night_landing.svg
     - assets/icons/wallet_new.png
     - assets/icons/wallet_new_name.svg

@@ -77,31 +77,30 @@ class _AboutWidgetState extends State<AboutWidget> {
   @override
   Widget build(final BuildContext context) {
     final L = AppLocalizations.of(context)!;
-    return GestureDetector(
-      onTap: title != null ? _debugTrigger : () => showWidget(context),
+    return TextButton(
+      onPressed: title != null ? _debugTrigger : () => showWidget(context),
       onLongPress: _debugTrigger,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFF1B284A),
+      style: TextButton.styleFrom(
+        backgroundColor: const Color(0xFF1B284A),
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        child: Row(
-          children: [
-            SizedBox(width: 16),
-            Assets.icons.nav.cupcake.svg(width: 24, height: 24),
-            const SizedBox(width: 16),
-            Text(
-              title ?? L.about_the_app,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
+        padding: EdgeInsets.all(16),
+      ),
+      child: Row(
+        children: [
+          SizedBox(width: 16),
+          Assets.icons.nav.cupcake.svg(width: 24, height: 24),
+          const SizedBox(width: 16),
+          Text(
+            title ?? L.about_the_app,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

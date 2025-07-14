@@ -124,7 +124,10 @@ class BitcoinWallet implements CoinWallet {
         for (final out in outputs) {
           final bdkScript = out.scriptPubkey;
           final script = ScriptBuf(bytes: bdkScript.bytes);
-          final address = await Address.fromScript(script: script, network: Network.bitcoin);
+          final address = await Address.fromScript(
+            script: script,
+            network: Network.bitcoin,
+          );
           destMap[BitcoinAddress(address.toString())] = BitcoinAmount(out.value.toInt());
         }
         if (!context.mounted) return;
