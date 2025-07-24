@@ -10,6 +10,7 @@ import 'package:cupcake/views/home_screen.dart';
 import 'package:cupcake/views/receive.dart';
 import 'package:cupcake/views/security_backup.dart';
 import 'package:cupcake/views/settings.dart';
+import 'package:cupcake/views/widgets/png_button.dart';
 import 'package:cupcake/views/widgets/settings/about_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:haptic_feedback/haptic_feedback.dart';
@@ -30,9 +31,6 @@ class WalletHome extends AbstractView {
 
   @override
   bool get automaticallyImplyLeading => false;
-
-  @override
-  bool get hasBackground => true;
 
   @override
   Widget? body(final BuildContext context) {
@@ -132,7 +130,11 @@ class WalletHome extends AbstractView {
         children: [
           _actionButton(
             context,
-            svgAsset: Assets.icons.menuDeposit.svg(
+            pngAsset: Assets.icons.menuDeposit.image(
+              width: 78,
+              height: 78,
+            ),
+            pressedPngAsset: Assets.icons.menuDepositPressed.image(
               width: 78,
               height: 78,
             ),
@@ -140,7 +142,11 @@ class WalletHome extends AbstractView {
           ),
           _actionButton(
             context,
-            svgAsset: Assets.icons.menuQr.svg(
+            pngAsset: Assets.icons.menuQr.image(
+              width: 78,
+              height: 78,
+            ),
+            pressedPngAsset: Assets.icons.menuQrPressed.image(
               width: 78,
               height: 78,
             ),
@@ -148,7 +154,11 @@ class WalletHome extends AbstractView {
           ),
           _actionButton(
             context,
-            svgAsset: Assets.icons.menuMenu.svg(
+            pngAsset: Assets.icons.menuMenu.image(
+              width: 78,
+              height: 78,
+            ),
+            pressedPngAsset: Assets.icons.menuMenuPressed.image(
               width: 78,
               height: 78,
             ),
@@ -161,18 +171,17 @@ class WalletHome extends AbstractView {
 
   Widget _actionButton(
     final BuildContext context, {
-    required final Widget svgAsset,
+    required final Widget pngAsset,
+    required final Widget pressedPngAsset,
     required final VoidCallback onPressed,
   }) {
-    return TextButton(
+    return PngButton(
+      pngAsset: pngAsset,
+      pressedPngAsset: pressedPngAsset,
       onPressed: () {
         unawaited(Haptics.vibrate(HapticsType.light));
         onPressed();
       },
-      style: TextButton.styleFrom(
-        padding: EdgeInsets.all(0),
-      ),
-      child: svgAsset,
     );
   }
 
@@ -221,7 +230,10 @@ class WalletHome extends AbstractView {
                   title: "Connect to Cake Wallet",
                   backgroundColor: const Color(0xFF1B284A),
                   textColor: Colors.white,
-                  onTap: () => ConnectWallet(wallet: viewModel.wallet).push(context),
+                  onTap: () => ConnectWallet(
+                    wallet: viewModel.wallet,
+                    canSkip: false,
+                  ).push(context),
                 ),
                 const SizedBox(height: 8),
                 _buildBottomSheetCard(

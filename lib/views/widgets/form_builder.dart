@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/alerts/widget_minimal.dart';
+import 'package:cupcake/utils/display_form_element.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/single_choice_form_element.dart';
 import 'package:cupcake/utils/form/string_form_element.dart';
@@ -11,6 +12,7 @@ import 'package:cupcake/views/widgets/base_text_form_field.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/numerical_keyboard/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class FormBuilder extends StatelessWidget {
@@ -30,17 +32,6 @@ class FormBuilder extends StatelessWidget {
     viewModel.onLabelChange(suggestedTitle);
   }
 
-  bool _displayPinFormElement() {
-    return (viewModel.formElements.isNotEmpty &&
-            (viewModel.formElements.first is PinFormElement &&
-                (viewModel.formElements.first as PinFormElement).showNumboard) &&
-            !(viewModel.formElements[0] as PinFormElement).isConfirmed) ||
-        viewModel.formElements.length >= 2 &&
-            (viewModel.formElements[1] is PinFormElement &&
-                (viewModel.formElements[1] as PinFormElement).showNumboard) &&
-            !(viewModel.formElements[1] as PinFormElement).isConfirmed;
-  }
-
   @override
   Widget build(final BuildContext context) {
     L = AppLocalizations.of(context)!;
@@ -54,7 +45,7 @@ class FormBuilder extends StatelessWidget {
   final pinFormTextInputFocusNode = FocusNode();
 
   Widget _build(final BuildContext context) {
-    if (_displayPinFormElement()) {
+    if (displayPinFormElement(viewModel.formElements)) {
       var e = viewModel.formElements.first as PinFormElement;
       int i = 0;
       int count = 0;
@@ -84,50 +75,88 @@ class FormBuilder extends StatelessWidget {
       // be that from secure storage or by actually entering it.
       unawaited(e.loadSecureStorageValue(nextPageCallback));
       // We can probably move this somewhere else, but I like it here.
+      void $nextPageCallback() {
+        if (e.enableBiometric) {
+          viewModel.enableSystemAuth(e, nextPageCallback);
+        } else {
+          nextPageCallback();
+        }
+      }
 
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(height: 32),
+          SizedBox(height: 52),
           Text(
-            L.enter_your_pin,
-            style: T.textTheme.bodyLarge,
+            count == i && i != 0
+                ? L.reenter_your_pin
+                : count == 0
+                    ? L.enter_your_pin
+                    : L.create_your_pin,
+            style: T.textTheme.bodyLarge?.copyWith(fontSize: 20),
           ),
-          TextFormField(
-            focusNode: pinFormTextInputFocusNode,
-            controller: e.ctrl,
-            obscureText: e.password,
-            enableSuggestions: !e.password,
-            autocorrect: !e.password,
-            textAlign: TextAlign.center,
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-            ),
-            onChanged: (final _) {
-              e.onChanged?.call();
-            },
-            style: const TextStyle(
-              fontSize: 64,
-            ),
-          ),
-          const SizedBox(height: 32),
-          if (MediaQuery.of(viewModel.scaffoldContext).viewInsets.bottom == 0)
-            TextButton(
-              onPressed: () {
-                pinFormTextInputFocusNode.requestFocus();
+          if (viewModel.isPinInput)
+            TextFormField(
+              focusNode: pinFormTextInputFocusNode,
+              controller: e.ctrl,
+              obscureText: e.password,
+              enableSuggestions: !e.password,
+              autocorrect: !e.password,
+              textAlign: TextAlign.center,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+              ),
+              onChanged: (final _) {
+                e.onChanged?.call();
               },
-              child: Text(L.switch_to_password),
+              style: const TextStyle(
+                fontSize: 64,
+              ),
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 36.0),
+              child: BaseTextFormField(
+                controller: e.ctrl,
+                obscureText: e.password,
+                enableSuggestions: !e.password,
+                autocorrect: !e.password,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          const SizedBox(height: 16),
+          if (count == i && i == 0)
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: T.colorScheme.surfaceContainer,
+                foregroundColor: T.colorScheme.onSurfaceVariant,
+              ),
+              onPressed: () {
+                viewModel.isPinInput = !viewModel.isPinInput;
+              },
+              child: Text(viewModel.isPinInput ? L.switch_to_password : L.switch_to_pin),
             ),
           const SizedBox(height: 32),
-          if (MediaQuery.of(viewModel.scaffoldContext).viewInsets.bottom == 0)
+          if (viewModel.isPinInput)
             NumericalKeyboard(
               ctrl: e.ctrl,
               showConfirm: () => e.isOk,
-              nextPage: nextPageCallback,
-              onConfirmLongPress: () => viewModel.enableSystemAuth(e, nextPageCallback),
+              nextPage: $nextPageCallback,
+              onConfirmLongPress: null,
               showComma: false,
             ),
-          const SizedBox(height: 128),
+          const Spacer(),
+          if (!viewModel.isPinInput)
+            SafeArea(
+              bottom: true,
+              top: false,
+              child: LongPrimaryButton(
+                onPressed: $nextPageCallback,
+                padding: EdgeInsets.zero,
+                text: L.continue_,
+              ),
+            ),
+          const SizedBox(height: 8),
         ],
       );
     }
@@ -146,7 +175,7 @@ class FormBuilder extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 16.0, left: 12.0, right: 12.0),
             child: BaseTextFormField(
               controller: e.ctrl,
-              obscureText: e.password,
+              obscureText: !e.visibility,
               enableSuggestions: !e.password,
               autocorrect: !e.password,
               hintText: e.label,
@@ -154,11 +183,27 @@ class FormBuilder extends StatelessWidget {
               validator: e.validator,
               onChanged: (final _) {},
               textAlign: TextAlign.center,
-              suffixIcon: IconButton(
-                key: ValueKey('wallet_restore_from_keys_wallet_name_refresh_button_key'),
-                onPressed: () => randomName(e.ctrl),
-                icon: Icon(Icons.refresh),
-              ),
+              suffixIcon: e.password
+                  ? e.visibility
+                      ? Icons.visibility_off
+                      : Icons.visibility
+                  : e.randomNameGenerator
+                      ? Icons.refresh
+                      : e.canPaste
+                          ? Icons.paste
+                          : null,
+              suffixIconOnPressed: e.password
+                  ? () => e.visibility = !e.visibility
+                  : e.randomNameGenerator
+                      ? () => randomName(e.ctrl)
+                      : e.canPaste
+                          ? () async {
+                              final data = await Clipboard.getData(Clipboard.kTextPlain);
+                              if (data != null) {
+                                e.ctrl.text = data.text ?? '';
+                              }
+                            }
+                          : null,
             ),
           ),
         );

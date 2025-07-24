@@ -1,8 +1,11 @@
 import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/gen/assets.gen.dart';
+import 'package:cupcake/utils/formatter_address.dart';
 import 'package:cupcake/view_model/receive_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class Receive extends AbstractView {
@@ -18,6 +21,46 @@ class Receive extends AbstractView {
 
   @override
   Widget? body(final BuildContext context) {
+    return Observer(
+      builder: (final BuildContext context) => _body(context) ?? const SizedBox.shrink(),
+    );
+  }
+
+  Widget? _body(final BuildContext context) {
+    if (viewModel.isFullPage) {
+      return GestureDetector(
+        onTap: _toggleFullPage,
+        child: Column(
+          children: [
+            Spacer(),
+            Container(
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30.0),
+                color: Colors.white,
+              ),
+              child: GestureDetector(
+                onTap: _toggleFullPage,
+                child: QrImageView(
+                  data: "${viewModel.uriScheme}:${viewModel.address}",
+                  dataModuleStyle: QrDataModuleStyle(
+                    color: Colors.black,
+                    dataModuleShape: QrDataModuleShape.square,
+                  ),
+                  embeddedImage: AssetImage(Assets.icons.cupcakeQr.path),
+                  embeddedImageEmitsError: true,
+                  eyeStyle: QrEyeStyle(
+                    color: Colors.black,
+                    eyeShape: QrEyeShape.square,
+                  ),
+                ),
+              ),
+            ),
+            Spacer(flex: 2),
+          ],
+        ),
+      );
+    }
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -30,21 +73,26 @@ class Receive extends AbstractView {
                 borderRadius: BorderRadius.circular(30.0),
                 color: Colors.white,
               ),
-              child: QrImageView(
-                data: "${viewModel.uriScheme}:${viewModel.address}",
-                dataModuleStyle: QrDataModuleStyle(
-                  color: Colors.black,
-                  dataModuleShape: QrDataModuleShape.square,
-                ),
-                eyeStyle: QrEyeStyle(
-                  color: Colors.black,
-                  eyeShape: QrEyeShape.square,
+              child: GestureDetector(
+                onTap: _toggleFullPage,
+                child: QrImageView(
+                  data: "${viewModel.uriScheme}:${viewModel.address}",
+                  dataModuleStyle: QrDataModuleStyle(
+                    color: Colors.black,
+                    dataModuleShape: QrDataModuleShape.square,
+                  ),
+                  embeddedImage: AssetImage(Assets.icons.cupcakeQr.path),
+                  embeddedImageEmitsError: true,
+                  eyeStyle: QrEyeStyle(
+                    color: Colors.black,
+                    eyeShape: QrEyeShape.square,
+                  ),
                 ),
               ),
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(25.0),
+            padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30.0),
               color: const Color.fromRGBO(35, 44, 79, 1),
@@ -63,12 +111,12 @@ class Receive extends AbstractView {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Expanded(
-                      child: SelectableText(
-                        viewModel.address,
-                        style: const TextStyle(color: Colors.white),
+                      child: SelectableText.rich(
+                        formattedAddress(viewModel.address),
+                        style: const TextStyle(fontSize: 13),
                       ),
                     ),
-                    const Icon(Icons.copy, color: Colors.grey),
+                    const Icon(Icons.copy),
                   ],
                 ),
               ),
@@ -77,5 +125,9 @@ class Receive extends AbstractView {
         ],
       ),
     );
+  }
+
+  void _toggleFullPage() {
+    viewModel.isFullPage = !viewModel.isFullPage;
   }
 }

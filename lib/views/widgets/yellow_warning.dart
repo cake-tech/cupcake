@@ -13,14 +13,16 @@ class YellowWarning extends StatelessWidget {
   final EdgeInsets padding;
   @override
   Widget build(final BuildContext context) {
+    final T = Theme.of(context);
     return Padding(
       padding: padding,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFFB8860B),
+          color: Color(0xff8E5800),
           borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Color(0xffFFE69C), width: 2),
         ),
         child: Row(
           children: [
@@ -34,7 +36,7 @@ class YellowWarning extends StatelessWidget {
                     markdownText(text),
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface,
+                          color: T.colorScheme.onSurface,
                         ),
                   ),
                 ],

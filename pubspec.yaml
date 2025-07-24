@@ -125,17 +125,23 @@ flutter:
   assets:
     - assets/coins/btc.svg
     - assets/coins/xmr.svg
+    - assets/background_for_wallethome.png
     - assets/icons/icon-white.svg
     - assets/icons/dot_up.svg
     - assets/icons/dot_down.svg
     - assets/icons/night_landing.svg
     - assets/icons/wallet_new.png
     - assets/icons/wallet_new_name.svg
+    - assets/icons/seed_verified.svg
     - assets/icons/cupcake_small_icon.svg
+    - assets/icons/cupcake_qr.png
     - assets/icons/shield_keys.svg
-    - assets/icons/menu_deposit.svg
-    - assets/icons/menu_qr.svg
-    - assets/icons/menu_menu.svg
+    - assets/icons/menu_deposit.png
+    - assets/icons/menu_qr.png
+    - assets/icons/menu_menu.png
+    - assets/icons/menu_deposit_pressed.png
+    - assets/icons/menu_qr_pressed.png
+    - assets/icons/menu_menu_pressed.png
     - assets/icons/cupcake_navbar.svg
     - assets/icons/link_cakewallet.png
     - assets/icons/warning.svg

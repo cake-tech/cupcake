@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 // Since there is no performance penalty for using stateful widgets I would just
 // use them everywhere, but honestly all I need in stateless widgets is easy
@@ -34,7 +36,10 @@ class _AbstractViewState extends State<AbstractView> {
   }
 }
 
-class ViewModelSimple extends ViewModel {}
+class ViewModelSimple extends ViewModel {
+  @override
+  bool hasBackground = true;
+}
 
 class AbstractView extends StatefulWidget {
   AbstractView({super.key});
@@ -118,27 +123,41 @@ class AbstractView extends StatefulWidget {
 
   Widget? body(final BuildContext context) => null;
 
-  bool get hasBackground => false;
-
   Widget? _body(final BuildContext context) {
     final b = body(context);
     if (b == null) return b;
     final navBar = bottomNavigationBar(context);
     return Stack(
       children: [
-        if (hasBackground)
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFF1F2E58),
-                  Color(0xFF000D2B),
-                ],
-              ),
-            ),
-          ),
+        Observer(
+          builder: (final context) => viewModel.hasBackground
+              ? Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xFF1B284A),
+                        Color(0xFF0F1A36),
+                      ],
+                    ),
+                  ),
+                )
+              : const SizedBox.expand(),
+        ),
+        Observer(
+          builder: (final context) => viewModel.hasPngBackground
+              ? Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(Assets.backgroundForWallethome.path),
+                      fit: BoxFit.cover,
+                      opacity: 0.12,
+                    ),
+                  ),
+                )
+              : const SizedBox.expand(),
+        ),
         Positioned.fill(
           child: Column(
             children: [

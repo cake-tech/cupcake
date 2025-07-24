@@ -3,10 +3,12 @@ import 'dart:developer';
 import 'package:bdk_flutter/bdk_flutter.dart';
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
 import 'package:cupcake/coins/bitcoin/address.dart';
 import 'package:cupcake/coins/bitcoin/amount.dart';
 import 'package:cupcake/coins/bitcoin/coin.dart';
+import 'package:cupcake/coins/bitcoin/wallet_info.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/views/animated_qr_page.dart';
@@ -215,4 +217,7 @@ class BitcoinWallet implements CoinWallet {
   String get walletName => p.basename(_walletName);
 
   final String _walletName;
+
+  @override
+  CoinWalletInfo get walletInfo => BitcoinWalletInfo(walletName);
 }

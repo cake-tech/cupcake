@@ -7,17 +7,19 @@ class CakeListTile extends StatelessWidget {
     required this.text,
     this.trailing,
     this.icon,
+    this.selected = false,
   });
 
   final String text;
   final Function(BuildContext context) onTap;
   final Widget? icon;
   final Widget? trailing;
+  final bool selected;
   @override
   Widget build(final BuildContext context) {
     final T = Theme.of(context);
     return Card(
-      color: T.colorScheme.surfaceContainer,
+      color: selected ? T.colorScheme.primary : T.colorScheme.surfaceContainer,
       child: ListTile(
         onTap: () => onTap(context),
         splashColor: T.colorScheme.primary,
@@ -35,7 +37,10 @@ class CakeListTile extends StatelessWidget {
               ],
               Text(
                 text,
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(
+                  fontSize: 20,
+                  color: selected ? T.colorScheme.onPrimary : T.colorScheme.onSurface,
+                ),
               ),
             ],
           ),

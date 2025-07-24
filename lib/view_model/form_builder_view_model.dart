@@ -27,6 +27,9 @@ abstract class FormBuilderViewModelBase extends ViewModel with Store {
 
   BuildContext scaffoldContext;
 
+  @observable
+  bool isPinInput = true;
+
   @action
   void onLabelChange(final String? suggestedTitle) => _onLabelChange?.call(suggestedTitle);
 

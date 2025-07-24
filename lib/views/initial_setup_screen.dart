@@ -1,3 +1,4 @@
+import 'package:cupcake/utils/text_span_markdown.dart';
 import 'package:cupcake/view_model/initial_setup_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/create_wallet.dart';
@@ -10,9 +11,6 @@ class InitialSetupScreen extends AbstractView {
 
   @override
   InitialSetupViewModel viewModel = InitialSetupViewModel();
-
-  @override
-  bool get hasBackground => true;
 
   @override
   Widget? body(final BuildContext context) {
@@ -41,12 +39,12 @@ class InitialSetupScreen extends AbstractView {
               ),
             ),
             SizedBox(width: 8),
-            Assets.icons.cupcakeSmallIcon.svg(width: 22),
+            Assets.icons.cupcakeSmallIcon.svg(width: 36),
             SizedBox(width: 8),
             Text(
               "Cupcake",
               style: T.textTheme.displaySmall?.copyWith(
-                fontSize: 22,
+                fontSize: 26,
               ),
             ),
           ],
@@ -54,10 +52,14 @@ class InitialSetupScreen extends AbstractView {
         const SizedBox(height: 42),
         Text(
           L.cupcake_slogan,
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 16, color: T.colorScheme.onSurfaceVariant),
         ),
         const Spacer(),
-        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: viewModel.showTos,
+          child: Text.rich(markdownText(L.tos_notice)),
+        ),
+        const SizedBox(height: 16),
       ],
     );
   }
@@ -65,7 +67,7 @@ class InitialSetupScreen extends AbstractView {
   @override
   Widget? bottomNavigationBar(final BuildContext context) {
     return LongPrimaryButton(
-      text: L.set_a_pin,
+      text: L.continue_,
       onPressed: () => CreateWallet(
         createMethod: null,
         needsPasswordConfirm: true,

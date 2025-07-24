@@ -8,6 +8,8 @@ class LongSecondaryButton extends LongPrimaryButton {
     required super.text,
     super.icon,
     required super.onPressed,
+    super.padding,
+    super.width,
   });
 
   final ThemeData T;

@@ -18,4 +18,7 @@ abstract class ReceiveViewModelBase extends ViewModel with Store {
 
   @computed
   String get uriScheme => wallet.coin.uriScheme;
+
+  @observable
+  bool isFullPage = false;
 }

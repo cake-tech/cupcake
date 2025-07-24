@@ -19,6 +19,7 @@ class BaseTextFormField extends StatelessWidget {
     this.prefixIcon,
     this.suffix,
     this.suffixIcon,
+    this.suffixIconOnPressed,
     this.enabled = true,
     this.readOnly = false,
     this.enableInteractiveSelection = true,
@@ -60,7 +61,8 @@ class BaseTextFormField extends StatelessWidget {
   final Widget? prefix;
   final Widget? prefixIcon;
   final Widget? suffix;
-  final Widget? suffixIcon;
+  final IconData? suffixIcon;
+  final void Function()? suffixIconOnPressed;
   final bool? enabled;
   final FormFieldValidator<String>? validator;
   final TextStyle? placeholderTextStyle;
@@ -120,13 +122,33 @@ class BaseTextFormField extends StatelessWidget {
       decoration: InputDecoration(
         isDense: isDense,
         alignLabelWithHint: alignLabelWithHint,
-        contentPadding:
-            contentPadding ?? const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0),
         floatingLabelBehavior: floatingLabelBehavior ?? FloatingLabelBehavior.never,
         prefix: prefix,
         prefixIcon: prefixIcon,
         suffix: suffix,
-        suffixIcon: suffixIcon,
+        suffixIcon: suffixIcon != null
+            ? SizedBox(
+                width: 27,
+                height: 27,
+                child: Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: Material(
+                    color: Color(0xff1B284A),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: IconButton(
+                      onPressed: suffixIconOnPressed,
+                      icon: Icon(
+                        suffixIcon,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : null,
         filled: true,
         fillColor: fillColor ?? Theme.of(context).colorScheme.surfaceContainer,
         hintStyle: placeholderTextStyle ??

@@ -33,6 +33,7 @@ class BitcoinWalletCreation extends WalletCreation {
           !(Bitcoin().isSeedSomewhatLegit(input)) ? L.warning_seed_incorrect_length : null,
     ),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
   late List<FormElement> createForm = [];

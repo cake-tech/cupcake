@@ -4,6 +4,7 @@ import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_creation.dart';
 import 'package:cupcake/coins/list.dart';
+import 'package:cupcake/utils/display_form_element.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
@@ -13,6 +14,8 @@ import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/form/validators.dart';
 import 'package:cupcake/utils/new_wallet/info_page.dart';
 import 'package:cupcake/view_model/abstract.dart';
+import 'package:cupcake/view_model/form_builder_view_model.dart';
+import 'package:cupcake/views/connect_wallet.dart';
 import 'package:cupcake/views/new_wallet_info.dart';
 import 'package:cupcake/views/wallet_home.dart';
 import 'package:flutter/foundation.dart';
@@ -32,10 +35,37 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   CreateMethod? createMethod;
 
   @observable
+  int formIndex = 0;
+
+  @override
+  @computed
+  bool get hasBackground {
+    if (selectedCoin == null) return true;
+    if (createMethod == null) return true;
+    if (currentForm == null) return true;
+
+    return !displayPinFormElement(currentForm!.form);
+  }
+
+  @observable
   bool isPinSet = false;
 
   @observable
   bool showExtra = false;
+
+  @observable
+  late List<FormBuilderViewModelBase> formBuilderViewModelList =
+      List.generate(createMethods.length, (final index) {
+    final formElements = createMethods.values.toList()[index].form;
+    return FormBuilderViewModel(
+      formElements: formElements,
+      scaffoldContext: c!,
+      isPinSet: false,
+      toggleIsPinSet: (final bool val) {
+        isPinSet = val;
+      },
+    );
+  });
 
   @override
   @observable
@@ -60,6 +90,9 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   }
 
   @observable
+  Coin? unconfirmedSelectedCoin;
+
+  @observable
   late Coin? selectedCoin = () {
     if (coins.length == 1) {
       return coins[0];
@@ -72,6 +105,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     validator: nonEmptyValidator(L),
     randomNameGenerator: true,
     errorHandler: errorHandler,
+    canPaste: false,
   );
 
   late final PinFormElement walletPasswordInitial = PinFormElement(
@@ -83,6 +117,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
       extra: (final input) => (input.length < 4) ? L.warning_password_too_short : null,
     ),
     errorHandler: errorHandler,
+    enableBiometric: false,
   );
 
   late final PinFormElement walletPassword = PinFormElement(
@@ -106,6 +141,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
       },
     ),
     errorHandler: errorHandler,
+    enableBiometric: false,
   );
 
   @observable
@@ -153,6 +189,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
       () async {
         CupcakeConfig.instance.initialSetupComplete = true;
         CupcakeConfig.instance.save();
+        await ConnectWallet(wallet: cw, canSkip: true).push(c!);
         await WalletHome(coinWallet: cw).pushReplacement(c!);
       },
       L.error_failed_to_setup,
@@ -210,8 +247,6 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
       NewWalletInfoPage.writeDownNotice(
         L,
         T,
-        nextCallback:
-            outcome.wallet!.passphrase.isEmpty ? () => completeSetup(outcome.wallet!) : null,
         text: outcome.wallet!.seed,
         title: outcome.wallet!.walletName,
       ),
@@ -219,10 +254,15 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
         NewWalletInfoPage.writeDownNotice(
           L,
           T,
-          nextCallback: () => completeSetup(outcome.wallet!),
           text: outcome.wallet!.passphrase,
           title: L.wallet_passphrase,
         ),
+      NewWalletInfoPage.seedWrittenDown(
+        L,
+        T,
+        wallet: outcome.wallet!,
+        nextCallback: () => completeSetup(outcome.wallet!),
+      ),
     ];
     if (!mounted) {
       throw Exception(L.error_context_not_mounted);
@@ -237,6 +277,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   }
 
   Future<void> titleUpdate(final String? suggestedTitle) async {
+    if (screenName == suggestedTitle) return;
     screenName = suggestedTitle ?? screenNameOriginal;
   }
 }

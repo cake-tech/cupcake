@@ -40,7 +40,7 @@ class MoneroWalletInfo extends CoinWalletInfo {
 
   @override
   void openUI(final BuildContext context) {
-    OpenWallet(coinWalletInfo: this).push(context);
+    OpenWallet(coinWalletInfo: this, enableBiometric: false).push(context);
   }
 
   @override

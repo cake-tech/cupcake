@@ -21,9 +21,12 @@ abstract class PinFormElementBase extends FormElement with Store {
     this.showNumboard = true,
     required this.label,
     required final Future<void> Function(Object e) errorHandler,
+    required this.enableBiometric,
   })  : ctrl = TextEditingController(text: initialText),
         _errorHandler = errorHandler;
   final Future<void> Function(Object e) _errorHandler;
+
+  final bool enableBiometric;
 
   @override
   bool get isExtra => false;

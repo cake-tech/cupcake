@@ -8,6 +8,6 @@ class NewWalletAction {
     required this.text,
   });
   final NewWalletActionType type;
-  final Function(BuildContext context)? function;
+  final Function(BuildContext context, VoidCallback nextPage)? function;
   final String text;
 }

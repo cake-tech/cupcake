@@ -6,6 +6,7 @@ import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/buttons/long_secondary.dart';
+import 'package:cupcake/views/widgets/custom_tab_bar.dart';
 import 'package:cupcake/views/widgets/form_builder.dart';
 import 'package:cupcake/views/widgets/list_tile.dart';
 import 'package:flutter/material.dart';
@@ -22,27 +23,31 @@ class CreateWallet extends AbstractView {
         );
 
   @override
-  bool get hasBackground => true;
-
-  @override
   final CreateWalletViewModel viewModel;
 
   Widget _selectCoin(final BuildContext context) {
+    viewModel.titleUpdate(L.choose_currency);
     return Column(
       children: [
-        SizedBox(height: 48),
-        Text(L.choose_wallet_currency),
+        SizedBox(height: 64),
+        Text(
+          L.choose_wallet_currency,
+          style: T.textTheme.titleMedium?.copyWith(color: T.colorScheme.onSurfaceVariant),
+        ),
         SizedBox(height: 8),
         ...List.generate(
           viewModel.coins.length,
-          (final int i) => Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
-            child: CakeListTile(
-              onTap: (final BuildContext _) {
-                viewModel.selectedCoin = viewModel.coins[i];
-              },
-              icon: viewModel.coins[i].strings.svg,
-              text: viewModel.coins[i].strings.nameFull,
+          (final int i) => Observer(
+            builder: (final BuildContext context) => Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
+              child: CakeListTile(
+                onTap: (final BuildContext _) {
+                  viewModel.unconfirmedSelectedCoin = viewModel.coins[i];
+                },
+                selected: viewModel.unconfirmedSelectedCoin == viewModel.coins[i],
+                icon: viewModel.coins[i].strings.svg,
+                text: viewModel.coins[i].strings.nameFull,
+              ),
             ),
           ),
         ),
@@ -51,16 +56,19 @@ class CreateWallet extends AbstractView {
   }
 
   Widget _createMethodKind(final BuildContext context) {
+    viewModel.titleUpdate(L.wallet);
     return SafeArea(
       top: false,
       child: SizedBox(
         height: double.maxFinite,
         child: Column(
           children: [
+            SizedBox(height: 32),
             SizedBox.square(
               dimension: 250,
               child: Assets.icons.walletNew.image(),
             ),
+            Spacer(),
             Padding(
               padding: const EdgeInsets.all(42.0),
               child: Text.rich(
@@ -99,61 +107,54 @@ class CreateWallet extends AbstractView {
     );
   }
 
-  Widget _createMethod(final BuildContext context) {
-    return SizedBox(
-      height: double.maxFinite,
-      child: ListView.builder(
-        itemCount: viewModel.createMethods.keys.length,
-        itemBuilder: (final BuildContext context, final int index) {
-          final key = viewModel.createMethods.keys.elementAt(index);
-          final value = viewModel.createMethods[key];
-          return Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
-            child: CakeListTile(
-              onTap: (final BuildContext _) {
-                viewModel.currentForm = value;
-              },
-              text: key,
-            ),
-          );
-        },
-      ),
+  @override
+  Widget body(final BuildContext context) {
+    return Observer(
+      builder: (final BuildContext context) {
+        return _body(context) ?? const SizedBox.shrink();
+      },
     );
   }
 
-  @override
-  Widget? body(final BuildContext context) {
+  Widget? _body(final BuildContext context) {
     if (viewModel.selectedCoin == null) {
       return _selectCoin(context);
     }
     if (viewModel.createMethod == null) {
       return _createMethodKind(context);
     }
-    if (viewModel.currentForm == null) {
-      return _createMethod(context);
-    }
+    return _createMethodTabbed(context);
+  }
+
+  Widget _createMethodTabbed(final BuildContext context) {
+    viewModel.titleUpdate(L.wallet);
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        if (viewModel.isPinSet)
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 64.0,
-              vertical: 64,
-            ),
-            child: Assets.icons.walletNewName.svg(),
-          ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: FormBuilder(
-            showExtra: viewModel.showExtra,
-            viewModel: FormBuilderViewModel(
-              formElements: viewModel.currentForm!.form,
-              scaffoldContext: context,
-              isPinSet: viewModel.isPinSet,
-              toggleIsPinSet: (final bool val) {
-                viewModel.isPinSet = val;
+        if (viewModel.isPinSet) ...[
+          SizedBox(height: 16),
+          if (viewModel.createMethod == CreateMethod.restore)
+            CustomTabBar(
+              tabs: viewModel.createMethods.keys.toList(),
+              selectedIndex: viewModel.formIndex,
+              onTabSelected: (final int index) {
+                viewModel.formIndex = index;
               },
-              onLabelChange: viewModel.titleUpdate,
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 32),
+              child: Assets.icons.walletNew.image(),
+            ),
+          SizedBox(height: 24),
+        ],
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: FormBuilder(
+              showExtra: viewModel.showExtra,
+              viewModel:
+                  viewModel.formBuilderViewModelList[viewModel.formIndex] as FormBuilderViewModel,
             ),
           ),
         ),
@@ -163,6 +164,18 @@ class CreateWallet extends AbstractView {
 
   @override
   Widget? bottomNavigationBar(final BuildContext context) {
+    if (viewModel.selectedCoin == null) {
+      return Observer(
+        builder: (final BuildContext context) => LongPrimaryButton(
+          text: L.confirm,
+          onPressed: viewModel.unconfirmedSelectedCoin == null
+              ? null
+              : () {
+                  viewModel.selectedCoin = viewModel.unconfirmedSelectedCoin;
+                },
+        ),
+      );
+    }
     if (!viewModel.isPinSet) return null;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -176,7 +189,7 @@ class CreateWallet extends AbstractView {
             },
           ),
         LongPrimaryButton(
-          text: L.next,
+          text: L.continue_,
           icon: null,
           onPressed: viewModel.createWallet,
         ),

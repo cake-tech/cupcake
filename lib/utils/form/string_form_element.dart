@@ -16,14 +16,19 @@ abstract class StringFormElementBase extends FormElement with Store {
     this.showIf,
     this.randomNameGenerator = false,
     required final Future<void> Function(Object e) errorHandler,
+    required this.canPaste,
   })  : ctrl = TextEditingController(text: initialText),
-        _errorHandler = errorHandler;
+        _errorHandler = errorHandler,
+        visibility = !password;
 
   bool Function()? showIf;
   TextEditingController ctrl;
   bool password;
   @override
   String label;
+
+  @observable
+  bool visibility;
 
   @computed
   @override
@@ -33,7 +38,9 @@ abstract class StringFormElementBase extends FormElement with Store {
   @observable
   bool isExtra;
 
-  bool randomNameGenerator;
+  final bool randomNameGenerator;
+
+  final bool canPaste;
 
   @computed
   @override

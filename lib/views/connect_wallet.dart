@@ -3,14 +3,19 @@ import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/utils/text_span_markdown.dart';
 import 'package:cupcake/view_model/connect_wallet_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
+import 'package:cupcake/views/wallet_home.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
+import 'package:cupcake/views/widgets/buttons/long_secondary.dart';
 import 'package:cupcake/views/widgets/urqr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class ConnectWallet extends AbstractView {
-  ConnectWallet({required final CoinWallet wallet, super.key})
-      : viewModel = ConnectWalletViewModel(wallet: wallet);
+  ConnectWallet({
+    required final CoinWallet wallet,
+    required final bool canSkip,
+    super.key,
+  }) : viewModel = ConnectWalletViewModel(wallet: wallet, canSkip: canSkip);
 
   @override
   final ConnectWalletViewModel viewModel;
@@ -53,15 +58,25 @@ class ConnectWallet extends AbstractView {
   @override
   Widget? bottomNavigationBar(final BuildContext context) {
     return Observer(
-      builder: (final context) => LongPrimaryButton(
-        text: viewModel.isShowingInfo ? L.show_qr_code : L.done,
-        onPressed: () {
-          if (!viewModel.isShowingInfo) {
-            Navigator.pop(context);
-          } else {
-            viewModel.isShowingInfo = false;
-          }
-        },
+      builder: (final context) => Column(
+        children: [
+          if (viewModel.canSkip)
+            LongSecondaryButton(
+              T,
+              onPressed: () => WalletHome(coinWallet: viewModel.wallet).pushReplacement(context),
+              text: L.skip,
+            ),
+          LongPrimaryButton(
+            text: viewModel.isShowingInfo ? L.link_to_cakewallet : L.done,
+            onPressed: () {
+              if (!viewModel.isShowingInfo) {
+                WalletHome(coinWallet: viewModel.wallet).pushReplacement(context);
+              } else {
+                viewModel.isShowingInfo = false;
+              }
+            },
+          ),
+        ],
       ),
     );
   }

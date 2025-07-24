@@ -16,6 +16,12 @@ abstract class WalletHomeViewModelBase extends ViewModel with Store {
   Coin get coin => wallet.coin;
 
   @override
+  bool get hasBackground => true;
+
+  @override
+  bool get hasPngBackground => true;
+
+  @override
   late String screenName = "Cupcake";
 
   @computed

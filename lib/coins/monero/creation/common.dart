@@ -14,7 +14,6 @@ import 'package:cupcake/coins/monero/creation/restore_polyseed.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
-import 'package:cupcake/utils/form/single_choice_form_element.dart';
 import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/form/validators.dart';
 
@@ -34,7 +33,6 @@ class MoneroWalletCreation extends WalletCreation {
     secretSpendKey.ctrl.clear();
     restoreHeight.ctrl.clear();
     seedOffset.ctrl.clear();
-    walletSeedType.currentSelection = 0;
   }
 
   AppLocalizations L;
@@ -56,30 +54,35 @@ class MoneroWalletCreation extends WalletCreation {
           !(Monero().isSeedSomewhatLegit(input)) ? L.warning_seed_incorrect_length : null,
     ),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
   late StringFormElement walletAddress = StringFormElement(
     L.primary_address_label,
     validator: nonEmptyValidator(L),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
   late StringFormElement secretSpendKey = StringFormElement(
     L.secret_spend_key,
     validator: nonEmptyValidator(L),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
   late StringFormElement secretViewKey = StringFormElement(
     L.secret_view_key,
     validator: nonEmptyValidator(L),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
   late StringFormElement restoreHeight = StringFormElement(
     L.restore_height,
     validator: nonEmptyValidator(L),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
   late StringFormElement seedOffset = StringFormElement(
@@ -88,19 +91,10 @@ class MoneroWalletCreation extends WalletCreation {
     isExtra: true,
     validator: nonEmptyValidator(L),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
-  late SingleChoiceFormElement walletSeedType = SingleChoiceFormElement(
-    title: L.seed_type,
-    elements: [
-      L.seed_type_polyseed,
-      L.seed_type_legacy,
-    ],
-    errorHandler: errorHandler,
-    isExtra: true,
-  );
-
-  late List<FormElement> createForm = [walletSeedType, seedOffset];
+  late List<FormElement> createForm = [seedOffset];
 
   late List<FormElement> restoreSeedForm = [seed, seedOffset];
 

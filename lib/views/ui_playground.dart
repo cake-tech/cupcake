@@ -97,7 +97,14 @@ class UIPlayground extends AbstractView {
       "AnimatedURPage (multi)": () =>
           AnimatedURPage(urqrList: _dummyURQRs, currentWallet: viewModel.wallet).push(context),
       "BarcodeScanner": () => BarcodeScanner(wallet: viewModel.wallet).push(context),
-      "ConnectWallet": () => ConnectWallet(wallet: viewModel.wallet).push(context),
+      "ConnectWallet(canSkip: true)": () => ConnectWallet(
+            wallet: viewModel.wallet,
+            canSkip: true,
+          ).push(context),
+      "ConnectWallet(canSkip: false)": () => ConnectWallet(
+            wallet: viewModel.wallet,
+            canSkip: false,
+          ).push(context),
       "CreateWallet(.create, passwordConfirm: false)": () =>
           CreateWallet(createMethod: CreateMethod.create, needsPasswordConfirm: false)
               .push(context),
@@ -126,9 +133,18 @@ class UIPlayground extends AbstractView {
               NewWalletInfoPage.writeDownNotice(
                 L,
                 T,
-                nextCallback: () async => _alert(context, "nextCallback"),
                 text: "test",
                 title: "test",
+              ),
+            ],
+          ).push(context),
+      "NewWalletInfoScreen(seedWrittenDown)": () => NewWalletInfoScreen(
+            pages: [
+              NewWalletInfoPage.seedWrittenDown(
+                L,
+                T,
+                wallet: viewModel.wallet,
+                nextCallback: () async => _alert(context, "nextCallback"),
               ),
             ],
           ).push(context),

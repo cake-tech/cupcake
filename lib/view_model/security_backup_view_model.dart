@@ -4,6 +4,7 @@ import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/validators.dart';
 import 'package:cupcake/view_model/abstract.dart';
+import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:mobx/mobx.dart';
 
 part 'security_backup_view_model.g.dart';
@@ -18,6 +19,16 @@ abstract class SecurityBackupViewModelBase extends ViewModel with Store {
 
   @observable
   bool isLocked = true;
+
+  @observable
+  late FormBuilderViewModel formBuilderViewModel = FormBuilderViewModel(
+    formElements: form,
+    scaffoldContext: c!,
+    isPinSet: !isLocked,
+    toggleIsPinSet: (final bool val) {
+      isLocked = val;
+    },
+  );
 
   late List<FormElement> form = [
     PinFormElement(
@@ -42,6 +53,7 @@ abstract class SecurityBackupViewModelBase extends ViewModel with Store {
         isLocked = false;
       },
       errorHandler: errorHandler,
+      enableBiometric: false,
     ),
   ];
 

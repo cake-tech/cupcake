@@ -10,6 +10,9 @@ abstract class ViewModel {
   bool canPop = true;
   String get screenName => "screenName";
 
+  bool hasBackground = true;
+  bool hasPngBackground = false;
+
   AppLocalizations get L {
     if (_lcache == null && c == null) {
       throw Exception(

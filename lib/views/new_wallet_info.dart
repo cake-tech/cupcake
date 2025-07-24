@@ -3,6 +3,7 @@ import 'package:cupcake/utils/new_wallet/info_page.dart';
 import 'package:cupcake/view_model/new_wallet_info_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
+import 'package:cupcake/views/widgets/buttons/long_secondary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -11,9 +12,6 @@ class NewWalletInfoScreen extends AbstractView {
     super.key,
     required final List<NewWalletInfoPage> pages,
   }) : viewModel = NewWalletInfoViewModel(pages);
-
-  @override
-  bool get hasBackground => true;
 
   @override
   bool get canPop => false;
@@ -57,16 +55,28 @@ class NewWalletInfoScreen extends AbstractView {
     return List.generate(viewModel.page.actions.length, (final index) {
       final action = viewModel.page.actions[index];
       final isLast = index + 1 == viewModel.page.actions.length;
-      final Function(BuildContext c) callback = switch (action.type) {
+      final Function(BuildContext c, VoidCallback nextPage) callback = switch (action.type) {
         NewWalletActionType.function => action.function!,
-        NewWalletActionType.nextPage => (final _) => viewModel.currentPageIndex++,
+        NewWalletActionType.nextPage => (final _, final __) => viewModel.currentPageIndex++,
       };
+      if (index != 0 || viewModel.page.actions.length == 1) {
+        return Expanded(
+          child: LongPrimaryButton(
+            padding: EdgeInsets.only(right: isLast ? 0 : 16.0),
+            text: action.text,
+            icon: null,
+            onPressed: () => callback(context, () => viewModel.currentPageIndex++),
+            width: null,
+          ),
+        );
+      }
       return Expanded(
-        child: LongPrimaryButton(
+        child: LongSecondaryButton(
+          T,
           padding: EdgeInsets.only(right: isLast ? 0 : 16.0),
           text: action.text,
           icon: null,
-          onPressed: () => callback(context),
+          onPressed: () => callback(context, () => viewModel.currentPageIndex++),
           width: null,
         ),
       );
@@ -78,6 +88,7 @@ class NewWalletInfoScreen extends AbstractView {
     return Padding(
       padding: const EdgeInsets.only(left: 32, right: 32, top: 0),
       child: SafeArea(
+        top: false,
         child: Observer(
           builder: (final context) => Column(
             children: [

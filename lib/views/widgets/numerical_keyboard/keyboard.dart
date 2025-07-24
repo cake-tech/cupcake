@@ -162,7 +162,7 @@ String getKeysChar(final Keys key) {
   };
 }
 
-Widget getKeyWidgetPinPad(final Keys key) {
+Widget getKeyWidgetPinPad(final Keys key, final ThemeData T) {
   return switch (key) {
     Keys.a0 ||
     Keys.a1 ||
@@ -178,10 +178,10 @@ Widget getKeyWidgetPinPad(final Keys key) {
     Keys.dot =>
       Text(
         getKeysChar(key),
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 32,
           fontWeight: FontWeight.w400,
-          color: Colors.white,
+          color: T.colorScheme.onSurfaceVariant,
         ),
       ),
     Keys.backspace => const Icon(Icons.backspace),

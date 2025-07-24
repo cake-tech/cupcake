@@ -5,7 +5,6 @@ import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/secure_storage.dart';
 import 'package:cupcake/utils/types.dart';
-import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:cupcake/view_model/security_backup_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/form_builder.dart';
@@ -26,25 +25,23 @@ class SecurityBackup extends AbstractView {
 
   @override
   Widget? body(final BuildContext context) {
-    return Observer(
-      builder: (final BuildContext context) {
-        if (viewModel.isLocked) {
-          return FormBuilder(
-            showExtra: true,
-            viewModel: FormBuilderViewModel(
-              formElements: viewModel.form,
-              scaffoldContext: context,
-              isPinSet: !viewModel.isLocked,
-            ),
-          );
-        }
+    return Expanded(
+      child: Observer(
+        builder: (final BuildContext context) {
+          if (viewModel.isLocked) {
+            return FormBuilder(
+              showExtra: true,
+              viewModel: viewModel.formBuilderViewModel,
+            );
+          }
 
-        return SecurityBackupTabbedContent(
-          viewModel: viewModel,
-          getDetails: getDetails,
-          L: L,
-        );
-      },
+          return SecurityBackupTabbedContent(
+            viewModel: viewModel,
+            getDetails: getDetails,
+            L: L,
+          );
+        },
+      ),
     );
   }
 

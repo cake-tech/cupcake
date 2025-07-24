@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/exception.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
 import 'package:cupcake/coins/monero/coin.dart';
 import 'package:cupcake/coins/monero/amount.dart';
 import 'package:cupcake/coins/monero/cache_keys.dart';
+import 'package:cupcake/coins/monero/wallet_info.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/null_if_empty.dart';
@@ -283,4 +285,7 @@ class MoneroWallet implements CoinWallet {
         "privateViewKey": wallet.secretViewKey(),
         "restoreHeight": wallet.getRefreshFromBlockHeight(),
       });
+
+  @override
+  CoinWalletInfo get walletInfo => MoneroWalletInfo(walletName);
 }

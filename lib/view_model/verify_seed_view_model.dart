@@ -16,6 +16,9 @@ abstract class VerifySeedViewModelBase extends ViewModel with Store {
   @override
   String get screenName => L.pick_correct_word;
 
+  @override
+  bool get hasBackground => true;
+
   final List<String> seedWords;
   final List<String> wordList;
 

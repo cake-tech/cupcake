@@ -4,6 +4,7 @@ import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/form/validators.dart';
+import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:path/path.dart' as p;
@@ -20,12 +21,23 @@ abstract class WalletEditViewModelBase extends ViewModel with Store {
 
   final CoinWalletInfo walletInfo;
 
+  @observable
+  late FormBuilderViewModel formBuilderViewModel = FormBuilderViewModel(
+    formElements: form,
+    scaffoldContext: c!,
+    isPinSet: false,
+    toggleIsPinSet: (final bool val) {
+      // isPinSet = val;
+    },
+  );
+
   late StringFormElement walletName = StringFormElement(
     L.wallet_name,
     initialText: p.basename(walletInfo.walletName),
     validator: nonEmptyValidator(L),
     randomNameGenerator: true,
     errorHandler: errorHandler,
+    canPaste: false,
   );
 
   late PinFormElement walletPassword = PinFormElement(
@@ -42,6 +54,7 @@ abstract class WalletEditViewModelBase extends ViewModel with Store {
     ),
     showNumboard: false,
     errorHandler: errorHandler,
+    enableBiometric: false,
   );
 
   late final List<FormElement> form = [

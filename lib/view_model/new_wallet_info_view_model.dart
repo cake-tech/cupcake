@@ -10,6 +10,9 @@ abstract class NewWalletInfoViewModelBase extends ViewModel with Store {
   NewWalletInfoViewModelBase(this.pages);
 
   @override
+  bool get hasBackground => true;
+
+  @override
   String get screenName => page.topText;
 
   @observable
