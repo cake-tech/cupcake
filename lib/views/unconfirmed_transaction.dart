@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:cupcake/coins/abstract/address.dart';
 import 'package:cupcake/coins/abstract/amount.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
+import 'package:cupcake/utils/formatter_address.dart';
 import 'package:cupcake/view_model/unconfirmed_transaction_view_model.dart';
 import 'package:flutter/material.dart';
 
@@ -24,14 +26,22 @@ class UnconfirmedTransactionView {
 
   final UnconfirmedTransactionViewModel viewModel;
   AppLocalizations get L => viewModel.L;
-
+  ThemeData get T => viewModel.T;
   Future<dynamic> pushReplacement(final BuildContext context) {
     viewModel.register(context);
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (final context) => _buildBottomSheet(context),
+      builder: (final context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          decoration: BoxDecoration(
+            color: T.colorScheme.onPrimary,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: _buildBottomSheet(context),
+        ),
+      ),
     );
   }
 
@@ -42,39 +52,66 @@ class UnconfirmedTransactionView {
         minHeight: MediaQuery.of(context).size.height * 0.1,
         maxHeight: MediaQuery.of(context).size.height * 0.85,
       ),
-      decoration: const BoxDecoration(
-        color: Color(0xFF273765),
+      decoration: BoxDecoration(
+        color: Color(0xff1B284A),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 40,
-            height: 4,
-            margin: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white.withAlpha(76),
-              borderRadius: BorderRadius.circular(2),
+          SizedBox(
+            width: double.maxFinite,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16, top: 16),
+                      child: Container(
+                        width: 34,
+                        height: 34,
+                        decoration: BoxDecoration(
+                          color: T.colorScheme.surfaceContainer,
+                          borderRadius: BorderRadius.circular(512),
+                        ),
+                        child: IconButton(
+                          onPressed: () => viewModel.cancel(),
+                          icon: Icon(
+                            Icons.close,
+                            color: T.colorScheme.onSurface,
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withAlpha(76),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ],
             ),
           ),
-          // Title
           Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.only(bottom: 32, top: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.account_balance_wallet,
-                  color: Colors.white,
-                  size: 24,
-                ),
+                viewModel.wallet.coin.strings.svg.svg(),
                 const SizedBox(width: 8),
                 Text(
                   L.confirm_transaction,
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
+                    color: T.colorScheme.onSurface,
+                    fontSize: 22,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -142,7 +179,7 @@ class UnconfirmedTransactionView {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: const Color(0xFF1B284A),
+        color: T.colorScheme.surfaceContainer,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -181,7 +218,7 @@ class UnconfirmedTransactionView {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: const Color(0xFF1B284A),
+        color: T.colorScheme.surfaceContainer,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,8 +231,8 @@ class UnconfirmedTransactionView {
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            address,
+          Text.rich(
+            formattedAddress(address),
             style: addressTextStyle,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -207,9 +244,9 @@ class UnconfirmedTransactionView {
 
   Widget _buildFooter(final BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 34),
-      decoration: const BoxDecoration(
-        color: Color(0xFF273765),
+      padding: const EdgeInsets.fromLTRB(42, 0, 42, 34),
+      decoration: BoxDecoration(
+        color: Color(0xff1B284A),
       ),
       child: _SlideToConfirmButton(
         onSlideComplete: () => viewModel.confirm(context),
@@ -242,6 +279,7 @@ class _SlideToConfirmButtonState extends State<_SlideToConfirmButton> {
 
   @override
   Widget build(final BuildContext context) {
+    final T = Theme.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -252,8 +290,8 @@ class _SlideToConfirmButtonState extends State<_SlideToConfirmButton> {
               height: 42,
               width: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: const Color(0xFF2A92FA),
+                borderRadius: BorderRadius.circular(8),
+                color: T.colorScheme.surfaceContainer,
               ),
               child: Stack(
                 children: [
@@ -297,12 +335,14 @@ class _SlideToConfirmButtonState extends State<_SlideToConfirmButton> {
                         width: 42,
                         height: 42,
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
+                          color: T.colorScheme.primary,
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(
-                          _isCompleted ? Icons.check : Icons.arrow_forward,
-                          color: _isCompleted ? Colors.green : Colors.black,
+                        child: Center(
+                          child: Icon(
+                            _isCompleted ? Icons.check : Icons.arrow_forward,
+                            color: _isCompleted ? Colors.green : Colors.black,
+                          ),
                         ),
                       ),
                     ),

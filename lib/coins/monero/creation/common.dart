@@ -33,6 +33,7 @@ class MoneroWalletCreation extends WalletCreation {
     secretSpendKey.ctrl.clear();
     restoreHeight.ctrl.clear();
     seedOffset.ctrl.clear();
+    seedOffsetConfrm.ctrl.clear();
   }
 
   AppLocalizations L;
@@ -94,9 +95,19 @@ class MoneroWalletCreation extends WalletCreation {
     canPaste: true,
   );
 
-  late List<FormElement> createForm = [seedOffset];
+  late StringFormElement seedOffsetConfrm = StringFormElement(
+    L.seed_offset_confirm,
+    password: true,
+    isExtra: true,
+    validator: (final String? input) =>
+        input != seedOffset.ctrl.text ? L.seed_passphrase_mismatch : null,
+    errorHandler: errorHandler,
+    canPaste: true,
+  );
 
-  late List<FormElement> restoreSeedForm = [seed, seedOffset];
+  late List<FormElement> createForm = [seedOffset, seedOffsetConfrm];
+
+  late List<FormElement> restoreSeedForm = [seed, seedOffset, seedOffsetConfrm];
 
   late List<FormElement> restoreKeysForm = [
     walletAddress,
@@ -133,6 +144,9 @@ class MoneroWalletCreation extends WalletCreation {
     final String walletPassword,
   ) async {
     if (createMethod == CreateMethod.create) {
+      if (await seedOffset.value != await seedOffsetConfrm.value) {
+        throw Exception(L.seed_passphrase_mismatch);
+      }
       return CreateMoneroWalletCreationMethod(
         L,
         progressCallback: null,

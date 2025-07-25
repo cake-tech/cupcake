@@ -250,13 +250,14 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
         text: outcome.wallet!.seed,
         title: outcome.wallet!.walletName,
       ),
-      if (outcome.wallet!.passphrase.isNotEmpty)
-        NewWalletInfoPage.writeDownNotice(
-          L,
-          T,
-          text: outcome.wallet!.passphrase,
-          title: L.wallet_passphrase,
-        ),
+      // TODO: add passphrase verification
+      // if (outcome.wallet!.passphrase.isNotEmpty)
+      //   NewWalletInfoPage.writeDownNotice(
+      //     L,
+      //     T,
+      //     text: outcome.wallet!.passphrase,
+      //     title: L.wallet_passphrase,
+      //   ),
       NewWalletInfoPage.seedWrittenDown(
         L,
         T,

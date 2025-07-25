@@ -108,6 +108,7 @@ class _SecurityBackupTabbedContentState extends State<SecurityBackupTabbedConten
           child: Column(
             children: [
               if (seedWords.isNotEmpty) ...[
+                SizedBox(height: 24),
                 Expanded(
                   child: SeedPhraseGridWidget(list: seedWords),
                 ),
@@ -140,11 +141,13 @@ class _SecurityBackupTabbedContentState extends State<SecurityBackupTabbedConten
         final keyDetails = snapshot.data!.where((final detail) => !_isSeedDetail(detail)).toList();
 
         return Padding(
-          padding: const EdgeInsets.only(left: 22, right: 22),
+          padding: const EdgeInsets.symmetric(horizontal: 22),
           child: Column(
             children: [
+              SizedBox(height: 24),
               Expanded(
                 child: ListView.separated(
+                  padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   itemCount: keyDetails.length,
                   itemBuilder: (final context, final index) {

@@ -6,9 +6,9 @@ import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/wallet_home.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/buttons/long_secondary.dart';
-import 'package:cupcake/views/widgets/urqr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class ConnectWallet extends AbstractView {
   ConnectWallet({
@@ -31,7 +31,26 @@ class ConnectWallet extends AbstractView {
               padding: const EdgeInsets.symmetric(horizontal: 64),
               child: Assets.icons.linkCakewallet.image(),
             ),
-          if (!viewModel.isShowingInfo) URQR(frames: viewModel.syncQRCode),
+          if (!viewModel.isShowingInfo)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Material(
+                color: Colors.white,
+                child: QrImageView(
+                  data: viewModel.syncQRCode.first,
+                  dataModuleStyle: QrDataModuleStyle(
+                    color: Colors.black,
+                    dataModuleShape: QrDataModuleShape.square,
+                  ),
+                  embeddedImage: AssetImage(Assets.icons.cupcakeQr.path),
+                  embeddedImageEmitsError: true,
+                  eyeStyle: QrEyeStyle(
+                    color: Colors.black,
+                    eyeShape: QrEyeShape.square,
+                  ),
+                ),
+              ),
+            ),
           const SizedBox(height: 32),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -72,6 +91,7 @@ class ConnectWallet extends AbstractView {
               if (!viewModel.isShowingInfo) {
                 WalletHome(coinWallet: viewModel.wallet).pushReplacement(context);
               } else {
+                viewModel.canSkip = false;
                 viewModel.isShowingInfo = false;
               }
             },

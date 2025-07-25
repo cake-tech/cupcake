@@ -1,5 +1,5 @@
-import 'package:cupcake/utils/alerts/basic.dart';
 import 'package:cupcake/view_model/abstract.dart';
+import 'package:cupcake/views/tos_page.dart';
 
 class InitialSetupViewModel extends ViewModel {
   @override
@@ -9,10 +9,6 @@ class InitialSetupViewModel extends ViewModel {
   bool get hasBackground => true;
 
   void showTos() {
-    showAlert(
-      context: c!,
-      title: L.terms_of_service,
-      body: ["please stop ignoring me on figma i need the ToS screen"],
-    );
+    TosPage().push(c!);
   }
 }

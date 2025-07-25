@@ -26,7 +26,6 @@ class CreateWallet extends AbstractView {
   final CreateWalletViewModel viewModel;
 
   Widget _selectCoin(final BuildContext context) {
-    viewModel.titleUpdate(L.choose_currency);
     return Column(
       children: [
         SizedBox(height: 64),
@@ -45,7 +44,7 @@ class CreateWallet extends AbstractView {
                   viewModel.unconfirmedSelectedCoin = viewModel.coins[i];
                 },
                 selected: viewModel.unconfirmedSelectedCoin == viewModel.coins[i],
-                icon: viewModel.coins[i].strings.svg,
+                icon: viewModel.coins[i].strings.svg.svg(),
                 text: viewModel.coins[i].strings.nameFull,
               ),
             ),
@@ -56,7 +55,6 @@ class CreateWallet extends AbstractView {
   }
 
   Widget _createMethodKind(final BuildContext context) {
-    viewModel.titleUpdate(L.wallet);
     return SafeArea(
       top: false,
       child: SizedBox(
@@ -118,16 +116,22 @@ class CreateWallet extends AbstractView {
 
   Widget? _body(final BuildContext context) {
     if (viewModel.selectedCoin == null) {
+      viewModel.titleUpdate(L.choose_currency);
       return _selectCoin(context);
     }
     if (viewModel.createMethod == null) {
+      viewModel.titleUpdate(L.wallet);
       return _createMethodKind(context);
+    }
+    if (viewModel.createMethod == CreateMethod.restore) {
+      viewModel.titleUpdate(L.restore_wallet);
+    } else {
+      viewModel.titleUpdate(L.create_new_wallet);
     }
     return _createMethodTabbed(context);
   }
 
   Widget _createMethodTabbed(final BuildContext context) {
-    viewModel.titleUpdate(L.wallet);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -181,12 +185,21 @@ class CreateWallet extends AbstractView {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (viewModel.hasAdvancedOptions)
-          LongSecondaryButton(
-            T,
-            text: L.advanced_options,
-            onPressed: () {
-              viewModel.showExtra = !viewModel.showExtra;
-            },
+          Row(
+            children: [
+              Spacer(),
+              Checkbox(
+                value: viewModel.showExtra,
+                onChanged: (final bool? value) {
+                  viewModel.showExtra = value ?? false;
+                },
+              ),
+              Text(
+                L.add_passphrase,
+                style: TextStyle(color: Colors.white),
+              ),
+              Spacer(),
+            ],
           ),
         LongPrimaryButton(
           text: L.continue_,

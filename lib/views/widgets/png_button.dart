@@ -30,9 +30,16 @@ class _FancyButtonThatWeDontCodeSoWeDoPNGInsteadOhNoWhatState extends State<PngB
         });
       },
       onTap: () {
+        setState(() {
+          isPressed = false;
+        });
         widget.onPressed();
       },
-      child: isPressed ? widget.pressedPngAsset : widget.pngAsset,
+      child: SizedBox(
+        width: 95,
+        height: 95,
+        child: isPressed ? widget.pressedPngAsset : widget.pngAsset,
+      ),
     );
   }
 }

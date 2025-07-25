@@ -39,6 +39,18 @@ class AnimatedURPage extends AbstractView {
             },
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.only(left: 32, right: 32, top: 64),
+          child: Text(
+            L.animated_qr_note,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: T.colorScheme.onSurface,
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
         const SizedBox(height: 32),
       ],
     );

@@ -97,6 +97,7 @@ dev_dependencies:
     sdk: flutter
   mobx_codegen: ^2.7.0
   drift_dev: ^2.26.0
+  flutter_launcher_icons: ^0.14.4
 
 dependency_overrides:
   web: ^0.5.0
@@ -126,9 +127,11 @@ flutter:
     - assets/coins/btc.svg
     - assets/coins/xmr.svg
     - assets/background_for_wallethome.png
+    - assets/icons/wallet_selection_button.png
     - assets/icons/icon-white.svg
-    - assets/icons/dot_up.svg
-    - assets/icons/dot_down.svg
+    - assets/icons/dot_up.png
+    - assets/icons/cupcake_while.svg
+    - assets/icons/dot_down.png
     - assets/icons/night_landing.svg
     - assets/icons/wallet_new.png
     - assets/icons/wallet_new_name.svg
@@ -191,3 +194,12 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+# flutter pub run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "assets/icons/app_icon.png"
+
+  android: "ic_launcher"
+
+  ios: true
+  remove_alpha_ios: true

@@ -54,6 +54,7 @@ class BaseTheme {
       onSurface: Color(0xffD7E2F7),
       onSurfaceVariant: Color(0xff8C9FBB),
       surfaceContainerHighest: Color(0xff334C8C),
+      surfaceContainerLowest: Color(0xff131C33),
     ),
     primaryColor: Color(0xff91B0FF),
   );

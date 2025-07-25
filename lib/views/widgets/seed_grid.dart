@@ -17,7 +17,7 @@ class SeedPhraseGridWidget extends StatelessWidget {
     final T = Theme.of(context);
     return GridView.builder(
       padding: EdgeInsets.zero,
-      itemCount: list.length,
+      itemCount: list.length + (list.length % 3 == 1 ? 1 : 0),
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
@@ -25,7 +25,13 @@ class SeedPhraseGridWidget extends StatelessWidget {
         mainAxisSpacing: 8.0,
         crossAxisSpacing: 8.0,
       ),
-      itemBuilder: (final BuildContext context, final index) {
+      itemBuilder: (final BuildContext context, int index) {
+        if (index == list.length - 1 && list.length % 3 == 1) {
+          return const SizedBox();
+        }
+        if (index == list.length && list.length % 3 == 1) {
+          index--;
+        }
         final item = list[index];
         final numberCount = index + 1;
         return GestureDetector(

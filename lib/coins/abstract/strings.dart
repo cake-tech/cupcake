@@ -1,4 +1,4 @@
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cupcake/gen/assets.gen.dart';
 
 abstract class CoinStrings {
   String get nameLowercase;
@@ -8,5 +8,5 @@ abstract class CoinStrings {
   String get symbolUppercase;
   String get nameFull;
 
-  SvgPicture get svg;
+  SvgGenImage get svg;
 }

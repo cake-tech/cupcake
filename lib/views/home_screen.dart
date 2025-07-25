@@ -91,14 +91,21 @@ class HomeScreen extends AbstractView {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: const Color(0xFF1B284A),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xff2B3A67),
+              Color(0xff1C2A4F),
+            ],
+          ),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
           children: [
             SizedBox.square(
               dimension: 32,
-              child: wallet.coin.strings.svg,
+              child: wallet.coin.strings.svg.svg(),
             ),
             const SizedBox(width: 16),
             Expanded(
