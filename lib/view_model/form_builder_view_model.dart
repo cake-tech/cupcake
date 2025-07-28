@@ -100,6 +100,7 @@ abstract class FormBuilderViewModelBase extends ViewModel with Store {
       await nextPageCallback();
     } catch (err) {
       await e.errorHandler(err);
+      isPinSet = false;
       return;
     }
   }

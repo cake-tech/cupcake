@@ -26,7 +26,7 @@ abstract class SecurityBackupViewModelBase extends ViewModel with Store {
     scaffoldContext: c!,
     isPinSet: !isLocked,
     toggleIsPinSet: (final bool val) {
-      isLocked = val;
+      isLocked = !val;
     },
   );
 

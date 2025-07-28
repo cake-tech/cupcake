@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cupcake/coins/abstract/wallet_info.dart';
+import 'package:cupcake/coins/list.dart';
 import 'package:cupcake/utils/filesystem.dart';
 import 'package:flutter/foundation.dart';
 // import 'package:flutter/foundation.dart';
@@ -10,7 +11,6 @@ import 'package:path/path.dart' as p;
 class CupcakeConfig {
   CupcakeConfig({
     required this.lastWallet,
-    required this.initialSetupComplete,
     required this.walletMigrationLevel,
     required this.msForQrCode,
     required this.maxFragmentLength,
@@ -25,7 +25,6 @@ class CupcakeConfig {
   factory CupcakeConfig.fromJson(final Map<String, dynamic> json) {
     return CupcakeConfig(
       lastWallet: CoinWalletInfo.fromJson(json['lastWallet']),
-      initialSetupComplete: json['initialSetupComplete'] ?? false,
       walletMigrationLevel: json['walletMigrationLevel'] ?? 0,
       msForQrCode: json['msForQrCode'] ?? 1000 ~/ 3.5,
       maxFragmentLength: json['maxFragmentLength'] ?? 130,
@@ -38,7 +37,16 @@ class CupcakeConfig {
     );
   }
   CoinWalletInfo? lastWallet;
-  bool initialSetupComplete;
+  Future<bool> initialSetupComplete() async {
+    for (final coin in walletCoins) {
+      final toAdd = await coin.coinWallets;
+      if (toAdd.isNotEmpty) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   int walletMigrationLevel;
   int msForQrCode;
   int maxFragmentLength;
@@ -52,7 +60,6 @@ class CupcakeConfig {
   Map<String, dynamic> toJson() {
     return {
       'lastWallet': lastWallet,
-      'initialSetupComplete': initialSetupComplete,
       'walletMigrationLevel': walletMigrationLevel,
       'msForQrCode': msForQrCode,
       'maxFragmentLength': maxFragmentLength,

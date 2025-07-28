@@ -127,51 +127,54 @@ class AbstractView extends StatefulWidget {
     final b = body(context);
     if (b == null) return b;
     final navBar = bottomNavigationBar(context);
-    return Stack(
-      children: [
-        Observer(
-          builder: (final context) => viewModel.hasBackground
-              ? Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFF1B284A),
-                        Color(0xFF0F1A36),
-                      ],
+    return Expanded(
+      child: Stack(
+        children: [
+          Observer(
+            builder: (final context) => viewModel.hasBackground
+                ? Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFF1B284A),
+                          Color(0xFF0F1A36),
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              : const SizedBox.expand(),
-        ),
-        Observer(
-          builder: (final context) => viewModel.hasPngBackground
-              ? Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(Assets.backgroundForWallethome.path),
-                      fit: BoxFit.cover,
-                      opacity: 0.12,
-                    ),
-                  ),
-                )
-              : const SizedBox.expand(),
-        ),
-        Positioned.fill(
-          child: Column(
-            children: [
-              if (appBar != null) appBar!,
-              Expanded(child: b),
-              if (navBar != null)
-                SafeArea(
-                  top: false,
-                  child: navBar,
-                ),
-            ],
+                  )
+                : const SizedBox.expand(),
           ),
-        ),
-      ],
+          Observer(
+            builder: (final context) => viewModel.hasPngBackground
+                ? Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(Assets.backgroundForWallethome.path),
+                        fit: BoxFit.cover,
+                        opacity: 0.12,
+                      ),
+                    ),
+                  )
+                : const SizedBox.expand(),
+          ),
+          Positioned.fill(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (appBar != null) appBar!,
+                Expanded(child: b),
+                if (navBar != null)
+                  SafeArea(
+                    top: false,
+                    child: navBar,
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

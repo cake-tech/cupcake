@@ -6,7 +6,6 @@ import 'package:cupcake/coins/abstract/wallet_creation.dart';
 import 'package:cupcake/coins/list.dart';
 import 'package:cupcake/utils/display_form_element.dart';
 import 'package:cupcake/utils/types.dart';
-import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/plain_value_outcome.dart';
@@ -74,7 +73,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   String get screenNameOriginal => switch (createMethod) {
         CreateMethod.create => L.create_wallet,
         CreateMethod.restore => L.restore_wallet,
-        null => L.create_new_wallet,
+        null => "Unknown",
       };
 
   @computed
@@ -144,13 +143,8 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     enableBiometric: false,
   );
 
-  @observable
-  late WalletCreationForm? currentForm = () {
-    if (createMethods.length == 1) {
-      return createMethods[createMethods.keys.first];
-    }
-    return null;
-  }();
+  @computed
+  WalletCreationForm? get currentForm => createMethods[createMethods.keys.toList()[formIndex]];
 
   @observable
   WalletCreation? creationMethod;
@@ -187,8 +181,6 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   Future<void> completeSetup(final CoinWallet cw) async {
     await callThrowable(
       () async {
-        CupcakeConfig.instance.initialSetupComplete = true;
-        CupcakeConfig.instance.save();
         await ConnectWallet(wallet: cw, canSkip: true).push(c!);
         await WalletHome(coinWallet: cw).pushReplacement(c!);
       },

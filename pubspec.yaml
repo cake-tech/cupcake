@@ -131,6 +131,7 @@ flutter:
     - assets/icons/icon-white.svg
     - assets/icons/dot_up.png
     - assets/icons/cupcake_while.svg
+    - assets/icons/cupcake_neutral.svg
     - assets/icons/dot_down.png
     - assets/icons/night_landing.svg
     - assets/icons/wallet_new.png
@@ -160,6 +161,7 @@ flutter:
     - assets/drawer_icons/security_and_backup.svg
     - assets/drawer_icons/wallets.svg
     - assets/drawer_icons/export_key_images.svg
+    - assets/wallet_pill.png
 
   fonts:
     - family: Lato

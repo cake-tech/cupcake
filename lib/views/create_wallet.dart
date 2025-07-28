@@ -89,7 +89,7 @@ class CreateWallet extends AbstractView {
             LongSecondaryButton(
               T,
               onPressed: () {
-                viewModel.createMethod = CreateMethod.create;
+                viewModel.createMethod = CreateMethod.restore;
               },
               text: L.restore_wallet,
             ),
@@ -132,6 +132,17 @@ class CreateWallet extends AbstractView {
   }
 
   Widget _createMethodTabbed(final BuildContext context) {
+    if (viewModel.isPinSet) {
+      return SingleChildScrollView(child: _createMethodTabbedPage(context));
+    }
+    return _createMethodTabbedPage(context);
+  }
+
+  Widget _createMethodTabbedPage(final BuildContext context) {
+    final form = FormBuilder(
+      showExtra: viewModel.showExtra,
+      viewModel: viewModel.formBuilderViewModelList[viewModel.formIndex] as FormBuilderViewModel,
+    );
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -152,16 +163,18 @@ class CreateWallet extends AbstractView {
             ),
           SizedBox(height: 24),
         ],
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: FormBuilder(
-              showExtra: viewModel.showExtra,
-              viewModel:
-                  viewModel.formBuilderViewModelList[viewModel.formIndex] as FormBuilderViewModel,
+        if (!viewModel.isPinSet)
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: form,
             ),
+          )
+        else
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: form,
           ),
-        ),
       ],
     );
   }

@@ -17,7 +17,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 Future<void> appInit() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeBaseStoragePath();
-  if (CupcakeConfig.instance.initialSetupComplete == false) {
+  if (await CupcakeConfig.instance.initialSetupComplete() == false) {
     final oldSecureStorage = await secureStorage.readAll();
     final date = DateTime.now().toIso8601String();
     CupcakeConfig.instance.oldSecureStorage[date] = oldSecureStorage;
@@ -42,11 +42,13 @@ Future<void> main() async {
 
 Future<void> $main() async {
   await appInit();
-  runApp(const MyApp());
+  final initialSetupComplete = await CupcakeConfig.instance.initialSetupComplete();
+  runApp(MyApp(initialSetupComplete: initialSetupComplete));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.initialSetupComplete});
+  final bool initialSetupComplete;
 
   // This widget is the root of your application.
   @override
@@ -66,7 +68,7 @@ class MyApp extends StatelessWidget {
         Locale('en'), // English
         Locale('pl'), // Polish
       ],
-      home: CupcakeConfig.instance.initialSetupComplete
+      home: initialSetupComplete
           ? HomeScreen(
               openLastWallet: true,
             )

@@ -88,6 +88,7 @@ class HomeScreen extends AbstractView {
   ) {
     return GestureDetector(
       onTap: () => wallet.openUI(context),
+      onLongPress: () => viewModel.renameWallet(wallet),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(

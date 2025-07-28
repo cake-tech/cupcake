@@ -61,9 +61,10 @@ class FormBuilder extends StatelessWidget {
         try {
           await e.onConfirmInternal(context);
           if (!context.mounted) return;
-          viewModel.isPinSet = (count == i);
           await e.onConfirm?.call();
+          viewModel.isPinSet = (count == i);
         } catch (err) {
+          viewModel.isPinSet = false;
           await e.errorHandler(err);
           return;
         }
@@ -121,7 +122,6 @@ class FormBuilder extends StatelessWidget {
                 obscureText: e.password,
                 enableSuggestions: !e.password,
                 autocorrect: !e.password,
-                textAlign: TextAlign.center,
               ),
             ),
           const SizedBox(height: 16),
@@ -182,7 +182,6 @@ class FormBuilder extends StatelessWidget {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: e.validator,
               onChanged: (final _) {},
-              textAlign: TextAlign.center,
               suffixIcon: e.password
                   ? e.visibility
                       ? Icons.visibility_off
@@ -222,7 +221,6 @@ class FormBuilder extends StatelessWidget {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: e.validator,
               onChanged: (final _) {},
-              textAlign: TextAlign.center,
             ),
           ),
         );

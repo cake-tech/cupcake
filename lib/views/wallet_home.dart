@@ -61,52 +61,51 @@ class WalletHome extends AbstractView {
       padding: const EdgeInsets.symmetric(horizontal: 42),
       child: GestureDetector(
         onTap: () => HomeScreen(openLastWallet: false).push(context),
-        child: Container(
-          height: 55,
-          padding: const EdgeInsets.only(left: 16),
-          decoration: BoxDecoration(
-            color: T.colorScheme.surfaceContainerLowest,
-            borderRadius: BorderRadius.circular(512),
-            boxShadow: [
-              BoxShadow(
-                color: T.colorScheme.primary.withValues(alpha: 0.5),
-                blurRadius: 1.0,
-                offset: Offset(0, 0),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              SizedBox.square(
-                dimension: 32,
-                child: GlowingSvg(svg: viewModel.coin.strings.svg),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  viewModel.wallet.walletName,
-                  style: TextStyle(
-                    color: T.colorScheme.primary,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 15.0,
-                        color: T.colorScheme.primary.withValues(alpha: 0.5),
-                        offset: Offset(0, 0),
-                      ),
-                    ],
-                  ),
-                  textAlign: TextAlign.center,
+        child: Stack(
+          children: [
+            Image.asset(
+              Assets.walletPill.path,
+              fit: BoxFit.cover,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(width: 8),
+                SizedBox.square(
+                  dimension: 40,
+                  child: GlowingSvg(svg: viewModel.coin.strings.svg),
                 ),
-              ),
-              const SizedBox(width: 16),
-              Container(
-                padding: const EdgeInsets.all(8),
-                child: Assets.icons.walletSelectionButton.image(),
-              ),
-            ],
-          ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    viewModel.wallet.walletName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: T.colorScheme.primary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 15.0,
+                          color: T.colorScheme.primary.withValues(alpha: 0.5),
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Assets.icons.walletSelectionButton.image(
+                    width: 42,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -202,19 +201,10 @@ class WalletHome extends AbstractView {
                 padding: const EdgeInsets.all(32),
                 child: Column(
                   children: [
-                    _buildBottomSheetGradientCard(
-                      context,
-                      icon: Assets.icons.nav.cakeDark.svg(width: 24, height: 24),
-                      title: "Sync to Cake Wallet",
-                      onTap: () {
-                        BarcodeScanner(wallet: viewModel.wallet).push(context);
-                      },
-                    ),
-                    const SizedBox(height: 8),
                     _buildBottomSheetCard(
                       context,
-                      icon: Assets.icons.nav.cakeLight.svg(width: 24, height: 24),
-                      title: "Connect to Cake Wallet",
+                      icon: Assets.icons.cupcakeNeutral.svg(width: 24, height: 24),
+                      title: L.link_to_cakewallet,
                       backgroundColor: const Color(0xFF1B284A),
                       textColor: Colors.white,
                       onTap: () => ConnectWallet(
@@ -235,7 +225,7 @@ class WalletHome extends AbstractView {
                     _buildBottomSheetCard(
                       context,
                       icon: Assets.icons.nav.otherSettings.svg(width: 24, height: 24),
-                      title: "Other settings",
+                      title: L.settings,
                       backgroundColor: const Color(0xFF1B284A),
                       textColor: Colors.white,
                       onTap: () => SettingsView(wallet: viewModel.wallet).push(context),
@@ -285,55 +275,8 @@ class WalletHome extends AbstractView {
   Widget _buildCornerDot(final bool isUp) {
     final img = isUp ? Assets.icons.dotUp : Assets.icons.dotDown;
     return img.image(
-      height: 15,
-      width: 15,
-    );
-  }
-
-  Widget _buildBottomSheetGradientCard(
-    final BuildContext context, {
-    required final Widget icon,
-    required final String title,
-    required final VoidCallback onTap,
-  }) {
-    return TextButton(
-      onPressed: onTap,
-      style: TextButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        padding: EdgeInsets.all(0),
-      ),
-      child: Ink(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              Color(0xFF2A92FA),
-              Color(0xFF61C5FF),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            SizedBox(width: 16),
-            icon,
-            const SizedBox(width: 16),
-            Text(
-              title,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
+      height: 20,
+      width: 20,
     );
   }
 

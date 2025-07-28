@@ -46,7 +46,8 @@ class SecurityBackup extends AbstractView {
   }
 
   Future<List<WalletSeedDetail>> getDetails() async {
-    final details = await viewModel.wallet.seedDetails();
+    var details = await viewModel.wallet.seedDetails();
+    details = details.where((final e) => e.type == WalletSeedDetailType.text).toList();
     if (CupcakeConfig.instance.debug) {
       final secrets = await secureStorage.readAll();
 

@@ -1,5 +1,5 @@
 {
-  "about_the_app": "About the app",
+  "about_the_app": "About Cupcake",
   "add_passphrase": "Add passphrase",
   "address_book": "Address book",
   "advanced_options": "Advanced Options",
@@ -69,7 +69,6 @@
   "option_create_keys": "Keys",
   "option_create_new_wallet": "Create new wallet",
   "option_create_seed": "Seed",
-  "other_settings": "Other settings",
   "partial_key_images": "Partial Key Images",
   "password_doesnt_match": "Passwords doesn't match",
   "pick_correct_word": "Pick correct word",
