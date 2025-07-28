@@ -61,51 +61,51 @@ class WalletHome extends AbstractView {
       padding: const EdgeInsets.symmetric(horizontal: 42),
       child: GestureDetector(
         onTap: () => HomeScreen(openLastWallet: false).push(context),
-        child: Stack(
-          children: [
-            Image.asset(
-              Assets.walletPill.path,
-              fit: BoxFit.cover,
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(Assets.walletPill.path),
+              fit: BoxFit.fill,
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(width: 8),
-                SizedBox.square(
-                  dimension: 40,
-                  child: GlowingSvg(svg: viewModel.coin.strings.svg),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    viewModel.wallet.walletName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: T.colorScheme.primary,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 15.0,
-                          color: T.colorScheme.primary.withValues(alpha: 0.5),
-                          offset: Offset(0, 0),
-                        ),
-                      ],
-                    ),
-                    textAlign: TextAlign.center,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(width: 8),
+              SizedBox.square(
+                dimension: 40,
+                child: GlowingSvg(svg: viewModel.coin.strings.svg),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  viewModel.wallet.walletName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: T.colorScheme.primary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 15.0,
+                        color: T.colorScheme.primary.withValues(alpha: 0.5),
+                        offset: Offset(0, 0),
+                      ),
+                    ],
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(width: 16),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Assets.icons.walletSelectionButton.image(
-                    width: 42,
-                  ),
+              ),
+              const SizedBox(width: 16),
+              Container(
+                padding: const EdgeInsets.all(8),
+                child: Assets.icons.walletSelectionButton.image(
+                  width: 42,
                 ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
