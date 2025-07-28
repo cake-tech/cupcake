@@ -19,11 +19,9 @@ class OpenWallet extends AbstractView {
 
   @override
   Widget body(final BuildContext context) {
-    return Expanded(
-      child: FormBuilder(
-        showExtra: false,
-        viewModel: viewModel.formBuilderViewModel,
-      ),
+    return FormBuilder(
+      showExtra: false,
+      viewModel: viewModel.formBuilderViewModel,
     );
   }
 }

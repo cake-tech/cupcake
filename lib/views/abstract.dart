@@ -127,7 +127,9 @@ class AbstractView extends StatefulWidget {
     final b = body(context);
     if (b == null) return b;
     final navBar = bottomNavigationBar(context);
-    return Expanded(
+    return SizedBox(
+      width: double.maxFinite,
+      height: double.maxFinite,
       child: Stack(
         children: [
           Observer(

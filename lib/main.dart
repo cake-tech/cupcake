@@ -26,16 +26,28 @@ Future<void> appInit() async {
   }
 }
 
+const List<String> ignoredErrors = [];
+
+Future<void> enableErrorHandling() async {
+  FlutterError.onError = (final FlutterErrorDetails errorDetails) {
+    if (ignoredErrors.any((final e) => errorDetails.exception.toString().contains(e))) {
+      return;
+    }
+    catchFatalError(errorDetails.exception, null);
+  };
+  PlatformDispatcher.instance.onError = (final Object error, final StackTrace stackTrace) {
+    if (ignoredErrors.any((final e) => error.toString().contains(e))) {
+      return true;
+    }
+    catchFatalError(error, stackTrace);
+    return true;
+  };
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (!kDebugMode) {
-    FlutterError.onError = (final FlutterErrorDetails errorDetails) {
-      catchFatalError(errorDetails.exception, null);
-    };
-    PlatformDispatcher.instance.onError = (final Object error, final StackTrace stackTrace) {
-      catchFatalError(error, stackTrace);
-      return true;
-    };
+    unawaited(enableErrorHandling());
   }
   await AppLock.instance.registerAppStart(BaseTheme.darkBaseTheme, $main);
 }
