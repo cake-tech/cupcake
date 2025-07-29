@@ -61,7 +61,7 @@ class BitcoinWalletInfo extends CoinWalletInfo {
 
   @override
   Future<void> deleteWallet() {
-    File(walletName).deleteSync();
+    File("$walletName.keys").deleteSync();
     return Future.value();
   }
 

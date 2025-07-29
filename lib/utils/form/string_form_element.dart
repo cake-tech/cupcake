@@ -15,10 +15,9 @@ abstract class StringFormElementBase extends FormElement with Store {
     this.isExtra = false,
     this.showIf,
     this.randomNameGenerator = false,
-    required final Future<void> Function(Object e) errorHandler,
+    required this.errorHandler,
     required this.canPaste,
   })  : ctrl = TextEditingController(text: initialText),
-        _errorHandler = errorHandler,
         visibility = !password;
 
   bool Function()? showIf;
@@ -48,7 +47,6 @@ abstract class StringFormElementBase extends FormElement with Store {
 
   String? Function(String? input) validator;
 
-  final Future<void> Function(Object e) _errorHandler;
   @override
-  Future<void> errorHandler(final Object e) => _errorHandler(e);
+  Future<void> Function(Object e) errorHandler;
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
@@ -5,7 +7,7 @@ import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/form/validators.dart';
 import 'package:cupcake/view_model/form_builder_view_model.dart';
-import 'package:flutter/material.dart';
+import 'package:cupcake/views/home_screen.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:path/path.dart' as p;
 import 'package:mobx/mobx.dart';
@@ -73,7 +75,11 @@ abstract class WalletEditViewModelBase extends ViewModel with Store {
         }
         await walletInfo.deleteWallet();
         if (!mounted) return;
-        Navigator.of(c!).pop();
+        unawaited(
+          HomeScreen(
+            openLastWallet: false,
+          ).pushReplacement(c!),
+        );
       },
       L.delete_wallet,
     );
@@ -90,7 +96,11 @@ abstract class WalletEditViewModelBase extends ViewModel with Store {
         }
         await walletInfo.renameWallet(await walletName.value);
         if (!mounted) return;
-        Navigator.of(c!).pop();
+        unawaited(
+          HomeScreen(
+            openLastWallet: false,
+          ).pushReplacement(c!),
+        );
       },
       L.rename_wallet,
     );

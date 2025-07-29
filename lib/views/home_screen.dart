@@ -1,6 +1,7 @@
 import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/utils/types.dart';
+import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/view_model/home_screen_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/create_wallet.dart';
@@ -88,8 +89,8 @@ class HomeScreen extends AbstractView {
   ) {
     return GestureDetector(
       onTap: () => wallet.openUI(context),
-      onLongPress: () => viewModel.renameWallet(wallet),
       child: Container(
+        height: 72,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -119,6 +120,15 @@ class HomeScreen extends AbstractView {
                 ),
               ),
             ),
+            IconButton(
+              padding: EdgeInsets.zero,
+              onPressed: () => viewModel.renameWallet(wallet),
+              icon: Icon(
+                Icons.edit,
+                size: 24,
+                color: Colors.white,
+              ),
+            ),
           ],
         ),
       ),
@@ -133,15 +143,23 @@ class HomeScreen extends AbstractView {
         LongSecondaryButton(
           T,
           onPressed: () {
-            CreateWallet(createMethod: CreateMethod.restore, needsPasswordConfirm: false)
-                .push(context);
+            CreateWallet(
+              viewModel: CreateWalletViewModel(
+                createMethod: CreateMethod.restore,
+                needsPasswordConfirm: false,
+              ),
+            ).push(context);
           },
           text: L.restore_wallet,
         ),
         LongPrimaryButton(
           onPressed: () {
-            CreateWallet(createMethod: CreateMethod.create, needsPasswordConfirm: false)
-                .push(context);
+            CreateWallet(
+              viewModel: CreateWalletViewModel(
+                createMethod: CreateMethod.create,
+                needsPasswordConfirm: false,
+              ),
+            ).push(context);
           },
           text: L.create_new_wallet,
         ),

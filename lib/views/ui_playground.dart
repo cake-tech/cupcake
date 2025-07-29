@@ -7,6 +7,7 @@ import 'package:cupcake/utils/alerts/basic.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/new_wallet/info_page.dart';
 import 'package:cupcake/utils/types.dart';
+import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/view_model/ui_playground_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/animated_qr_page.dart';
@@ -105,21 +106,36 @@ class UIPlayground extends AbstractView {
             wallet: viewModel.wallet,
             canSkip: false,
           ).push(context),
-      "CreateWallet(.create, passwordConfirm: false)": () =>
-          CreateWallet(createMethod: CreateMethod.create, needsPasswordConfirm: false)
-              .push(context),
-      "CreateWallet(.create, passwordConfirm: true)": () =>
-          CreateWallet(createMethod: CreateMethod.create, needsPasswordConfirm: true).push(context),
-      "CreateWallet(.restore, passwordConfirm: false)": () =>
-          CreateWallet(createMethod: CreateMethod.restore, needsPasswordConfirm: false)
-              .push(context),
-      "CreateWallet(.restore, passwordConfirm: true)": () =>
-          CreateWallet(createMethod: CreateMethod.restore, needsPasswordConfirm: true)
-              .push(context),
-      "CreateWallet(null, passwordConfirm: false)": () =>
-          CreateWallet(createMethod: null, needsPasswordConfirm: false).push(context),
-      "CreateWallet(null, passwordConfirm: true)": () =>
-          CreateWallet(createMethod: null, needsPasswordConfirm: true).push(context),
+      "CreateWallet(.create, passwordConfirm: false)": () => CreateWallet(
+            viewModel: CreateWalletViewModel(
+              createMethod: CreateMethod.create,
+              needsPasswordConfirm: false,
+            ),
+          ).push(context),
+      "CreateWallet(.create, passwordConfirm: true)": () => CreateWallet(
+            viewModel: CreateWalletViewModel(
+              createMethod: CreateMethod.create,
+              needsPasswordConfirm: true,
+            ),
+          ).push(context),
+      "CreateWallet(.restore, passwordConfirm: false)": () => CreateWallet(
+            viewModel: CreateWalletViewModel(
+              createMethod: CreateMethod.restore,
+              needsPasswordConfirm: false,
+            ),
+          ).push(context),
+      "CreateWallet(.restore, passwordConfirm: true)": () => CreateWallet(
+            viewModel: CreateWalletViewModel(
+              createMethod: CreateMethod.restore,
+              needsPasswordConfirm: true,
+            ),
+          ).push(context),
+      "CreateWallet(null, passwordConfirm: false)": () => CreateWallet(
+            viewModel: CreateWalletViewModel(createMethod: null, needsPasswordConfirm: false),
+          ).push(context),
+      "CreateWallet(null, passwordConfirm: true)": () => CreateWallet(
+            viewModel: CreateWalletViewModel(createMethod: null, needsPasswordConfirm: true),
+          ).push(context),
       "Home(openLastWallet: false)": () => HomeScreen(openLastWallet: false).push(context),
       "Home(openLastWallet: true)": () => HomeScreen(openLastWallet: true).push(context),
       "InitialSetupScreen": () => InitialSetupScreen().push(context),

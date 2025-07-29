@@ -15,6 +15,7 @@ import 'package:cupcake/utils/new_wallet/info_page.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:cupcake/views/connect_wallet.dart';
+import 'package:cupcake/views/create_wallet.dart';
 import 'package:cupcake/views/new_wallet_info.dart';
 import 'package:cupcake/views/wallet_home.dart';
 import 'package:flutter/foundation.dart';
@@ -28,13 +29,60 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   CreateWalletViewModelBase({
     required this.createMethod,
     required this.needsPasswordConfirm,
+    this.forcedScreenName,
+    this.showExtra = false,
+    this.formIndex = 0,
+    this.isPinSet = false,
   });
 
-  @observable
-  CreateMethod? createMethod;
+  CreateWalletViewModelBase.full({
+    required this.createMethod,
+    required this.needsPasswordConfirm,
+    required this.formIndex,
+    required this.isPinSet,
+    required this.showExtra,
+    required this.forcedScreenName,
+    required this.unconfirmedSelectedCoin,
+    required this.selectedCoin,
+    required this.walletName,
+    required this.walletPasswordInitial,
+    required this.walletPassword,
+    required this.creationMethod,
+  });
+  CreateWalletViewModel copyWith({
+    final CreateMethod? newCreateMethod,
+    final bool? newNeedsPasswordConfirm,
+    final int? newFormIndex,
+    final bool? newIsPinSet,
+    final bool? newShowExtra,
+    final String? newForcedScreenName,
+    final Coin? newUnconfirmedSelectedCoin,
+    final Coin? newSelectedCoin,
+    final StringFormElement? newWalletName,
+    final PinFormElement? newWalletPasswordInitial,
+    final PinFormElement? newWalletPassword,
+    final WalletCreation? newCreationMethod,
+  }) {
+    return CreateWalletViewModel.full(
+      createMethod: newCreateMethod ?? createMethod,
+      needsPasswordConfirm: newNeedsPasswordConfirm ?? needsPasswordConfirm,
+      formIndex: newFormIndex ?? formIndex,
+      isPinSet: newIsPinSet ?? isPinSet,
+      showExtra: newShowExtra ?? showExtra,
+      forcedScreenName: forcedScreenName ?? screenName,
+      unconfirmedSelectedCoin: newUnconfirmedSelectedCoin ?? unconfirmedSelectedCoin,
+      selectedCoin: newSelectedCoin ?? selectedCoin,
+      walletName: newWalletName ?? walletName,
+      walletPasswordInitial: newWalletPasswordInitial ?? walletPasswordInitial,
+      walletPassword: newWalletPassword ?? walletPassword,
+      creationMethod: newCreationMethod ?? creationMethod,
+    );
+  }
+
+  final CreateMethod? createMethod;
 
   @observable
-  int formIndex = 0;
+  int formIndex;
 
   @override
   @computed
@@ -47,10 +95,10 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   }
 
   @observable
-  bool isPinSet = false;
+  bool isPinSet;
 
   @observable
-  bool showExtra = false;
+  bool showExtra;
 
   @observable
   late List<FormBuilderViewModelBase> formBuilderViewModelList =
@@ -61,14 +109,19 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
       scaffoldContext: c!,
       isPinSet: false,
       toggleIsPinSet: (final bool val) {
-        isPinSet = val;
+        if (val == isPinSet) return;
+        CreateWallet(
+          viewModel: copyWith(newIsPinSet: val),
+        ).pushReplacement(c!);
       },
     );
   });
 
+  final String? forcedScreenName;
+
   @override
   @observable
-  late String screenName = screenNameOriginal;
+  late String screenName = forcedScreenName ?? screenNameOriginal;
 
   String get screenNameOriginal => switch (createMethod) {
         CreateMethod.create => L.create_wallet,
@@ -99,7 +152,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     return null;
   }();
 
-  late final StringFormElement walletName = StringFormElement(
+  late StringFormElement walletName = StringFormElement(
     L.wallet_name,
     validator: nonEmptyValidator(L),
     randomNameGenerator: true,
@@ -107,7 +160,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     canPaste: false,
   );
 
-  late final PinFormElement walletPasswordInitial = PinFormElement(
+  late PinFormElement walletPasswordInitial = PinFormElement(
     label: L.setup_pin,
     password: true,
     valueOutcome: PlainValueOutcome(),
@@ -119,7 +172,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     enableBiometric: false,
   );
 
-  late final PinFormElement walletPassword = PinFormElement(
+  late PinFormElement walletPassword = PinFormElement(
     label: L.setup_pin,
     password: true,
     valueOutcome: FlutterSecureStorageValueOutcome(

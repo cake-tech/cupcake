@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
+import 'package:cupcake/utils/native_animation_type.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,22 +45,36 @@ class ViewModelSimple extends ViewModel {
 class AbstractView extends StatefulWidget {
   AbstractView({super.key});
   Future<dynamic> push(final BuildContext context) {
+    Widget builder(final context) {
+      return this;
+    }
+
     return Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (final context) {
-          return this;
-        },
-      ),
+      switch (nativeAnimationType) {
+        NativeAnimationType.cupertino => CupertinoPageRoute(
+            builder: builder,
+          ),
+        NativeAnimationType.material => MaterialPageRoute(
+            builder: builder,
+          ),
+      },
     );
   }
 
   Future<dynamic> pushReplacement(final BuildContext context) {
+    Widget builder(final context) {
+      return this;
+    }
+
     return Navigator.of(context).pushReplacement(
-      CupertinoPageRoute(
-        builder: (final context) {
-          return this;
-        },
-      ),
+      switch (nativeAnimationType) {
+        NativeAnimationType.cupertino => CupertinoPageRoute(
+            builder: builder,
+          ),
+        NativeAnimationType.material => MaterialPageRoute(
+            builder: builder,
+          ),
+      },
     );
   }
 

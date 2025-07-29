@@ -1,4 +1,5 @@
 import 'package:cupcake/utils/text_span_markdown.dart';
+import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/view_model/initial_setup_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/create_wallet.dart';
@@ -69,8 +70,7 @@ class InitialSetupScreen extends AbstractView {
     return LongPrimaryButton(
       text: L.continue_,
       onPressed: () => CreateWallet(
-        createMethod: null,
-        needsPasswordConfirm: true,
+        viewModel: CreateWalletViewModel(createMethod: null, needsPasswordConfirm: true),
       ).push(context),
     );
   }

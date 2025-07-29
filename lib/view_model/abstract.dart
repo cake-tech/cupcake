@@ -13,6 +13,8 @@ abstract class ViewModel {
   bool hasBackground = true;
   bool hasPngBackground = false;
 
+  GlobalKey scaffoldKey = GlobalKey<ScaffoldState>();
+
   AppLocalizations get L {
     if (_lcache == null && c == null) {
       throw Exception(
@@ -53,9 +55,7 @@ abstract class ViewModel {
   AppLocalizations? _lcache;
   ThemeData? _tcache;
 
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-  BuildContext? get c => _c ?? scaffoldKey.currentContext;
+  BuildContext? get c => scaffoldKey.currentContext ?? _c;
   bool get mounted {
     if (c == null) print("c is null");
     return c?.mounted ?? false;

@@ -15,12 +15,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 class CreateWallet extends AbstractView {
   CreateWallet({
     super.key,
-    required final CreateMethod? createMethod,
-    required final bool needsPasswordConfirm,
-  }) : viewModel = CreateWalletViewModel(
-          createMethod: createMethod,
-          needsPasswordConfirm: needsPasswordConfirm,
-        );
+    required this.viewModel,
+  });
 
   @override
   final CreateWalletViewModel viewModel;
@@ -88,14 +84,18 @@ class CreateWallet extends AbstractView {
             ),
             LongSecondaryButton(
               T,
-              onPressed: () {
-                viewModel.createMethod = CreateMethod.restore;
+              onPressed: () async {
+                await CreateWallet(
+                  viewModel: viewModel.copyWith(newCreateMethod: CreateMethod.restore),
+                ).pushReplacement(context);
               },
               text: L.restore_wallet,
             ),
             LongPrimaryButton(
-              onPressed: () {
-                viewModel.createMethod = CreateMethod.create;
+              onPressed: () async {
+                await CreateWallet(
+                  viewModel: viewModel.copyWith(newCreateMethod: CreateMethod.create),
+                ).pushReplacement(context);
               },
               text: L.create_new_wallet,
             ),
@@ -139,6 +139,13 @@ class CreateWallet extends AbstractView {
   }
 
   Widget _createMethodTabbedPage(final BuildContext context) {
+    viewModel.formBuilderViewModelList[viewModel.formIndex].scaffoldContext = context;
+    for (int i = 0; i < viewModel.formBuilderViewModelList.length; i++) {
+      viewModel.formBuilderViewModelList[i].scaffoldContext = context;
+      for (int j = 0; j < viewModel.formBuilderViewModelList[i].formElements.length; j++) {
+        viewModel.formBuilderViewModelList[i].formElements[j].errorHandler = viewModel.errorHandler;
+      }
+    }
     final form = FormBuilder(
       showExtra: viewModel.showExtra,
       viewModel: viewModel.formBuilderViewModelList[viewModel.formIndex] as FormBuilderViewModel,
@@ -188,7 +195,10 @@ class CreateWallet extends AbstractView {
           onPressed: viewModel.unconfirmedSelectedCoin == null
               ? null
               : () {
-                  viewModel.selectedCoin = viewModel.unconfirmedSelectedCoin;
+                  CreateWallet(
+                    viewModel:
+                        viewModel.copyWith(newSelectedCoin: viewModel.unconfirmedSelectedCoin),
+                  ).pushReplacement(context);
                 },
         ),
       );

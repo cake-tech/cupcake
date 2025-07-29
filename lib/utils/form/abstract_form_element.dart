@@ -3,5 +3,7 @@ abstract class FormElement {
   String get label;
   Future<String> get value;
   bool get isExtra;
-  Future<void> errorHandler(final Object e);
+  Future<void> Function(Object e) errorHandler = (final Object e) async {
+    print("unhandled error");
+  };
 }
