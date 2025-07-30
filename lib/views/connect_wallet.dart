@@ -31,7 +31,9 @@ class ConnectWallet extends AbstractView {
           if (viewModel.isShowingInfo)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 64),
-              child: Assets.icons.linkCakewallet.image(),
+              child: viewModel.canSkip
+                  ? Assets.icons.linkCakewallet.image()
+                  : Assets.icons.linkCakewalletAlt.image(),
             ),
           if (!viewModel.isShowingInfo)
             Padding(

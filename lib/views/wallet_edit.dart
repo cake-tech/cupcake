@@ -57,21 +57,6 @@ class WalletEdit {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16, top: 16),
-                      child: IconButton(
-                        onPressed: () => viewModel.deleteWallet(),
-                        icon: Assets.icons.delete.svg(
-                          width: 34,
-                          height: 34,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 Container(
                   width: 40,
                   height: 4,
@@ -84,23 +69,42 @@ class WalletEdit {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 32, top: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                viewModel.walletInfo.coin.strings.svg.svg(),
-                const SizedBox(width: 8),
-                Text(
-                  L.edit_wallet,
-                  style: TextStyle(
-                    color: T.colorScheme.onSurface,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
+          Stack(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16, top: 8),
+                    child: IconButton(
+                      onPressed: () => viewModel.deleteWallet(),
+                      icon: Assets.icons.delete.svg(
+                        width: 34,
+                        height: 34,
+                      ),
+                    ),
                   ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 32, top: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    viewModel.walletInfo.coin.strings.svg.svg(),
+                    const SizedBox(width: 8),
+                    Text(
+                      L.edit_wallet,
+                      style: TextStyle(
+                        color: T.colorScheme.onSurface,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           FormBuilder(
             showExtra: true,

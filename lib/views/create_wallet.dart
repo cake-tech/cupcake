@@ -172,10 +172,7 @@ class CreateWallet extends AbstractView {
         ],
         if (!viewModel.isPinSet)
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: form,
-            ),
+            child: form,
           )
         else
           Padding(
