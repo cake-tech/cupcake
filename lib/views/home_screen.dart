@@ -123,10 +123,18 @@ class HomeScreen extends AbstractView {
             IconButton(
               padding: EdgeInsets.zero,
               onPressed: () => viewModel.renameWallet(wallet),
-              icon: Icon(
-                Icons.edit,
-                size: 24,
-                color: Colors.white,
+              icon: Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: T.colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(512),
+                ),
+                child: Icon(
+                  Icons.edit,
+                  size: 14,
+                  color: T.colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
           ],

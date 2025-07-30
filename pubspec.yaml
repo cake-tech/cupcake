@@ -130,6 +130,7 @@ flutter:
     - assets/icons/wallet_selection_button.png
     - assets/icons/icon-white.svg
     - assets/icons/dot_up.png
+    - assets/icons/delete.svg
     - assets/icons/cupcake_while.svg
     - assets/icons/cupcake_neutral.svg
     - assets/icons/dot_down.png

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:cupcake/coins/abstract/wallet_info.dart';
+import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/view_model/wallet_edit_view_model.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
@@ -61,20 +62,11 @@ class WalletEdit {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(right: 16, top: 16),
-                      child: Container(
-                        width: 34,
-                        height: 34,
-                        decoration: BoxDecoration(
-                          color: T.colorScheme.surfaceContainer,
-                          borderRadius: BorderRadius.circular(512),
-                        ),
-                        child: IconButton(
-                          onPressed: () => viewModel.deleteWallet(),
-                          icon: Icon(
-                            Icons.delete_forever,
-                            color: T.colorScheme.onSurface,
-                            size: 18,
-                          ),
+                      child: IconButton(
+                        onPressed: () => viewModel.deleteWallet(),
+                        icon: Assets.icons.delete.svg(
+                          width: 34,
+                          height: 34,
                         ),
                       ),
                     ),

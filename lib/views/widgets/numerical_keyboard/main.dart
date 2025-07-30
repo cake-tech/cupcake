@@ -34,7 +34,9 @@ class _NumericalKeyboardState extends State<NumericalKeyboard> {
           children: [
             const Spacer(),
             SingleKey(Keys.a1, widget.ctrl, rebuild),
+            SizedBox(width: 8),
             SingleKey(Keys.a2, widget.ctrl, rebuild),
+            SizedBox(width: 8),
             SingleKey(Keys.a3, widget.ctrl, rebuild),
             const Spacer(),
           ],
@@ -43,7 +45,9 @@ class _NumericalKeyboardState extends State<NumericalKeyboard> {
           children: [
             const Spacer(),
             SingleKey(Keys.a4, widget.ctrl, rebuild),
+            SizedBox(width: 8),
             SingleKey(Keys.a5, widget.ctrl, rebuild),
+            SizedBox(width: 8),
             SingleKey(Keys.a6, widget.ctrl, rebuild),
             const Spacer(),
           ],
@@ -52,7 +56,9 @@ class _NumericalKeyboardState extends State<NumericalKeyboard> {
           children: [
             const Spacer(),
             SingleKey(Keys.a7, widget.ctrl, rebuild),
+            SizedBox(width: 8),
             SingleKey(Keys.a8, widget.ctrl, rebuild),
+            SizedBox(width: 8),
             SingleKey(Keys.a9, widget.ctrl, rebuild),
             const Spacer(),
           ],
@@ -70,7 +76,9 @@ class _NumericalKeyboardState extends State<NumericalKeyboard> {
               )
             else
               const Spacer(flex: 2),
+            SizedBox(width: 8),
             SingleKey(Keys.a0, widget.ctrl, rebuild),
+            SizedBox(width: 8),
             SingleKey(Keys.backspace, widget.ctrl, rebuild),
             const Spacer(),
           ],

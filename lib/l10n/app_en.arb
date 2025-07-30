@@ -27,6 +27,7 @@
   "creating_wallet": "Creating wallet",
   "cupcake_slogan": "Security made easy",
   "delete": "Delete",
+  "delete_confirm_notice": "Are you sure you want to delete this wallet?\n\nThis action is irreversible.",
   "delete_wallet": "Delete wallet",
   "do_not_share_notice": "**DO NOT SHARE THESE WITH ANYONE ELSE, INCLUDING SUPPORT.**\n\nYOUR FUNDS CAN AND WILL BE STOLEN!",
   "done": "Done",

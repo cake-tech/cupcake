@@ -185,7 +185,7 @@ class Bitcoin implements Coin {
       print("generating addresses");
       for (final wallet in wallets) {
         // generate addresses, or otherwise it will fail to sign
-        for (var i = 0; i < 10000; i++) {
+        for (var i = 0; i < 500; i++) {
           await Future.delayed(Duration.zero);
           wallet.getInternalAddress(addressIndex: AddressIndex.increase());
           wallet.getAddress(addressIndex: AddressIndex.increase());

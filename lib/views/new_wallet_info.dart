@@ -11,7 +11,8 @@ class NewWalletInfoScreen extends AbstractView {
   NewWalletInfoScreen({
     super.key,
     required final List<NewWalletInfoPage> pages,
-  }) : viewModel = NewWalletInfoViewModel(pages);
+    final int currentPageIndex = 0,
+  }) : viewModel = NewWalletInfoViewModel(pages, currentPageIndex: currentPageIndex);
 
   @override
   bool get canPop => false;
@@ -38,7 +39,7 @@ class NewWalletInfoScreen extends AbstractView {
     if (viewModel.page.topActionText != null && viewModel.page.topAction == null) {
       return [
         TextButton(
-          onPressed: () => viewModel.currentPageIndex++,
+          onPressed: viewModel.nextPage,
           child: viewModel.page.topActionText!,
         ),
       ];
@@ -57,7 +58,7 @@ class NewWalletInfoScreen extends AbstractView {
       final isLast = index + 1 == viewModel.page.actions.length;
       final Function(BuildContext c, VoidCallback nextPage) callback = switch (action.type) {
         NewWalletActionType.function => action.function!,
-        NewWalletActionType.nextPage => (final _, final __) => viewModel.currentPageIndex++,
+        NewWalletActionType.nextPage => (final _, final __) => viewModel.nextPage(),
       };
       if (index != 0 || viewModel.page.actions.length == 1) {
         return Expanded(
@@ -65,7 +66,7 @@ class NewWalletInfoScreen extends AbstractView {
             padding: EdgeInsets.only(right: isLast ? 0 : 16.0),
             text: action.text,
             icon: null,
-            onPressed: () => callback(context, () => viewModel.currentPageIndex++),
+            onPressed: () => callback(context, viewModel.nextPage),
             width: null,
           ),
         );
@@ -76,7 +77,7 @@ class NewWalletInfoScreen extends AbstractView {
           padding: EdgeInsets.only(right: isLast ? 0 : 16.0),
           text: action.text,
           icon: null,
-          onPressed: () => callback(context, () => viewModel.currentPageIndex++),
+          onPressed: () => callback(context, viewModel.nextPage),
           width: null,
         ),
       );

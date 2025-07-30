@@ -14,8 +14,10 @@ class ConnectWallet extends AbstractView {
   ConnectWallet({
     required final CoinWallet wallet,
     required final bool canSkip,
+    final bool isShowingInfo = true,
     super.key,
-  }) : viewModel = ConnectWalletViewModel(wallet: wallet, canSkip: canSkip);
+  }) : viewModel =
+            ConnectWalletViewModel(wallet: wallet, canSkip: canSkip, isShowingInfo: isShowingInfo);
 
   @override
   final ConnectWalletViewModel viewModel;
@@ -92,7 +94,7 @@ class ConnectWallet extends AbstractView {
                 WalletHome(coinWallet: viewModel.wallet).pushReplacement(context);
               } else {
                 viewModel.canSkip = false;
-                viewModel.isShowingInfo = false;
+                viewModel.setIsShowingInfo(false);
               }
             },
           ),
