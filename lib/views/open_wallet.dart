@@ -1,5 +1,4 @@
 import 'package:cupcake/coins/abstract/wallet_info.dart';
-import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:cupcake/view_model/open_wallet_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/form_builder.dart';
@@ -9,8 +8,10 @@ class OpenWallet extends AbstractView {
   OpenWallet({
     super.key,
     required final CoinWalletInfo coinWalletInfo,
+    required final bool enableBiometric,
   }) : viewModel = OpenWalletViewModel(
           coinWalletInfo: coinWalletInfo,
+          enableBiometric: enableBiometric,
         );
 
   @override
@@ -18,20 +19,9 @@ class OpenWallet extends AbstractView {
 
   @override
   Widget body(final BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        FormBuilder(
-          showExtra: false,
-          viewModel: FormBuilderViewModel(
-            formElements: [
-              viewModel.walletPassword,
-            ],
-            scaffoldContext: context,
-            isPinSet: false,
-          ),
-        ),
-      ],
+    return FormBuilder(
+      showExtra: false,
+      viewModel: viewModel.formBuilderViewModel,
     );
   }
 }

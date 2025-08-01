@@ -4,9 +4,8 @@ import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_creation.dart';
 import 'package:cupcake/coins/list.dart';
+import 'package:cupcake/utils/display_form_element.dart';
 import 'package:cupcake/utils/types.dart';
-import 'package:cupcake/utils/config.dart';
-import 'package:cupcake/utils/form/abstract_form_element.dart';
 import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/plain_value_outcome.dart';
@@ -14,6 +13,9 @@ import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/form/validators.dart';
 import 'package:cupcake/utils/new_wallet/info_page.dart';
 import 'package:cupcake/view_model/abstract.dart';
+import 'package:cupcake/view_model/form_builder_view_model.dart';
+import 'package:cupcake/views/connect_wallet.dart';
+import 'package:cupcake/views/create_wallet.dart';
 import 'package:cupcake/views/new_wallet_info.dart';
 import 'package:cupcake/views/wallet_home.dart';
 import 'package:flutter/foundation.dart';
@@ -27,23 +29,104 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   CreateWalletViewModelBase({
     required this.createMethod,
     required this.needsPasswordConfirm,
+    this.forcedScreenName,
+    this.showExtra = false,
+    this.formIndex = 0,
+    this.isPinSet = false,
   });
 
-  final CreateMethod createMethod;
+  CreateWalletViewModelBase.full({
+    required this.createMethod,
+    required this.needsPasswordConfirm,
+    required this.formIndex,
+    required this.isPinSet,
+    required this.showExtra,
+    required this.forcedScreenName,
+    required this.unconfirmedSelectedCoin,
+    required this.selectedCoin,
+    required this.walletName,
+    required this.walletPasswordInitial,
+    required this.walletPassword,
+    required this.creationMethod,
+  });
+  CreateWalletViewModel copyWith({
+    final CreateMethod? newCreateMethod,
+    final bool? newNeedsPasswordConfirm,
+    final int? newFormIndex,
+    final bool? newIsPinSet,
+    final bool? newShowExtra,
+    final String? newForcedScreenName,
+    final Coin? newUnconfirmedSelectedCoin,
+    final Coin? newSelectedCoin,
+    final StringFormElement? newWalletName,
+    final PinFormElement? newWalletPasswordInitial,
+    final PinFormElement? newWalletPassword,
+    final WalletCreation? newCreationMethod,
+  }) {
+    return CreateWalletViewModel.full(
+      createMethod: newCreateMethod ?? createMethod,
+      needsPasswordConfirm: newNeedsPasswordConfirm ?? needsPasswordConfirm,
+      formIndex: newFormIndex ?? formIndex,
+      isPinSet: newIsPinSet ?? isPinSet,
+      showExtra: newShowExtra ?? showExtra,
+      forcedScreenName: forcedScreenName ?? screenName,
+      unconfirmedSelectedCoin: newUnconfirmedSelectedCoin ?? unconfirmedSelectedCoin,
+      selectedCoin: newSelectedCoin ?? selectedCoin,
+      walletName: newWalletName ?? walletName,
+      walletPasswordInitial: newWalletPasswordInitial ?? walletPasswordInitial,
+      walletPassword: newWalletPassword ?? walletPassword,
+      creationMethod: newCreationMethod ?? creationMethod,
+    );
+  }
+
+  final CreateMethod? createMethod;
 
   @observable
-  bool isPinSet = false;
+  int formIndex;
+
+  @override
+  @computed
+  bool get hasBackground {
+    if (selectedCoin == null) return true;
+    if (createMethod == null) return true;
+    if (currentForm == null) return true;
+
+    return !displayPinFormElement(currentForm!.form);
+  }
 
   @observable
-  bool showExtra = false;
+  bool isPinSet;
+
+  @observable
+  bool showExtra;
+
+  @observable
+  late List<FormBuilderViewModelBase> formBuilderViewModelList =
+      List.generate(createMethods.length, (final index) {
+    final formElements = createMethods.values.toList()[index].form;
+    return FormBuilderViewModel(
+      formElements: formElements,
+      scaffoldContext: c!,
+      isPinSet: false,
+      toggleIsPinSet: (final bool val) {
+        if (val == isPinSet) return;
+        CreateWallet(
+          viewModel: copyWith(newIsPinSet: val),
+        ).pushReplacement(c!);
+      },
+    );
+  });
+
+  final String? forcedScreenName;
 
   @override
   @observable
-  late String screenName = screenNameOriginal;
+  late String screenName = forcedScreenName ?? screenNameOriginal;
 
   String get screenNameOriginal => switch (createMethod) {
         CreateMethod.create => L.create_wallet,
         CreateMethod.restore => L.restore_wallet,
+        null => "Unknown",
       };
 
   @computed
@@ -52,13 +135,14 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   @computed
   bool get hasAdvancedOptions {
     if (currentForm == null) return false;
-    for (final elm in currentForm!) {
-      if (elm is StringFormElement) {
-        if (elm.isExtra) return true;
-      }
+    for (final elm in currentForm!.form) {
+      if (elm.isExtra) return true;
     }
     return false;
   }
+
+  @observable
+  Coin? unconfirmedSelectedCoin;
 
   @observable
   late Coin? selectedCoin = () {
@@ -68,15 +152,16 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     return null;
   }();
 
-  late final StringFormElement walletName = StringFormElement(
+  late StringFormElement walletName = StringFormElement(
     L.wallet_name,
     validator: nonEmptyValidator(L),
     randomNameGenerator: true,
     errorHandler: errorHandler,
+    canPaste: false,
   );
 
-  late final PinFormElement walletPasswordInitial = PinFormElement(
-    label: L.wallet_password,
+  late PinFormElement walletPasswordInitial = PinFormElement(
+    label: L.setup_pin,
     password: true,
     valueOutcome: PlainValueOutcome(),
     validator: nonEmptyValidator(
@@ -84,10 +169,11 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
       extra: (final input) => (input.length < 4) ? L.warning_password_too_short : null,
     ),
     errorHandler: errorHandler,
+    enableBiometric: false,
   );
 
-  late final PinFormElement walletPassword = PinFormElement(
-    label: (needsPasswordConfirm) ? L.wallet_password_repeat : L.wallet_password,
+  late PinFormElement walletPassword = PinFormElement(
+    label: L.setup_pin,
     password: true,
     valueOutcome: FlutterSecureStorageValueOutcome(
       "secure.wallet_password",
@@ -107,34 +193,38 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
       },
     ),
     errorHandler: errorHandler,
+    enableBiometric: false,
   );
 
-  @observable
-  late List<FormElement>? currentForm = () {
-    if (createMethods.length == 1) {
-      return createMethods[createMethods.keys.first];
-    }
-    return null;
-  }();
+  @computed
+  WalletCreationForm? get currentForm => createMethods[createMethods.keys.toList()[formIndex]];
 
   @observable
   WalletCreation? creationMethod;
 
   @computed
-  Map<String, List<FormElement>> get createMethods {
+  Map<String, WalletCreationForm> get createMethods {
     if (creationMethod == null || creationMethod!.coin != selectedCoin) {
       creationMethod = selectedCoin!.creationMethod(L);
       creationMethod!.wipe();
     }
-    final form = creationMethod!.createMethods(createMethod);
-    final Map<String, List<FormElement>> toRet = {};
+    final Map<String, WalletCreationForm> form = {
+      if ([CreateMethod.create, null].contains(createMethod))
+        ...creationMethod!.createMethods(CreateMethod.create),
+      if ([CreateMethod.restore, null].contains(createMethod))
+        ...creationMethod!.createMethods(CreateMethod.restore),
+    };
+    final Map<String, WalletCreationForm> toRet = {};
     for (final key in form.keys) {
-      toRet[key] = [
-        if (needsPasswordConfirm) walletPasswordInitial,
-        walletPassword,
-        walletName,
-      ];
-      toRet[key]!.addAll(form[key]!);
+      toRet[key] = WalletCreationForm(
+        method: form[key]!.method,
+        form: [
+          if (needsPasswordConfirm) walletPasswordInitial,
+          walletPassword,
+          walletName,
+          ...form[key]!.form,
+        ],
+      );
     }
     return toRet;
   }
@@ -144,9 +234,8 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   Future<void> completeSetup(final CoinWallet cw) async {
     await callThrowable(
       () async {
-        CupcakeConfig.instance.initialSetupComplete = true;
-        CupcakeConfig.instance.save();
-        await WalletHome(coinWallet: cw).push(c!);
+        await ConnectWallet(wallet: cw, canSkip: true).push(c!);
+        await WalletHome(coinWallet: cw).pushReplacement(c!);
       },
       L.error_failed_to_setup,
     );
@@ -178,7 +267,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     }
 
     final outcome = await creationMethod!.create(
-      createMethod,
+      currentForm!.method,
       await walletName.value,
       await walletPassword.value,
     );
@@ -199,21 +288,27 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     }
 
     final List<NewWalletInfoPage> pages = [
-      NewWalletInfoPage.preShowSeedPage(L),
+      NewWalletInfoPage.preShowSeedPage(L, T),
       NewWalletInfoPage.writeDownNotice(
         L,
-        nextCallback:
-            outcome.wallet!.passphrase.isEmpty ? () => completeSetup(outcome.wallet!) : null,
+        T,
         text: outcome.wallet!.seed,
-        title: L.seed,
+        title: outcome.wallet!.walletName,
       ),
-      if (outcome.wallet!.passphrase.isNotEmpty)
-        NewWalletInfoPage.writeDownNotice(
-          L,
-          nextCallback: () => completeSetup(outcome.wallet!),
-          text: outcome.wallet!.passphrase,
-          title: L.wallet_passphrase,
-        ),
+      // TODO: add passphrase verification
+      // if (outcome.wallet!.passphrase.isNotEmpty)
+      //   NewWalletInfoPage.writeDownNotice(
+      //     L,
+      //     T,
+      //     text: outcome.wallet!.passphrase,
+      //     title: L.wallet_passphrase,
+      //   ),
+      NewWalletInfoPage.seedWrittenDown(
+        L,
+        T,
+        wallet: outcome.wallet!,
+        nextCallback: () => completeSetup(outcome.wallet!),
+      ),
     ];
     if (!mounted) {
       throw Exception(L.error_context_not_mounted);
@@ -228,6 +323,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
   }
 
   Future<void> titleUpdate(final String? suggestedTitle) async {
+    if (screenName == suggestedTitle) return;
     screenName = suggestedTitle ?? screenNameOriginal;
   }
 }

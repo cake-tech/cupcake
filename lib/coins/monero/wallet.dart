@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/exception.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
 import 'package:cupcake/coins/monero/coin.dart';
 import 'package:cupcake/coins/monero/amount.dart';
 import 'package:cupcake/coins/monero/cache_keys.dart';
+import 'package:cupcake/coins/monero/wallet_info.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/null_if_empty.dart';
@@ -29,6 +31,9 @@ class MoneroWallet implements CoinWallet {
 
   @override
   Coin coin = Monero();
+
+  @override
+  List<String> get connectCakeWalletQRCode => [pairQrString];
 
   @override
   bool get hasAccountSupport => true;
@@ -269,13 +274,18 @@ class MoneroWallet implements CoinWallet {
       WalletSeedDetail(
         type: WalletSeedDetailType.qr,
         name: Coin.L.view_only_restore_qr,
-        value: const JsonEncoder.withIndent('   ').convert({
-          "version": 0,
-          "primaryAddress": primaryAddress,
-          "privateViewKey": wallet.secretViewKey(),
-          "restoreHeight": wallet.getRefreshFromBlockHeight(),
-        }),
+        value: pairQrString,
       ),
     ];
   }
+
+  String get pairQrString => const JsonEncoder.withIndent('   ').convert({
+        "version": 0,
+        "primaryAddress": primaryAddress,
+        "privateViewKey": wallet.secretViewKey(),
+        "restoreHeight": wallet.getRefreshFromBlockHeight(),
+      });
+
+  @override
+  CoinWalletInfo get walletInfo => MoneroWalletInfo(walletName);
 }

@@ -33,6 +33,7 @@ class BitcoinWalletCreation extends WalletCreation {
           !(Bitcoin().isSeedSomewhatLegit(input)) ? L.warning_seed_incorrect_length : null,
     ),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
   late List<FormElement> createForm = [];
@@ -60,13 +61,17 @@ class BitcoinWalletCreation extends WalletCreation {
   }
 
   @override
-  Map<String, List<FormElement>> createMethods(
+  Map<String, WalletCreationForm> createMethods(
     final CreateMethod createMethod,
   ) =>
       {
-        if ([CreateMethod.create].contains(createMethod)) L.option_create_new_wallet: createForm,
+        if ([CreateMethod.create].contains(createMethod))
+          L.option_create_new_wallet: WalletCreationForm(
+            method: CreateMethod.create,
+            form: createForm,
+          ),
         if ([CreateMethod.restore].contains(createMethod)) ...{
-          L.option_create_seed: restoreForm,
+          L.option_create_seed: WalletCreationForm(method: CreateMethod.restore, form: restoreForm),
         },
       };
 

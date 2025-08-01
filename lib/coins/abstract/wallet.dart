@@ -1,4 +1,5 @@
 import 'package:cupcake/coins/abstract/coin.dart';
+import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
 import 'package:cupcake/utils/urqr.dart';
 import 'package:flutter/widgets.dart';
@@ -10,6 +11,8 @@ abstract class CoinWallet {
 
   Future<void> handleUR(final BuildContext context, final URQRData ur) =>
       throw UnimplementedError();
+
+  List<String> get connectCakeWalletQRCode;
 
   bool get hasAccountSupport;
 
@@ -40,6 +43,8 @@ abstract class CoinWallet {
   String getBalanceString();
 
   Future<void> close();
+
+  CoinWalletInfo get walletInfo;
 
   Future<List<WalletSeedDetail>> seedDetails() => throw UnimplementedError();
 }

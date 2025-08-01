@@ -14,7 +14,6 @@ import 'package:cupcake/coins/monero/creation/restore_polyseed.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/form/abstract_form_element.dart';
-import 'package:cupcake/utils/form/single_choice_form_element.dart';
 import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/utils/form/validators.dart';
 
@@ -34,7 +33,7 @@ class MoneroWalletCreation extends WalletCreation {
     secretSpendKey.ctrl.clear();
     restoreHeight.ctrl.clear();
     seedOffset.ctrl.clear();
-    walletSeedType.currentSelection = 0;
+    seedOffsetConfrm.ctrl.clear();
   }
 
   AppLocalizations L;
@@ -56,30 +55,35 @@ class MoneroWalletCreation extends WalletCreation {
           !(Monero().isSeedSomewhatLegit(input)) ? L.warning_seed_incorrect_length : null,
     ),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
   late StringFormElement walletAddress = StringFormElement(
     L.primary_address_label,
     validator: nonEmptyValidator(L),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
   late StringFormElement secretSpendKey = StringFormElement(
     L.secret_spend_key,
     validator: nonEmptyValidator(L),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
   late StringFormElement secretViewKey = StringFormElement(
     L.secret_view_key,
     validator: nonEmptyValidator(L),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
   late StringFormElement restoreHeight = StringFormElement(
     L.restore_height,
     validator: nonEmptyValidator(L),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
   late StringFormElement seedOffset = StringFormElement(
@@ -88,20 +92,22 @@ class MoneroWalletCreation extends WalletCreation {
     isExtra: true,
     validator: nonEmptyValidator(L),
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
-  late SingleChoiceFormElement walletSeedType = SingleChoiceFormElement(
-    title: L.seed_type,
-    elements: [
-      L.seed_type_polyseed,
-      L.seed_type_legacy,
-    ],
+  late StringFormElement seedOffsetConfrm = StringFormElement(
+    L.seed_offset_confirm,
+    password: true,
+    isExtra: true,
+    validator: (final String? input) =>
+        input != seedOffset.ctrl.text ? L.seed_passphrase_mismatch : null,
     errorHandler: errorHandler,
+    canPaste: true,
   );
 
-  late List<FormElement> createForm = [walletSeedType, seedOffset];
+  late List<FormElement> createForm = [seedOffset, seedOffsetConfrm];
 
-  late List<FormElement> restoreSeedForm = [seed, seedOffset];
+  late List<FormElement> restoreSeedForm = [seed, seedOffset, seedOffsetConfrm];
 
   late List<FormElement> restoreKeysForm = [
     walletAddress,
@@ -110,14 +116,24 @@ class MoneroWalletCreation extends WalletCreation {
   ];
 
   @override
-  Map<String, List<FormElement>> createMethods(
+  Map<String, WalletCreationForm> createMethods(
     final CreateMethod createMethod,
   ) =>
       {
-        if ([CreateMethod.create].contains(createMethod)) L.option_create_new_wallet: createForm,
+        if ([CreateMethod.create].contains(createMethod))
+          L.option_create_new_wallet: WalletCreationForm(
+            method: CreateMethod.create,
+            form: createForm,
+          ),
         if ([CreateMethod.restore].contains(createMethod)) ...{
-          L.option_create_seed: restoreSeedForm,
-          L.option_create_keys: restoreKeysForm,
+          L.option_create_seed: WalletCreationForm(
+            method: CreateMethod.restore,
+            form: restoreSeedForm,
+          ),
+          L.option_create_keys: WalletCreationForm(
+            method: CreateMethod.restore,
+            form: restoreKeysForm,
+          ),
         },
       };
 
@@ -128,6 +144,9 @@ class MoneroWalletCreation extends WalletCreation {
     final String walletPassword,
   ) async {
     if (createMethod == CreateMethod.create) {
+      if (await seedOffset.value != await seedOffsetConfrm.value) {
+        throw Exception(L.seed_passphrase_mismatch);
+      }
       return CreateMoneroWalletCreationMethod(
         L,
         progressCallback: null,

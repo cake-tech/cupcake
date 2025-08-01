@@ -3,6 +3,7 @@ import 'package:cupcake/utils/new_wallet/info_page.dart';
 import 'package:cupcake/view_model/new_wallet_info_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
+import 'package:cupcake/views/widgets/buttons/long_secondary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -10,13 +11,14 @@ class NewWalletInfoScreen extends AbstractView {
   NewWalletInfoScreen({
     super.key,
     required final List<NewWalletInfoPage> pages,
-  }) : viewModel = NewWalletInfoViewModel(pages);
-
-  @override
-  NewWalletInfoViewModel viewModel;
+    final int currentPageIndex = 0,
+  }) : viewModel = NewWalletInfoViewModel(pages, currentPageIndex: currentPageIndex);
 
   @override
   bool get canPop => false;
+
+  @override
+  NewWalletInfoViewModel viewModel;
 
   @override
   PreferredSizeWidget? get appBar => PreferredSize(
@@ -37,7 +39,7 @@ class NewWalletInfoScreen extends AbstractView {
     if (viewModel.page.topActionText != null && viewModel.page.topAction == null) {
       return [
         TextButton(
-          onPressed: () => viewModel.currentPageIndex++,
+          onPressed: viewModel.nextPage,
           child: viewModel.page.topActionText!,
         ),
       ];
@@ -50,21 +52,32 @@ class NewWalletInfoScreen extends AbstractView {
     ];
   }
 
-  List<Widget> _getBottomActionButtons() {
+  List<Widget> _getBottomActionButtons(final BuildContext context) {
     return List.generate(viewModel.page.actions.length, (final index) {
       final action = viewModel.page.actions[index];
       final isLast = index + 1 == viewModel.page.actions.length;
-      final callback = switch (action.type) {
+      final Function(BuildContext c, VoidCallback nextPage) callback = switch (action.type) {
         NewWalletActionType.function => action.function!,
-        NewWalletActionType.nextPage => () => viewModel.currentPageIndex++,
+        NewWalletActionType.nextPage => (final _, final __) => viewModel.nextPage(),
       };
+      if (index != 0 || viewModel.page.actions.length == 1) {
+        return Expanded(
+          child: LongPrimaryButton(
+            padding: EdgeInsets.only(right: isLast ? 0 : 16.0),
+            text: action.text,
+            icon: null,
+            onPressed: () => callback(context, viewModel.nextPage),
+            width: null,
+          ),
+        );
+      }
       return Expanded(
-        child: LongPrimaryButton(
+        child: LongSecondaryButton(
+          T,
           padding: EdgeInsets.only(right: isLast ? 0 : 16.0),
-          textWidget: action.text,
+          text: action.text,
           icon: null,
-          onPressed: callback,
-          backgroundColor: WidgetStatePropertyAll(action.backgroundColor),
+          onPressed: () => callback(context, viewModel.nextPage),
           width: null,
         ),
       );
@@ -73,23 +86,31 @@ class NewWalletInfoScreen extends AbstractView {
 
   @override
   Widget? body(final BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 32, right: 32, top: 0, bottom: 16),
+    return Padding(
+      padding: const EdgeInsets.only(left: 32, right: 32, top: 0),
+      child: SafeArea(
+        top: false,
         child: Observer(
           builder: (final context) => Column(
             children: [
-              if (viewModel.page.lottieAnimation != null) viewModel.page.lottieAnimation!,
+              if (viewModel.page.svgIcon != null) viewModel.page.svgIcon!,
               ...viewModel.page.texts,
-              const Spacer(),
-              SizedBox(
-                width: double.maxFinite,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: _getBottomActionButtons(),
-                ),
-              ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget? bottomNavigationBar(final BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: SizedBox(
+        width: double.maxFinite,
+        child: Observer(
+          builder: (final context) => Row(
+            children: _getBottomActionButtons(context),
           ),
         ),
       ),

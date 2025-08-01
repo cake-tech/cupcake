@@ -15,38 +15,38 @@ class SingleKey extends StatelessWidget {
   final VoidCallback? longPress;
   @override
   Widget build(final BuildContext context) {
+    final T = Theme.of(context);
     return Expanded(
       flex: 2,
-      child: Container(
-        margin: const EdgeInsets.only(top: 15),
-        width: 80,
-        height: 80,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-        ),
-        child: ClipRect(
-          child: Material(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            child: InkWell(
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
-              onTap: () {
-                switch (keyId) {
-                  case Keys.backspace:
-                    if (ctrl.text.isNotEmpty) {
-                      ctrl.text = ctrl.text.substring(0, ctrl.text.length - 1);
-                    }
-                    break;
-                  case Keys.next:
-                    break;
-                  default:
-                    ctrl.text = "${ctrl.text}${getKeysChar(keyId)}";
-                }
-                callback?.call();
-              },
-              onLongPress: longPress,
-              child: Center(
-                child: getKeyWidgetPinPad(keyId),
+      child: GestureDetector(
+        onTap: () {
+          switch (keyId) {
+            case Keys.backspace:
+              if (ctrl.text.isNotEmpty) {
+                ctrl.text = ctrl.text.substring(0, ctrl.text.length - 1);
+              }
+              break;
+            case Keys.next:
+              break;
+            default:
+              ctrl.text = "${ctrl.text}${getKeysChar(keyId)}";
+          }
+          callback?.call();
+        },
+        onLongPress: longPress,
+        child: Center(
+          child: Container(
+            margin: const EdgeInsets.only(top: 15),
+            width: 80,
+            height: 80,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            child: ClipRect(
+              child: Material(
+                color: T.colorScheme.surfaceContainer,
+                shape: CircleBorder(),
+                child: Center(child: getKeyWidgetPinPad(keyId, T)),
               ),
             ),
           ),

@@ -53,9 +53,7 @@ class _URQRState extends State<URQR> {
       children: [
         Center(
           child: Container(
-            padding: const EdgeInsets.all(17.0),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30.0),
               color: Colors.white,
             ),
             child: QrImageView(
@@ -69,7 +67,6 @@ class _URQRState extends State<URQR> {
               ),
               data: widget.frames[frame % widget.frames.length],
               version: -1,
-              size: 275,
             ),
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:cupcake/coins/list.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/view_model/abstract.dart';
+import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/views/create_wallet.dart';
 import 'package:cupcake/views/wallet_edit.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ abstract class HomeScreenViewModelBase extends ViewModel with Store {
   });
 
   @override
-  String get screenName => L.select_wallet;
+  String get screenName => "Cupcake";
 
   final bool openLastWallet;
 
@@ -35,8 +36,10 @@ abstract class HomeScreenViewModelBase extends ViewModel with Store {
   Future<void> createWallet(final CreateMethod method) async {
     if (!mounted) return;
     return CreateWallet(
-      createMethod: method,
-      needsPasswordConfirm: false,
+      viewModel: CreateWalletViewModel(
+        createMethod: method,
+        needsPasswordConfirm: false,
+      ),
     ).push(c!);
   }
 

@@ -45,7 +45,7 @@ class BitcoinWalletInfo extends CoinWalletInfo {
 
   @override
   void openUI(final BuildContext context) {
-    OpenWallet(coinWalletInfo: this).push(context);
+    OpenWallet(coinWalletInfo: this, enableBiometric: false).push(context);
   }
 
   @override
@@ -61,7 +61,7 @@ class BitcoinWalletInfo extends CoinWalletInfo {
 
   @override
   Future<void> deleteWallet() {
-    File(walletName).deleteSync();
+    File("$walletName.keys").deleteSync();
     return Future.value();
   }
 

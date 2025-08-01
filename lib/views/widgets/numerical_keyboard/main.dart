@@ -34,7 +34,9 @@ class _NumericalKeyboardState extends State<NumericalKeyboard> {
           children: [
             const Spacer(),
             SingleKey(Keys.a1, widget.ctrl, rebuild),
+            SizedBox(width: 8),
             SingleKey(Keys.a2, widget.ctrl, rebuild),
+            SizedBox(width: 8),
             SingleKey(Keys.a3, widget.ctrl, rebuild),
             const Spacer(),
           ],
@@ -43,7 +45,9 @@ class _NumericalKeyboardState extends State<NumericalKeyboard> {
           children: [
             const Spacer(),
             SingleKey(Keys.a4, widget.ctrl, rebuild),
+            SizedBox(width: 8),
             SingleKey(Keys.a5, widget.ctrl, rebuild),
+            SizedBox(width: 8),
             SingleKey(Keys.a6, widget.ctrl, rebuild),
             const Spacer(),
           ],
@@ -52,7 +56,9 @@ class _NumericalKeyboardState extends State<NumericalKeyboard> {
           children: [
             const Spacer(),
             SingleKey(Keys.a7, widget.ctrl, rebuild),
+            SizedBox(width: 8),
             SingleKey(Keys.a8, widget.ctrl, rebuild),
+            SizedBox(width: 8),
             SingleKey(Keys.a9, widget.ctrl, rebuild),
             const Spacer(),
           ],
@@ -60,8 +66,6 @@ class _NumericalKeyboardState extends State<NumericalKeyboard> {
         Row(
           children: [
             const Spacer(),
-            SingleKey(Keys.backspace, widget.ctrl, rebuild),
-            SingleKey(Keys.a0, widget.ctrl, rebuild),
             if (widget.showConfirm() &&
                 (!widget.showComma || widget.ctrl.text.contains(getKeysChar(Keys.dot))))
               SingleKey(
@@ -69,10 +73,14 @@ class _NumericalKeyboardState extends State<NumericalKeyboard> {
                 widget.ctrl,
                 widget.nextPage,
                 longPress: widget.onConfirmLongPress,
-              ),
-            if (widget.showComma && !widget.ctrl.text.contains(getKeysChar(Keys.dot)))
-              SingleKey(Keys.dot, widget.ctrl, rebuild),
-            Spacer(flex: widget.showConfirm() || widget.showComma ? 1 : 3),
+              )
+            else
+              const Spacer(flex: 2),
+            SizedBox(width: 8),
+            SingleKey(Keys.a0, widget.ctrl, rebuild),
+            SizedBox(width: 8),
+            SingleKey(Keys.backspace, widget.ctrl, rebuild),
+            const Spacer(),
           ],
         ),
       ],

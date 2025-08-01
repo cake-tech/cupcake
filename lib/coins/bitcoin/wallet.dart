@@ -3,10 +3,12 @@ import 'dart:developer';
 import 'package:bdk_flutter/bdk_flutter.dart';
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
 import 'package:cupcake/coins/bitcoin/address.dart';
 import 'package:cupcake/coins/bitcoin/amount.dart';
 import 'package:cupcake/coins/bitcoin/coin.dart';
+import 'package:cupcake/coins/bitcoin/wallet_info.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/views/animated_qr_page.dart';
@@ -37,7 +39,7 @@ class BDKWalletWrapper {
     log(previous);
     for (final wallet in w) {
       ret = ret ||
-          await wallet.sign(
+          wallet.sign(
             psbt: psbt,
             signOptions: SignOptions(
               trustWitnessUtxo: true,
@@ -68,6 +70,9 @@ class BitcoinWallet implements CoinWallet {
     required final String walletName,
   }) : _walletName = walletName;
   final BDKWalletWrapper wallet;
+
+  @override
+  List<String> get connectCakeWalletQRCode => [publicUri.toString()];
 
   @override
   int get addressIndex => 0;
@@ -117,11 +122,14 @@ class BitcoinWallet implements CoinWallet {
 
         final Map<BitcoinAddress, BitcoinAmount> destMap = {};
         final tx = psbt.extractTx();
-        final outputs = await tx.output();
+        final outputs = tx.output();
         for (final out in outputs) {
           final bdkScript = out.scriptPubkey;
           final script = ScriptBuf(bytes: bdkScript.bytes);
-          final address = await Address.fromScript(script: script, network: Network.bitcoin);
+          final address = await Address.fromScript(
+            script: script,
+            network: Network.bitcoin,
+          );
           destMap[BitcoinAddress(address.toString())] = BitcoinAmount(out.value.toInt());
         }
         if (!context.mounted) return;
@@ -209,4 +217,7 @@ class BitcoinWallet implements CoinWallet {
   String get walletName => p.basename(_walletName);
 
   final String _walletName;
+
+  @override
+  CoinWalletInfo get walletInfo => BitcoinWalletInfo(walletName);
 }

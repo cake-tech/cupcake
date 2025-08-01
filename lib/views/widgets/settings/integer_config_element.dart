@@ -1,5 +1,6 @@
 import 'package:cupcake/utils/alerts/widget.dart';
 import 'package:cupcake/utils/config.dart';
+import 'package:cupcake/views/widgets/base_text_form_field.dart';
 import 'package:flutter/material.dart';
 
 class IntegerConfigElement extends StatelessWidget {
@@ -24,9 +25,9 @@ class IntegerConfigElement extends StatelessWidget {
         CupcakeConfig.instance.debug = true;
         CupcakeConfig.instance.save();
       },
-      subtitle: TextField(
+      subtitle: BaseTextFormField(
         controller: ctrl,
-        onSubmitted: (final String value) {
+        onFieldSubmitted: (final String value) {
           final i = int.tryParse(value);
           if (i == null) return;
           onChange(i);

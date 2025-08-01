@@ -5,15 +5,12 @@ class CakeCard extends StatelessWidget {
     super.key,
     required this.child,
     this.internalPadding = const EdgeInsets.only(
-      top: 24.0,
       left: 24.0,
-      bottom: 24,
       right: 24,
     ),
     this.externalPadding = const EdgeInsets.only(
       top: 4,
       left: 16.0,
-      bottom: 4,
       right: 16,
     ),
     this.firmPadding = const EdgeInsets.only(top: 24.0, left: 24.0, bottom: 24, right: 24),

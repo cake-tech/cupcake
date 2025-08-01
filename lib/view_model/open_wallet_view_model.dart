@@ -7,6 +7,7 @@ import 'package:cupcake/utils/form/flutter_secure_storage_value_outcome.dart';
 import 'package:cupcake/utils/form/pin_form_element.dart';
 import 'package:cupcake/utils/form/validators.dart';
 import 'package:cupcake/view_model/abstract.dart';
+import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:cupcake/views/wallet_home.dart';
 import 'package:mobx/mobx.dart';
 
@@ -15,9 +16,21 @@ part 'open_wallet_view_model.g.dart';
 class OpenWalletViewModel = OpenWalletViewModelBase with _$OpenWalletViewModel;
 
 abstract class OpenWalletViewModelBase extends ViewModel with Store {
-  OpenWalletViewModelBase({required this.coinWalletInfo});
+  OpenWalletViewModelBase({required this.coinWalletInfo, required this.enableBiometric});
 
   final CoinWalletInfo coinWalletInfo;
+  final bool enableBiometric;
+
+  late FormBuilderViewModel formBuilderViewModel = FormBuilderViewModel(
+    formElements: [
+      walletPassword,
+    ],
+    scaffoldContext: c!,
+    isPinSet: false,
+  );
+
+  @override
+  bool get hasBackground => false;
 
   @override
   String get screenName => L.enter_password;
@@ -40,6 +53,7 @@ abstract class OpenWalletViewModelBase extends ViewModel with Store {
       await AppLock.instance.fail(BaseTheme.darkBaseTheme, $main); // failed authentication
       await errorHandler(e);
     },
+    enableBiometric: enableBiometric,
   );
 
   Future<void> openWallet() async {

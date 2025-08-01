@@ -1,93 +1,139 @@
-import 'package:cupcake/utils/types.dart';
+import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/gen/assets.gen.dart';
+import 'package:cupcake/utils/bip39.dart';
+import 'package:cupcake/utils/text_span_markdown.dart';
+import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/new_wallet/action.dart';
+import 'package:cupcake/views/connect_wallet.dart';
+import 'package:cupcake/views/verify_seed_page.dart';
+import 'package:cupcake/views/widgets/seed_grid.dart';
+import 'package:cupcake/views/widgets/yellow_warning.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lottie/lottie.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class NewWalletInfoPage {
   NewWalletInfoPage({
     required this.topText,
     required this.topAction,
     required this.topActionText,
-    required this.lottieAnimation,
+    required this.svgIcon,
     required this.actions,
     required this.texts,
   });
-  static NewWalletInfoPage preShowSeedPage(final AppLocalizations L) => NewWalletInfoPage(
+  static NewWalletInfoPage preShowSeedPage(final AppLocalizations L, final ThemeData T) =>
+      NewWalletInfoPage(
         topText: L.important,
         topAction: null,
         topActionText: null,
-        lottieAnimation: Assets.shield.lottie(),
+        svgIcon: Assets.icons.shieldKeys.svg(),
         actions: [
           NewWalletAction(
             type: NewWalletActionType.nextPage,
             function: null,
-            text: Text(
-              L.understand_show_seed,
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.blue,
+            text: L.understand_show_seed,
           ),
         ],
         texts: [
-          Text(
-            L.important_seed_backup_info(L.seed_length_16_word),
+          SizedBox(height: 24),
+          Text.rich(
+            markdownText(L.important_seed_backup_info),
             textAlign: TextAlign.center,
+            style: TextStyle(
+              color: T.colorScheme.onSurface,
+              fontSize: 16,
+            ),
           ),
         ],
       );
 
   static NewWalletInfoPage writeDownNotice(
-    final AppLocalizations L, {
-    required final Future<void> Function()? nextCallback,
+    final AppLocalizations L,
+    final ThemeData T, {
     required final String text,
     required final String title,
   }) =>
       NewWalletInfoPage(
         topText: L.seed,
-        topAction: nextCallback,
-        topActionText: Text(L.next),
-        lottieAnimation: Assets.shield.lottie(),
+        topAction: null,
+        topActionText: null,
+        svgIcon: null,
         actions: [
           NewWalletAction(
             type: NewWalletActionType.function,
-            function: () {
-              Share.share(text);
-            },
-            text: Text(
-              L.save,
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.green,
+            function: (final _, final __) => Clipboard.setData(ClipboardData(text: text)),
+            text: L.copy,
           ),
           NewWalletAction(
             type: NewWalletActionType.function,
-            function: () async {
-              await Clipboard.setData(ClipboardData(text: text));
+            function: (final BuildContext context, final VoidCallback nextPage) async {
+              for (var i = 0; i < 2; i++) {
+                final isCorrect = await VerifySeedPage(
+                  seedWords: text.split(" "),
+                  wordList: Bip39.english,
+                ).push(context);
+                if (isCorrect != true) return;
+              }
+              nextPage();
             },
-            text: Text(
-              L.copy,
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.blue,
+            text: L.verify_seed,
           ),
         ],
         texts: [
+          SizedBox(height: 16),
+          YellowWarning(
+            text: L.save_words_warning,
+            padding: EdgeInsets.zero,
+          ),
+          SizedBox(height: 32),
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
+            style: TextStyle(
+              fontSize: 24,
+              color: T.colorScheme.onSurface,
             ),
-            textAlign: TextAlign.center,
           ),
-          Text(
-            "$text\n\n\n\n${L.write_down_notice}",
+          SizedBox(height: 16),
+          SeedPhraseGridWidget(list: text.split(" ")),
+          Spacer(),
+        ],
+      );
+
+  static NewWalletInfoPage seedWrittenDown(
+    final AppLocalizations L,
+    final ThemeData T, {
+    required final CoinWallet wallet,
+    required final Future<void> Function()? nextCallback,
+  }) =>
+      NewWalletInfoPage(
+        topText: L.verify_seed,
+        topAction: null,
+        topActionText: null,
+        svgIcon: null,
+        actions: [
+          NewWalletAction(
+            type: NewWalletActionType.function,
+            text: L.continue_,
+            function: (final BuildContext context, final _) => ConnectWallet(
+              wallet: wallet,
+              canSkip: true,
+            ).push(context),
+          ),
+        ],
+        texts: [
+          SizedBox(height: 32),
+          Assets.icons.seedVerified.svg(),
+          SizedBox(height: 32),
+          Text(L.seed_verified, style: T.textTheme.titleLarge),
+          SizedBox(height: 48),
+          Text.rich(
+            markdownText(L.seed_verified_notice),
             textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              color: T.colorScheme.onSurface,
+            ),
           ),
         ],
       );
@@ -96,7 +142,7 @@ class NewWalletInfoPage {
   final VoidCallback? topAction;
   final Widget? topActionText;
 
-  final LottieBuilder? lottieAnimation;
+  final SvgPicture? svgIcon;
   final List<NewWalletAction> actions;
 
   List<Widget> texts;

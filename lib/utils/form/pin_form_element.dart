@@ -20,10 +20,14 @@ abstract class PinFormElementBase extends FormElement with Store {
     this.onConfirm,
     this.showNumboard = true,
     required this.label,
-    required final Future<void> Function(Object e) errorHandler,
-  })  : ctrl = TextEditingController(text: initialText),
-        _errorHandler = errorHandler;
-  final Future<void> Function(Object e) _errorHandler;
+    required this.errorHandler,
+    required this.enableBiometric,
+  }) : ctrl = TextEditingController(text: initialText);
+
+  final bool enableBiometric;
+
+  @override
+  bool get isExtra => false;
 
   @action
   Future<void> loadSecureStorageValue(final VoidCallback callback) async {
@@ -91,7 +95,5 @@ abstract class PinFormElementBase extends FormElement with Store {
   String? Function(String? input) validator;
 
   @override
-  Future<void> errorHandler(final Object e) async {
-    await _errorHandler(e);
-  }
+  Future<void> Function(Object e) errorHandler;
 }

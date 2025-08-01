@@ -4,12 +4,16 @@ class SingleChoiceFormElement extends FormElement {
   SingleChoiceFormElement({
     required this.title,
     required this.elements,
-    required final Future<void> Function(Object e) errorHandler,
-  }) : _errorHandler = errorHandler;
+    required this.errorHandler,
+    this.isExtra = false,
+  });
   String title;
   List<String> elements;
 
   int currentSelection = 0;
+
+  @override
+  bool isExtra;
 
   @override
   Future<String> get value => Future.value(valueSync);
@@ -18,9 +22,8 @@ class SingleChoiceFormElement extends FormElement {
   @override
   bool get isOk => true;
 
-  final Future<void> Function(Object e) _errorHandler;
   @override
-  Future<void> errorHandler(final Object e) => _errorHandler(e);
+  Future<void> Function(Object e) errorHandler;
 
   @override
   String get label => valueSync;

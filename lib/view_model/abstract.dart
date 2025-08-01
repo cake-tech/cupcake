@@ -10,6 +10,11 @@ abstract class ViewModel {
   bool canPop = true;
   String get screenName => "screenName";
 
+  bool hasBackground = true;
+  bool hasPngBackground = false;
+
+  GlobalKey scaffoldKey = GlobalKey<ScaffoldState>();
+
   AppLocalizations get L {
     if (_lcache == null && c == null) {
       throw Exception(
@@ -26,6 +31,21 @@ abstract class ViewModel {
     return _lcache!;
   }
 
+  ThemeData get T {
+    if (_tcache == null && c == null) {
+      throw Exception(
+        "context is null in view model. Did you forget to register()?",
+      );
+    }
+    if (_tcache == null && c?.mounted != true) {
+      throw Exception(
+        "context is not mounted. Did you register incorrect context?",
+      );
+    }
+    _tcache ??= Theme.of(c!);
+    return _tcache!;
+  }
+
   BuildContext? _c;
 
   void register(final BuildContext context) {
@@ -33,10 +53,9 @@ abstract class ViewModel {
   }
 
   AppLocalizations? _lcache;
+  ThemeData? _tcache;
 
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-  BuildContext? get c => _c ?? scaffoldKey.currentContext;
+  BuildContext? get c => scaffoldKey.currentContext ?? _c;
   bool get mounted {
     if (c == null) print("c is null");
     return c?.mounted ?? false;
