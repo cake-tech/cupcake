@@ -20,7 +20,7 @@ libs_android_build_ci:
 
 libs_ios_download:
 	./build_moneroc.sh --prebuild --coin ${COIN} --tag ${MONERO_C_TAG} --triplet aarch64-apple-ios --location ios/native_libs/ios-arm64
-	./build_moneroc.sh --prebuild --coin ${COIN} --tag ${MONERO_C_TAG} --triplet aarch64-apple-ios --location ios/native_libs/ios-arm64-simulator
+	./build_moneroc.sh --prebuild --coin ${COIN} --tag ${MONERO_C_TAG} --triplet aarch64-apple-iossimulator --location ios/native_libs/ios-arm64-simulator
 	cd ios && ./gen_framework.sh
 
 libs_ios_build:
