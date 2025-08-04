@@ -1,10 +1,12 @@
 PODS:
-  - bdk_flutter (0.31.2):
+  - bdk_flutter (0.31.3):
     - Flutter
   - fast_scanner (5.1.1):
     - Flutter
   - Flutter (1.0.0)
   - flutter_secure_storage (6.0.0):
+    - Flutter
+  - haptic_feedback (0.5.1):
     - Flutter
   - integration_test (0.0.1):
     - Flutter
@@ -18,23 +20,23 @@ PODS:
     - FlutterMacOS
   - share_plus (0.0.1):
     - Flutter
-  - sqlite3 (3.49.2):
-    - sqlite3/common (= 3.49.2)
-  - sqlite3/common (3.49.2)
-  - sqlite3/dbstatvtab (3.49.2):
+  - sqlite3 (3.50.3):
+    - sqlite3/common (= 3.50.3)
+  - sqlite3/common (3.50.3)
+  - sqlite3/dbstatvtab (3.50.3):
     - sqlite3/common
-  - sqlite3/fts5 (3.49.2):
+  - sqlite3/fts5 (3.50.3):
     - sqlite3/common
-  - sqlite3/math (3.49.2):
+  - sqlite3/math (3.50.3):
     - sqlite3/common
-  - sqlite3/perf-threadsafe (3.49.2):
+  - sqlite3/perf-threadsafe (3.50.3):
     - sqlite3/common
-  - sqlite3/rtree (3.49.2):
+  - sqlite3/rtree (3.50.3):
     - sqlite3/common
   - sqlite3_flutter_libs (0.0.1):
     - Flutter
     - FlutterMacOS
-    - sqlite3 (~> 3.49.2)
+    - sqlite3 (~> 3.50.1)
     - sqlite3/dbstatvtab
     - sqlite3/fts5
     - sqlite3/math
@@ -46,6 +48,7 @@ DEPENDENCIES:
   - fast_scanner (from `.symlinks/plugins/fast_scanner/ios`)
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - haptic_feedback (from `.symlinks/plugins/haptic_feedback/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - local_auth_darwin (from `.symlinks/plugins/local_auth_darwin/darwin`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
@@ -66,6 +69,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  haptic_feedback:
+    :path: ".symlinks/plugins/haptic_feedback/ios"
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
   local_auth_darwin:
@@ -80,17 +85,18 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqlite3_flutter_libs/darwin"
 
 SPEC CHECKSUMS:
-  bdk_flutter: 08274535b7bd58a09bfa9c3733474fb44133484c
+  bdk_flutter: cef9180019b4c6b67a3e3dfb74611683fe140107
   fast_scanner: 2cb1ad3e69e645e9980fb4961396ce5804caa3e3
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
+  haptic_feedback: fd1d8509833f58f164fc12122c0357fa9b2750e0
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   local_auth_darwin: 553ce4f9b16d3fdfeafce9cf042e7c9f77c1c391
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
-  sqlite3: 3c950dc86011117c307eb0b28c4a7bb449dce9f1
-  sqlite3_flutter_libs: 74334e3ef2dbdb7d37e50859bb45da43935779c4
+  sqlite3: 83105acd294c9137c026e2da1931c30b4588ab81
+  sqlite3_flutter_libs: e7fc8c9ea2200ff3271f08f127842131746b70e2
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
 
