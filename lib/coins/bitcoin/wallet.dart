@@ -26,7 +26,7 @@ class BDKWalletWrapper {
     required this.xpub,
   }) : w = wallets;
   final List<Wallet> w;
-  final Mnemonic mnemonic;
+  final String mnemonic;
   String get currentAddress {
     return w[0].getAddress(addressIndex: AddressIndex.peek(index: 0)).address.asString();
   }
@@ -68,6 +68,7 @@ class BitcoinWallet implements CoinWallet {
     this.wallet, {
     required this.seed,
     required final String walletName,
+    required this.passphrase,
   }) : _walletName = walletName;
   final BDKWalletWrapper wallet;
 
@@ -172,7 +173,7 @@ class BitcoinWallet implements CoinWallet {
   bool get hasAddressesSupport => true;
 
   @override
-  String get passphrase => "";
+  final String passphrase;
 
   @override
   String get primaryAddress => wallet.currentAddress;
@@ -188,6 +189,12 @@ class BitcoinWallet implements CoinWallet {
         name: "Seed",
         value: seed,
       ),
+      if (passphrase.isNotEmpty)
+        WalletSeedDetail(
+          type: WalletSeedDetailType.text,
+          name: "Passphrase",
+          value: passphrase,
+        ),
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
         name: "xPub",

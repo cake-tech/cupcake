@@ -98,6 +98,7 @@ dev_dependencies:
   mobx_codegen: ^2.7.0
   drift_dev: ^2.26.0
   flutter_launcher_icons: ^0.14.4
+  hashlib: 1.19.2
 
 dependency_overrides:
   web: ^0.5.0

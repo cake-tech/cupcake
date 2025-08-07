@@ -35,7 +35,7 @@ abstract class BDKPSBTViewModelBase extends ViewModel with Store {
     busy = true;
     status = "";
     log("createWalletObject");
-    final w = (await Bitcoin().createWalletObject(wallet.seed)).w[0];
+    final w = (await Bitcoin().createWalletObject(wallet.seed, wallet.passphrase)).w[0];
     log(w.getAddress(addressIndex: AddressIndex.peek(index: 0)).address.asString());
     log("creating config");
     final config = BlockchainConfig.electrum(

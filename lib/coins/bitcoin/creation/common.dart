@@ -36,8 +36,20 @@ class BitcoinWalletCreation extends WalletCreation {
     canPaste: true,
   );
 
-  late List<FormElement> createForm = [];
-  late List<FormElement> restoreForm = [seed];
+  late StringFormElement passphrase = StringFormElement(
+    L.wallet_passphrase,
+    password: false,
+    validator: nonEmptyValidator(
+      L,
+      extra: (final input) => null,
+    ),
+    errorHandler: errorHandler,
+    canPaste: true,
+    isExtra: true,
+  );
+
+  late List<FormElement> createForm = [passphrase];
+  late List<FormElement> restoreForm = [seed, passphrase];
 
   @override
   Future<CreationOutcome?> create(
@@ -50,12 +62,14 @@ class BitcoinWalletCreation extends WalletCreation {
           L,
           walletPath: coin.getPathForWallet(walletName),
           walletPassword: walletPassword,
+          passphrase: await passphrase.value,
         ).create(),
       CreateMethod.restore => RestoreBitcoinWalletCreationMethod(
           L,
           walletPath: coin.getPathForWallet(walletName),
           walletPassword: walletPassword,
           seed: await seed.value,
+          passphrase: await passphrase.value,
         ).create(),
     };
   }
