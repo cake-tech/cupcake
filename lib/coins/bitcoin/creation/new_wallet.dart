@@ -14,6 +14,7 @@ class CreateBitcoinWalletCreationMethod extends CreationMethod {
     this.L, {
     required this.walletPath,
     required this.walletPassword,
+    required this.passphrase,
     this.progressCallback,
   });
   final coin = Bitcoin();
@@ -22,18 +23,19 @@ class CreateBitcoinWalletCreationMethod extends CreationMethod {
   final ProgressCallback? progressCallback;
   final String walletPath;
   final String walletPassword;
+  final String passphrase;
 
   @override
   Future<CreationOutcome> create() async {
     progressCallback?.call(description: L.generating_polyseed);
-    // ignore: deprecated_member_use
     final mnemonic = await Mnemonic.create(WordCount.words12);
 
     final keys = "${Bitcoin().getPathForWallet(p.basename(walletPath))}.keys";
-    final keysEncrypted = DefaultEncryption().encryptString(mnemonic.asString(), walletPassword);
+    final data = passphrase.isEmpty ? mnemonic.asString() : "${mnemonic.asString()};$passphrase";
+    final keysEncrypted = DefaultEncryption().encryptString(data, walletPassword);
     File(keys).writeAsBytesSync(keysEncrypted);
 
-    final wallet = await coin.createWalletObject(mnemonic.asString());
+    final wallet = await coin.createWalletObject(mnemonic.asString(), passphrase);
     return CreationOutcome(
       method: CreateMethod.create,
       success: true,
@@ -41,6 +43,7 @@ class CreateBitcoinWalletCreationMethod extends CreationMethod {
         wallet,
         seed: mnemonic.asString(),
         walletName: p.basename(walletPath),
+        passphrase: passphrase,
       ),
     );
   }

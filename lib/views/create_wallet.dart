@@ -212,6 +212,17 @@ class CreateWallet extends AbstractView {
                 value: viewModel.showExtra,
                 onChanged: (final bool? value) {
                   viewModel.showExtra = value ?? false;
+                  if (!viewModel.showExtra) {
+                    final count = viewModel.formBuilderViewModelList.length;
+                    for (int i = 0; i < count; i++) {
+                      final formCount = viewModel.formBuilderViewModelList[i].formElements.length;
+                      for (int j = 0; j < formCount; j++) {
+                        if (viewModel.formBuilderViewModelList[i].formElements[j].isExtra) {
+                          viewModel.formBuilderViewModelList[i].formElements[j].clear();
+                        }
+                      }
+                    }
+                  }
                 },
               ),
               Text(

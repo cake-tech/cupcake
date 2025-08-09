@@ -65,12 +65,15 @@ class Bitcoin implements Coin {
     required final String password,
   }) async {
     final encrypted = File("${walletInfo.walletName}.keys").readAsBytesSync();
-    final mnemonic = DefaultEncryption().decryptString(encrypted, password);
-    final wallet = await createWalletObject(mnemonic);
+    final data = DefaultEncryption().decryptString(encrypted, password);
+    final mnemonic = data.split(";")[0];
+    final passphrase = data.contains(";") ? data.substring(data.indexOf(";") + 1) : "";
+    final wallet = await createWalletObject(mnemonic, passphrase);
     return BitcoinWallet(
       wallet,
       seed: mnemonic,
       walletName: walletInfo.walletName,
+      passphrase: passphrase,
     );
   }
 
@@ -88,12 +91,15 @@ class Bitcoin implements Coin {
 
   Future<BDKWalletWrapper> createWalletObject(
     final String mnemonic,
+    final String passphrase,
   ) async {
     final List<Wallet> wallets = [];
     final m = await Mnemonic.fromString(mnemonic);
+
     final descriptorSecretKey = (await DescriptorSecretKey.create(
       network: Network.bitcoin,
       mnemonic: m,
+      password: passphrase.isEmpty ? null : passphrase,
     ));
     final externalDescriptor84 = await Descriptor.newBip84(
       secretKey: descriptorSecretKey,
@@ -195,7 +201,7 @@ class Bitcoin implements Coin {
     }());
     return BDKWalletWrapper(
       wallets: wallets,
-      mnemonic: m,
+      mnemonic: mnemonic,
       xpub: xpub,
     );
   }
