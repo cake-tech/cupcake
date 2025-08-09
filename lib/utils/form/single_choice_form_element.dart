@@ -27,4 +27,9 @@ class SingleChoiceFormElement extends FormElement {
 
   @override
   String get label => valueSync;
+
+  @override
+  Future<void> clear() async {
+    currentSelection = 0;
+  }
 }

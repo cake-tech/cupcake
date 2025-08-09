@@ -75,6 +75,13 @@ class BitcoinWalletCreation extends WalletCreation {
   }
 
   @override
+  Future<void> wipe() async {
+    await Future.delayed(Duration.zero); // do not call on build();
+    seed.ctrl.clear();
+    passphrase.ctrl.clear();
+  }
+
+  @override
   Map<String, WalletCreationForm> createMethods(
     final CreateMethod createMethod,
   ) =>
@@ -88,9 +95,6 @@ class BitcoinWalletCreation extends WalletCreation {
           L.option_create_seed: WalletCreationForm(method: CreateMethod.restore, form: restoreForm),
         },
       };
-
-  @override
-  void wipe() {}
 
   @override
   Coin get coin => Bitcoin();
