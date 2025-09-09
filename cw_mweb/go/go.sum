@@ -69,8 +69,8 @@ github.com/ltcmweb/ltcd/btcec/v2 v2.3.3 h1:gJc1ljDPCBtwBKFcC4SW44BFoJqoZzkeagndM
 github.com/ltcmweb/ltcd/btcec/v2 v2.3.3/go.mod h1:NRr2WtpiSiSO29TkdZhbGNRA/Q16DV2eNbORf+M2ykI=
 github.com/ltcmweb/ltcd/chaincfg/chainhash v1.0.3 h1:CAPyzHI3bCFRrrVHZkDUR2i3Awj6l/aqAZIEi0E/nfM=
 github.com/ltcmweb/ltcd/chaincfg/chainhash v1.0.3/go.mod h1:zB+HhI2IbIwTGpdAhdzpm1GVX4ShcWTgN42+ar9HXrg=
-github.com/ltcmweb/mwebd v0.1.9 h1:UTB5tIxeunoHb+mW57sEup3qIq8x+nlr2ZMYbr2mAFU=
-github.com/ltcmweb/mwebd v0.1.9/go.mod h1:GEhTe4RTG4ImmzsyqCzO2NKK11U2Zgb5+leQnwY+u+4=
+github.com/ltcmweb/mwebd v0.1.10 h1:WgMzRVvyNW9tXDEdxJhCKthMOZNioCAmIUNMCFIhv64=
+github.com/ltcmweb/mwebd v0.1.10/go.mod h1:GEhTe4RTG4ImmzsyqCzO2NKK11U2Zgb5+leQnwY+u+4=
 github.com/ltcmweb/neutrino v0.17.4 h1:ZsguBvicTM5CtZDsKg+OBFuPUCKjfEJ3lRSGXPjF2oM=
 github.com/ltcmweb/neutrino v0.17.4/go.mod h1:KktZ+McIwHuTHe0K8JK9Wv4qgv8orkA21a0ZOU4SwJ4=
 github.com/ltcmweb/neutrino/cache v1.1.0 h1:C0Qn2p8ogcskRPfrBKPUayjn3m/CUJqI7otopNScvhk=
