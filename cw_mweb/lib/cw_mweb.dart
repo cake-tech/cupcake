@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:cw_core/utils/print_verbose.dart';
+import 'print_verbose.dart';
 import 'package:cw_mweb/mweb_ffi.dart';
 import 'package:grpc/grpc.dart';
 import 'package:path_provider/path_provider.dart';
