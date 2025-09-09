@@ -7,6 +7,7 @@ import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/coins/litecoin/coin.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:path/path.dart' as p;
+import 'package:bip39/bip39.dart' as bip39;
 
 class CreateLitecoinWalletCreationMethod extends CreationMethod {
   CreateLitecoinWalletCreationMethod(
@@ -26,19 +27,17 @@ class CreateLitecoinWalletCreationMethod extends CreationMethod {
   Future<CreationOutcome> create() async {
     progressCallback?.call(description: L.generating_polyseed);
     // ignore: deprecated_member_use
-    final mnemonic = await Mnemonic.create(WordCount.words12);
+    final mnemonic = await bip39.generateMnemonic(strength: 128);
 
     final keys = "${Litecoin().getPathForWallet(p.basename(walletPath))}.keys";
-    final keysEncrypted = DefaultEncryption().encryptString(mnemonic.asString(), walletPassword);
+    final keysEncrypted = DefaultEncryption().encryptString(mnemonic, walletPassword);
     File(keys).writeAsBytesSync(keysEncrypted);
 
-    final wallet = await coin.createWalletObject(mnemonic.asString());
     return CreationOutcome(
       method: CreateMethod.create,
       success: true,
       wallet: LitecoinWallet(
-        wallet,
-        seed: mnemonic.asString(),
+        seed: mnemonic,
         walletName: p.basename(walletPath),
       ),
     );

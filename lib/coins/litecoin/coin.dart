@@ -64,9 +64,7 @@ class Litecoin implements Coin {
   }) async {
     final encrypted = File("${walletInfo.walletName}.keys").readAsBytesSync();
     final mnemonic = DefaultEncryption().decryptString(encrypted, password);
-    final wallet = await createWalletObject(mnemonic);
     return LitecoinWallet(
-      wallet,
       seed: mnemonic,
       walletName: walletInfo.walletName,
     );
