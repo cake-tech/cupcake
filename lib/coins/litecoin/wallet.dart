@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bitcoin_base/bitcoin_base.dart' hide LitecoinAddress;
+import 'package:blockchain_utils/blockchain_utils.dart';
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_info.dart';
@@ -26,9 +27,16 @@ class LitecoinWallet implements CoinWallet {
   LitecoinWallet({
     required this.seed,
     required final String walletName,
-  }) : _walletName = walletName {
-    final seed = bip39.mnemonicToSeed(this.seed);
+  }) : _walletName = walletName,
+       wpkhHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed)).derivePath("m/84'/2'/0'") as Bip32Slip10Secp256k1,
+       mwebHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed)).derivePath("m/1000'/2'/0'") as Bip32Slip10Secp256k1 {
   }
+
+  final Bip32Slip10Secp256k1 wpkhHd;
+  final Bip32Slip10Secp256k1 mwebHd;
+
+  List<int> get scanSecret => mwebHd.childKey(Bip32KeyIndex(0x80000000)).privateKey.privKey.raw;
+  List<int> get spendPubkey => mwebHd.childKey(Bip32KeyIndex(0x80000001)).publicKey.pubKey.compressed;
 
   @override
   List<String> get connectCakeWalletQRCode => [publicUri.toString()];
@@ -63,16 +71,20 @@ class LitecoinWallet implements CoinWallet {
   }
 
   @override
-  String get getCurrentAddress => wallet.currentAddress;
+  String get getCurrentAddress {
+    final hd = wpkhHd.derivePath("0/0") as Bip32Slip10Secp256k1;
+    return ECPublic.fromBip32(hd.publicKey).toP2wpkhAddress().toAddress(LitecoinNetwork.mainnet);
+  }
 
   @override
   Future<void> handleUR(final BuildContext context, final URQRData ur) async {
     switch (ur.tag) {
       case 'psbt' || '':
-        final psbt = Psbt.fromBase64(ur.base64);
+        final psbtB64 = ur.base64;
+        final psbt = Psbt.fromBase64(psbtB64);
         print(psbt.toJson());
 
-        final resp = await CwMweb.psbtGetRecipients(PsbtGetRecipientsRequest(psbtB64: ur.base64));
+        final resp = await CwMweb.psbtGetRecipients(PsbtGetRecipientsRequest(psbtB64: psbtB64));
 
         final Map<LitecoinAddress, LitecoinAmount> destMap = {};
         for (final recipient in resp.recipient) {
@@ -83,11 +95,15 @@ class LitecoinWallet implements CoinWallet {
         await UnconfirmedTransactionView(
           wallet: this,
           destMap: destMap,
-          fee: LitecoinAmount(psbt.feeAmount()?.toInt() ?? -1),
+          fee: LitecoinAmount(-1),
           confirmCallback: (final BuildContext context) async {
-            final status = await wallet.sign(psbt: psbt);
-            if (!status) throw Exception("Failed to sign");
-            final sourceBytes = psbt.serialize();
+            var sourceBytes;
+            try {
+              final resp = await CwMweb.psbtSign(PsbtSignRequest(psbtB64: psbtB64));
+              sourceBytes = resp.psbtB64;
+            } catch (e) {
+              throw Exception("Failed to sign");
+            }
             final cborEncoder = CBOREncoder();
             cborEncoder.encodeBytes(sourceBytes);
             final ur = UR("psbt", cborEncoder.getBytes());
@@ -121,7 +137,7 @@ class LitecoinWallet implements CoinWallet {
   String get passphrase => "";
 
   @override
-  String get primaryAddress => wallet.currentAddress;
+  String get primaryAddress => this.getCurrentAddress;
 
   @override
   final String seed;
