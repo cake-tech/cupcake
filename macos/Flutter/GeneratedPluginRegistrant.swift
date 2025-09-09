@@ -5,6 +5,7 @@
 import FlutterMacOS
 import Foundation
 
+import cw_mweb
 import fast_scanner
 import flutter_secure_storage_macos
 import local_auth_darwin
@@ -14,6 +15,7 @@ import share_plus
 import sqlite3_flutter_libs
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
+  CwMwebPlugin.register(with: registry.registrar(forPlugin: "CwMwebPlugin"))
   MobileScannerPlugin.register(with: registry.registrar(forPlugin: "MobileScannerPlugin"))
   FlutterSecureStoragePlugin.register(with: registry.registrar(forPlugin: "FlutterSecureStoragePlugin"))
   FLALocalAuthPlugin.register(with: registry.registrar(forPlugin: "FLALocalAuthPlugin"))
