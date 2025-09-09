@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:bitcoin_base/bitcoin_base.dart' hide LitecoinAddress;
 import 'package:blockchain_utils/blockchain_utils.dart';
@@ -72,8 +74,13 @@ class LitecoinWallet implements CoinWallet {
 
   @override
   String get getCurrentAddress {
+    return getCurrentMwebAddress;
     final hd = wpkhHd.derivePath("0/0") as Bip32Slip10Secp256k1;
     return ECPublic.fromBip32(hd.publicKey).toP2wpkhAddress().toAddress(LitecoinNetwork.mainnet);
+  }
+
+  String get getCurrentMwebAddress {
+    return CwMweb.address(Uint8List.fromList(scanSecret), Uint8List.fromList(spendPubkey), 1)!;
   }
 
   @override
@@ -95,7 +102,7 @@ class LitecoinWallet implements CoinWallet {
         await UnconfirmedTransactionView(
           wallet: this,
           destMap: destMap,
-          fee: LitecoinAmount(-1),
+          fee: LitecoinAmount(resp.fee.toInt()),
           confirmCallback: (final BuildContext context) async {
             var sourceBytes;
             try {
@@ -154,6 +161,16 @@ class LitecoinWallet implements CoinWallet {
         type: WalletSeedDetailType.text,
         name: "xPub",
         value: this.xpub,
+      ),
+      WalletSeedDetail(
+        type: WalletSeedDetailType.text,
+        name: Coin.L.view_key,
+        value: hex.encode(scanSecret),
+      ),
+      WalletSeedDetail(
+        type: WalletSeedDetailType.text,
+        name: Coin.L.spend_key,
+        value: hex.encode(spendPubkey),
       ),
       WalletSeedDetail(
         type: WalletSeedDetailType.qr,
