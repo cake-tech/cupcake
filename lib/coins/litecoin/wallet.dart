@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:bitcoin_base/bitcoin_base.dart' hide LitecoinAddress;
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_info.dart';
@@ -19,13 +20,15 @@ import 'package:path/path.dart' as p;
 import 'package:ur/cbor_lite.dart';
 import 'package:ur/ur.dart';
 import 'package:ur/ur_encoder.dart';
+import 'package:bip39/bip39.dart' as bip39;
 
 class LitecoinWallet implements CoinWallet {
-  const LitecoinWallet(
-    this.wallet, {
+  LitecoinWallet({
     required this.seed,
     required final String walletName,
-  }) : _walletName = walletName;
+  }) : _walletName = walletName {
+    final seed = bip39.mnemonicToSeed(this.seed);
+  }
 
   @override
   List<String> get connectCakeWalletQRCode => [publicUri.toString()];
@@ -66,20 +69,14 @@ class LitecoinWallet implements CoinWallet {
   Future<void> handleUR(final BuildContext context, final URQRData ur) async {
     switch (ur.tag) {
       case 'psbt' || '':
-        final psbt = await PartiallySignedTransaction.fromString(ur.base64);
-        print(psbt.asString());
+        final psbt = Psbt.fromBase64(ur.base64);
+        print(psbt.toJson());
+
+        final resp = await CwMweb.psbtGetRecipients(PsbtGetRecipientsRequest(psbtB64: ur.base64));
 
         final Map<LitecoinAddress, LitecoinAmount> destMap = {};
-        final tx = psbt.extractTx();
-        final outputs = tx.output();
-        for (final out in outputs) {
-          final bdkScript = out.scriptPubkey;
-          final script = ScriptBuf(bytes: bdkScript.bytes);
-          final address = await Address.fromScript(
-            script: script,
-            network: Network.litecoin,
-          );
-          destMap[LitecoinAddress(address.toString())] = LitecoinAmount(out.value.toInt());
+        for (final recipient in resp.recipient) {
+          destMap[LitecoinAddress(recipient.address)] = LitecoinAmount(recipient.value.toInt());
         }
         if (!context.mounted) return;
 
