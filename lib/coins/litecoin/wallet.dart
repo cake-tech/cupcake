@@ -153,7 +153,7 @@ class LitecoinWallet implements CoinWallet {
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
         name: "xPub",
-        value: wallet.xpub,
+        value: this.xpub,
       ),
       WalletSeedDetail(
         type: WalletSeedDetailType.qr,
@@ -163,10 +163,12 @@ class LitecoinWallet implements CoinWallet {
     ];
   }
 
+  String get xpub => wpkhHd.privateKey.toExtended;
+
   Uri get publicUri => Uri(
         scheme: "litecoin",
         queryParameters: {
-          "xpub": wallet.xpub,
+          "xpub": this.xpub,
           // "path": wallet.derivationPath,
           "label": p.basename(walletName),
         },
