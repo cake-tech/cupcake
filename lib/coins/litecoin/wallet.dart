@@ -163,7 +163,7 @@ class LitecoinWallet implements CoinWallet {
     ];
   }
 
-  String get xpub => wpkhHd.privateKey.toExtended;
+  String get xpub => wpkhHd.publicKey.toExtended;
 
   Uri get publicUri => Uri(
         scheme: "litecoin",
