@@ -128,6 +128,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/coins/btc.svg
+    - assets/coins/ltc.svg
     - assets/coins/xmr.svg
     - assets/background_for_wallethome.png
     - assets/icons/wallet_selection_button.png
