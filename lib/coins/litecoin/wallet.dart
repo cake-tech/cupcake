@@ -175,7 +175,7 @@ class LitecoinWallet implements CoinWallet {
                   }
                 }
                 if (key != null) {
-                  resp2 = await CwMweb.psbtSignNonMweb(PsbtSignNonMwebRequest(psbtB64: psbtB64, privKey: key.raw, index: i));
+                  resp2 = await CwMweb.psbtSignNonMweb(PsbtSignNonMwebRequest(psbtB64: resp2.psbtB64, privKey: key.raw, index: i));
                 }
               }
               sourceBytes = base64.decode(resp2.psbtB64);
