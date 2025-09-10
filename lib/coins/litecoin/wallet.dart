@@ -36,14 +36,14 @@ class PubkeyIndexMap {
 
   void topupExternal({final int count = 100}) {
     for (int i = nextExternalIndex; i < nextExternalIndex + count; i++) {
-      externalMap[root.derivePath("0/$i").publicKey.toString()] = i;
+      externalMap[ECPublic.fromBip32(root.derivePath("0/$i").publicKey).toHash160Hex()] = i;
     }
     nextExternalIndex += count;
   }
 
   void topupChange({final int count = 100}) {
     for (int i = nextChangeIndex; i < nextChangeIndex + count; i++) {
-      changeMap[root.derivePath("1/$i").publicKey.toString()] = i;
+      changeMap[ECPublic.fromBip32(root.derivePath("1/$i").publicKey).toHash160Hex()] = i;
     }
     nextChangeIndex += count;
   }
@@ -137,9 +137,6 @@ class LitecoinWallet implements CoinWallet {
     switch (ur.tag) {
       case 'psbt' || '':
         final psbtB64 = ur.base64;
-        final psbt = Psbt.fromBase64(psbtB64);
-        print(psbt.toJson());
-
         final resp = await CwMweb.psbtGetRecipients(PsbtGetRecipientsRequest(psbtB64: psbtB64));
 
         final Map<LitecoinAddress, LitecoinAmount> destMap = {};
@@ -155,8 +152,33 @@ class LitecoinWallet implements CoinWallet {
           confirmCallback: (final BuildContext context) async {
             Uint8List sourceBytes;
             try {
-              final resp = await CwMweb.psbtSign(PsbtSignRequest(psbtB64: psbtB64));
-              sourceBytes = base64.decode(resp.psbtB64);
+              var resp2 = await CwMweb.psbtSign(PsbtSignRequest(psbtB64: psbtB64));
+              for (int i = 0; i < resp.inputPubkey.length; i++) {
+                final pubkey = hex.encode(resp.inputPubkey[i]);
+                if (pubkey.isEmpty) continue;
+                var index = pubkeyMap.getExternalIndex(pubkey);
+                if (index == null) {
+                  pubkeyMap.topupExternal();
+                  index = pubkeyMap.getExternalIndex(pubkey);
+                }
+                Bip32PrivateKey? key;
+                if (index != null) {
+                  key = wpkhHd.derivePath("0/$index").privateKey;
+                } else {
+                  index = pubkeyMap.getChangeIndex(pubkey);
+                  if (index == null) {
+                    pubkeyMap.topupChange();
+                    index = pubkeyMap.getChangeIndex(pubkey);
+                  }
+                  if (index != null) {
+                    key = wpkhHd.derivePath("1/$index").privateKey;
+                  }
+                }
+                if (key != null) {
+                  resp2 = await CwMweb.psbtSignNonMweb(PsbtSignNonMwebRequest(psbtB64: psbtB64, privKey: key.raw, index: i));
+                }
+              }
+              sourceBytes = base64.decode(resp2.psbtB64);
             } catch (e) {
               throw Exception("Failed to sign");
             }
