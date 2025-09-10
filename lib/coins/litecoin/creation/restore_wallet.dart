@@ -29,7 +29,7 @@ class RestoreLitecoinWalletCreationMethod extends CreationMethod {
   Future<CreationOutcome> create() async {
     progressCallback?.call(description: L.generating_polyseed);
     // ignore: deprecated_member_use
-    if (!(await bip39.validateMnemonic(seed))) {
+    if (!bip39.validateMnemonic(seed)) {
       return CreationOutcome(
         method: CreateMethod.restore,
         success: false,
