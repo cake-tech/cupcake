@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:bitcoin_base/bitcoin_base.dart' hide LitecoinAddress;
@@ -25,17 +24,67 @@ import 'package:ur/ur.dart';
 import 'package:ur/ur_encoder.dart';
 import 'package:bip39/bip39.dart' as bip39;
 
+class PubkeyIndexMap {
+  PubkeyIndexMap(this.root);
+
+  final Bip32Slip10Secp256k1 root;
+  final Map<String, int> externalMap = {};
+  final Map<String, int> changeMap = {};
+
+  int nextExternalIndex = 0;
+  int nextChangeIndex = 0;
+
+  void topupExternal({final int count = 100}) {
+    for (int i = nextExternalIndex; i < nextExternalIndex + count; i++) {
+      externalMap[root.derivePath("0/$i").publicKey.toString()] = i;
+    }
+    nextExternalIndex += count;
+  }
+
+  void topupChange({final int count = 100}) {
+    for (int i = nextChangeIndex; i < nextChangeIndex + count; i++) {
+      changeMap[root.derivePath("1/$i").publicKey.toString()] = i;
+    }
+    nextChangeIndex += count;
+  }
+
+  int? getExternalIndex(final String pubkey) => externalMap[pubkey];
+  int? getChangeIndex(final String pubkey) => changeMap[pubkey];
+}
+
 class LitecoinWallet implements CoinWallet {
-  LitecoinWallet({
+  factory LitecoinWallet({
+    required final String seed,
+    required final String walletName,
+  }) {
+    final wpkhHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed)).derivePath("m/84'/2'/0'") as Bip32Slip10Secp256k1;
+    final mwebHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed)).derivePath("m/1000'/2'/0'") as Bip32Slip10Secp256k1;
+
+    final pubkeyMap = PubkeyIndexMap(wpkhHd);
+    pubkeyMap.topupExternal(count: 500);
+    pubkeyMap.topupChange(count: 500);
+
+    return LitecoinWallet._(
+      seed: seed,
+      walletName: walletName,
+      wpkhHd: wpkhHd,
+      mwebHd: mwebHd,
+      pubkeyMap: pubkeyMap,
+    );
+  }
+
+  const LitecoinWallet._({
     required this.seed,
     required final String walletName,
-  }) : _walletName = walletName,
-       wpkhHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed)).derivePath("m/84'/2'/0'") as Bip32Slip10Secp256k1,
-       mwebHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed)).derivePath("m/1000'/2'/0'") as Bip32Slip10Secp256k1 {
-  }
+    required this.wpkhHd,
+    required this.mwebHd,
+    required this.pubkeyMap,
+  }) : _walletName = walletName;
 
   final Bip32Slip10Secp256k1 wpkhHd;
   final Bip32Slip10Secp256k1 mwebHd;
+
+  final PubkeyIndexMap pubkeyMap;
 
   List<int> get scanSecret => mwebHd.childKey(Bip32KeyIndex(0x80000000)).privateKey.privKey.raw;
   List<int> get spendPubkey => mwebHd.childKey(Bip32KeyIndex(0x80000001)).publicKey.pubKey.compressed;
@@ -75,7 +124,7 @@ class LitecoinWallet implements CoinWallet {
   @override
   String get getCurrentAddress {
     return getCurrentMwebAddress;
-    final hd = wpkhHd.derivePath("0/0") as Bip32Slip10Secp256k1;
+    final hd = wpkhHd.derivePath("0/0");
     return ECPublic.fromBip32(hd.publicKey).toP2wpkhAddress().toAddress(LitecoinNetwork.mainnet);
   }
 
@@ -104,10 +153,10 @@ class LitecoinWallet implements CoinWallet {
           destMap: destMap,
           fee: LitecoinAmount(resp.fee.toInt()),
           confirmCallback: (final BuildContext context) async {
-            var sourceBytes;
+            Uint8List sourceBytes;
             try {
               final resp = await CwMweb.psbtSign(PsbtSignRequest(psbtB64: psbtB64));
-              sourceBytes = resp.psbtB64;
+              sourceBytes = base64.decode(resp.psbtB64);
             } catch (e) {
               throw Exception("Failed to sign");
             }
@@ -144,7 +193,7 @@ class LitecoinWallet implements CoinWallet {
   String get passphrase => "";
 
   @override
-  String get primaryAddress => this.getCurrentAddress;
+  String get primaryAddress => getCurrentAddress;
 
   @override
   final String seed;
@@ -160,7 +209,7 @@ class LitecoinWallet implements CoinWallet {
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
         name: "xPub",
-        value: this.xpub,
+        value: xpub,
       ),
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
@@ -185,7 +234,7 @@ class LitecoinWallet implements CoinWallet {
   Uri get publicUri => Uri(
         scheme: "litecoin",
         queryParameters: {
-          "xpub": this.xpub,
+          "xpub": xpub,
           // "path": wallet.derivationPath,
           "label": p.basename(walletName),
         },
