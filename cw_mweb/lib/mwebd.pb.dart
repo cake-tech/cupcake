@@ -1316,11 +1316,15 @@ class PsbtGetRecipientsRequest extends $pb.GeneratedMessage {
 class PsbtGetRecipientsResponse extends $pb.GeneratedMessage {
   factory PsbtGetRecipientsResponse({
     $core.Iterable<PsbtRecipient>? recipient,
+    $core.Iterable<$core.List<$core.int>>? inputPubkey,
     $fixnum.Int64? fee,
   }) {
     final $result = create();
     if (recipient != null) {
       $result.recipient.addAll(recipient);
+    }
+    if (inputPubkey != null) {
+      $result.inputPubkey.addAll(inputPubkey);
     }
     if (fee != null) {
       $result.fee = fee;
@@ -1333,7 +1337,8 @@ class PsbtGetRecipientsResponse extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'PsbtGetRecipientsResponse', createEmptyInstance: create)
     ..pc<PsbtRecipient>(1, _omitFieldNames ? '' : 'recipient', $pb.PbFieldType.PM, subBuilder: PsbtRecipient.create)
-    ..aInt64(2, _omitFieldNames ? '' : 'fee')
+    ..p<$core.List<$core.int>>(2, _omitFieldNames ? '' : 'inputPubkey', $pb.PbFieldType.PY)
+    ..aInt64(3, _omitFieldNames ? '' : 'fee')
     ..hasRequiredFields = false
   ;
 
@@ -1362,13 +1367,16 @@ class PsbtGetRecipientsResponse extends $pb.GeneratedMessage {
   $core.List<PsbtRecipient> get recipient => $_getList(0);
 
   @$pb.TagNumber(2)
-  $fixnum.Int64 get fee => $_getI64(1);
-  @$pb.TagNumber(2)
-  set fee($fixnum.Int64 v) { $_setInt64(1, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasFee() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearFee() => clearField(2);
+  $core.List<$core.List<$core.int>> get inputPubkey => $_getList(1);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get fee => $_getI64(2);
+  @$pb.TagNumber(3)
+  set fee($fixnum.Int64 v) { $_setInt64(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasFee() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFee() => clearField(3);
 }
 
 class PsbtRecipient extends $pb.GeneratedMessage {
