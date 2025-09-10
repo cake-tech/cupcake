@@ -27,7 +27,7 @@ class CreateLitecoinWalletCreationMethod extends CreationMethod {
   Future<CreationOutcome> create() async {
     progressCallback?.call(description: L.generating_polyseed);
     // ignore: deprecated_member_use
-    final mnemonic = await bip39.generateMnemonic(strength: 128);
+    final mnemonic = bip39.generateMnemonic(strength: 128);
 
     final keys = "${Litecoin().getPathForWallet(p.basename(walletPath))}.keys";
     final keysEncrypted = DefaultEncryption().encryptString(mnemonic, walletPassword);
