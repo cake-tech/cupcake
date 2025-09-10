@@ -25,55 +25,58 @@ class ConnectWallet extends AbstractView {
   @override
   Widget body(final BuildContext context) {
     return Observer(
-      builder: (final context) => Column(
-        children: [
-          const SizedBox(height: 64),
-          if (viewModel.isShowingInfo)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 64),
-              child: viewModel.canSkip
-                  ? Assets.icons.linkCakewallet.image()
-                  : Assets.icons.linkCakewalletAlt.image(),
-            ),
-          if (!viewModel.isShowingInfo)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Material(
-                color: Colors.white,
-                child: QrImageView(
-                  data: viewModel.syncQRCode.first,
-                  dataModuleStyle: QrDataModuleStyle(
-                    color: Colors.black,
-                    dataModuleShape: QrDataModuleShape.square,
-                  ),
-                  embeddedImage: AssetImage(Assets.icons.cupcakeQr.path),
-                  embeddedImageEmitsError: true,
-                  eyeStyle: QrEyeStyle(
-                    color: Colors.black,
-                    eyeShape: QrEyeShape.square,
+      builder: (final context) => SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 64),
+            if (viewModel.isShowingInfo)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 64),
+                child: viewModel.canSkip
+                    ? Assets.icons.linkCakewallet.image()
+                    : Assets.icons.linkCakewalletAlt.image(),
+              ),
+            if (!viewModel.isShowingInfo)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Material(
+                  color: Colors.white,
+                  child: QrImageView(
+                    data: viewModel.syncQRCode.first,
+                    dataModuleStyle: QrDataModuleStyle(
+                      color: Colors.black,
+                      dataModuleShape: QrDataModuleShape.square,
+                    ),
+                    embeddedImage: AssetImage(Assets.icons.cupcakeQr.path),
+                    embeddedImageEmitsError: true,
+                    eyeStyle: QrEyeStyle(
+                      color: Colors.black,
+                      eyeShape: QrEyeShape.square,
+                    ),
                   ),
                 ),
               ),
-            ),
-          const SizedBox(height: 32),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Column(
-              children: [
-                Text.rich(
-                  markdownText(
-                    viewModel.isShowingInfo ? L.cake_restore_tutorial_1 : L.cake_restore_tutorial_2,
+            const SizedBox(height: 32),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Column(
+                children: [
+                  Text.rich(
+                    markdownText(
+                      viewModel.isShowingInfo
+                          ? L.cake_restore_tutorial_1
+                          : L.cake_restore_tutorial_2,
+                    ),
+                    textAlign: TextAlign.center,
+                    style: T.textTheme.bodyLarge?.copyWith(
+                      color: T.colorScheme.onSurface,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                  style: T.textTheme.bodyLarge?.copyWith(
-                    color: T.colorScheme.onSurface,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const Spacer(),
-        ],
+          ],
+        ),
       ),
     );
   }
