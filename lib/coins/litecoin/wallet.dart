@@ -57,7 +57,7 @@ class LitecoinWallet implements CoinWallet {
     required final String seed,
     required final String walletName,
   }) {
-    final wpkhHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed)).derivePath("m/84'/2'/0'") as Bip32Slip10Secp256k1;
+    final wpkhHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed), Bip44Conf.litecoinMainNet.altKeyNetVer).derivePath("m/84'/2'/0'") as Bip32Slip10Secp256k1;
     final mwebHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed)).derivePath("m/1000'/2'/0'") as Bip32Slip10Secp256k1;
 
     final pubkeyMap = PubkeyIndexMap(wpkhHd);
