@@ -254,13 +254,15 @@ class LitecoinWallet implements CoinWallet {
   String get xpub => wpkhHd.publicKey.toExtended;
 
   Uri get publicUri => Uri(
-        scheme: "litecoin",
-        queryParameters: {
-          "xpub": xpub,
-          // "path": wallet.derivationPath,
-          "label": p.basename(walletName),
-        },
-      );
+    scheme: "litecoin",
+    queryParameters: {
+      // "path": wallet.derivationPath,
+      "label": p.basename(walletName),
+      "xpub": xpub,
+      "scan_secret": hex.encode(scanSecret),
+      "spend_pubkey": hex.encode(spendPubkey),
+    },
+  );
 
   @override
   void setAccount(final int newAccountIndex) {}
