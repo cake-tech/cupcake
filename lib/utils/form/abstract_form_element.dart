@@ -6,4 +6,5 @@ abstract class FormElement {
   Future<void> Function(Object e) errorHandler = (final Object e) async {
     print("unhandled error");
   };
+  Future<void> clear();
 }

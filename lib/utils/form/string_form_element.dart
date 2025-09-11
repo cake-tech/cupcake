@@ -49,4 +49,9 @@ abstract class StringFormElementBase extends FormElement with Store {
 
   @override
   Future<void> Function(Object e) errorHandler;
+
+  @override
+  Future<void> clear() async {
+    ctrl.clear();
+  }
 }
