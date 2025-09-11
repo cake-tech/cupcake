@@ -111,7 +111,7 @@ class FormBuilder extends StatelessWidget {
                 e.onChanged?.call();
               },
               style: const TextStyle(
-                fontSize: 64,
+                fontSize: 16,
               ),
             )
           else
@@ -124,8 +124,7 @@ class FormBuilder extends StatelessWidget {
                 autocorrect: !e.password,
               ),
             ),
-          const SizedBox(height: 16),
-          if (count == i && i == 0)
+          if (i == 0)
             TextButton(
               style: TextButton.styleFrom(
                 backgroundColor: T.colorScheme.surfaceContainer,
