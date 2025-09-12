@@ -61,8 +61,8 @@ class LitecoinWallet implements CoinWallet {
     final mwebHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed)).derivePath("m/1000'/2'/0'") as Bip32Slip10Secp256k1;
 
     final pubkeyMap = PubkeyIndexMap(wpkhHd);
-    pubkeyMap.topupExternal(count: 500);
-    pubkeyMap.topupChange(count: 500);
+    pubkeyMap.topupExternal();
+    pubkeyMap.topupChange();
 
     return LitecoinWallet._(
       seed: seed,
@@ -87,6 +87,7 @@ class LitecoinWallet implements CoinWallet {
   final PubkeyIndexMap pubkeyMap;
 
   List<int> get scanSecret => mwebHd.childKey(Bip32KeyIndex(0x80000000)).privateKey.privKey.raw;
+  List<int> get spendSecret => mwebHd.childKey(Bip32KeyIndex(0x80000001)).privateKey.privKey.raw;
   List<int> get spendPubkey => mwebHd.childKey(Bip32KeyIndex(0x80000001)).publicKey.pubKey.compressed;
 
   @override
@@ -152,7 +153,11 @@ class LitecoinWallet implements CoinWallet {
           confirmCallback: (final BuildContext context) async {
             Uint8List sourceBytes;
             try {
-              var resp2 = await CwMweb.psbtSign(PsbtSignRequest(psbtB64: psbtB64));
+              var resp2 = await CwMweb.psbtSign(PsbtSignRequest(
+                psbtB64: psbtB64,
+                scanSecret: scanSecret,
+                spendSecret: spendSecret,
+              ));
               for (int i = 0; i < resp.inputPubkey.length; i++) {
                 final pubkey = hex.encode(resp.inputPubkey[i]);
                 if (pubkey.isEmpty) continue;
