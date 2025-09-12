@@ -25,13 +25,13 @@ func StartServer(chain *C.char, dataDir *C.char, nodeUri *C.char, errMsg **C.cha
 		return 0
 	}
 
-	start, err := server.Start(0)
+	err = server.StartUnix(goDataDir + "/mwebd.sock")
 	if err != nil {
 		*errMsg = C.CString(err.Error())
 		return 0
 	}
 
-	return C.int(start)
+	return 1
 }
 
 //export StopServer
