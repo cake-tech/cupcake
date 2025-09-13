@@ -64,9 +64,6 @@ class CwMweb {
     }
     printV("Attempting to connect to server on port: $_port");
 
-    // wait for the server to finish starting up before we try to connect to it:
-    await Future.delayed(const Duration(seconds: 8));
-
     _clientChannel = ClientChannel(InternetAddress("${appDir.path}/mwebd.sock", type: InternetAddressType.unix), channelShutdownHandler: () {
       _rpcClient = null;
       printV("Channel is shutting down!");
