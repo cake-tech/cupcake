@@ -167,7 +167,7 @@ class LitecoinWallet implements CoinWallet {
                 } catch (_) {
                   continue;
                 }
-                final pubkey = address.baseAddress.pubKeyHash();
+                final pubkey = address.baseAddress.addressProgram;
                 var index = pubkeyMap.getExternalIndex(pubkey);
                 if (index == null) {
                   pubkeyMap.topupExternal();
