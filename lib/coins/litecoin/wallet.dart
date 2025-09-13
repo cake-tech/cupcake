@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:bitcoin_base/bitcoin_base.dart' hide LitecoinAddress;
+import 'package:bitcoin_base/bitcoin_base.dart';
 import 'package:blockchain_utils/blockchain_utils.dart';
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
@@ -142,9 +142,9 @@ class LitecoinWallet implements CoinWallet {
         final psbtB64 = ur.base64;
         final resp = await CwMweb.psbtGetRecipients(PsbtGetRecipientsRequest(psbtB64: psbtB64));
 
-        final Map<LitecoinAddress, LitecoinAmount> destMap = {};
+        final Map<LitecoinAddress2, LitecoinAmount> destMap = {};
         for (final recipient in resp.recipient) {
-          destMap[LitecoinAddress(recipient.address)] = LitecoinAmount(recipient.value.toInt());
+          destMap[LitecoinAddress2(recipient.address)] = LitecoinAmount(recipient.value.toInt());
         }
         if (!context.mounted) return;
 
@@ -160,9 +160,14 @@ class LitecoinWallet implements CoinWallet {
                 scanSecret: scanSecret,
                 spendSecret: spendSecret,
               ));
-              for (int i = 0; i < resp.inputPubkey.length; i++) {
-                final pubkey = hex.encode(resp.inputPubkey[i]);
-                if (pubkey.isEmpty) continue;
+              for (int i = 0; i < resp.inputAddress.length; i++) {
+                late LitecoinAddress address;
+                try {
+                  address = LitecoinAddress(resp.inputAddress[i]);
+                } catch (_) {
+                  continue;
+                }
+                final pubkey = address.baseAddress.pubKeyHash();
                 var index = pubkeyMap.getExternalIndex(pubkey);
                 if (index == null) {
                   pubkeyMap.topupExternal();
