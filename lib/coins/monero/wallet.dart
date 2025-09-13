@@ -152,7 +152,7 @@ class MoneroWallet implements CoinWallet {
               currentWallet: this,
             ).pushReplacement(context);
           },
-          cancelCallback: () => Navigator.of(context).pop(),
+          cancelCallback: (final BuildContext context) => Navigator.of(context).pop(),
         ).pushReplacement(context);
         save();
       default:
