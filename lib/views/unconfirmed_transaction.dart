@@ -15,7 +15,7 @@ class UnconfirmedTransactionView {
     required final Amount fee,
     required final Map<Address, Amount> destMap,
     required final FutureOr<void> Function(BuildContext context) confirmCallback,
-    required final FutureOr<void> Function() cancelCallback,
+    required final FutureOr<void> Function(BuildContext context) cancelCallback,
   }) : viewModel = UnconfirmedTransactionViewModel(
           wallet: wallet,
           fee: fee,
@@ -27,21 +27,25 @@ class UnconfirmedTransactionView {
   final UnconfirmedTransactionViewModel viewModel;
   AppLocalizations get L => viewModel.L;
   ThemeData get T => viewModel.T;
-  Future<dynamic> pushReplacement(final BuildContext context) {
-    viewModel.register(context);
+  Future<dynamic> pushReplacement(final BuildContext context) async {
+    final navigator = Navigator.of(context);
+    await navigator.maybePop();
     return showModalBottomSheet(
-      context: context,
+      context: navigator.context,
       isScrollControlled: true,
-      builder: (final context) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          decoration: BoxDecoration(
-            color: T.colorScheme.onPrimary,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      builder: (final context) {
+        final sheet = _buildBottomSheet(context);
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: Container(
+            decoration: BoxDecoration(
+              color: T.colorScheme.onPrimary,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: sheet,
           ),
-          child: _buildBottomSheet(context),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -77,7 +81,7 @@ class UnconfirmedTransactionView {
                           borderRadius: BorderRadius.circular(512),
                         ),
                         child: IconButton(
-                          onPressed: () => viewModel.cancel(),
+                          onPressed: () => viewModel.cancel(context),
                           icon: Icon(
                             Icons.close,
                             color: T.colorScheme.onSurface,
@@ -251,7 +255,7 @@ class UnconfirmedTransactionView {
       child: _SlideToConfirmButton(
         onSlideComplete: () => viewModel.confirm(context),
         buttonText: L.swipe_to_confirm,
-        onCancel: () => viewModel.cancel(),
+        onCancel: () => viewModel.cancel(context),
       ),
     );
   }
@@ -322,8 +326,6 @@ class _SlideToConfirmButtonState extends State<_SlideToConfirmButton> {
                             _isCompleted = true;
                             _dragPosition = _maxDragDistance;
                           });
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
                           widget.onSlideComplete();
                         } else {
                           setState(() {
