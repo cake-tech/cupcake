@@ -1,8 +1,8 @@
 module github.com/cake-tech/cake_wallet/cw_mweb/go
 
-go 1.24.2
+go 1.24.1
 
-require github.com/ltcmweb/mwebd v0.1.15
+require github.com/ltcmweb/mwebd v0.1.16
 
 require (
 	github.com/Microsoft/go-winio v0.6.2 // indirect
