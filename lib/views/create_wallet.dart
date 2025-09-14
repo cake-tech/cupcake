@@ -51,18 +51,18 @@ class CreateWallet extends AbstractView {
   }
 
   Widget _createMethodKind(final BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: SizedBox(
-        height: double.maxFinite,
+    return SingleChildScrollView(
+      child: SafeArea(
+        top: false,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(height: 32),
             SizedBox.square(
               dimension: 250,
               child: Assets.icons.walletNew.image(),
             ),
-            Spacer(),
+            // Spacer(),
             Padding(
               padding: const EdgeInsets.all(42.0),
               child: Text.rich(
@@ -71,7 +71,7 @@ class CreateWallet extends AbstractView {
                 textAlign: TextAlign.center,
               ),
             ),
-            Spacer(),
+            // Spacer(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 86.0),
               child: Text(
@@ -212,6 +212,17 @@ class CreateWallet extends AbstractView {
                 value: viewModel.showExtra,
                 onChanged: (final bool? value) {
                   viewModel.showExtra = value ?? false;
+                  if (!viewModel.showExtra) {
+                    final count = viewModel.formBuilderViewModelList.length;
+                    for (int i = 0; i < count; i++) {
+                      final formCount = viewModel.formBuilderViewModelList[i].formElements.length;
+                      for (int j = 0; j < formCount; j++) {
+                        if (viewModel.formBuilderViewModelList[i].formElements[j].isExtra) {
+                          viewModel.formBuilderViewModelList[i].formElements[j].clear();
+                        }
+                      }
+                    }
+                  }
                 },
               ),
               Text(
