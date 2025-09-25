@@ -144,6 +144,11 @@ class UIPlayground extends AbstractView {
               NewWalletInfoPage.preShowSeedPage(L, T),
             ],
           ).push(context),
+      "NewWalletInfoScreen(needUseCakeWallet)": () => NewWalletInfoScreen(
+            pages: [
+              NewWalletInfoPage.needUseCakeWallet(L, T),
+            ],
+          ).push(context),
       "NewWalletInfoScreen(writeDownNotice)": () => NewWalletInfoScreen(
             pages: [
               NewWalletInfoPage.writeDownNotice(

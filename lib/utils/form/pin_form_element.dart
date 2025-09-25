@@ -86,7 +86,12 @@ abstract class PinFormElementBase extends FormElement with Store {
 
   @action
   Future<void> onConfirmInternal(final BuildContext context) async {
-    await valueOutcome.encode(ctrl.text);
+    try {
+      await valueOutcome.encode(ctrl.text);
+    } catch (e) {
+      await clear();
+      rethrow;
+    }
     isConfirmed = true;
   }
 

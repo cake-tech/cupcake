@@ -11,7 +11,6 @@ import 'package:cupcake/views/widgets/seed_grid.dart';
 import 'package:cupcake/views/widgets/yellow_warning.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class NewWalletInfoPage {
   NewWalletInfoPage({
@@ -21,7 +20,37 @@ class NewWalletInfoPage {
     required this.svgIcon,
     required this.actions,
     required this.texts,
+    this.popAnimation = true,
   });
+
+  final bool popAnimation;
+
+  static NewWalletInfoPage needUseCakeWallet(final AppLocalizations L, final ThemeData T) =>
+      NewWalletInfoPage(
+        topText: L.important,
+        topAction: null,
+        topActionText: null,
+        svgIcon: Assets.icons.linkCakewallet.image(),
+        actions: [
+          NewWalletAction(
+            type: NewWalletActionType.nextPage,
+            function: null,
+            text: L.next,
+          ),
+        ],
+        texts: [
+          SizedBox(height: 24),
+          Text.rich(
+            markdownText(L.need_use_cakewallet),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: T.colorScheme.onSurface,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      );
+
   static NewWalletInfoPage preShowSeedPage(final AppLocalizations L, final ThemeData T) =>
       NewWalletInfoPage(
         topText: L.important,
@@ -72,7 +101,7 @@ class NewWalletInfoPage {
                 final isCorrect = await VerifySeedPage(
                   seedWords: text.split(" "),
                   wordList: Bip39.english,
-                ).push(context);
+                ).pushWithoutAnimation(context);
                 if (isCorrect != true) return;
               }
               nextPage();
@@ -107,6 +136,7 @@ class NewWalletInfoPage {
     required final Future<void> Function()? nextCallback,
   }) =>
       NewWalletInfoPage(
+        popAnimation: false,
         topText: L.verify_seed,
         topAction: null,
         topActionText: null,
@@ -142,7 +172,7 @@ class NewWalletInfoPage {
   final VoidCallback? topAction;
   final Widget? topActionText;
 
-  final SvgPicture? svgIcon;
+  final Widget? svgIcon;
   final List<NewWalletAction> actions;
 
   List<Widget> texts;

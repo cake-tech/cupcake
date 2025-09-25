@@ -110,10 +110,11 @@ class WalletEdit {
             showExtra: true,
             viewModel: viewModel.formBuilderViewModel,
           ),
-          SizedBox(
-            height: 280,
-          ),
           bottomNavigationBar(context),
+          if (MediaQuery.of(context).viewInsets.bottom > 0)
+            SizedBox(
+              height: 280,
+            ),
         ],
       ),
     );
