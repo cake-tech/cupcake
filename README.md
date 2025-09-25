@@ -2,7 +2,6 @@
 
 > It's almost cake, but in a cup.
 
-
 ## Getting Started (for developers)
 
 To build:
