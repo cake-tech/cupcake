@@ -15,7 +15,7 @@ pushd lib/l10n
 popd
 
 dart run build_runner build --delete-conflicting-outputs
-dart fix --apply .
-dart format .
+dart fix --apply lib/
+dart format lib/
 
 flutter gen-l10n
