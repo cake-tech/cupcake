@@ -1,6 +1,7 @@
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/bitcoin/wallet_info.dart';
+import 'package:cupcake/coins/litecoin/wallet_info.dart';
 import 'package:cupcake/coins/monero/wallet_info.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:flutter/widgets.dart';
@@ -41,6 +42,8 @@ abstract class CoinWalletInfo {
         return MoneroWalletInfo(walletName);
       case Coins.bitcoin:
         return BitcoinWalletInfo(walletName);
+      case Coins.litecoin:
+        return LitecoinWalletInfo(walletName);
       case Coins.unknown:
         throw UnimplementedError("unknown coin");
     }

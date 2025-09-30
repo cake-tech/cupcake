@@ -18,7 +18,7 @@ abstract class UnconfirmedTransactionViewModelBase extends ViewModel with Store 
     required this.fee,
     required this.destMap,
     required final FutureOr<void> Function(BuildContext context) confirmCallback,
-    required final FutureOr<void> Function() cancelCallback,
+    required final FutureOr<void> Function(BuildContext context) cancelCallback,
   })  : _confirmCallback = confirmCallback,
         _cancelCallback = cancelCallback;
 
@@ -28,14 +28,14 @@ abstract class UnconfirmedTransactionViewModelBase extends ViewModel with Store 
   late String screenName = wallet.coin.strings.nameFull;
 
   final FutureOr<void> Function(BuildContext context) _confirmCallback;
-  final FutureOr<void> Function() _cancelCallback;
+  final FutureOr<void> Function(BuildContext context) _cancelCallback;
 
   Future<void> confirm(final BuildContext context) => callThrowable(
         () async => await _confirmCallback(context),
         L.error_unable_to_confirm_transaction,
       );
-  Future<void> cancel() => callThrowable(
-        () async => await _cancelCallback(),
+  Future<void> cancel(final BuildContext context) => callThrowable(
+        () async => await _cancelCallback(context),
         L.error_unable_to_cancel,
       );
 

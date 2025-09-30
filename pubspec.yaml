@@ -79,6 +79,13 @@ dependencies:
       url: https://github.com/mrcyjanek/applock
       ref: 77cc90a7ae3c0c0969afe82df5a9d04cc0387d8d
   haptic_feedback: ^0.5.1+1
+  cw_mweb:
+    path: cw_mweb
+  bip39: ^1.0.6
+  bitcoin_base:
+    git:
+      url: https://github.com/cake-tech/bitcoin_base
+      ref: cake-update-v16
 
 dev_dependencies:
   flutter_test:
@@ -102,6 +109,7 @@ dev_dependencies:
 
 dependency_overrides:
   web: ^0.5.0
+  intl: 0.20.2
 
 analyzer:
   exclude:
@@ -126,6 +134,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/coins/btc.svg
+    - assets/coins/ltc.svg
     - assets/coins/xmr.svg
     - assets/background_for_wallethome.png
     - assets/icons/wallet_selection_button.png
