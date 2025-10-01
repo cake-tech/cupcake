@@ -7,6 +7,7 @@ import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/formatter_address.dart';
 import 'package:cupcake/view_model/unconfirmed_transaction_view_model.dart';
+import 'package:cupcake/views/widgets/guarded_gesture_detector.dart';
 import 'package:flutter/material.dart';
 
 class UnconfirmedTransactionView {
@@ -309,7 +310,7 @@ class _SlideToConfirmButtonState extends State<_SlideToConfirmButton> {
                   Positioned(
                     left: _dragPosition,
                     top: 0,
-                    child: GestureDetector(
+                    child: GuardedGestureDetector(
                       onPanUpdate: (final details) {
                         setState(() {
                           _dragPosition += details.delta.dx;

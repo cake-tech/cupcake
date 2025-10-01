@@ -5,6 +5,7 @@ import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/create_wallet.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
+import 'package:cupcake/views/widgets/guarded_gesture_detector.dart';
 import 'package:flutter/material.dart';
 
 class InitialSetupScreen extends AbstractView {
@@ -56,7 +57,7 @@ class InitialSetupScreen extends AbstractView {
           style: TextStyle(fontSize: 16, color: T.colorScheme.onSurfaceVariant),
         ),
         const Spacer(),
-        GestureDetector(
+        GuardedGestureDetector(
           onTap: viewModel.showTos,
           child: Text.rich(markdownText(L.tos_notice)),
         ),

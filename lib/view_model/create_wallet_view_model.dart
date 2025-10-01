@@ -245,6 +245,8 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     await callThrowable(
       () async {
         await _createWallet();
+        await walletPassword.clear();
+        await walletPasswordInitial.clear();
       },
       L.create_wallet,
     );

@@ -39,8 +39,8 @@ class MoneroWalletInfo extends CoinWalletInfo {
   Coins get type => coin.type;
 
   @override
-  void openUI(final BuildContext context) {
-    OpenWallet(coinWalletInfo: this, enableBiometric: false).push(context);
+  Future<void> openUI(final BuildContext context) {
+    return OpenWallet(coinWalletInfo: this, enableBiometric: false).push(context);
   }
 
   @override
@@ -83,6 +83,7 @@ class MoneroWalletInfo extends CoinWalletInfo {
     }
     File(walletName).copySync(p.join(basePath, newName));
     File("$walletName.keys").copySync(p.join(basePath, "$newName.keys"));
+
     // Copy and delete later, if anything throws below we end up with copied walled,
     // instead of nuking the wallet
     File(walletName).deleteSync();

@@ -1,3 +1,4 @@
+import 'package:cupcake/views/widgets/guarded_gesture_detector.dart';
 import 'package:cupcake/views/widgets/numerical_keyboard/keyboard.dart';
 import 'package:flutter/material.dart';
 
@@ -11,15 +12,15 @@ class SingleKey extends StatelessWidget {
   });
   final Keys keyId;
   final TextEditingController ctrl;
-  final VoidCallback? callback;
-  final VoidCallback? longPress;
+  final Future<void> Function()? callback;
+  final Future<void> Function()? longPress;
   @override
   Widget build(final BuildContext context) {
     final T = Theme.of(context);
     return Expanded(
       flex: 2,
-      child: GestureDetector(
-        onTap: () {
+      child: GuardedGestureDetector(
+        onTap: () async {
           switch (keyId) {
             case Keys.backspace:
               if (ctrl.text.isNotEmpty) {
@@ -31,7 +32,7 @@ class SingleKey extends StatelessWidget {
             default:
               ctrl.text = "${ctrl.text}${getKeysChar(keyId)}";
           }
-          callback?.call();
+          await callback?.call();
         },
         onLongPress: longPress,
         child: Center(

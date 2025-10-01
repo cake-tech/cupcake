@@ -79,7 +79,7 @@ class Monero implements Coin {
     }
 
     // Prevent user from slipping outside allowed directory
-    final String walletPath = p.join(baseDir.path, walletName);
+    final String walletPath = p.normalize(p.join(baseDir.path, walletName));
     if (!walletPath.startsWith(baseDir.path)) {
       throw Exception(Coin.L.error_illegal_wallet_name(walletName));
     }

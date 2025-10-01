@@ -127,6 +127,7 @@ abstract class WalletEditViewModelBase extends ViewModel with Store {
             openLastWallet: false,
           ).pushReplacement(c!),
         );
+        await walletPassword.clear();
       },
       L.delete_wallet,
     );
@@ -148,6 +149,7 @@ abstract class WalletEditViewModelBase extends ViewModel with Store {
             openLastWallet: false,
           ).pushReplacement(c!),
         );
+        await walletPassword.clear();
       },
       L.rename_wallet,
     );

@@ -7,6 +7,7 @@ import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/create_wallet.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/buttons/long_secondary.dart';
+import 'package:cupcake/views/widgets/guarded_gesture_detector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:path/path.dart' as p;
@@ -87,7 +88,7 @@ class HomeScreen extends AbstractView {
     final BuildContext context,
     final CoinWalletInfo wallet,
   ) {
-    return GestureDetector(
+    return GuardedGestureDetector(
       onTap: () => wallet.openUI(context),
       child: Container(
         height: 72,

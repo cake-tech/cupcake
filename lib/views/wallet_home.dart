@@ -12,6 +12,7 @@ import 'package:cupcake/views/receive.dart';
 import 'package:cupcake/views/security_backup.dart';
 import 'package:cupcake/views/settings.dart';
 import 'package:cupcake/views/widgets/glowing_svg.dart';
+import 'package:cupcake/views/widgets/guarded_gesture_detector.dart';
 import 'package:cupcake/views/widgets/png_button.dart';
 import 'package:cupcake/views/widgets/settings/about_widget.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +60,7 @@ class WalletHome extends AbstractView {
   Widget _walletSelector(final BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 42),
-      child: GestureDetector(
+      child: GuardedGestureDetector(
         onTap: () => HomeScreen(openLastWallet: false).push(context),
         child: Container(
           decoration: BoxDecoration(
@@ -147,20 +148,20 @@ class WalletHome extends AbstractView {
     final BuildContext context, {
     required final Widget pngAsset,
     required final Widget pressedPngAsset,
-    required final VoidCallback onPressed,
+    required final Future<void> Function() onPressed,
   }) {
     return PngButton(
       pngAsset: pngAsset,
       pressedPngAsset: pressedPngAsset,
-      onPressed: () {
+      onPressed: () async {
         unawaited(Haptics.vibrate(HapticsType.light));
-        onPressed();
+        await onPressed();
       },
     );
   }
 
-  void _showBottomSheet(final BuildContext context) {
-    showModalBottomSheet(
+  Future<void> _showBottomSheet(final BuildContext context) async {
+    await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,

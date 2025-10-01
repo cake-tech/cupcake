@@ -13,7 +13,7 @@ abstract class CoinWalletInfo {
 
   Coin get coin;
 
-  void openUI(final BuildContext context);
+  Future<void> openUI(final BuildContext context);
 
   Future<bool> checkWalletPassword(final String password);
 

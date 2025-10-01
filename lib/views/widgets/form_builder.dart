@@ -15,28 +15,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-class FormBuilder extends StatelessWidget {
-  FormBuilder({super.key, required this.viewModel, required this.showExtra});
+class FormBuilder extends StatefulWidget {
+  const FormBuilder({super.key, required this.viewModel, required this.showExtra});
 
+  final FormBuilderViewModel viewModel;
+  final bool showExtra;
+
+  @override
+  State<FormBuilder> createState() => _FormBuilderState();
+}
+
+class _FormBuilderState extends State<FormBuilder> {
   late AppLocalizations L;
   late ThemeData T;
 
-  final FormBuilderViewModel viewModel;
-
-  final bool showExtra;
-
   String? lastSuggestedTitle = DateTime.now().toIso8601String();
+
   void _onLabelChange(final String? suggestedTitle) {
     if (suggestedTitle == lastSuggestedTitle) return;
     lastSuggestedTitle = suggestedTitle;
-    viewModel.onLabelChange(suggestedTitle);
+    widget.viewModel.onLabelChange(suggestedTitle);
   }
 
   @override
   Widget build(final BuildContext context) {
     L = AppLocalizations.of(context)!;
     T = Theme.of(context);
-    viewModel.register(context);
+    widget.viewModel.register(context);
     return Observer(
       builder: (final context) => _build(context),
     );
@@ -45,16 +50,17 @@ class FormBuilder extends StatelessWidget {
   final pinFormTextInputFocusNode = FocusNode();
 
   Widget _build(final BuildContext context) {
-    if (displayPinFormElement(viewModel.formElements)) {
-      var e = viewModel.formElements.first as PinFormElement;
+    if (displayPinFormElement(widget.viewModel.formElements)) {
+      var e = widget.viewModel.formElements.first as PinFormElement;
       int i = 0;
       int count = 0;
-      if (viewModel.formElements.length >= 2 && (viewModel.formElements[1] is PinFormElement)) {
+      if (widget.viewModel.formElements.length >= 2 &&
+          (widget.viewModel.formElements[1] is PinFormElement)) {
         count++;
       }
       if (e.isConfirmed) {
         i++;
-        e = viewModel.formElements[1] as PinFormElement;
+        e = widget.viewModel.formElements[1] as PinFormElement;
       }
       _onLabelChange(e.label);
       Future<void> nextPageCallback() async {
@@ -62,9 +68,9 @@ class FormBuilder extends StatelessWidget {
           await e.onConfirmInternal(context);
           if (!context.mounted) return;
           await e.onConfirm?.call();
-          viewModel.isPinSet = (count == i);
+          widget.viewModel.isPinSet = (count == i);
         } catch (err) {
-          viewModel.isPinSet = false;
+          widget.viewModel.isPinSet = false;
           await e.errorHandler(err);
           return;
         }
@@ -76,11 +82,11 @@ class FormBuilder extends StatelessWidget {
       // be that from secure storage or by actually entering it.
       unawaited(e.loadSecureStorageValue(nextPageCallback));
       // We can probably move this somewhere else, but I like it here.
-      void $nextPageCallback() {
+      Future<void> $nextPageCallback() async {
         if (e.enableBiometric) {
-          viewModel.enableSystemAuth(e, nextPageCallback);
+          await widget.viewModel.enableSystemAuth(e, nextPageCallback);
         } else {
-          nextPageCallback();
+          await nextPageCallback();
         }
       }
 
@@ -96,7 +102,7 @@ class FormBuilder extends StatelessWidget {
                     : L.create_your_pin,
             style: T.textTheme.bodyLarge?.copyWith(fontSize: 20),
           ),
-          if (viewModel.isPinInput)
+          if (widget.viewModel.isPinInput)
             TextFormField(
               focusNode: pinFormTextInputFocusNode,
               controller: e.ctrl,
@@ -131,12 +137,12 @@ class FormBuilder extends StatelessWidget {
                 foregroundColor: T.colorScheme.onSurfaceVariant,
               ),
               onPressed: () {
-                viewModel.isPinInput = !viewModel.isPinInput;
+                widget.viewModel.isPinInput = !widget.viewModel.isPinInput;
               },
-              child: Text(viewModel.isPinInput ? L.switch_to_password : L.switch_to_pin),
+              child: Text(widget.viewModel.isPinInput ? L.switch_to_password : L.switch_to_pin),
             ),
           const SizedBox(height: 32),
-          if (viewModel.isPinInput)
+          if (widget.viewModel.isPinInput)
             NumericalKeyboard(
               ctrl: e.ctrl,
               showConfirm: () => e.isOk,
@@ -145,7 +151,7 @@ class FormBuilder extends StatelessWidget {
               showComma: false,
             ),
           const Spacer(),
-          if (!viewModel.isPinInput)
+          if (!widget.viewModel.isPinInput)
             SafeArea(
               bottom: true,
               top: false,
@@ -161,8 +167,8 @@ class FormBuilder extends StatelessWidget {
     }
     _onLabelChange(null);
     final List<Widget> children = [];
-    for (final e in viewModel.formElements) {
-      if (e.isExtra && !showExtra) {
+    for (final e in widget.viewModel.formElements) {
+      if (e.isExtra && !widget.showExtra) {
         // If we return Container() some stuff happens on flutter render cache
         // and it doesn't render properly.
         continue;

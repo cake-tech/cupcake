@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CakeListTile extends StatelessWidget {
+class CakeListTile extends StatefulWidget {
   const CakeListTile({
     super.key,
     required this.onTap,
@@ -15,13 +15,34 @@ class CakeListTile extends StatelessWidget {
   final Widget? icon;
   final Widget? trailing;
   final bool selected;
+
+  @override
+  State<CakeListTile> createState() => _CakeListTileState();
+}
+
+class _CakeListTileState extends State<CakeListTile> {
+  bool isProcessing = false;
+
   @override
   Widget build(final BuildContext context) {
     final T = Theme.of(context);
     return Card(
-      color: selected ? T.colorScheme.primary : T.colorScheme.surfaceContainer,
+      color: widget.selected ? T.colorScheme.primary : T.colorScheme.surfaceContainer,
       child: ListTile(
-        onTap: () => onTap(context),
+        onTap: isProcessing
+            ? null
+            : () {
+                setState(() {
+                  isProcessing = true;
+                });
+                try {
+                  widget.onTap(context);
+                } finally {
+                  setState(() {
+                    isProcessing = false;
+                  });
+                }
+              },
         splashColor: T.colorScheme.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -31,15 +52,15 @@ class CakeListTile extends StatelessWidget {
           child: Row(
             children: [
               SizedBox(width: 12),
-              if (icon != null) ...[
-                SizedBox.square(dimension: 24, child: icon),
+              if (widget.icon != null) ...[
+                SizedBox.square(dimension: 24, child: widget.icon),
                 SizedBox(width: 18),
               ],
               Text(
-                text,
+                widget.text,
                 style: TextStyle(
                   fontSize: 20,
-                  color: selected ? T.colorScheme.onPrimary : T.colorScheme.onSurface,
+                  color: widget.selected ? T.colorScheme.onPrimary : T.colorScheme.onSurface,
                 ),
               ),
             ],

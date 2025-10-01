@@ -8,7 +8,5 @@ class InitialSetupViewModel extends ViewModel {
   @override
   bool get hasBackground => true;
 
-  void showTos() {
-    TosPage().push(c!);
-  }
+  Future<void> showTos() => TosPage().push(c!);
 }

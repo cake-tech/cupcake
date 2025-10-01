@@ -1,3 +1,4 @@
+import 'package:cupcake/views/widgets/guarded_gesture_detector.dart';
 import 'package:flutter/material.dart';
 
 class SeedPhraseGridWidget extends StatelessWidget {
@@ -34,7 +35,7 @@ class SeedPhraseGridWidget extends StatelessWidget {
         }
         final item = list[index];
         final numberCount = index + 1;
-        return GestureDetector(
+        return GuardedGestureDetector(
           onTap: () => onSelect?.call(item, index),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8),
