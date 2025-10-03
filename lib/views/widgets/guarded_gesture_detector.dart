@@ -58,9 +58,13 @@ class _GuardedGestureDetectorState extends State<GuardedGestureDetector> {
               try {
                 await widget.onTap?.call();
               } finally {
-                setState(() {
-                  isProcessing = false;
-                });
+                try {
+                  setState(() {
+                    isProcessing = false;
+                  });
+                } catch (e) {
+                  print("error setting state: $e");
+                }
               }
             },
       child: widget.child,
