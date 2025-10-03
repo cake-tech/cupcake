@@ -288,6 +288,7 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     }
 
     final List<NewWalletInfoPage> pages = [
+      NewWalletInfoPage.needUseCakeWallet(L, T),
       NewWalletInfoPage.preShowSeedPage(L, T),
       NewWalletInfoPage.writeDownNotice(
         L,

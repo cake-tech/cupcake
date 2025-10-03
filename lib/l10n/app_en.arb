@@ -64,6 +64,7 @@
   "invalid_password": "Invalid password",
   "keys": "Keys",
   "link_to_cakewallet": "Link to Cake Wallet",
+  "need_use_cakewallet": "**Welcome to Cupcake!**\nCupcake lets you store and manage your crypto even more securely, turning any old phone into a hardware wallet at a tap. Cupcake uses QR codes to communicate with Cake Wallet, ensuring that your keys never leave your offline Cupcake app. While you can receive and view transactions at any time in Cake Wallet after pairing, you’ll need Cupcake to sign any transactions you want to send. Maximum security, minimum effort.",
   "next": "Next",
   "no_seed_available": "No seed is available",
   "opening_wallet": "Opening wallet",

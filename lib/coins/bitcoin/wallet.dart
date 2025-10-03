@@ -186,13 +186,13 @@ class BitcoinWallet implements CoinWallet {
     return [
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
-        name: "Seed",
+        name: Coin.L.seed,
         value: seed,
       ),
       if (passphrase.isNotEmpty)
         WalletSeedDetail(
           type: WalletSeedDetailType.text,
-          name: "Passphrase",
+          name: Coin.L.wallet_passphrase,
           value: passphrase,
         ),
       WalletSeedDetail(
@@ -202,7 +202,7 @@ class BitcoinWallet implements CoinWallet {
       ),
       WalletSeedDetail(
         type: WalletSeedDetailType.qr,
-        name: "Pair Cake Wallet",
+        name: Coin.L.view_only_restore_qr,
         value: publicUri.toString(),
       ),
     ];

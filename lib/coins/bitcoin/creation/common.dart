@@ -48,7 +48,19 @@ class BitcoinWalletCreation extends WalletCreation {
     isExtra: true,
   );
 
-  late List<FormElement> createForm = [passphrase];
+  late StringFormElement passphraseConfirm = StringFormElement(
+    L.wallet_passphrase,
+    password: false,
+    validator: nonEmptyValidator(
+      L,
+      extra: (final input) => input != passphrase.ctrl.text ? L.seed_passphrase_mismatch : null,
+    ),
+    errorHandler: errorHandler,
+    canPaste: true,
+    isExtra: true,
+  );
+
+  late List<FormElement> createForm = [passphrase, passphraseConfirm];
   late List<FormElement> restoreForm = [seed, passphrase];
 
   @override
@@ -57,6 +69,11 @@ class BitcoinWalletCreation extends WalletCreation {
     final String walletName,
     final String walletPassword,
   ) async {
+    if (createMethod == CreateMethod.create) {
+      if (await passphrase.value != await passphraseConfirm.value) {
+        throw Exception(L.seed_passphrase_mismatch);
+      }
+    }
     return switch (createMethod) {
       CreateMethod.create => CreateBitcoinWalletCreationMethod(
           L,

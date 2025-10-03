@@ -78,6 +78,25 @@ class AbstractView extends StatefulWidget {
     );
   }
 
+  Future<dynamic> pushWithoutAnimation(final BuildContext context) {
+    Widget builder(final context) {
+      return this;
+    }
+
+    return Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (
+          final BuildContext context,
+          final Animation<double> animation,
+          final Animation<double> secondaryAnimation,
+        ) =>
+            builder(context),
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
+      ),
+    );
+  }
+
   final ViewModel viewModel = ViewModelSimple();
 
   @override

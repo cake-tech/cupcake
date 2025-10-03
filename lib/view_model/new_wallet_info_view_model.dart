@@ -18,7 +18,11 @@ abstract class NewWalletInfoViewModelBase extends ViewModel with Store {
 
   void nextPage() {
     final nextPageIndex = (currentPageIndex + 1) % pages.length;
-    NewWalletInfoScreen(pages: pages, currentPageIndex: nextPageIndex).push(c!);
+    if (pages[nextPageIndex].popAnimation) {
+      NewWalletInfoScreen(pages: pages, currentPageIndex: nextPageIndex).push(c!);
+    } else {
+      NewWalletInfoScreen(pages: pages, currentPageIndex: nextPageIndex).pushWithoutAnimation(c!);
+    }
   }
 
   final int currentPageIndex;

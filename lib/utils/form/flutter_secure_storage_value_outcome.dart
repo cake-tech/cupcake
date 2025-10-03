@@ -32,7 +32,10 @@ class FlutterSecureStorageValueOutcome implements ValueOutcome {
       );
     }
     if (sha512Hash.toString() != valInput && verifyMatching) {
-      throw Exception("Input doesn't match the secure element value");
+      if (CupcakeConfig.instance.debug) {
+        throw Exception("Input doesn't match the secure element value");
+      }
+      throw Exception("Invalid password");
     }
 
     final input_ = await secureStorage.read(key: key);

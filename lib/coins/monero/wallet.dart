@@ -240,12 +240,6 @@ class MoneroWallet implements CoinWallet {
         name: Coin.L.seed_screen_wallet_seed_legacy,
         value: legacySeed,
       ),
-      if (seedOffset.isNotEmpty)
-        WalletSeedDetail(
-          type: WalletSeedDetailType.text,
-          name: Coin.L.seed_offset,
-          value: seedOffset,
-        ),
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
         name: Coin.L.view_key,
@@ -271,6 +265,12 @@ class MoneroWallet implements CoinWallet {
         name: Coin.L.restore_height,
         value: wallet.getRefreshFromBlockHeight().toString(),
       ),
+      if (passphrase.isNotEmpty)
+        WalletSeedDetail(
+          type: WalletSeedDetailType.text,
+          name: Coin.L.wallet_passphrase,
+          value: passphrase,
+        ),
       WalletSeedDetail(
         type: WalletSeedDetailType.qr,
         name: Coin.L.view_only_restore_qr,
@@ -280,6 +280,7 @@ class MoneroWallet implements CoinWallet {
   }
 
   String get pairQrString => const JsonEncoder.withIndent('   ').convert({
+        "label": p.basename(walletName),
         "version": 0,
         "primaryAddress": primaryAddress,
         "privateViewKey": wallet.secretViewKey(),

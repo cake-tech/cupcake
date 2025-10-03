@@ -51,57 +51,63 @@ class CreateWallet extends AbstractView {
   }
 
   Widget _createMethodKind(final BuildContext context) {
-    return SingleChildScrollView(
-      child: SafeArea(
-        top: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(height: 32),
-            SizedBox.square(
-              dimension: 250,
-              child: Assets.icons.walletNew.image(),
-            ),
-            // Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(42.0),
-              child: Text.rich(
-                markdownText(L.wallet_creation_onboard),
-                style: TextStyle(color: T.colorScheme.onSurface, fontSize: 16),
-                textAlign: TextAlign.center,
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: SafeArea(
+              top: false,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 32),
+                  SizedBox.square(
+                    dimension: 250,
+                    child: Assets.icons.walletNew.image(),
+                  ),
+                  // Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.all(42.0),
+                    child: Text.rich(
+                      markdownText(L.wallet_creation_onboard),
+                      style: TextStyle(color: T.colorScheme.onSurface, fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  // Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 86.0),
+                    child: Text(
+                      L.wallet_creation_kind_note,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                ],
               ),
             ),
-            // Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 86.0),
-              child: Text(
-                L.wallet_creation_kind_note,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            LongSecondaryButton(
-              T,
-              onPressed: () async {
-                await CreateWallet(
-                  viewModel: viewModel.copyWith(newCreateMethod: CreateMethod.restore),
-                ).pushReplacement(context);
-              },
-              text: L.restore_wallet,
-            ),
-            LongPrimaryButton(
-              onPressed: () async {
-                await CreateWallet(
-                  viewModel: viewModel.copyWith(newCreateMethod: CreateMethod.create),
-                ).pushReplacement(context);
-              },
-              text: L.create_new_wallet,
-            ),
-          ],
+          ),
         ),
-      ),
+        LongSecondaryButton(
+          T,
+          onPressed: () async {
+            await CreateWallet(
+              viewModel: viewModel.copyWith(newCreateMethod: CreateMethod.restore),
+            ).pushReplacement(context);
+          },
+          text: L.restore_wallet,
+        ),
+        LongPrimaryButton(
+          onPressed: () async {
+            await CreateWallet(
+              viewModel: viewModel.copyWith(newCreateMethod: CreateMethod.create),
+            ).pushReplacement(context);
+          },
+          text: L.create_new_wallet,
+        ),
+      ],
     );
   }
 
@@ -109,7 +115,7 @@ class CreateWallet extends AbstractView {
   Widget body(final BuildContext context) {
     return Observer(
       builder: (final BuildContext context) {
-        return _body(context) ?? const SizedBox.shrink();
+        return SafeArea(child: _body(context) ?? const SizedBox.shrink());
       },
     );
   }
