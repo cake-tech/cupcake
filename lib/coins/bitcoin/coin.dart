@@ -15,6 +15,7 @@ import 'package:cupcake/coins/bitcoin/wallet_info.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/encryption/default.dart';
 import 'package:cupcake/utils/filesystem.dart';
+import 'package:cupcake/utils/zpub.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 
@@ -186,6 +187,8 @@ class Bitcoin implements Coin {
         .asString();
     xpub = xpub.substring(xpub.indexOf("]") + 1, xpub.lastIndexOf("/"));
 
+    final zpub = convertXpubToZpub(xpub);
+
     unawaited(() async {
       final start = Stopwatch()..start();
       print("generating addresses");
@@ -202,7 +205,7 @@ class Bitcoin implements Coin {
     return BDKWalletWrapper(
       wallets: wallets,
       mnemonic: mnemonic,
-      xpub: xpub,
+      zpub: zpub,
     );
   }
 
