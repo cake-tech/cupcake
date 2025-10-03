@@ -1,9 +1,8 @@
 import 'package:cupcake/utils/text_span_markdown.dart';
-import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/view_model/initial_setup_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
-import 'package:cupcake/views/create_wallet.dart';
 import 'package:cupcake/gen/assets.gen.dart';
+import 'package:cupcake/views/onboarding_screen.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
 import 'package:cupcake/views/widgets/guarded_gesture_detector.dart';
 import 'package:flutter/material.dart';
@@ -70,9 +69,9 @@ class InitialSetupScreen extends AbstractView {
   Widget? bottomNavigationBar(final BuildContext context) {
     return LongPrimaryButton(
       text: L.continue_,
-      onPressed: () => CreateWallet(
-        viewModel: CreateWalletViewModel(createMethod: null, needsPasswordConfirm: true),
-      ).push(context),
+      onPressed: () async {
+        await OnboardingScreen().push(context);
+      },
     );
   }
 }
