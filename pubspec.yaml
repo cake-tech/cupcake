@@ -79,6 +79,7 @@ dependencies:
       url: https://github.com/mrcyjanek/applock
       ref: 77cc90a7ae3c0c0969afe82df5a9d04cc0387d8d
   haptic_feedback: ^0.5.1+1
+  blockchain_utils: ^5.2.0
 
 dev_dependencies:
   flutter_test:

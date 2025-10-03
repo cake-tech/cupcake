@@ -23,7 +23,7 @@ class BDKWalletWrapper {
   BDKWalletWrapper({
     required final List<Wallet> wallets,
     required this.mnemonic,
-    required this.xpub,
+    required this.zpub,
   }) : w = wallets;
   final List<Wallet> w;
   final String mnemonic;
@@ -31,7 +31,7 @@ class BDKWalletWrapper {
     return w[0].getAddress(addressIndex: AddressIndex.peek(index: 0)).address.asString();
   }
 
-  final String xpub;
+  final String zpub;
 
   Future<bool> sign({required final PartiallySignedTransaction psbt}) async {
     bool ret = false;
@@ -197,8 +197,8 @@ class BitcoinWallet implements CoinWallet {
         ),
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
-        name: "xPub",
-        value: wallet.xpub,
+        name: "zPub",
+        value: wallet.zpub,
       ),
       WalletSeedDetail(
         type: WalletSeedDetailType.qr,
@@ -211,7 +211,7 @@ class BitcoinWallet implements CoinWallet {
   Uri get publicUri => Uri(
         scheme: "bitcoin",
         queryParameters: {
-          "xpub": wallet.xpub,
+          "zpub": wallet.zpub,
           // "path": wallet.derivationPath,
           "label": p.basename(walletName),
         },

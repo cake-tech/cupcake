@@ -1,3 +1,4 @@
+import 'package:cupcake/views/widgets/guarded_gesture_detector.dart';
 import 'package:flutter/material.dart';
 
 class CustomTabBar extends StatelessWidget {
@@ -26,7 +27,7 @@ class CustomTabBar extends StatelessWidget {
 
           return Padding(
             padding: EdgeInsets.only(left: index == 0 ? 24 : 18),
-            child: GestureDetector(
+            child: GuardedGestureDetector(
               onTap: () => onTabSelected(index),
               child: Container(
                 height: 40,

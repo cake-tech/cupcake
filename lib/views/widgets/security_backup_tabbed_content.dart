@@ -1,6 +1,7 @@
 import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/view_model/security_backup_view_model.dart';
+import 'package:cupcake/views/widgets/guarded_gesture_detector.dart';
 import 'package:cupcake/views/widgets/seed_grid.dart';
 import 'package:cupcake/views/widgets/yellow_warning.dart';
 import 'package:flutter/material.dart';
@@ -185,7 +186,7 @@ class _SecurityBackupTabbedContentState extends State<SecurityBackupTabbedConten
                       color: Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(128),
                     ),
               ),
-              GestureDetector(
+              GuardedGestureDetector(
                 onTap: () => Clipboard.setData(ClipboardData(text: detail.value)),
                 child: Icon(
                   Icons.copy,

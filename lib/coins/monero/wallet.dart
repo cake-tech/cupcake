@@ -43,9 +43,10 @@ class MoneroWallet implements CoinWallet {
   int _accountIndex = 0;
   @override
   int getAccountsCount() => wallet.numSubaddressAccounts();
+
   @override
   void setAccount(final int accountIndex) {
-    if (_accountIndex < getAccountsCount()) {
+    if (accountIndex >= getAccountsCount()) {
       throw Exception(Coin.L.error_account_index_higher_than_count);
     }
     _accountIndex = accountIndex;

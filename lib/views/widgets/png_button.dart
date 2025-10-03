@@ -1,3 +1,4 @@
+import 'package:cupcake/views/widgets/guarded_gesture_detector.dart';
 import 'package:flutter/material.dart';
 
 class PngButton extends StatefulWidget {
@@ -9,7 +10,7 @@ class PngButton extends StatefulWidget {
   });
   final Widget pngAsset;
   final Widget pressedPngAsset;
-  final VoidCallback onPressed;
+  final Future<void> Function() onPressed;
   @override
   State<PngButton> createState() => _FancyButtonThatWeDontCodeSoWeDoPNGInsteadOhNoWhatState();
 }
@@ -18,7 +19,7 @@ class _FancyButtonThatWeDontCodeSoWeDoPNGInsteadOhNoWhatState extends State<PngB
   bool isPressed = false;
   @override
   Widget build(final BuildContext context) {
-    return GestureDetector(
+    return GuardedGestureDetector(
       onTapDown: (final details) {
         setState(() {
           isPressed = true;
@@ -29,11 +30,11 @@ class _FancyButtonThatWeDontCodeSoWeDoPNGInsteadOhNoWhatState extends State<PngB
           isPressed = false;
         });
       },
-      onTap: () {
+      onTap: () async {
         setState(() {
           isPressed = false;
         });
-        widget.onPressed();
+        await widget.onPressed();
       },
       child: SizedBox(
         width: 95,

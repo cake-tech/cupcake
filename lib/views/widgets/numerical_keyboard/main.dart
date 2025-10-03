@@ -13,8 +13,8 @@ class NumericalKeyboard extends StatefulWidget {
   });
   final TextEditingController ctrl;
   final bool Function() showConfirm;
-  final VoidCallback? nextPage;
-  final VoidCallback? onConfirmLongPress;
+  final Future<void> Function()? nextPage;
+  final Future<void> Function()? onConfirmLongPress;
   final bool showComma;
 
   @override
@@ -22,7 +22,7 @@ class NumericalKeyboard extends StatefulWidget {
 }
 
 class _NumericalKeyboardState extends State<NumericalKeyboard> {
-  void rebuild() {
+  Future<void> rebuild() async {
     setState(() {});
   }
 

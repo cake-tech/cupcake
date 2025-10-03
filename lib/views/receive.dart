@@ -3,6 +3,7 @@ import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/utils/formatter_address.dart';
 import 'package:cupcake/view_model/receive_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
+import 'package:cupcake/views/widgets/guarded_gesture_detector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -28,7 +29,7 @@ class Receive extends AbstractView {
 
   Widget? _body(final BuildContext context) {
     if (viewModel.isFullPage) {
-      return GestureDetector(
+      return GuardedGestureDetector(
         onTap: _toggleFullPage,
         child: Column(
           children: [
@@ -39,7 +40,7 @@ class Receive extends AbstractView {
                 borderRadius: BorderRadius.circular(30.0),
                 color: Colors.white,
               ),
-              child: GestureDetector(
+              child: GuardedGestureDetector(
                 onTap: _toggleFullPage,
                 child: QrImageView(
                   data: "${viewModel.uriScheme}:${viewModel.address}",
@@ -73,7 +74,7 @@ class Receive extends AbstractView {
                 borderRadius: BorderRadius.circular(30.0),
                 color: Colors.white,
               ),
-              child: GestureDetector(
+              child: GuardedGestureDetector(
                 onTap: _toggleFullPage,
                 child: QrImageView(
                   data: "${viewModel.uriScheme}:${viewModel.address}",
@@ -127,7 +128,7 @@ class Receive extends AbstractView {
     );
   }
 
-  void _toggleFullPage() {
+  Future<void> _toggleFullPage() async {
     viewModel.isFullPage = !viewModel.isFullPage;
   }
 }

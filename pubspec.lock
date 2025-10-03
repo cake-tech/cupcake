@@ -72,6 +72,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.31.3"
+  blockchain_utils:
+    dependency: "direct main"
+    description:
+      name: blockchain_utils
+      sha256: edc360f7f2a8978d089a34dd62a5dfad303c79260e5f6207e1709fed80c84334
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.0"
   boolean_selector:
     dependency: transitive
     description:

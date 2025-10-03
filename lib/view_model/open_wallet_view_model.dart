@@ -67,6 +67,7 @@ abstract class OpenWalletViewModelBase extends ViewModel with Store {
         CupcakeConfig.instance.lastWallet = coinWalletInfo;
         CupcakeConfig.instance.save();
         await WalletHome(coinWallet: wallet).push(c!);
+        await walletPassword.clear();
       },
       L.opening_wallet,
     );
