@@ -1,8 +1,8 @@
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/config.dart';
+import 'package:cupcake/views/about_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 class AboutWidget extends StatefulWidget {
   const AboutWidget({super.key});
@@ -13,17 +13,8 @@ class AboutWidget extends StatefulWidget {
 
 class _AboutWidgetState extends State<AboutWidget> {
   Future<void> showWidget(final BuildContext context) async {
-    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-    final String appName = packageInfo.appName;
-    final String version = packageInfo.version;
-    final String buildNumber = packageInfo.buildNumber;
     if (!context.mounted) return;
-    showAboutDialog(
-      context: context,
-      applicationName: appName,
-      applicationVersion: "$version+$buildNumber",
-    );
+    await AboutScreen().push(context);
   }
 
   List<String?> easterEgg = [
