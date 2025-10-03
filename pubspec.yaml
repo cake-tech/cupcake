@@ -44,6 +44,7 @@ dependencies:
   path_provider: ^2.1.5
   path_provider_android: ^2.2.12
   qr_flutter: ^4.1.0
+  url_launcher: ^6.3.0
   fast_scanner:
     git:
       url: https://github.com/MrCyjaneK/fast_scanner
@@ -166,6 +167,11 @@ flutter:
     - assets/drawer_icons/wallets.svg
     - assets/drawer_icons/export_key_images.svg
     - assets/wallet_pill.png
+    - assets/icons/cupcake_cake_airgap.webp
+    - assets/icons/cupcake_cake_qr.webp
+    - assets/icons/secure_storage.webp
+    - assets/icons/tiny_cake_labs.svg
+    - assets/icons/cupcake_about.svg
 
   fonts:
     - family: Lato
