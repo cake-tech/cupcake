@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 
 class GuardedGestureDetector extends StatefulWidget {
@@ -12,13 +14,13 @@ class GuardedGestureDetector extends StatefulWidget {
     this.onTapCancel,
   });
 
-  final Future<void> Function()? onTap;
-  final Future<void> Function()? onLongPress;
+  final FutureOr<void> Function()? onTap;
+  final FutureOr<void> Function()? onLongPress;
   final Widget child;
-  final Function(DragUpdateDetails)? onPanUpdate;
-  final Function(DragEndDetails)? onPanEnd;
-  final Function(TapDownDetails)? onTapDown;
-  final Function()? onTapCancel;
+  final FutureOr<void> Function(DragUpdateDetails)? onPanUpdate;
+  final FutureOr<void> Function(DragEndDetails)? onPanEnd;
+  final FutureOr<void> Function(TapDownDetails)? onTapDown;
+  final FutureOr<void> Function()? onTapCancel;
 
   @override
   State<GuardedGestureDetector> createState() => _GuardedGestureDetectorState();
