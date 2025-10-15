@@ -5,6 +5,8 @@ on: [push]
 jobs:
     app_android:
         runs-on: ubuntu-latest
+        env:
+            ANDROID_NDK_VERSION: 28.2.13676358
         steps:
             - uses: actions/checkout@v4
               with:
@@ -20,14 +22,17 @@ jobs:
               with:
                 distribution: 'zulu'
                 java-version: '17'
+            - name: Git submodule update
+              run: |
+                git submodule update --init --recursive
+            - name: Build monero_c
+              run: |
+                make libs_android_download
             - name: Flutter pub get
               run: |
                 flutter pub get
             - name: Prepare dev
-              run: ./.tooling/prepare_dev.sh
-            - name: Build monero_c
-              run: |
-                make libs_android_download
+              run: make prepare_dev
             - name: Build apk
               run: |
                 flutter build apk --profile

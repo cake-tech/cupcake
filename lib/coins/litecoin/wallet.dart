@@ -57,10 +57,14 @@ class LitecoinWallet implements CoinWallet {
     required final String seed,
     required final String walletName,
   }) {
-    final wpkhHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed), Bip44Conf.litecoinMainNet.altKeyNetVer).derivePath("m/84'/2'/0'") as Bip32Slip10Secp256k1;
-    final mwebHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed)).derivePath("m/1000'/2'/0'") as Bip32Slip10Secp256k1;
+    CwMweb.nodeUriOverride = "http://::1:80";
 
-    CwMweb.stub();
+    final wpkhHd = Bip32Slip10Secp256k1.fromSeed(
+      bip39.mnemonicToSeed(seed),
+      Bip44Conf.litecoinMainNet.altKeyNetVer,
+    ).derivePath("m/84'/2'/0'") as Bip32Slip10Secp256k1;
+    final mwebHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed))
+        .derivePath("m/1000'/2'/0'") as Bip32Slip10Secp256k1;
 
     final pubkeyMap = PubkeyIndexMap(wpkhHd);
     pubkeyMap.topupExternal();
@@ -90,7 +94,8 @@ class LitecoinWallet implements CoinWallet {
 
   List<int> get scanSecret => mwebHd.childKey(Bip32KeyIndex(0x80000000)).privateKey.privKey.raw;
   List<int> get spendSecret => mwebHd.childKey(Bip32KeyIndex(0x80000001)).privateKey.privKey.raw;
-  List<int> get spendPubkey => mwebHd.childKey(Bip32KeyIndex(0x80000001)).publicKey.pubKey.compressed;
+  List<int> get spendPubkey =>
+      mwebHd.childKey(Bip32KeyIndex(0x80000001)).publicKey.pubKey.compressed;
 
   @override
   List<String> get connectCakeWalletQRCode => [publicUri.toString()];
@@ -127,8 +132,8 @@ class LitecoinWallet implements CoinWallet {
   @override
   String get getCurrentAddress {
     return getCurrentMwebAddress;
-    final hd = wpkhHd.derivePath("0/0");
-    return ECPublic.fromBip32(hd.publicKey).toP2wpkhAddress().toAddress(LitecoinNetwork.mainnet);
+    // final hd = wpkhHd.derivePath("0/0");
+    // return ECPublic.fromBip32(hd.publicKey).toP2wpkhAddress().toAddress(LitecoinNetwork.mainnet);
   }
 
   String get getCurrentMwebAddress {
@@ -155,11 +160,13 @@ class LitecoinWallet implements CoinWallet {
           confirmCallback: (final BuildContext context) async {
             Uint8List sourceBytes;
             try {
-              var resp2 = await CwMweb.psbtSign(PsbtSignRequest(
-                psbtB64: psbtB64,
-                scanSecret: scanSecret,
-                spendSecret: spendSecret,
-              ));
+              var resp2 = await CwMweb.psbtSign(
+                PsbtSignRequest(
+                  psbtB64: psbtB64,
+                  scanSecret: scanSecret,
+                  spendSecret: spendSecret,
+                ),
+              );
               for (int i = 0; i < resp.inputAddress.length; i++) {
                 late LitecoinAddress address;
                 try {
@@ -187,7 +194,9 @@ class LitecoinWallet implements CoinWallet {
                   }
                 }
                 if (key != null) {
-                  resp2 = await CwMweb.psbtSignNonMweb(PsbtSignNonMwebRequest(psbtB64: resp2.psbtB64, privKey: key.raw, index: i));
+                  resp2 = await CwMweb.psbtSignNonMweb(
+                    PsbtSignNonMwebRequest(psbtB64: resp2.psbtB64, privKey: key.raw, index: i),
+                  );
                 }
               }
               sourceBytes = base64.decode(resp2.psbtB64);
@@ -266,15 +275,15 @@ class LitecoinWallet implements CoinWallet {
   String get xpub => wpkhHd.publicKey.toExtended;
 
   Uri get publicUri => Uri(
-    scheme: "litecoin",
-    queryParameters: {
-      // "path": wallet.derivationPath,
-      "label": p.basename(walletName),
-      "xpub": xpub,
-      "scan_secret": hex.encode(scanSecret),
-      "spend_pubkey": hex.encode(spendPubkey),
-    },
-  );
+        scheme: "litecoin",
+        queryParameters: {
+          // "path": wallet.derivationPath,
+          "label": p.basename(walletName),
+          "xpub": xpub,
+          "scan_secret": hex.encode(scanSecret),
+          "spend_pubkey": hex.encode(spendPubkey),
+        },
+      );
 
   @override
   void setAccount(final int newAccountIndex) {}

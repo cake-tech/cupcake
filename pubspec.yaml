@@ -80,14 +80,17 @@ dependencies:
       url: https://github.com/mrcyjanek/applock
       ref: 77cc90a7ae3c0c0969afe82df5a9d04cc0387d8d
   haptic_feedback: ^0.5.1+1
-  blockchain_utils: ^5.2.0
   cw_mweb:
-    path: cw_mweb
+    path: ./external/cake_wallet/cw_mweb
   bip39: ^1.0.6
   bitcoin_base:
     git:
       url: https://github.com/cake-tech/bitcoin_base
-      ref: cake-update-v16
+      ref: cake-update-v11
+  blockchain_utils:
+    git:
+      url: https://github.com/cake-tech/blockchain_utils
+      ref: 59fdf29d72068e0522a96a8953ed7272833a9f57
 
 dev_dependencies:
   flutter_test:
@@ -112,6 +115,14 @@ dev_dependencies:
 dependency_overrides:
   web: ^0.5.0
   intl: 0.20.2
+  bitcoin_base:
+    git:
+      url: https://github.com/cake-tech/bitcoin_base
+      ref: cake-update-v16
+  blockchain_utils:
+    git:
+      url: https://github.com/cake-tech/blockchain_utils
+      ref: cake-update-v4
 
 analyzer:
   exclude:

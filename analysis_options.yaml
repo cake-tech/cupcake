@@ -5,6 +5,8 @@ analyzer:
     overridden_fields: ignore
   exclude:
     - '**.g.dart'
+    - 'external/**'
+
 include: package:flutter_lints/flutter.yaml
 
 linter:

@@ -44,8 +44,8 @@ class LitecoinWalletInfo extends CoinWalletInfo {
   Coins get type => coin.type;
 
   @override
-  void openUI(final BuildContext context) {
-    OpenWallet(coinWalletInfo: this, enableBiometric: false).push(context);
+  Future<void> openUI(final BuildContext context) {
+    return OpenWallet(coinWalletInfo: this, enableBiometric: false).push(context);
   }
 
   @override
