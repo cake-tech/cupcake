@@ -96,6 +96,7 @@ class BitcoinWalletCreation extends WalletCreation {
     await Future.delayed(Duration.zero); // do not call on build();
     seed.ctrl.clear();
     passphrase.ctrl.clear();
+    passphraseConfirm.ctrl.clear();
   }
 
   @override

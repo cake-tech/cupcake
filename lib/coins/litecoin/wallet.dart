@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:bitcoin_base/bitcoin_base.dart';
+import 'package:bitcoin_base/bitcoin_base.dart' hide LitecoinAddress;
+import 'package:bitcoin_base/bitcoin_base.dart' as bb show LitecoinAddress;
 import 'package:blockchain_utils/blockchain_utils.dart';
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
@@ -55,12 +56,13 @@ class PubkeyIndexMap {
 class LitecoinWallet implements CoinWallet {
   factory LitecoinWallet({
     required final String seed,
+    required final String passphrase,
     required final String walletName,
   }) {
     CwMweb.nodeUriOverride = "http://::1:80";
 
     final wpkhHd = Bip32Slip10Secp256k1.fromSeed(
-      bip39.mnemonicToSeed(seed),
+      bip39.mnemonicToSeed(seed, passphrase: passphrase),
       Bip44Conf.litecoinMainNet.altKeyNetVer,
     ).derivePath("m/84'/2'/0'") as Bip32Slip10Secp256k1;
     final mwebHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed))
@@ -147,9 +149,9 @@ class LitecoinWallet implements CoinWallet {
         final psbtB64 = ur.base64;
         final resp = await CwMweb.psbtGetRecipients(PsbtGetRecipientsRequest(psbtB64: psbtB64));
 
-        final Map<LitecoinAddress2, LitecoinAmount> destMap = {};
+        final Map<LitecoinAddress, LitecoinAmount> destMap = {};
         for (final recipient in resp.recipient) {
-          destMap[LitecoinAddress2(recipient.address)] = LitecoinAmount(recipient.value.toInt());
+          destMap[LitecoinAddress(recipient.address)] = LitecoinAmount(recipient.value.toInt());
         }
         if (!context.mounted) return;
 
@@ -168,9 +170,9 @@ class LitecoinWallet implements CoinWallet {
                 ),
               );
               for (int i = 0; i < resp.inputAddress.length; i++) {
-                late LitecoinAddress address;
+                late bb.LitecoinAddress address;
                 try {
-                  address = LitecoinAddress(resp.inputAddress[i]);
+                  address = bb.LitecoinAddress(resp.inputAddress[i]);
                 } catch (_) {
                   continue;
                 }

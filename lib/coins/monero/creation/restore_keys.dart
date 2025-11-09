@@ -15,11 +15,9 @@ class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
     required this.secretSpendKey,
     required this.secretViewKey,
     required this.restoreHeight,
-    this.progressCallback,
   });
 
   final AppLocalizations L;
-  final ProgressCallback? progressCallback;
   final String walletPath;
   final String walletPassword;
   final String walletAddress;
@@ -29,7 +27,6 @@ class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
 
   @override
   Future<CreationOutcome> create() async {
-    progressCallback?.call(description: L.creating_wallet);
     Wallet2Wallet newWptr;
     if (secretViewKey.isNotEmpty) {
       newWptr = Monero.wm.createWalletFromKeys(
@@ -50,7 +47,6 @@ class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
         restoreHeight: restoreHeight,
       );
     }
-    progressCallback?.call(description: L.checking_status);
     int status = newWptr.status();
     if (status != 0) {
       // Fallback to createDeterministicWallet in case when createWalletFromKeys didn't work.
@@ -75,7 +71,6 @@ class RestoreFromKeysMoneroWalletCreationMethod extends CreationMethod {
     }
     newWptr.store();
     newWptr.store();
-    progressCallback?.call(description: L.wallet_created);
     final wallet = await Monero().openWallet(
       MoneroWalletInfo(p.basename(walletPath)),
       password: walletPassword,

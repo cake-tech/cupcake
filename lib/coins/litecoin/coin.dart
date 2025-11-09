@@ -63,9 +63,12 @@ class Litecoin implements Coin {
     required final String password,
   }) async {
     final encrypted = File("${walletInfo.walletName}.keys").readAsBytesSync();
-    final mnemonic = DefaultEncryption().decryptString(encrypted, password);
+    final data = DefaultEncryption().decryptString(encrypted, password);
+    final mnemonic = data.split(";")[0];
+    final passphrase = data.contains(";") ? data.substring(data.indexOf(";") + 1) : "";
     return LitecoinWallet(
       seed: mnemonic,
+      passphrase: passphrase,
       walletName: walletInfo.walletName,
     );
   }

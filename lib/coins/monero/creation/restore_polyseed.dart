@@ -14,11 +14,9 @@ class RestorePolyseedMoneroWalletCreationMethod extends CreationMethod {
     required this.walletPassword,
     required this.seed,
     required this.seedOffsetOrEncryption,
-    this.progressCallback,
   });
   final AppLocalizations L;
 
-  final ProgressCallback? progressCallback;
   final String walletPath;
   final String walletPassword;
   String seed;
@@ -26,7 +24,6 @@ class RestorePolyseedMoneroWalletCreationMethod extends CreationMethod {
 
   @override
   Future<CreationOutcome> create() async {
-    progressCallback?.call(description: L.restoring_wallet);
     final lang = PolyseedLang.getByPhrase(seed);
     const coin = PolyseedCoin.POLYSEED_MONERO;
     final dartPolyseed = Polyseed.decode(seed, lang, coin);
@@ -53,7 +50,6 @@ class RestorePolyseedMoneroWalletCreationMethod extends CreationMethod {
       kdfRounds: 1,
     );
     Monero.wPtrList.add(newWptr);
-    progressCallback?.call(description: L.checking_status);
     final status = newWptr.status();
     if (status != 0) {
       final error = newWptr.errorString();
@@ -69,7 +65,6 @@ class RestorePolyseedMoneroWalletCreationMethod extends CreationMethod {
     );
     newWptr.store();
     newWptr.store();
-    progressCallback?.call(description: L.wallet_created);
     final wallet = await Monero().openWallet(
       MoneroWalletInfo(p.basename(walletPath)),
       password: walletPassword,

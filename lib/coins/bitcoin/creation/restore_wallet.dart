@@ -16,12 +16,10 @@ class RestoreBitcoinWalletCreationMethod extends CreationMethod {
     required this.walletPassword,
     required this.seed,
     required this.passphrase,
-    this.progressCallback,
   });
   final coin = Bitcoin();
   final AppLocalizations L;
 
-  final ProgressCallback? progressCallback;
   final String walletPath;
   final String walletPassword;
   final String seed;
@@ -29,7 +27,6 @@ class RestoreBitcoinWalletCreationMethod extends CreationMethod {
 
   @override
   Future<CreationOutcome> create() async {
-    progressCallback?.call(description: L.generating_polyseed);
     // ignore: deprecated_member_use
     final mnemonic = await Mnemonic.fromString(seed);
 

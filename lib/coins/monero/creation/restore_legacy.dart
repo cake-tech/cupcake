@@ -12,11 +12,9 @@ class RestoreLegacyWalletCreationMethod extends CreationMethod {
     required this.walletPassword,
     required this.seed,
     required this.seedOffsetOrEncryption,
-    this.progressCallback,
   });
   final AppLocalizations L;
 
-  final ProgressCallback? progressCallback;
   final String walletPath;
   final String walletPassword;
   String seed;
@@ -24,7 +22,6 @@ class RestoreLegacyWalletCreationMethod extends CreationMethod {
 
   @override
   Future<CreationOutcome> create() async {
-    progressCallback?.call(description: L.creating_wallet);
     final newWptr = Monero.wm.recoveryWallet(
       path: walletPath,
       password: walletPassword,
@@ -34,7 +31,6 @@ class RestoreLegacyWalletCreationMethod extends CreationMethod {
       kdfRounds: 1,
     );
     Monero.wPtrList.add(newWptr);
-    progressCallback?.call(description: L.checking_status);
     final status = newWptr.status();
     if (status != 0) {
       final error = newWptr.errorString();
@@ -46,7 +42,6 @@ class RestoreLegacyWalletCreationMethod extends CreationMethod {
     }
     newWptr.store();
     newWptr.store();
-    progressCallback?.call(description: L.wallet_created);
     final wallet = await Monero().openWallet(
       MoneroWalletInfo(p.basename(walletPath)),
       password: walletPassword,

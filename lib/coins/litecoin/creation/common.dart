@@ -36,8 +36,32 @@ class LitecoinWalletCreation extends WalletCreation {
     canPaste: true,
   );
 
-  late List<FormElement> createForm = [];
-  late List<FormElement> restoreForm = [seed];
+  late StringFormElement passphrase = StringFormElement(
+    L.wallet_passphrase,
+    password: false,
+    validator: nonEmptyValidator(
+      L,
+      extra: (final input) => null,
+    ),
+    errorHandler: errorHandler,
+    canPaste: true,
+    isExtra: true,
+  );
+
+  late StringFormElement passphraseConfirm = StringFormElement(
+    L.wallet_passphrase,
+    password: false,
+    validator: nonEmptyValidator(
+      L,
+      extra: (final input) => input != passphrase.ctrl.text ? L.seed_passphrase_mismatch : null,
+    ),
+    errorHandler: errorHandler,
+    canPaste: true,
+    isExtra: true,
+  );
+
+  late List<FormElement> createForm = [passphrase, passphraseConfirm];
+  late List<FormElement> restoreForm = [passphrase, seed];
 
   @override
   Future<CreationOutcome?> create(
@@ -45,16 +69,23 @@ class LitecoinWalletCreation extends WalletCreation {
     final String walletName,
     final String walletPassword,
   ) async {
+    if (createMethod == CreateMethod.create &&
+        (await passphrase.value != await passphraseConfirm.value)) {
+      throw Exception("Passphrase doesn't match");
+    }
     return switch (createMethod) {
       CreateMethod.create => CreateLitecoinWalletCreationMethod(
           L,
           walletPath: coin.getPathForWallet(walletName),
           walletPassword: walletPassword,
+          passphrase: await passphrase.value,
+          passphraseConfirm: await passphrase.value,
         ).create(),
       CreateMethod.restore => RestoreLitecoinWalletCreationMethod(
           L,
           walletPath: coin.getPathForWallet(walletName),
           walletPassword: walletPassword,
+          passphrase: await passphrase.value,
           seed: await seed.value,
         ).create(),
     };
@@ -76,7 +107,12 @@ class LitecoinWalletCreation extends WalletCreation {
       };
 
   @override
-  void wipe() {}
+  Future<void> wipe() async {
+    await Future.delayed(Duration.zero); // do not call on build();
+    seed.ctrl.clear();
+    passphrase.ctrl.clear();
+    passphraseConfirm.ctrl.clear();
+  }
 
   @override
   Coin get coin => Litecoin();

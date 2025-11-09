@@ -14,23 +14,28 @@ class CreateLitecoinWalletCreationMethod extends CreationMethod {
     this.L, {
     required this.walletPath,
     required this.walletPassword,
-    this.progressCallback,
+    required this.passphrase,
+    required this.passphraseConfirm,
   });
   final coin = Litecoin();
   final AppLocalizations L;
 
-  final ProgressCallback? progressCallback;
   final String walletPath;
   final String walletPassword;
+  final String passphrase;
+  final String passphraseConfirm;
 
   @override
   Future<CreationOutcome> create() async {
-    progressCallback?.call(description: L.generating_polyseed);
+    if (passphrase != passphraseConfirm) {
+      throw Exception("Passphrase doesn't match");
+    }
     // ignore: deprecated_member_use
     final mnemonic = bip39.generateMnemonic(strength: 128);
 
     final keys = "${Litecoin().getPathForWallet(p.basename(walletPath))}.keys";
-    final keysEncrypted = DefaultEncryption().encryptString(mnemonic, walletPassword);
+    final keysEncrypted =
+        DefaultEncryption().encryptString("$mnemonic:$passphrase", walletPassword);
     File(keys).writeAsBytesSync(keysEncrypted);
 
     return CreationOutcome(
@@ -38,6 +43,7 @@ class CreateLitecoinWalletCreationMethod extends CreationMethod {
       success: true,
       wallet: LitecoinWallet(
         seed: mnemonic,
+        passphrase: passphrase,
         walletName: p.basename(walletPath),
       ),
     );
