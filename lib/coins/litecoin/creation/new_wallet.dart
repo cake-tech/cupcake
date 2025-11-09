@@ -35,7 +35,7 @@ class CreateLitecoinWalletCreationMethod extends CreationMethod {
 
     final keys = "${Litecoin().getPathForWallet(p.basename(walletPath))}.keys";
     final keysEncrypted =
-        DefaultEncryption().encryptString("$mnemonic:$passphrase", walletPassword);
+        DefaultEncryption().encryptString("$mnemonic;$passphrase", walletPassword);
     File(keys).writeAsBytesSync(keysEncrypted);
 
     return CreationOutcome(
