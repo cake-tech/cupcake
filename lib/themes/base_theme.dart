@@ -51,6 +51,8 @@ class BaseTheme {
       onPrimary: Color(0xff002860),
       surface: Color(0xff233461),
       onSecondaryContainer: Color(0xffBACBFF),
+      surfaceContainer: Color(0xff233461),
+      surfaceContainerHigh: Color(0xff2A3E73),
       onSurface: Color(0xffD7E2F7),
       onSurfaceVariant: Color(0xff8C9FBB),
       surfaceContainerHighest: Color(0xff334C8C),

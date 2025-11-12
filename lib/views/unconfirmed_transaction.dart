@@ -110,7 +110,7 @@ class UnconfirmedTransactionView {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                viewModel.wallet.coin.strings.svg.svg(),
+                viewModel.wallet.coin.strings.svg.svg(height: 32),
                 const SizedBox(width: 8),
                 Text(
                   L.confirm_transaction,

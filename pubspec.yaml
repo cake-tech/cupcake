@@ -149,6 +149,9 @@ flutter:
     - assets/coins/ltc.svg
     - assets/coins/xmr.svg
     - assets/background_for_wallethome.png
+    - assets/icons/address_ltc.svg
+    - assets/icons/address_mweb.svg
+    - assets/icons/arrow_down.svg
     - assets/icons/wallet_selection_button.png
     - assets/icons/icon-white.svg
     - assets/icons/dot_up.png

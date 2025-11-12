@@ -176,14 +176,17 @@ class UIPlayground extends AbstractView {
       "UnconfirmedTransaction(single)": () => UnconfirmedTransactionView(
             wallet: viewModel.wallet,
             fee: Amount(0),
-            destMap: {Address("test"): Amount(0)},
+            destMap: {Address(UnknownLabel(), "test"): Amount(0)},
             confirmCallback: (final BuildContext context) => {_alert(context, "confirmCallback")},
             cancelCallback: (final BuildContext context) => _alert(context, "cancelCallback"),
           ).pushReplacement(context),
       "UnconfirmedTransaction(multi)": () => UnconfirmedTransactionView(
             wallet: viewModel.wallet,
             fee: Amount(0),
-            destMap: {Address("test"): Amount(0), Address("test2"): Amount(1)},
+            destMap: {
+              Address(UnknownLabel(), "test"): Amount(0),
+              Address(UnknownLabel(), "test2"): Amount(1),
+            },
             confirmCallback: (final BuildContext context) => {_alert(context, "confirmCallback")},
             cancelCallback: (final BuildContext context) => _alert(context, "cancelCallback"),
           ).pushReplacement(context),

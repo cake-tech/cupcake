@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:bitcoin_base/bitcoin_base.dart' hide LitecoinAddress;
 import 'package:bitcoin_base/bitcoin_base.dart' as bb show LitecoinAddress;
 import 'package:blockchain_utils/blockchain_utils.dart';
+import 'package:cupcake/coins/abstract/address.dart';
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_info.dart';
@@ -65,8 +66,8 @@ class LitecoinWallet implements CoinWallet {
       bip39.mnemonicToSeed(seed, passphrase: passphrase),
       Bip44Conf.litecoinMainNet.altKeyNetVer,
     ).derivePath("m/84'/2'/0'") as Bip32Slip10Secp256k1;
-    final mwebHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed))
-        .derivePath("m/1000'/2'/0'") as Bip32Slip10Secp256k1;
+    final mwebHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed)).derivePath("m/1000'")
+        as Bip32Slip10Secp256k1;
 
     final pubkeyMap = PubkeyIndexMap(wpkhHd);
     pubkeyMap.topupExternal();
@@ -131,14 +132,12 @@ class LitecoinWallet implements CoinWallet {
     return (balance / 1e8).toStringAsFixed(8);
   }
 
-  @override
-  String get getCurrentAddress {
-    return getCurrentMwebAddress;
-    // final hd = wpkhHd.derivePath("0/0");
-    // return ECPublic.fromBip32(hd.publicKey).toP2wpkhAddress().toAddress(LitecoinNetwork.mainnet);
+  String get getSegwitAddress {
+    final hd = wpkhHd.derivePath("0/0");
+    return ECPublic.fromBip32(hd.publicKey).toP2wpkhAddress().toAddress(LitecoinNetwork.mainnet);
   }
 
-  String get getCurrentMwebAddress {
+  String get getMwebAddress {
     return CwMweb.address(Uint8List.fromList(scanSecret), Uint8List.fromList(spendPubkey), 1)!;
   }
 
@@ -151,7 +150,8 @@ class LitecoinWallet implements CoinWallet {
 
         final Map<LitecoinAddress, LitecoinAmount> destMap = {};
         for (final recipient in resp.recipient) {
-          destMap[LitecoinAddress(recipient.address)] = LitecoinAmount(recipient.value.toInt());
+          destMap[LitecoinAddress(UnknownLabel(), recipient.address)] =
+              LitecoinAmount(recipient.value.toInt());
         }
         if (!context.mounted) return;
 
@@ -238,7 +238,10 @@ class LitecoinWallet implements CoinWallet {
   String get passphrase => "";
 
   @override
-  String get primaryAddress => getCurrentAddress;
+  List<Address> get address => [
+        LitecoinAddress(MwebAddressLabel(), getMwebAddress),
+        LitecoinAddress(LTCSegwitAddressLabel(), getSegwitAddress),
+      ];
 
   @override
   final String seed;
