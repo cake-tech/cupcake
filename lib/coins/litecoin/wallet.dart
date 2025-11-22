@@ -38,14 +38,14 @@ class PubkeyIndexMap {
 
   void topupExternal({final int count = 100}) {
     for (int i = nextExternalIndex; i < nextExternalIndex + count; i++) {
-      externalMap[ECPublic.fromBip32(root.derivePath("0/$i").publicKey).toHash160Hex()] = i;
+      externalMap[ECPublic.fromBip32(root.derivePath("0/$i").publicKey).toHash160()] = i;
     }
     nextExternalIndex += count;
   }
 
   void topupChange({final int count = 100}) {
     for (int i = nextChangeIndex; i < nextChangeIndex + count; i++) {
-      changeMap[ECPublic.fromBip32(root.derivePath("1/$i").publicKey).toHash160Hex()] = i;
+      changeMap[ECPublic.fromBip32(root.derivePath("1/$i").publicKey).toHash160()] = i;
     }
     nextChangeIndex += count;
   }

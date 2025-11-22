@@ -114,6 +114,10 @@ dev_dependencies:
 dependency_overrides:
   web: ^0.5.0
   intl: 0.20.2
+  bdk_flutter:
+    git:
+      url: https://github.com/StaxoLotl/bdk-flutter/
+      ref: cfa95443f11e75625c5f7de986b1cc64b682ed3f
 
 analyzer:
   exclude:
