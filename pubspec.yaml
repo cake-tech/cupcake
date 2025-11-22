@@ -214,4 +214,7 @@ flutter_launcher_icons:
   android: "ic_launcher"
 
   ios: true
+  image_path_ios: "assets/icons/app_icon.png"
+  image_path_ios_dark_transparent: "assets/icons/app_icon_dark.png"
+  image_path_ios_tinted_grayscale: "assets/icons/app_icon_tinted.png"
   remove_alpha_ios: true
