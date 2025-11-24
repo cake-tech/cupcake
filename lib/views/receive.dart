@@ -116,7 +116,7 @@ class Receive extends AbstractView {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox.square(
-              dimension: 32,
+              dimension: 24,
               child: viewModel.address.label.icon(T.colorScheme.primary),
             ),
             Text(
