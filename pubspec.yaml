@@ -2,7 +2,7 @@ name: cupcake
 description: "Keep your crypto even safer"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.3+7
 
 environment:
-  sdk: '>=3.3.4 <4.0.0'
+  sdk: ">=3.3.4 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -30,7 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -80,7 +79,17 @@ dependencies:
       url: https://github.com/mrcyjanek/applock
       ref: 77cc90a7ae3c0c0969afe82df5a9d04cc0387d8d
   haptic_feedback: ^0.5.1+1
-  blockchain_utils: ^5.2.0
+  cw_mweb:
+    path: ./external/cake_wallet/cw_mweb
+  bip39: ^1.0.6
+  bitcoin_base:
+    git:
+      url: https://github.com/cake-tech/bitcoin_base
+      ref: cake-update-v11
+  blockchain_utils:
+    git:
+      url: https://github.com/cake-tech/blockchain_utils
+      ref: cake-update-v2
 
 dev_dependencies:
   flutter_test:
@@ -104,6 +113,11 @@ dev_dependencies:
 
 dependency_overrides:
   web: ^0.5.0
+  intl: 0.20.2
+  bdk_flutter:
+    git:
+      url: https://github.com/StaxoLotl/bdk-flutter/
+      ref: cfa95443f11e75625c5f7de986b1cc64b682ed3f
 
 analyzer:
   exclude:
@@ -128,8 +142,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/coins/btc.svg
+    - assets/coins/ltc.svg
     - assets/coins/xmr.svg
     - assets/background_for_wallethome.png
+    - assets/icons/address_ltc.svg
+    - assets/icons/address_mweb.svg
+    - assets/icons/arrow_down.svg
     - assets/icons/wallet_selection_button.png
     - assets/icons/icon-white.svg
     - assets/icons/dot_up.png

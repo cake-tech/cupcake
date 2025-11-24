@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bdk_flutter/bdk_flutter.dart';
+import 'package:cupcake/coins/abstract/address.dart' hide Address;
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_info.dart';
@@ -105,9 +106,6 @@ class BitcoinWallet implements CoinWallet {
   }
 
   @override
-  String get getCurrentAddress => wallet.currentAddress;
-
-  @override
   Future<void> handleUR(final BuildContext context, final URQRData ur) async {
     switch (ur.tag) {
       case 'psbt' || '':
@@ -131,7 +129,8 @@ class BitcoinWallet implements CoinWallet {
             script: script,
             network: Network.bitcoin,
           );
-          destMap[BitcoinAddress(address.toString())] = BitcoinAmount(out.value.toInt());
+          destMap[BitcoinAddress(UnknownLabel(), address.toString())] =
+              BitcoinAmount(out.value.toInt());
         }
         if (!context.mounted) return;
 
@@ -158,7 +157,7 @@ class BitcoinWallet implements CoinWallet {
               currentWallet: this,
             ).pushReplacement(context);
           },
-          cancelCallback: () => Navigator.of(context).pop(),
+          cancelCallback: (final BuildContext context) => Navigator.of(context).pop(),
         ).pushReplacement(context);
         break;
       default:
@@ -176,7 +175,9 @@ class BitcoinWallet implements CoinWallet {
   final String passphrase;
 
   @override
-  String get primaryAddress => wallet.currentAddress;
+  List<BitcoinAddress> get address => [
+        BitcoinAddress(SegwitAddress(), wallet.currentAddress),
+      ];
 
   @override
   final String seed;

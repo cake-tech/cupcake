@@ -2,6 +2,7 @@
   "about_the_app": "About Cupcake",
   "add_passphrase": "Add passphrase",
   "address_book": "Address book",
+  "address_type": "Address Type",
   "advanced_options": "Advanced Options",
   "all_key_images": "All key images",
   "animated_qr_note": "Scan this animated QR code from Cake Wallet to finish sending the transaction.\n\nTap “Continue” on Cake Wallet to scan.",

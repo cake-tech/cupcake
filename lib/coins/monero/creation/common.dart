@@ -149,7 +149,6 @@ class MoneroWalletCreation extends WalletCreation {
       }
       return CreateMoneroWalletCreationMethod(
         L,
-        progressCallback: null,
         walletPath: coin.getPathForWallet(walletName),
         walletPassword: walletPassword,
         seedOffsetOrEncryption: await seedOffset.value,

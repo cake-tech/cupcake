@@ -1,3 +1,4 @@
+import 'package:cupcake/coins/abstract/address.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:mobx/mobx.dart';
@@ -13,8 +14,11 @@ abstract class ReceiveViewModelBase extends ViewModel with Store {
   @override
   String get screenName => L.receive;
 
+  @observable
+  int currentAddressOffset = 0;
+
   @computed
-  String get address => wallet.getCurrentAddress;
+  Address get address => wallet.address[currentAddressOffset];
 
   @computed
   String get uriScheme => wallet.coin.uriScheme;

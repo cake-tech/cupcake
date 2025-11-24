@@ -1,3 +1,4 @@
+import 'package:cupcake/coins/abstract/address.dart';
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
@@ -28,13 +29,11 @@ abstract class CoinWallet {
 
   String get getAccountLabel;
 
-  String get getCurrentAddress;
-
   String get seed;
 
   String get passphrase;
 
-  String get primaryAddress;
+  List<Address> get address;
 
   String get walletName;
 
