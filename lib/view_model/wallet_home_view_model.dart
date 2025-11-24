@@ -1,3 +1,4 @@
+import 'package:cupcake/coins/abstract/address.dart';
 import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/view_model/abstract.dart';
@@ -28,7 +29,7 @@ abstract class WalletHomeViewModelBase extends ViewModel with Store {
   String get balance => wallet.getBalanceString();
 
   @computed
-  String get currentAddress => wallet.getCurrentAddress;
+  Address get currentAddress => wallet.address[0];
 
   @action
   Future<void> showScanner() {

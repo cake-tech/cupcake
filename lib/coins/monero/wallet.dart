@@ -64,10 +64,6 @@ class MoneroWallet implements CoinWallet {
       wallet.getSubaddressLabel(accountIndex: _accountIndex, addressIndex: 0);
 
   @override
-  String get getCurrentAddress =>
-      wallet.address(accountIndex: getAccountId(), addressIndex: addressIndex);
-
-  @override
   int getBalance() => wallet.balance(accountIndex: getAccountId());
 
   @override
@@ -128,7 +124,7 @@ class MoneroWallet implements CoinWallet {
           throw CoinException(Coin.L.error_amount_and_address_count_not_equal);
         }
         for (int i = 0; i < amts.length; i++) {
-          destMap[Address(addrs[i])] = MoneroAmount(amts[i]);
+          destMap[Address(UnknownLabel(), addrs[i])] = MoneroAmount(amts[i]);
         }
         final fee = MoneroAmount(int.parse(tx.fee()));
         await UnconfirmedTransactionView(
@@ -152,7 +148,7 @@ class MoneroWallet implements CoinWallet {
               currentWallet: this,
             ).pushReplacement(context);
           },
-          cancelCallback: () => Navigator.of(context).pop(),
+          cancelCallback: (final BuildContext context) => Navigator.of(context).pop(),
         ).pushReplacement(context);
         save();
       default:
@@ -211,18 +207,12 @@ class MoneroWallet implements CoinWallet {
   }
 
   @override
-  String get primaryAddress => wallet.address(
-        accountIndex: 0,
-        addressIndex: 0,
-      );
-
-  @override
   Future<List<WalletSeedDetail>> seedDetails() async {
     return [
       WalletSeedDetail(
         type: WalletSeedDetailType.text,
         name: Coin.L.primary_address_label,
-        value: primaryAddress,
+        value: wallet.address(),
       ),
       if ((polyseed ?? "").isNotEmpty)
         WalletSeedDetail(
@@ -283,11 +273,16 @@ class MoneroWallet implements CoinWallet {
   String get pairQrString => const JsonEncoder.withIndent('   ').convert({
         "label": p.basename(walletName),
         "version": 0,
-        "primaryAddress": primaryAddress,
+        "primaryAddress": wallet.address(),
         "privateViewKey": wallet.secretViewKey(),
         "restoreHeight": wallet.getRefreshFromBlockHeight(),
       });
 
   @override
   CoinWalletInfo get walletInfo => MoneroWalletInfo(walletName);
+
+  @override
+  List<Address> get address => [
+        Address(UnknownLabel(), wallet.address()),
+      ];
 }

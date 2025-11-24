@@ -15,19 +15,16 @@ class CreateBitcoinWalletCreationMethod extends CreationMethod {
     required this.walletPath,
     required this.walletPassword,
     required this.passphrase,
-    this.progressCallback,
   });
   final coin = Bitcoin();
   final AppLocalizations L;
 
-  final ProgressCallback? progressCallback;
   final String walletPath;
   final String walletPassword;
   final String passphrase;
 
   @override
   Future<CreationOutcome> create() async {
-    progressCallback?.call(description: L.generating_polyseed);
     final mnemonic = await Mnemonic.create(WordCount.words12);
 
     final keys = "${Bitcoin().getPathForWallet(p.basename(walletPath))}.keys";
