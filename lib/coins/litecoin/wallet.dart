@@ -239,8 +239,8 @@ class LitecoinWallet implements CoinWallet {
 
   @override
   List<Address> get address => [
-        LitecoinAddress(MwebAddressLabel(), getMwebAddress),
         LitecoinAddress(LTCSegwitAddressLabel(), getSegwitAddress),
+        LitecoinAddress(MwebAddressLabel(), getMwebAddress),
       ];
 
   @override
