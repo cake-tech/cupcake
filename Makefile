@@ -40,10 +40,11 @@ cupcake_ios:
 
 mwebd_android:
 	cd external/cake_wallet/scripts/android && bash ./build_mwebd.sh --dont-install
-	
+
 mwebd_ios:
 	cd external/cake_wallet/scripts/ios && bash ./build_mwebd.sh --dont-install
 
 prepare_dev:
 	cd external/cake_wallet/scripts && bash ./prepare_torch.sh
+	cd external/cake_wallet && flutter pub get
 	./.tooling/prepare_dev.sh
