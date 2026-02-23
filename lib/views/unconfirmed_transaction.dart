@@ -8,6 +8,7 @@ import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/formatter_address.dart';
 import 'package:cupcake/view_model/unconfirmed_transaction_view_model.dart';
 import 'package:cupcake/views/widgets/guarded_gesture_detector.dart';
+import 'package:cupcake/views/widgets/yellow_warning.dart';
 import 'package:flutter/material.dart';
 
 class UnconfirmedTransactionView {
@@ -17,13 +18,17 @@ class UnconfirmedTransactionView {
     required final Map<Address, Amount> destMap,
     required final FutureOr<void> Function(BuildContext context) confirmCallback,
     required final FutureOr<void> Function(BuildContext context) cancelCallback,
+    this.warnings = const [],
   }) : viewModel = UnconfirmedTransactionViewModel(
           wallet: wallet,
           fee: fee,
           destMap: destMap,
+          warnings: warnings,
           confirmCallback: confirmCallback,
           cancelCallback: cancelCallback,
         );
+
+  final List<String> warnings;
 
   final UnconfirmedTransactionViewModel viewModel;
   AppLocalizations get L => viewModel.L;
@@ -138,6 +143,11 @@ class UnconfirmedTransactionView {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          for (final warning in viewModel.warnings)
+            YellowWarning(
+              text: warning,
+              padding: const EdgeInsets.only(bottom: 8),
+            ),
           _buildStandardTile(
             context,
             itemTitle: 'Fee',

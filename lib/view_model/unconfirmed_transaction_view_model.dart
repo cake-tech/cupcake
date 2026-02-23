@@ -17,6 +17,7 @@ abstract class UnconfirmedTransactionViewModelBase extends ViewModel with Store 
     required this.wallet,
     required this.fee,
     required this.destMap,
+    required this.warnings,
     required final FutureOr<void> Function(BuildContext context) confirmCallback,
     required final FutureOr<void> Function(BuildContext context) cancelCallback,
   })  : _confirmCallback = confirmCallback,
@@ -41,4 +42,5 @@ abstract class UnconfirmedTransactionViewModelBase extends ViewModel with Store 
 
   final Amount fee;
   final Map<Address, Amount> destMap;
+  final List<String> warnings;
 }

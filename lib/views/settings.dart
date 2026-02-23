@@ -2,6 +2,7 @@ import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/utils/secure_storage.dart';
 import 'package:cupcake/view_model/settings_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
+import 'package:cupcake/views/debug/coin_test_screen.dart';
 import 'package:cupcake/views/open_wallet.dart';
 import 'package:cupcake/views/ui_playground.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
@@ -109,6 +110,11 @@ class SettingsView extends AbstractView {
           LongPrimaryButton(
             onPressed: () => UIPlayground(wallet: viewModel.wallet).push(context),
             text: "UI Playground",
+          ),
+        if (viewModel.debug)
+          LongPrimaryButton(
+            onPressed: () => CoinTestScreen().push(context),
+            text: "Coin tests",
           ),
         if (viewModel.debug)
           ...List.generate(

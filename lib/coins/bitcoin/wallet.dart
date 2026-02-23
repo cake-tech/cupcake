@@ -10,6 +10,7 @@ import 'package:cupcake/coins/bitcoin/address.dart';
 import 'package:cupcake/coins/bitcoin/amount.dart';
 import 'package:cupcake/coins/bitcoin/coin.dart';
 import 'package:cupcake/coins/bitcoin/wallet_info.dart';
+import 'package:cupcake/utils/psbt.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/views/animated_qr_page.dart';
@@ -43,6 +44,9 @@ class BDKWalletWrapper {
           wallet.sign(
             psbt: psbt,
             signOptions: SignOptions(
+              // Offline signer has no UTXO DB.
+              // Witness utxo is required to sign.
+              // Fee display warns when input amounts cannot be cross-checked.
               trustWitnessUtxo: true,
               allowAllSighashes: true,
               removePartialSigs: false,
@@ -138,6 +142,7 @@ class BitcoinWallet implements CoinWallet {
           wallet: this,
           destMap: destMap,
           fee: BitcoinAmount(psbt.feeAmount()?.toInt() ?? -1),
+          warnings: psbtConfirmationWarnings(psbt.serialize()),
           confirmCallback: (final BuildContext context) async {
             final status = await wallet.sign(psbt: psbt);
             if (!status) throw Exception("Failed to sign");

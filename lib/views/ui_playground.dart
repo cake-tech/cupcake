@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cupcake/coins/abstract/amount.dart';
 import 'package:cupcake/coins/abstract/address.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
+import 'package:cupcake/coins/debug/fixtures.dart';
 import 'package:cupcake/utils/alerts/basic.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/utils/new_wallet/info_page.dart';
+import 'package:cupcake/utils/psbt.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/view_model/create_wallet_view_model.dart';
 import 'package:cupcake/view_model/ui_playground_view_model.dart';
@@ -190,6 +193,7 @@ class UIPlayground extends AbstractView {
             confirmCallback: (final BuildContext context) => {_alert(context, "confirmCallback")},
             cancelCallback: (final BuildContext context) => _alert(context, "cancelCallback"),
           ).pushReplacement(context),
+      "UnconfirmedTransaction(SIGHASH_NONE warning)": () => _showSighashNoneConfirm(context),
       "VerifySeed(seedWords: 12, wordList: (4, 1000))": () =>
           VerifySeedPage(seedWords: _genSeedWords(12), wordList: _genList(4, 1000)).push(context),
       "VerifySeed(seedWords: 16, wordList: (4, 1000))": () =>
@@ -200,6 +204,19 @@ class UIPlayground extends AbstractView {
           VerifySeedPage(seedWords: _genSeedWords(25), wordList: _genList(4, 1)).push(context),
       "WalletHome": () => WalletHome(coinWallet: viewModel.wallet).push(context),
     };
+  }
+
+  void _showSighashNoneConfirm(final BuildContext context) {
+    UnconfirmedTransactionView(
+      wallet: viewModel.wallet,
+      fee: Amount(10000),
+      destMap: {
+        Address(UnknownLabel(), "bc1qnjg0jd8228aq7egyzacy8cys3knf9xvrerkf9g"): Amount(90000),
+      },
+      warnings: psbtConfirmationWarnings(base64.decode(bitcoinSighashNonePsbt)),
+      confirmCallback: (final BuildContext context) => {_alert(context, "confirmCallback")},
+      cancelCallback: (final BuildContext context) => _alert(context, "cancelCallback"),
+    ).pushReplacement(context);
   }
 
   void _alert(final BuildContext context, final String message) {
