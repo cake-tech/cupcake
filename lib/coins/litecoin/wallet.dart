@@ -66,8 +66,8 @@ class LitecoinWallet implements CoinWallet {
       bip39.mnemonicToSeed(seed, passphrase: passphrase),
       Bip44Conf.litecoinMainNet.altKeyNetVer,
     ).derivePath("m/84'/2'/0'") as Bip32Slip10Secp256k1;
-    final mwebHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed)).derivePath("m/1000'")
-        as Bip32Slip10Secp256k1;
+    final mwebHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed, passphrase: passphrase))
+        .derivePath("m/1000'") as Bip32Slip10Secp256k1;
 
     final pubkeyMap = PubkeyIndexMap(wpkhHd);
     pubkeyMap.topupExternal();
