@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Script designed to build (or download) monero_c
-# usage: 
-# ./build_moneroc.sh 
+# usage:
+# ./build_moneroc.sh
 # --prebuild - allow downloads of prebuilds
 # --coin - monero/wownero
 # --tag v0.18.3.3-RC45 - which tag to build / download
@@ -91,14 +91,14 @@ then
     do
         asset_basename=$(urldecode $(basename $release_url) | tr -d '\r' | xargs)
         if [[ "$asset_basename" == ${ARG_COIN}_${ARG_TRIPLET}* ]];
-        then            
+        then
             if [[ "$asset_basename" == *libwallet2_api_c* ]];
             then
                 curl -L "$release_url" > "$ARG_LOCATION/$lib_name_prefix${asset_basename/${ARG_TRIPLET}_/}"
-                unxz -f "$ARG_LOCATION/$lib_name_prefix${asset_basename/${ARG_TRIPLET}_/}"
+                unxz -f "$ARG_LOCATION/$lib_name_prefix${asset_basename/${ARG_TRIPLET}_/}" || true
             else
                 curl -L "$release_url" > "$ARG_LOCATION/${asset_basename/${ARG_COIN}_${ARG_TRIPLET}_/}"
-                unxz -f "$ARG_LOCATION/${asset_basename/${ARG_COIN}_${ARG_TRIPLET}_/}"
+                unxz -f "$ARG_LOCATION/${asset_basename/${ARG_COIN}_${ARG_TRIPLET}_/}" || true
             fi
         fi
     done
@@ -120,23 +120,23 @@ else
     fi
     COPIED=""
 
-    if ! ls ${BUILD_DIR}/release/${ARG_COIN}/${ARG_TRIPLET}_libwallet2_api_c*.xz
+    if ! ls ${BUILD_DIR}/release/${ARG_COIN}/${ARG_TRIPLET}_libwallet2_api_c*
     then
         pushd "$BUILD_DIR"
-            ./build_single.sh ${ARG_COIN} ${ARG_TRIPLET} -j$(nproc)
+            env -i PATH="$PATH" HOME="$HOME" ./build_single.sh ${ARG_COIN} ${ARG_TRIPLET} -j$(nproc)
         popd
     fi
 
-    for release in ${BUILD_DIR}/release/${ARG_COIN}/${ARG_TRIPLET}_*.xz;
+    for release in ${BUILD_DIR}/release/${ARG_COIN}/${ARG_TRIPLET}_*;
     do
         asset_basename="$(basename $release)"
         if [[ "$asset_basename" == *libwallet2_api_c* ]];
         then
             cp "$release" "$ARG_LOCATION/$lib_name_prefix${ARG_COIN}_${asset_basename/${ARG_TRIPLET}_/}"
-            unxz -f "$ARG_LOCATION/$lib_name_prefix${ARG_COIN}_${asset_basename/${ARG_TRIPLET}_/}"
+            unxz -f "$ARG_LOCATION/$lib_name_prefix${ARG_COIN}_${asset_basename/${ARG_TRIPLET}_/}" || true
         else
             cp "$release" "$ARG_LOCATION/${asset_basename/${ARG_TRIPLET}_/}"
-            unxz -f "$ARG_LOCATION/${asset_basename/${ARG_TRIPLET}_/}"
+            unxz -f "$ARG_LOCATION/${asset_basename/${ARG_TRIPLET}_/}" || true
         fi
     done
 fi
