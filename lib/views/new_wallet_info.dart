@@ -96,11 +96,12 @@ class NewWalletInfoScreen extends AbstractView {
             children: [
               if (viewModel.page.svgIcon != null) viewModel.page.svgIcon!,
               Expanded(
-                  child: SingleChildScrollView(
-                child: Column(
-                  children: viewModel.page.texts,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: viewModel.page.texts,
+                  ),
                 ),
-              )),
+              ),
             ],
           ),
         ),
