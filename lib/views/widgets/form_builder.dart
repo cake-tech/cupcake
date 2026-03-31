@@ -96,57 +96,58 @@ class _FormBuilderState extends State<FormBuilder> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-
-
-            Column(children: [
-              Text(
-                count == i && i != 0
-                    ? L.reenter_your_pin
-                    : count == 0
-                    ? L.enter_your_pin
-                    : L.create_your_pin,
-                style: T.textTheme.bodyLarge?.copyWith(fontSize: 20),
-              ),
-              if (widget.viewModel.isPinInput)
-                TextFormField(
-                  focusNode: pinFormTextInputFocusNode,
-                  controller: e.ctrl,
-                  obscureText: e.password,
-                  enableSuggestions: !e.password,
-                  autocorrect: !e.password,
-                  textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                  ),
-                  onChanged: (final _) {
-                    e.onChanged?.call();
-                  },
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                )
-              else
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 36.0),
-                  child: BaseTextFormField(
+            Column(
+              children: [
+                Text(
+                  count == i && i != 0
+                      ? L.reenter_your_pin
+                      : count == 0
+                          ? L.enter_your_pin
+                          : L.create_your_pin,
+                  style: T.textTheme.bodyLarge?.copyWith(fontSize: 20),
+                ),
+                if (widget.viewModel.isPinInput)
+                  TextFormField(
+                    focusNode: pinFormTextInputFocusNode,
                     controller: e.ctrl,
                     obscureText: e.password,
                     enableSuggestions: !e.password,
                     autocorrect: !e.password,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (final _) {
+                      e.onChanged?.call();
+                    },
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 36.0),
+                    child: BaseTextFormField(
+                      controller: e.ctrl,
+                      obscureText: e.password,
+                      enableSuggestions: !e.password,
+                      autocorrect: !e.password,
+                    ),
                   ),
-                ),
-              if (i == 0)
-                TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: T.colorScheme.surfaceContainer,
-                    foregroundColor: T.colorScheme.onSurfaceVariant,
+                if (i == 0)
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: T.colorScheme.surfaceContainer,
+                      foregroundColor: T.colorScheme.onSurfaceVariant,
+                    ),
+                    onPressed: () {
+                      widget.viewModel.isPinInput = !widget.viewModel.isPinInput;
+                    },
+                    child:
+                        Text(widget.viewModel.isPinInput ? L.switch_to_password : L.switch_to_pin),
                   ),
-                  onPressed: () {
-                    widget.viewModel.isPinInput = !widget.viewModel.isPinInput;
-                  },
-                  child: Text(widget.viewModel.isPinInput ? L.switch_to_password : L.switch_to_pin),
-                ),
-            ],),
+              ],
+            ),
             const SizedBox(height: 32),
             if (widget.viewModel.isPinInput)
               NumericalKeyboard(
