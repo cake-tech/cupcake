@@ -27,6 +27,7 @@ class NewWalletInfoScreen extends AbstractView {
           builder: (final context) => AppBar(
             title: Text(viewModel.screenName),
             automaticallyImplyLeading: canPop,
+            backgroundColor: Colors.transparent,
             actions: _getActionButton(),
           ),
         ),
@@ -94,7 +95,7 @@ class NewWalletInfoScreen extends AbstractView {
           builder: (final context) => Column(
             children: [
               if (viewModel.page.svgIcon != null) viewModel.page.svgIcon!,
-              ...viewModel.page.texts,
+              Expanded(child: SingleChildScrollView(child: Column(children: viewModel.page.texts,),))
             ],
           ),
         ),

@@ -61,71 +61,73 @@ class UnconfirmedTransactionView {
         color: Color(0xff1B284A),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: double.maxFinite,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16, top: 16),
-                      child: Container(
-                        width: 34,
-                        height: 34,
-                        decoration: BoxDecoration(
-                          color: T.colorScheme.surfaceContainer,
-                          borderRadius: BorderRadius.circular(512),
-                        ),
-                        child: IconButton(
-                          onPressed: () => viewModel.cancel(context),
-                          icon: Icon(
-                            Icons.close,
-                            color: T.colorScheme.onSurface,
-                            size: 18,
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: double.maxFinite,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16, top: 16),
+                        child: Container(
+                          width: 34,
+                          height: 34,
+                          decoration: BoxDecoration(
+                            color: T.colorScheme.surfaceContainer,
+                            borderRadius: BorderRadius.circular(512),
+                          ),
+                          child: IconButton(
+                            onPressed: () => viewModel.cancel(context),
+                            icon: Icon(
+                              Icons.close,
+                              color: T.colorScheme.onSurface,
+                              size: 18,
+                            ),
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                  Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(76),
+                      borderRadius: BorderRadius.circular(2),
                     ),
-                  ],
-                ),
-                Container(
-                  width: 40,
-                  height: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withAlpha(76),
-                    borderRadius: BorderRadius.circular(2),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 32, top: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                viewModel.wallet.coin.strings.svg.svg(height: 32),
-                const SizedBox(width: 8),
-                Text(
-                  L.confirm_transaction,
-                  style: TextStyle(
-                    color: T.colorScheme.onSurface,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 32, top: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  viewModel.wallet.coin.strings.svg.svg(height: 32),
+                  const SizedBox(width: 8),
+                  Text(
+                    L.confirm_transaction,
+                    style: TextStyle(
+                      color: T.colorScheme.onSurface,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          _buildContent(context),
-          _buildFooter(context),
-        ],
+            _buildContent(context),
+            _buildFooter(context),
+          ],
+        ),
       ),
     );
   }

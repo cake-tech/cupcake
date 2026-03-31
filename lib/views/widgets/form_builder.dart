@@ -90,79 +90,86 @@ class _FormBuilderState extends State<FormBuilder> {
         }
       }
 
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(height: 52),
-          Text(
-            count == i && i != 0
-                ? L.reenter_your_pin
-                : count == 0
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+
+
+            Column(children: [
+              Text(
+                count == i && i != 0
+                    ? L.reenter_your_pin
+                    : count == 0
                     ? L.enter_your_pin
                     : L.create_your_pin,
-            style: T.textTheme.bodyLarge?.copyWith(fontSize: 20),
-          ),
-          if (widget.viewModel.isPinInput)
-            TextFormField(
-              focusNode: pinFormTextInputFocusNode,
-              controller: e.ctrl,
-              obscureText: e.password,
-              enableSuggestions: !e.password,
-              autocorrect: !e.password,
-              textAlign: TextAlign.center,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
+                style: T.textTheme.bodyLarge?.copyWith(fontSize: 20),
               ),
-              onChanged: (final _) {
-                e.onChanged?.call();
-              },
-              style: const TextStyle(
-                fontSize: 16,
+              if (widget.viewModel.isPinInput)
+                TextFormField(
+                  focusNode: pinFormTextInputFocusNode,
+                  controller: e.ctrl,
+                  obscureText: e.password,
+                  enableSuggestions: !e.password,
+                  autocorrect: !e.password,
+                  textAlign: TextAlign.center,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (final _) {
+                    e.onChanged?.call();
+                  },
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
+                )
+              else
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 36.0),
+                  child: BaseTextFormField(
+                    controller: e.ctrl,
+                    obscureText: e.password,
+                    enableSuggestions: !e.password,
+                    autocorrect: !e.password,
+                  ),
+                ),
+              if (i == 0)
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: T.colorScheme.surfaceContainer,
+                    foregroundColor: T.colorScheme.onSurfaceVariant,
+                  ),
+                  onPressed: () {
+                    widget.viewModel.isPinInput = !widget.viewModel.isPinInput;
+                  },
+                  child: Text(widget.viewModel.isPinInput ? L.switch_to_password : L.switch_to_pin),
+                ),
+            ],),
+            const SizedBox(height: 32),
+            if (widget.viewModel.isPinInput)
+              NumericalKeyboard(
+                ctrl: e.ctrl,
+                showConfirm: () => e.isOk,
+                nextPage: $nextPageCallback,
+                onConfirmLongPress: null,
+                showComma: false,
               ),
-            )
-          else
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 36.0),
-              child: BaseTextFormField(
-                controller: e.ctrl,
-                obscureText: e.password,
-                enableSuggestions: !e.password,
-                autocorrect: !e.password,
+            // const Spacer(),
+            if (!widget.viewModel.isPinInput)
+              SafeArea(
+                bottom: true,
+                top: false,
+                child: LongPrimaryButton(
+                  onPressed: $nextPageCallback,
+                  padding: EdgeInsets.zero,
+                  text: L.continue_,
+                ),
               ),
-            ),
-          if (i == 0)
-            TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: T.colorScheme.surfaceContainer,
-                foregroundColor: T.colorScheme.onSurfaceVariant,
-              ),
-              onPressed: () {
-                widget.viewModel.isPinInput = !widget.viewModel.isPinInput;
-              },
-              child: Text(widget.viewModel.isPinInput ? L.switch_to_password : L.switch_to_pin),
-            ),
-          const SizedBox(height: 32),
-          if (widget.viewModel.isPinInput)
-            NumericalKeyboard(
-              ctrl: e.ctrl,
-              showConfirm: () => e.isOk,
-              nextPage: $nextPageCallback,
-              onConfirmLongPress: null,
-              showComma: false,
-            ),
-          const Spacer(),
-          if (!widget.viewModel.isPinInput)
-            SafeArea(
-              bottom: true,
-              top: false,
-              child: LongPrimaryButton(
-                onPressed: $nextPageCallback,
-                padding: EdgeInsets.zero,
-                text: L.continue_,
-              ),
-            ),
-          const SizedBox(height: 8),
-        ],
+            const SizedBox(height: 8),
+          ],
+        ),
       );
     }
     _onLabelChange(null);
