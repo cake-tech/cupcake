@@ -26,22 +26,20 @@ class AnimatedURPage extends AbstractView {
 
   @override
   Widget body(final BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 64.0, left: 32, right: 32),
-          child: Observer(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Observer(
             builder: (final context) {
               return URQR(
                 frames: viewModel.urqr,
               );
             },
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 32, right: 32, top: 64),
-          child: Text(
+          Text(
             L.animated_qr_note,
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -50,9 +48,8 @@ class AnimatedURPage extends AbstractView {
               fontWeight: FontWeight.w400,
             ),
           ),
-        ),
-        const SizedBox(height: 32),
-      ],
+        ],
+      ),
     );
   }
 

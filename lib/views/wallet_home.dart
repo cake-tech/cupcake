@@ -116,31 +116,29 @@ class WalletHome extends AbstractView {
   AppBar? get appBar => null;
 
   Widget _bottomActions(final BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _actionButton(
-            context,
-            pngAsset: Assets.icons.menuDeposit.image(),
-            pressedPngAsset: Assets.icons.menuDepositPressed.image(),
-            onPressed: () => Receive(coinWallet: viewModel.wallet).push(context),
-          ),
-          _actionButton(
-            context,
-            pngAsset: Assets.icons.menuQr.image(),
-            pressedPngAsset: Assets.icons.menuQrPressed.image(),
-            onPressed: () => BarcodeScanner(wallet: viewModel.wallet).push(context),
-          ),
-          _actionButton(
-            context,
-            pngAsset: Assets.icons.menuMenu.image(),
-            pressedPngAsset: Assets.icons.menuMenuPressed.image(),
-            onPressed: () => _showBottomSheet(context),
-          ),
-        ],
-      ),
+    return Row(
+      spacing: 6,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _actionButton(
+          context,
+          pngAsset: Assets.icons.menuDeposit.image(),
+          pressedPngAsset: Assets.icons.menuDepositPressed.image(),
+          onPressed: () => Receive(coinWallet: viewModel.wallet).push(context),
+        ),
+        _actionButton(
+          context,
+          pngAsset: Assets.icons.menuQr.image(),
+          pressedPngAsset: Assets.icons.menuQrPressed.image(),
+          onPressed: () => BarcodeScanner(wallet: viewModel.wallet).push(context),
+        ),
+        _actionButton(
+          context,
+          pngAsset: Assets.icons.menuMenu.image(),
+          pressedPngAsset: Assets.icons.menuMenuPressed.image(),
+          onPressed: () => _showBottomSheet(context),
+        ),
+      ],
     );
   }
 

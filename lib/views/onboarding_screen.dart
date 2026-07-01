@@ -28,10 +28,9 @@ class OnboardingScreen extends AbstractView {
                   return Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        const SizedBox(height: 60),
                         _getIconForPage(index),
-                        const SizedBox(height: 24),
                         Text(
                           pageData.description,
                           style: T.textTheme.bodyLarge?.copyWith(

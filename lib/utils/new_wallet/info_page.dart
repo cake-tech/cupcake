@@ -84,7 +84,7 @@ class NewWalletInfoPage {
     required final String title,
   }) =>
       NewWalletInfoPage(
-        topText: L.seed,
+        topText: L.verify_seed,
         topAction: null,
         topActionText: null,
         svgIcon: null,
@@ -110,12 +110,10 @@ class NewWalletInfoPage {
           ),
         ],
         texts: [
-          SizedBox(height: 16),
           YellowWarning(
             text: L.save_words_warning,
             padding: EdgeInsets.zero,
           ),
-          SizedBox(height: 32),
           Text(
             title,
             style: TextStyle(
@@ -123,9 +121,7 @@ class NewWalletInfoPage {
               color: T.colorScheme.onSurface,
             ),
           ),
-          SizedBox(height: 16),
           SeedPhraseGridWidget(list: text.split(" ")),
-          Spacer(),
         ],
       );
 
