@@ -331,7 +331,10 @@ class CreateWallet extends AbstractView {
                                 ),
                           ),
                           TextSpan(
-                            text: L.create_passphrase_warning_text,
+                            // TODO: swap in restore-specific string once added.
+                            text: viewModel.createMethod == CreateMethod.restore
+                                ? L.restore_passphrase_warning_text
+                                : L.create_passphrase_warning_text,
                           ),
                         ],
                       ),

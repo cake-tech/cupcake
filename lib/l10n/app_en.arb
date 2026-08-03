@@ -97,6 +97,7 @@
   "rename": "Rename",
   "rename_wallet": "Rename wallet",
   "restore_height": "Restore height",
+  "restore_passphrase_warning_text": "Only enter a passphrase if you have used one for thie wallet in the past. If you enter the wrong passphrase or have not used a passphrase before on this wallet, you won't see any of existing funds or history.",
   "restore_wallet": "Restore wallet",
   "restoring_wallet": "Restoring wallet",
   "save": "Save",

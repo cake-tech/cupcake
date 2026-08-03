@@ -29,6 +29,7 @@
   "primary_address_label": "Adres główny",
   "receive": "Wpłać",
   "restore_height": "Wysokość przywracania",
+  "restore_passphrase_warning_text": "Wprowadź hasło tylko wtedy, gdy było ono wcześniej używane w tym portfelu. Jeśli wprowadzisz nieprawidłowe hasło lub nie było ono wcześniej używane w tym portfelu, nie zobaczysz żadnych istniejących środków ani historii.",
   "restore_wallet": "Przywróć portfel",
   "save": "Zapisz",
   "scan": "Skanuj",
