@@ -26,11 +26,22 @@ security channel, so reports will not be missed.
 ### What to include
 
 - A clear description of the issue and its security impact.
-- Step-by-step reproduction, ideally with a proof of concept.
+- A working proof of concept is required. It must run directly against Cupcake
+  itself, using a release build or locally built version, and demonstrate the
+  reported behavior and security impact. Standalone Python code, mathematical
+  examples, or simulations that only reproduce the theory without exercising
+  Cupcake do not satisfy this requirement.
+- Step-by-step reproduction instructions.
 - Affected platform and app version.
 - Any relevant details about the signing, QR, or air-gap transfer flow.
 
 If you used AI tooling to find or write up the report, please say so.
+
+### Communication expectations
+
+AI should not be used to generate comments when communicating with maintainers
+and other contributors. Comments are expected to be written by humans. Comments
+that are believed to be written by AI may be moderated.
 
 ## Our commitment (safe harbor)
 
