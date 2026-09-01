@@ -35,10 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   monero:
-    git:
-      url: https://github.com/mrcyjanek/monero_c
-      ref: v0.18.4.0-RC4
-      path: impls/monero.dart
+    path: .cache/monero_c/99aa531f9c7180805e59dd52f6dde95d5c55ab0d/impls/monero.dart
   path: ^1.9.0
   path_provider: ^2.1.5
   path_provider_android: ^2.2.12
@@ -61,9 +58,8 @@ dependencies:
   crypto: ^3.0.3
   package_info_plus: ^8.1.0
   local_auth: ^2.3.0
-  analyzer: ^6.11.0
-  build: ^2.4.2
-  source_gen: ^1.0.0
+  analyzer: ^9.0.0
+  build: ^4.0.4
   mobx: ^2.5.0
   flutter_mobx: ^2.3.0
   drift: ^2.26.1
@@ -90,6 +86,10 @@ dependencies:
     git:
       url: https://github.com/cake-tech/blockchain_utils
       ref: cake-update-v2
+  zkool:
+    git:
+      url: https://github.com/cake-tech/zkool2
+      ref: 36e72b530c274c4a54a6127aadb94886e84d67bf
 
 dev_dependencies:
   flutter_test:
@@ -101,12 +101,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
-  flutter_asset_generator: ^1.2.0
   build_runner: ^2.4.15
-  flutter_gen_runner: ^5.8.0
+  flutter_gen_runner: ^5.12.0
   integration_test:
     sdk: flutter
-  mobx_codegen: ^2.7.0
+  mobx_codegen: ^2.7.6
   drift_dev: ^2.26.0
   flutter_launcher_icons: ^0.14.4
   hashlib: 1.19.2
@@ -116,8 +115,8 @@ dependency_overrides:
   intl: 0.20.2
   bdk_flutter:
     git:
-      url: https://github.com/StaxoLotl/bdk-flutter/
-      ref: cfa95443f11e75625c5f7de986b1cc64b682ed3f
+      url: https://github.com/MrCyjaneK/bdk-flutter.git
+      ref: 43532b1436f7f76d72ba67bd4428cd0a81cae145
 
 analyzer:
   exclude:
