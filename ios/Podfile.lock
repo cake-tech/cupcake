@@ -98,20 +98,20 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  bdk_flutter: cef9180019b4c6b67a3e3dfb74611683fe140107
-  cw_mweb: 3aea2fb35b2bd04d8b2d21b83216f3b8fb768d85
-  fast_scanner: 2cb1ad3e69e645e9980fb4961396ce5804caa3e3
+  bdk_flutter: 86c9ba59ee282dee08c3a29599abe867d10a8b10
+  cw_mweb: 22cd01dfb8ad2d39b15332006f22046aaa8352a3
+  fast_scanner: 44c00940355a51258cd6c2085734193cd23d95bc
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
-  haptic_feedback: fd1d8509833f58f164fc12122c0357fa9b2750e0
-  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
-  local_auth_darwin: d2e8c53ef0c4f43c646462e3415432c4dab3ae19
-  package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
-  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
-  share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
+  flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
+  haptic_feedback: 8cb3ee0cb6b797946c2b0df9c99ebc8f7ed79c71
+  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
+  local_auth_darwin: fa4b06454df7df8e97c18d7ee55151c57e7af0de
+  package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+  share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
   sqlite3: 73513155ec6979715d3904ef53a8d68892d4032b
-  sqlite3_flutter_libs: 83f8e9f5b6554077f1d93119fe20ebaa5f3a9ef1
-  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
+  sqlite3_flutter_libs: 86f82662868ee26ff3451f73cac9c5fc2a1f57fa
+  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
 
