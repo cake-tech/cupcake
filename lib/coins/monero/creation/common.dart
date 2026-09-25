@@ -7,6 +7,7 @@
 
 import 'package:cupcake/coins/abstract/wallet_creation.dart';
 import 'package:cupcake/coins/monero/coin.dart';
+import 'package:cupcake/coins/monero/seed_offset_check.dart';
 import 'package:cupcake/coins/monero/creation/new_wallet.dart';
 import 'package:cupcake/coins/monero/creation/restore_keys.dart';
 import 'package:cupcake/coins/monero/creation/restore_legacy.dart';
@@ -143,10 +144,16 @@ class MoneroWalletCreation extends WalletCreation {
     final String walletName,
     final String walletPassword,
   ) async {
+    if (seedOffsetMismatchBlocksCreate(
+      method: createMethod,
+      restoringFromSeed: (await seed.value).isNotEmpty,
+      offset: await seedOffset.value,
+      confirm: await seedOffsetConfrm.value,
+    )) {
+      throw Exception(L.seed_passphrase_mismatch);
+    }
+
     if (createMethod == CreateMethod.create) {
-      if (await seedOffset.value != await seedOffsetConfrm.value) {
-        throw Exception(L.seed_passphrase_mismatch);
-      }
       return CreateMoneroWalletCreationMethod(
         L,
         walletPath: coin.getPathForWallet(walletName),
