@@ -14,6 +14,7 @@ import 'package:cupcake/utils/form/validators.dart';
 import 'package:cupcake/utils/new_wallet/info_page.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:cupcake/view_model/form_builder_view_model.dart';
+import 'package:cupcake/view_model/wallet_setup_error_title.dart';
 import 'package:cupcake/views/connect_wallet.dart';
 import 'package:cupcake/views/create_wallet.dart';
 import 'package:cupcake/views/new_wallet_info.dart';
@@ -248,7 +249,12 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
         await walletPassword.clear();
         await walletPasswordInitial.clear();
       },
-      L.create_wallet,
+      walletSetupErrorTitle(
+        createTitle: L.create_wallet,
+        restoreTitle: L.restore_wallet,
+        screenMethod: createMethod,
+        formMethod: selectedCoin == null ? null : currentForm?.method,
+      ),
     );
   }
 
