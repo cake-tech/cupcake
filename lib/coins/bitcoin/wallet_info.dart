@@ -5,6 +5,7 @@ import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/bitcoin/coin.dart';
 import 'package:cupcake/utils/encryption/default.dart';
+import 'package:cupcake/utils/wallet_paths.dart';
 import 'package:cupcake/views/open_wallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as p;
@@ -71,14 +72,14 @@ class BitcoinWalletInfo extends CoinWalletInfo {
       throw Exception(Coin.L.error_wallet_name_unchanged);
     }
     final basePath = p.dirname(walletName);
-    if (File(p.join(basePath, newName)).existsSync()) {
+    if (File(renameCollisionPath(basePath, newName, keysFile: true)).existsSync()) {
       throw Exception(Coin.L.error_wallet_name_already_exists);
     }
     File("$walletName.keys").copySync(p.join(basePath, "$newName.keys"));
     // Copy and delete later, if anything throws below we end up with copied walled,
     // instead of nuking the wallet
     File("$walletName.keys").deleteSync();
-    _walletName = newName;
+    _walletName = pathAfterRename(walletName, newName);
   }
 
   @override
