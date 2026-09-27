@@ -26,12 +26,11 @@ abstract class VerifySeedViewModelBase extends ViewModel with Store {
   String get randomWord => seedWords[randomIndex];
 
   late final List<String> randomWords = () {
-    final w = wordList;
-    w.shuffle(Random.secure());
-    final elms = w.take(5).toList();
-    elms.add(randomWord);
-    elms.toSet(); // in case we got a duplicate
-    return elms.toList()..shuffle(Random.secure());
+    // Copy before shuffling, wordList is shared (Bip39.english is a static).
+    final shuffled = List<String>.of(wordList)..shuffle(Random.secure());
+    // Drop the correct word so it cannot show up as a decoy as well.
+    final decoys = shuffled.toSet()..remove(randomWord);
+    return [...decoys.take(5), randomWord]..shuffle(Random.secure());
   }();
 
   bool result(final String guessedWord) {
