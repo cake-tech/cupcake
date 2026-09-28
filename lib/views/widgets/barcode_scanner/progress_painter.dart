@@ -18,7 +18,7 @@ class ProgressPainter extends CustomPainter {
       final sweepAngle = (1 / urQrProgress.expectedPartCount) * fullAngle * pi / 180.0;
       drawSector(
         canvas,
-        urQrProgress.receivedPartIndexes.contains(i),
+        urSectorReceived(urQrProgress.receivedPartIndexes, i),
         rect,
         startAngle,
         sweepAngle,
