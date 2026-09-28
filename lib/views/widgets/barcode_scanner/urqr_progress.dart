@@ -29,3 +29,10 @@ class URQrProgress {
     );
   }
 }
+
+/// Whether sector [sectorIndex] (0-based) was received.
+///
+/// UR part numbers are 1-based, so sector 0 is part 1.
+bool urSectorReceived(final List<int> receivedPartIndexes, final int sectorIndex) {
+  return receivedPartIndexes.contains(sectorIndex + 1);
+}
