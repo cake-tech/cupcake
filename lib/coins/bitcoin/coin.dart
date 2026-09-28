@@ -15,6 +15,7 @@ import 'package:cupcake/coins/bitcoin/wallet_info.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/encryption/default.dart';
 import 'package:cupcake/utils/filesystem.dart';
+import 'package:cupcake/utils/wallet_directory.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 
@@ -51,9 +52,8 @@ class Bitcoin implements Coin {
       baseDir.createSync(recursive: true);
     }
 
-    // Prevent user from slipping outside allowed directory
-    final String walletPath = p.normalize(p.join(baseDir.path, walletName));
-    if (!walletPath.startsWith(baseDir.path)) {
+    final String? walletPath = pathInsideWalletDirectory(baseDir.path, walletName);
+    if (walletPath == null) {
       throw Exception(Coin.L.error_illegal_wallet_name(walletName));
     }
     return walletPath;
