@@ -1,5 +1,5 @@
 import 'package:cupcake/coins/abstract/wallet.dart';
-import 'package:cupcake/utils/collect_ur_codes.dart';
+import 'package:cupcake/utils/accept_ur_part.dart';
 import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:fast_scanner/fast_scanner.dart';
@@ -42,12 +42,13 @@ abstract class BarcodeScannerViewModelBase extends ViewModel with Store {
     for (final barcode in barcodes.barcodes) {
       final raw = barcode.rawValue;
       if (raw == null || !raw.startsWith("ur:")) continue;
-      if (URQRData.parse(urCodes).progress == 1 && !popped) {
+      final accepted = acceptUrPart(urCodes, raw);
+      urCodes = accepted.codes;
+      if (accepted.completed && !popped) {
         popped = true;
         await handleUR();
         return;
       }
-      urCodes = collectUrCodes(urCodes, [raw]);
     }
     if (urCodes.isNotEmpty) return;
     if (!mounted) return;
