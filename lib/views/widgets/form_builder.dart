@@ -16,10 +16,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class FormBuilder extends StatefulWidget {
-  const FormBuilder({super.key, required this.viewModel, required this.showExtra});
+  const FormBuilder({
+    super.key,
+    required this.viewModel,
+    required this.showExtra,
+    this.extraOnly = false,
+  });
 
   final FormBuilderViewModel viewModel;
   final bool showExtra;
+
+  final bool extraOnly;
 
   @override
   State<FormBuilder> createState() => _FormBuilderState();
@@ -176,7 +183,9 @@ class _FormBuilderState extends State<FormBuilder> {
     _onLabelChange(null);
     final List<Widget> children = [];
     for (final e in widget.viewModel.formElements) {
-      if (e.isExtra && !widget.showExtra) {
+      if (widget.extraOnly) {
+        if (!e.isExtra) continue;
+      } else if (e.isExtra && !widget.showExtra) {
         // If we return Container() some stuff happens on flutter render cache
         // and it doesn't render properly.
         continue;

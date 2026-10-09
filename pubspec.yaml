@@ -190,6 +190,7 @@ flutter:
     - assets/icons/secure_storage.webp
     - assets/icons/tiny_cake_labs.svg
     - assets/icons/cupcake_about.svg
+    - assets/icons/passphrase.png
 
   fonts:
     - family: Lato

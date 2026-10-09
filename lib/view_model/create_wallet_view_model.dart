@@ -263,7 +263,9 @@ abstract class CreateWalletViewModelBase extends ViewModel with Store {
     // verify that password match when confirming, ignore otherwise
     if (walletPassword1 != walletPassword2 && walletPassword2.isNotEmpty) {
       if (kDebugMode) {
-        throw Exception("${L.password_doesnt_match} /$walletPassword1/$walletPassword2/");
+        throw Exception(
+          "${L.password_doesnt_match} /$walletPassword1/$walletPassword2/",
+        );
       }
       throw Exception(L.password_doesnt_match);
     }

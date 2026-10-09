@@ -1,7 +1,11 @@
+import 'dart:ui';
+
 import 'package:cupcake/utils/text_span_markdown.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/gen/assets.gen.dart';
 import 'package:cupcake/view_model/create_wallet_view_model.dart';
+import 'package:cupcake/utils/alerts/basic.dart';
+import 'package:cupcake/utils/form/string_form_element.dart';
 import 'package:cupcake/view_model/form_builder_view_model.dart';
 import 'package:cupcake/views/abstract.dart';
 import 'package:cupcake/views/widgets/buttons/long_primary.dart';
@@ -153,7 +157,7 @@ class CreateWallet extends AbstractView {
       }
     }
     final form = FormBuilder(
-      showExtra: viewModel.showExtra,
+      showExtra: false,
       viewModel: viewModel.formBuilderViewModelList[viewModel.formIndex] as FormBuilderViewModel,
     );
     return Column(
@@ -241,9 +245,151 @@ class CreateWallet extends AbstractView {
         LongPrimaryButton(
           text: L.continue_,
           icon: null,
-          onPressed: viewModel.createWallet,
+          onPressed: () async {
+            if (viewModel.showExtra) {
+              await _showBottomSheet(context);
+            } else {
+              await viewModel.createWallet();
+            }
+          },
         ),
       ],
+    );
+  }
+
+  String? _extraFieldsError() {
+    final elements = viewModel.formBuilderViewModelList[viewModel.formIndex].formElements
+        .where((final e) => e.isExtra)
+        .whereType<StringFormElement>();
+    for (final e in elements) {
+      final error = e.validator(e.ctrl.text);
+      if (error != null) return error;
+    }
+    return null;
+  }
+
+  Future<void> _showBottomSheet(final BuildContext context) async {
+    await showModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (final context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Color(0xFF273765),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: _buildBottomSheet(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomSheet(final BuildContext context) {
+    return Builder(
+      builder: (final context) {
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Color(0xFF273765),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(76),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      spacing: 16,
+                      children: [
+                        Text(L.add_passphrase, style: Theme.of(context).textTheme.titleLarge),
+                        Assets.icons.passphrase.image(width: 200),
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '${L.warning.toUpperCase()}: ',
+                                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: Theme.of(context).colorScheme.errorContainer,
+                                      decoration: TextDecoration.none,
+                                    ),
+                              ),
+                              TextSpan(
+                                text: viewModel.createMethod == CreateMethod.restore
+                                    ? L.restore_passphrase_warning_text
+                                    : L.create_passphrase_warning_text,
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                decoration: TextDecoration.none,
+                              ),
+                        ),
+                        FormBuilder(
+                          showExtra: true,
+                          extraOnly: true,
+                          viewModel: viewModel.formBuilderViewModelList[viewModel.formIndex]
+                              as FormBuilderViewModel,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: LongSecondaryButton(
+                                T,
+                                onPressed: () => Navigator.of(context).pop(),
+                                padding: EdgeInsets.only(right: 10, left: 12),
+                                text: "Cancel",
+                              ),
+                            ),
+                            Expanded(
+                              child: LongPrimaryButton(
+                                onPressed: () async {
+                                  final error = _extraFieldsError();
+                                  if (error != null) {
+                                    await showAlert(
+                                      context: context,
+                                      title: L.warning,
+                                      body: [error],
+                                    );
+                                    return;
+                                  }
+                                  await viewModel.createWallet();
+                                },
+                                padding: EdgeInsets.only(left: 10),
+                                text: "Confirm",
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
