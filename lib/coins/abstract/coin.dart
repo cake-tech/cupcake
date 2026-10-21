@@ -5,7 +5,7 @@ import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 
-enum Coins { monero, bitcoin, litecoin, unknown }
+enum Coins { monero, bitcoin, litecoin, zcash, unknown }
 
 abstract class Coin {
   static late AppLocalizations L;

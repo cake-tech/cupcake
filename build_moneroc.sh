@@ -127,16 +127,14 @@ else
         popd
     fi
 
-    for release in ${BUILD_DIR}/release/${ARG_COIN}/${ARG_TRIPLET}_*;
+    for release in ${BUILD_DIR}/release/*/${ARG_TRIPLET}/lib${ARG_COIN}_*;
     do
         asset_basename="$(basename $release)"
         if [[ "$asset_basename" == *libwallet2_api_c* ]];
         then
             cp "$release" "$ARG_LOCATION/$lib_name_prefix${ARG_COIN}_${asset_basename/${ARG_TRIPLET}_/}"
-            unxz -f "$ARG_LOCATION/$lib_name_prefix${ARG_COIN}_${asset_basename/${ARG_TRIPLET}_/}" || true
         else
             cp "$release" "$ARG_LOCATION/${asset_basename/${ARG_TRIPLET}_/}"
-            unxz -f "$ARG_LOCATION/${asset_basename/${ARG_TRIPLET}_/}" || true
         fi
     done
 fi
