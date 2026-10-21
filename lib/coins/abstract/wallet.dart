@@ -21,8 +21,6 @@ abstract class CoinWallet {
 
   int getAccountsCount();
 
-  void setAccount(final int accountIndex);
-
   int getAccountId();
 
   int get addressIndex;
@@ -45,5 +43,5 @@ abstract class CoinWallet {
 
   CoinWalletInfo get walletInfo;
 
-  Future<List<WalletSeedDetail>> seedDetails() => throw UnimplementedError();
+  Future<List<WalletSeedDetail>> seedDetails();
 }
