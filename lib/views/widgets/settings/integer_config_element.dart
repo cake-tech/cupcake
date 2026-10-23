@@ -1,3 +1,4 @@
+import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/alerts/widget.dart';
 import 'package:cupcake/utils/config.dart';
 import 'package:cupcake/views/widgets/base_text_form_field.dart';
@@ -36,7 +37,7 @@ class IntegerConfigElement extends StatelessWidget {
       trailing: hint == null
           ? null
           : IconButton(
-              icon: const Icon(Icons.info),
+              icon: Icon(Icons.info, semanticLabel: AppLocalizations.of(context)!.more_info),
               onPressed: () {
                 showAlertWidget(
                   context: context,

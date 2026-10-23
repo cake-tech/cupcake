@@ -216,6 +216,7 @@ class CreateWallet extends AbstractView {
               Spacer(),
               Checkbox(
                 value: viewModel.showExtra,
+                semanticLabel: L.add_passphrase,
                 onChanged: (final bool? value) {
                   viewModel.showExtra = value ?? false;
                   if (!viewModel.showExtra) {

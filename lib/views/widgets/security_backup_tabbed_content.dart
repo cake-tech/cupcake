@@ -192,6 +192,7 @@ class _SecurityBackupTabbedContentState extends State<SecurityBackupTabbedConten
                   Icons.copy,
                   size: 16,
                   color: Theme.of(context).textTheme.bodyLarge?.color?.withAlpha(179),
+                  semanticLabel: L.copy,
                 ),
               ),
             ],

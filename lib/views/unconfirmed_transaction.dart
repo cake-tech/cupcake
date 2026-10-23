@@ -88,6 +88,7 @@ class UnconfirmedTransactionView {
                               Icons.close,
                               color: T.colorScheme.onSurface,
                               size: 18,
+                              semanticLabel: L.cancel,
                             ),
                           ),
                         ),
@@ -255,10 +256,17 @@ class UnconfirmedTransactionView {
       decoration: BoxDecoration(
         color: Color(0xff1B284A),
       ),
-      child: _SlideToConfirmButton(
-        onSlideComplete: () => viewModel.confirm(context),
-        buttonText: L.swipe_to_confirm,
-        onCancel: () => viewModel.cancel(context),
+      child: Semantics(
+        container: true,
+        button: true,
+        label: L.confirm,
+        onTap: () => viewModel.confirm(context),
+        excludeSemantics: true,
+        child: _SlideToConfirmButton(
+          onSlideComplete: () => viewModel.confirm(context),
+          buttonText: L.swipe_to_confirm,
+          onCancel: () => viewModel.cancel(context),
+        ),
       ),
     );
   }

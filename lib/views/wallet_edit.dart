@@ -78,9 +78,10 @@ class WalletEdit {
                     padding: const EdgeInsets.only(right: 16, top: 8),
                     child: IconButton(
                       onPressed: () => viewModel.deleteWallet(),
-                      icon: Assets.icons.delete.svg(
-                        width: 34,
-                        height: 34,
+                      icon: Semantics(
+                        label: L.delete_wallet,
+                        excludeSemantics: true,
+                        child: Assets.icons.delete.svg(width: 34, height: 34),
                       ),
                     ),
                   ),
