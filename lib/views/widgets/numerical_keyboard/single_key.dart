@@ -1,3 +1,4 @@
+import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/views/widgets/guarded_gesture_detector.dart';
 import 'package:cupcake/views/widgets/numerical_keyboard/keyboard.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class SingleKey extends StatelessWidget {
               child: Material(
                 color: T.colorScheme.surfaceContainer,
                 shape: CircleBorder(),
-                child: Center(child: getKeyWidgetPinPad(keyId, T)),
+                child: Center(child: getKeyWidgetPinPad(keyId, T, AppLocalizations.of(context)!)),
               ),
             ),
           ),

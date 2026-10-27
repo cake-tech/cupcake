@@ -1,3 +1,4 @@
+import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:fast_scanner/fast_scanner.dart';
 import 'package:flutter/material.dart';
 
@@ -22,12 +23,13 @@ class SwitchCameraButton extends StatelessWidget {
         }
 
         final Widget icon;
+        final L = AppLocalizations.of(context)!;
 
         switch (state.cameraDirection) {
           case CameraFacing.front:
-            icon = const Icon(Icons.camera_front);
+            icon = Icon(Icons.camera_front, semanticLabel: L.switch_camera);
           case CameraFacing.back:
-            icon = const Icon(Icons.camera_rear);
+            icon = Icon(Icons.camera_rear, semanticLabel: L.switch_camera);
         }
 
         return IconButton(

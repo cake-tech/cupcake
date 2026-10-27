@@ -1,3 +1,4 @@
+import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 enum Keys {
@@ -162,7 +163,7 @@ String getKeysChar(final Keys key) {
   };
 }
 
-Widget getKeyWidgetPinPad(final Keys key, final ThemeData T) {
+Widget getKeyWidgetPinPad(final Keys key, final ThemeData T, final AppLocalizations L) {
   return switch (key) {
     Keys.a0 ||
     Keys.a1 ||
@@ -184,8 +185,8 @@ Widget getKeyWidgetPinPad(final Keys key, final ThemeData T) {
           color: T.colorScheme.onSurfaceVariant,
         ),
       ),
-    Keys.backspace => const Icon(Icons.backspace),
-    Keys.next => const Icon(Icons.check),
+    Keys.backspace => Icon(Icons.backspace, semanticLabel: L.delete),
+    Keys.next => Icon(Icons.check, semanticLabel: L.confirm),
     _ => Container(),
   };
 }
