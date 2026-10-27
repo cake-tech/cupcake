@@ -72,7 +72,7 @@ class Zcash implements Coin {
       password: password,
       walletName: walletInfo.walletName,
     );
-
+    await u.init();
     return u.wallet;
   }
 

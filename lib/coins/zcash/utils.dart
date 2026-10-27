@@ -79,6 +79,8 @@ class ZcashUtils {
   }
 
   final String password;
+  // SQLCipher's PRAGMA key quoting is fragile with punctuation, so the
+  // passphrase is reduced to alphanumerics and mixed with its hash.
   late final String passwordSha256 = sha256
       .convert(
         utf8.encode(
@@ -86,8 +88,8 @@ class ZcashUtils {
         ),
       )
       .toString();
-  late final String? dbPassword =
-      null; //'cup${password.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '')}_${passwordSha256}cake';
+  late final String dbPassword =
+      'cup${password.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '')}_${passwordSha256}cake';
 
   String get walletDataDir => Zcash().getPathForWallet(walletName);
   String walletName;
@@ -108,7 +110,6 @@ class ZcashUtils {
     await globalInit();
     if (_isInit) return;
     _isInit = true;
-    // await zkool_network.initDatadir(directory: dbFile.parent.path);
     c = await c.openDatabase(dbFilepath: dbFile.path, password: dbPassword);
     c = c.setLwd(url: "127.0.0.1:7676", serverType: 0);
 
@@ -126,17 +127,14 @@ class ZcashUtils {
     final keysEncrypted = DefaultEncryption().encryptString(data, password);
 
     final walletDataDir = Zcash().getPathForWallet(walletName);
-
-    final keyFile = File(p.join(walletDataDir, "zcash.keys"));
-    final dbFile = File(p.join(walletDataDir, "zcash.db"));
-    keyFile.writeAsBytesSync(keysEncrypted);
+    File(p.join(walletDataDir, "zcash.keys")).writeAsBytesSync(keysEncrypted);
 
     final u = ZcashUtils(
       password: password,
       walletName: walletName,
     );
 
-    u.c = await u.c.openDatabase(dbFilepath: dbFile.path, password: u.dbPassword);
+    u.c = await u.c.openDatabase(dbFilepath: u.dbFile.path, password: u.dbPassword);
 
     await zkool_account.newAccount(
       na: zkool_account.NewAccount(
