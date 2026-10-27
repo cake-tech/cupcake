@@ -97,7 +97,9 @@ class ZcashWallet extends CoinWallet {
     await u.init();
     final package = await zkool_pay.unsignedPcztPackage(bytes: _decodePczt(ur.inputs));
     final plan = zkool_pay.toPlan(package: package, c: c);
-    final changeAddresses = (await zkool_account.internalChangeAddresses(c: c)).toSet();
+    final account = await u.getCurrentAccountId();
+    final changeAddresses =
+        (await zkool_account.internalChangeAddresses(account: account, c: c)).toSet();
     if (!context.mounted) return;
     await UnconfirmedTransactionView(
       wallet: this,
@@ -110,7 +112,7 @@ class ZcashWallet extends CoinWallet {
       },
       fee: ZcashAmount(plan.fee.toInt()),
       confirmCallback: (final BuildContext context) async {
-        final signed = await zkool_pay.signTransaction(pczt: package, c: c);
+        final signed = await zkool_pay.signTransaction(pczt: package, account: account, c: c);
         if (!context.mounted) return;
         await AnimatedURPage(
           urqrList: {'signedTx': _encodePczt(signed.pczt)},

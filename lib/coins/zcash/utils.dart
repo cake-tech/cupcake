@@ -48,9 +48,9 @@ class ZcashUtils {
 
   Future<List<Address>> getAddresses() async {
     await init();
-    c = await c.setAccount(account: await getCurrentAccountId());
     final addrs = await zkool_account.getAddresses(
       uaPools: 7,
+      account: await getCurrentAccountId(),
       c: c,
     );
     return [
@@ -138,7 +138,7 @@ class ZcashUtils {
 
     u.c = await u.c.openDatabase(dbFilepath: dbFile.path, password: u.dbPassword);
 
-    final i = await zkool_account.newAccount(
+    await zkool_account.newAccount(
       na: zkool_account.NewAccount(
         name: walletName,
         restore: true,
@@ -153,7 +153,6 @@ class ZcashUtils {
       ),
       c: u.c,
     );
-    u.c = await u.c.setAccount(account: i);
     u.c = u.c.setLwd(url: "127.0.0.1:7676", serverType: 0);
     u._isInit = true;
     await u.setCache();

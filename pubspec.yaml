@@ -89,7 +89,7 @@ dependencies:
   zkool:
     git:
       url: https://github.com/cake-tech/zkool2
-      ref: ec5f72e3d8b700a8014cf7c3ce4de2896e24620b
+      ref: cb3e96f10e58a8fc8632b40636a0c64aa21fb653
 
 dev_dependencies:
   flutter_test:
