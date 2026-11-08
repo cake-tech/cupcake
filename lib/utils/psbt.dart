@@ -17,7 +17,7 @@ List<String> psbtConfirmationWarnings(final List<int> psbtBytes) {
         'This transaction uses a non-standard signature type '
             '(${sighashes.map(_sighashName).join(', ')}) on '
             '${sighashes.length} input${sighashes.length == 1 ? '' : 's'}. '
-            'The signature may not commit to the outputs shown above. '
+            'The signature may not commit to the outputs shown below. '
             'Only continue if you trust the wallet that created this PSBT.',
     ];
   } catch (_) {
