@@ -12,6 +12,7 @@ import 'package:cupcake/coins/abstract/wallet_seed_detail.dart';
 import 'package:cupcake/coins/litecoin/address.dart';
 import 'package:cupcake/coins/litecoin/amount.dart';
 import 'package:cupcake/coins/litecoin/coin.dart';
+import 'package:cupcake/coins/litecoin/mweb_seed.dart';
 import 'package:cupcake/coins/litecoin/wallet_info.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/urqr.dart';
@@ -66,8 +67,8 @@ class LitecoinWallet implements CoinWallet {
       bip39.mnemonicToSeed(seed, passphrase: passphrase),
       Bip44Conf.litecoinMainNet.altKeyNetVer,
     ).derivePath("m/84'/2'/0'") as Bip32Slip10Secp256k1;
-    final mwebHd = Bip32Slip10Secp256k1.fromSeed(bip39.mnemonicToSeed(seed)).derivePath("m/1000'")
-        as Bip32Slip10Secp256k1;
+    final mwebHd = Bip32Slip10Secp256k1.fromSeed(litecoinMwebSeed(seed, passphrase))
+        .derivePath("m/1000'") as Bip32Slip10Secp256k1;
 
     final pubkeyMap = PubkeyIndexMap(wpkhHd);
     pubkeyMap.topupExternal();
