@@ -12,6 +12,12 @@ void main() {
     expect(warnings.join('\n'), contains('SIGHASH_NONE'));
   });
 
+  test('psbt with SIGHASH_DEFAULT and a previous transaction stays quiet', () {
+    final warnings = psbtConfirmationWarnings(_v2Psbt(sighash: 0x00, includePrevout: true));
+
+    expect(warnings, isEmpty);
+  });
+
   test('psbt with a previous transaction and no sighash override stays quiet', () {
     final warnings = psbtConfirmationWarnings(_v2Psbt(includePrevout: true));
 

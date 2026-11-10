@@ -3,8 +3,10 @@ import 'dart:typed_data';
 /// Warnings to show before an offline signer confirms a PSBT.
 ///
 /// The fee can only be checked when each input carries the full previous
-/// transaction. A sighash other than SIGHASH_ALL does not commit to the
-/// outputs shown on the confirmation screen.
+/// transaction. A sighash other than SIGHASH_ALL or SIGHASH_DEFAULT does not
+/// commit to the outputs shown on the confirmation screen. SIGHASH_DEFAULT
+/// is the Taproot default and commits to every input and output, the same
+/// way SIGHASH_ALL does.
 List<String> psbtConfirmationWarnings(final List<int> psbtBytes) {
   try {
     final (sighashes, feeOk) = _inspect(Uint8List.fromList(psbtBytes));
@@ -62,7 +64,8 @@ List<String> psbtConfirmationWarnings(final List<int> psbtBytes) {
     final raw = input[0x03];
     if (raw != null && raw.length == 4) {
       final type = ByteData.sublistView(raw).getUint32(0, Endian.little);
-      if (type != 0x01) sighashes.add(type);
+      // 0x00 is SIGHASH_DEFAULT. It binds every input and output.
+      if (type != 0x01 && type != 0x00) sighashes.add(type);
     }
   }
   for (var i = 0; i < nOut; i++) {
