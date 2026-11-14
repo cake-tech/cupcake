@@ -53,3 +53,5 @@ missing_translations.txt
 # FVM Version Cache
 .fvm/
 *.g.dart
+
+android/.kotlin/sessions/*.salive

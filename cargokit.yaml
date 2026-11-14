@@ -1,0 +1,15 @@
+# Offline builds compile the Sapling parameters into the binary.
+# Cake does not have this file, so it keeps downloading them.
+cargo:
+  debug:
+    extra_flags:
+      - --features
+      - bundled-sapling-params
+  profile:
+    extra_flags:
+      - --features
+      - bundled-sapling-params
+  release:
+    extra_flags:
+      - --features
+      - bundled-sapling-params

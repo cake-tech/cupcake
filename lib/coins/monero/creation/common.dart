@@ -53,7 +53,7 @@ class MoneroWalletCreation extends WalletCreation {
     validator: nonEmptyValidator(
       L,
       extra: (final input) =>
-          !(Monero().isSeedSomewhatLegit(input)) ? L.warning_seed_incorrect_length : null,
+          !(coin.isSeedSomewhatLegit(input)) ? L.warning_seed_incorrect_length : null,
     ),
     errorHandler: errorHandler,
     canPaste: true,

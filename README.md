@@ -7,8 +7,9 @@
 To build:
 
 ```bash
-$ make libs_android_build # or libs_android_download, libs_ios_build, libs_ios_download
-$ make prepare_dev # load dev signing key (not required on iOS)
+$ make init # fetch the submodules
+$ make all # or libs_android_build, libs_android_download, libs_ios_build, libs_ios_download
+$ make prepare_dev # not needed if ran `make all`
 $ make cupcake_android # or cupcake_ios
 ```
 
