@@ -3,41 +3,43 @@ run-name: Build cupcake for supported targets
 on: [push]
 
 jobs:
-    app_android:
-        runs-on: ubuntu-latest
-        env:
-            ANDROID_NDK_VERSION: 28.2.13676358
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                fetch-depth: 0
-                submodules: recursive
-            - uses: kuhnroyal/flutter-fvm-config-action@v2
-              id: fvm-config-action
-            - uses: subosito/flutter-action@v2
-              with:
-                flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
-                channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
-            - uses: actions/setup-java@v4
-              with:
-                distribution: 'zulu'
-                java-version: '17'
-            - name: Git submodule update
-              run: |
-                git submodule update --init --recursive
-            - name: Build monero_c
-              run: |
-                make libs_android_download
-            - name: Flutter pub get
-              run: |
-                flutter pub get
-            - name: Prepare dev
-              run: make prepare_dev
-            - name: Build apk
-              run: |
-                flutter build apk --profile
-            - name: Upload lib
-              uses: actions/upload-artifact@v4
-              with:
-                name: android apk
-                path: build/app/outputs/flutter-apk/*.apk
+  app_android:
+    runs-on: ubuntu-latest
+    env:
+      ANDROID_NDK_VERSION: 28.2.13676358
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - uses: kuhnroyal/flutter-fvm-config-action@v2
+        id: fvm-config-action
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
+      - name: Git submodule update
+        run: |
+          git submodule update --init --recursive
+      - name: Build monero_c
+        run: |
+          git config --global user.email "builds@cakewallet.com"
+          git config --global user.name "cakewallet CI"
+          make libs_android_build_ci
+      - name: Flutter pub get
+        run: |
+          flutter pub get
+      - name: Prepare dev
+        run: make prepare_dev
+      - name: Build apk
+        run: |
+          flutter build apk --profile
+      - name: Upload lib
+        uses: actions/upload-artifact@v4
+        with:
+          name: android apk
+          path: build/app/outputs/flutter-apk/*.apk

@@ -219,9 +219,6 @@ class BitcoinWallet implements CoinWallet {
       );
 
   @override
-  void setAccount(final int newAccountIndex) {}
-
-  @override
   String get walletName => p.basename(_walletName);
 
   final String _walletName;

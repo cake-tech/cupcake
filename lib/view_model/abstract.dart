@@ -4,6 +4,7 @@ import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/exception.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:cupcake/utils/alerts/basic.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 abstract class ViewModel {
@@ -73,22 +74,29 @@ abstract class ViewModel {
       await function.call();
       return true;
     } on CoinException catch (e) {
-      print(e);
+      e.toString().split("\n").forEach(print);
       await showAlert(
         context: c!,
         title: title,
         body: [e.details ?? "", e.toString()],
       );
     } on TypeError catch (e) {
-      print(e);
+      e.toString().split("\n").forEach(print);
       await showAlert(
         context: c!,
         title: title,
         body: [e.toString(), e.stackTrace.toString()],
       );
     } catch (e) {
-      print(e);
-      await showAlert(context: c!, title: title, body: [e.toString()]);
+      e.toString().split("\n").forEach(print);
+      await showAlert(
+        context: c!,
+        title: title,
+        body: [
+          e.toString(),
+          if (kDebugMode) StackTrace.current.toString(),
+        ],
+      );
     }
     return false;
   }

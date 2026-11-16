@@ -6,7 +6,7 @@ jobs:
   format:
     runs-on: ubuntu-latest
     env:
-        ANDROID_NDK_VERSION: 28.2.13676358
+      ANDROID_NDK_VERSION: 28.2.13676358
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,14 +20,19 @@ jobs:
           channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
       - uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: "zulu"
+          java-version: "17"
       - name: Git submodule update
         run: |
           git submodule update --init --recursive
       - name: Build monero_c
         run: |
-          make libs_android_download
+          source .env
+          mkdir -p ${PWD}/.cache/monero_c/
+          cd ${PWD}/.cache/monero_c/
+          git clone https://github.com/mrcyjanek/monero_c ${MONERO_C_TAG}
+          cd ${MONERO_C_TAG}
+          git checkout ${MONERO_C_TAG}
 
       - name: Flutter pub get
         run: |
@@ -36,9 +41,9 @@ jobs:
         run: ./.tooling/format.sh
       - name: check if git tree is clean
         run: |
-          if [ -z "$(git status --porcelain)" ]; then 
+          if [ -z "$(git status --porcelain)" ]; then
             exit 0
-          else 
+          else
             git status --porcelain
             exit 1
           fi
@@ -50,6 +55,6 @@ jobs:
             exit 0
           else
             echo "There are missing translations:"
-            cat missing_translations.txt          
+            cat missing_translations.txt
             exit 1
           fi
