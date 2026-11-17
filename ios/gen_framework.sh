@@ -100,7 +100,8 @@ create_framework() {
     rm -rf "$framework_bundle"
     mkdir -p "$framework_bundle"
 
-    input_dylib="${DYLIB_PATH}/${target}/${wallet}_libwallet2_api_c.dylib"
+    # monero_c names it lib<coin>_wallet2_api_c.dylib (formerly <coin>_libwallet2_api_c.dylib)
+    input_dylib="${DYLIB_PATH}/${target}/lib${wallet}_wallet2_api_c.dylib"
     if [[ ! -f "$input_dylib" ]]; then
         echo "Error: Input dylib not found: $input_dylib"
         exit 1
