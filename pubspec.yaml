@@ -115,8 +115,6 @@ dependency_overrides:
   web: ^0.5.0
   intl: 0.20.2
   flutter_rust_bridge: 2.11.1
-  zkool:
-    path: /Users/user/work/zkool2
   bdk_flutter:
     git:
       url: https://github.com/MrCyjaneK/bdk-flutter.git
