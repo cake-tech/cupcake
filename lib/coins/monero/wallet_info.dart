@@ -4,6 +4,7 @@ import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/monero/coin.dart';
+import 'package:cupcake/utils/rename_target.dart';
 import 'package:cupcake/views/open_wallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as p;
@@ -75,6 +76,9 @@ class MoneroWalletInfo extends CoinWalletInfo {
     }
     Monero.wPtrList.clear();
     final basePath = p.dirname(walletName);
+    if (!renameNameStaysInDirectory(basePath, newName)) {
+      throw Exception(Coin.L.error_illegal_wallet_name(newName));
+    }
     if (File(p.join(basePath, newName)).existsSync()) {
       throw Exception(Coin.L.error_wallet_name_already_exists);
     }
