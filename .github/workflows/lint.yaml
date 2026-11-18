@@ -6,7 +6,9 @@ jobs:
   format:
     runs-on: ubuntu-latest
     env:
-      ANDROID_NDK_VERSION: 28.2.13676358
+      # Must be an NDK preinstalled on the runner (27.3, 29.0 and 30.0 as of 2026-11);
+      # 29.0 matches ndkVersion in android/app/build.gradle.
+      ANDROID_NDK_VERSION: 29.0.14206865
     steps:
       - uses: actions/checkout@v4
         with:
