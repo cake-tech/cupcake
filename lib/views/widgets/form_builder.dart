@@ -127,11 +127,14 @@ class _FormBuilderState extends State<FormBuilder> {
                 else
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 36.0),
-                    child: BaseTextFormField(
-                      controller: e.ctrl,
-                      obscureText: e.password,
-                      enableSuggestions: !e.password,
-                      autocorrect: !e.password,
+                    child: Semantics(
+                      label: L.wallet_password,
+                      child: BaseTextFormField(
+                        controller: e.ctrl,
+                        obscureText: e.password,
+                        enableSuggestions: !e.password,
+                        autocorrect: !e.password,
+                      ),
                     ),
                   ),
                 if (i == 0)
@@ -216,6 +219,13 @@ class _FormBuilderState extends State<FormBuilder> {
                               }
                             }
                           : null,
+              suffixIconSemanticLabel: e.password
+                  ? e.visibility
+                      ? L.hide_password
+                      : L.show_password
+                  : e.randomNameGenerator
+                      ? L.generate_random_name
+                      : MaterialLocalizations.of(context).pasteButtonLabel,
             ),
           ),
         );

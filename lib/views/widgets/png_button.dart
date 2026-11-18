@@ -7,10 +7,12 @@ class PngButton extends StatefulWidget {
     required this.pngAsset,
     required this.pressedPngAsset,
     required this.onPressed,
+    required this.semanticLabel,
   });
   final Widget pngAsset;
   final Widget pressedPngAsset;
   final Future<void> Function() onPressed;
+  final String semanticLabel;
   @override
   State<PngButton> createState() => _FancyButtonThatWeDontCodeSoWeDoPNGInsteadOhNoWhatState();
 }
@@ -36,10 +38,15 @@ class _FancyButtonThatWeDontCodeSoWeDoPNGInsteadOhNoWhatState extends State<PngB
         });
         await widget.onPressed();
       },
-      child: SizedBox(
-        width: 95,
-        height: 95,
-        child: isPressed ? widget.pressedPngAsset : widget.pngAsset,
+      child: Semantics(
+        button: true,
+        label: widget.semanticLabel,
+        excludeSemantics: true,
+        child: SizedBox(
+          width: 95,
+          height: 95,
+          child: isPressed ? widget.pressedPngAsset : widget.pngAsset,
+        ),
       ),
     );
   }

@@ -20,6 +20,7 @@ class BaseTextFormField extends StatelessWidget {
     this.suffix,
     this.suffixIcon,
     this.suffixIconOnPressed,
+    this.suffixIconSemanticLabel,
     this.enabled = true,
     this.readOnly = false,
     this.enableInteractiveSelection = true,
@@ -63,6 +64,7 @@ class BaseTextFormField extends StatelessWidget {
   final Widget? suffix;
   final IconData? suffixIcon;
   final void Function()? suffixIconOnPressed;
+  final String? suffixIconSemanticLabel;
   final bool? enabled;
   final FormFieldValidator<String>? validator;
   final TextStyle? placeholderTextStyle;
@@ -143,6 +145,7 @@ class BaseTextFormField extends StatelessWidget {
                       icon: Icon(
                         suffixIcon,
                         size: 20,
+                        semanticLabel: suffixIconSemanticLabel,
                       ),
                     ),
                   ),

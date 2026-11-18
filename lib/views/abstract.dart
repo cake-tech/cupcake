@@ -123,6 +123,7 @@ class AbstractView extends StatefulWidget {
       icon: Icon(
         CupertinoIcons.left_chevron,
         size: 22,
+        semanticLabel: MaterialLocalizations.of(viewModel.c!).backButtonTooltip,
       ),
     );
   }

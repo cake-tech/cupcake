@@ -101,8 +101,11 @@ class WalletHome extends AbstractView {
               const SizedBox(width: 16),
               Container(
                 padding: const EdgeInsets.all(8),
-                child: Assets.icons.walletSelectionButton.image(
-                  width: 42,
+                child: Semantics(
+                  button: true,
+                  label: L.select_wallet,
+                  excludeSemantics: true,
+                  child: Assets.icons.walletSelectionButton.image(width: 42),
                 ),
               ),
             ],
@@ -125,18 +128,21 @@ class WalletHome extends AbstractView {
           pngAsset: Assets.icons.menuDeposit.image(),
           pressedPngAsset: Assets.icons.menuDepositPressed.image(),
           onPressed: () => Receive(coinWallet: viewModel.wallet).push(context),
+          semanticLabel: L.receive,
         ),
         _actionButton(
           context,
           pngAsset: Assets.icons.menuQr.image(),
           pressedPngAsset: Assets.icons.menuQrPressed.image(),
           onPressed: () => BarcodeScanner(wallet: viewModel.wallet).push(context),
+          semanticLabel: L.scan,
         ),
         _actionButton(
           context,
           pngAsset: Assets.icons.menuMenu.image(),
           pressedPngAsset: Assets.icons.menuMenuPressed.image(),
           onPressed: () => _showBottomSheet(context),
+          semanticLabel: MaterialLocalizations.of(context).showMenuTooltip,
         ),
       ],
     );
@@ -147,6 +153,7 @@ class WalletHome extends AbstractView {
     required final Widget pngAsset,
     required final Widget pressedPngAsset,
     required final Future<void> Function() onPressed,
+    required final String semanticLabel,
   }) {
     return PngButton(
       pngAsset: pngAsset,
@@ -155,6 +162,7 @@ class WalletHome extends AbstractView {
         unawaited(Haptics.vibrate(HapticsType.light));
         await onPressed();
       },
+      semanticLabel: semanticLabel,
     );
   }
 

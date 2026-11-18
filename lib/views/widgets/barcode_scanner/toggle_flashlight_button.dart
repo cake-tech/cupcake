@@ -1,3 +1,4 @@
+import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:fast_scanner/fast_scanner.dart';
 import 'package:flutter/material.dart';
 
@@ -14,12 +15,13 @@ class ToggleFlashlightButton extends StatelessWidget {
         if (!state.isInitialized || !state.isRunning) {
           return const SizedBox.shrink();
         }
+        final L = AppLocalizations.of(context)!;
 
         switch (state.torchState) {
           case TorchState.auto:
             return IconButton(
               iconSize: 32.0,
-              icon: const Icon(Icons.flash_auto),
+              icon: Icon(Icons.flash_auto, semanticLabel: L.toggle_flashlight),
               onPressed: () async {
                 await controller.toggleTorch();
               },
@@ -27,7 +29,7 @@ class ToggleFlashlightButton extends StatelessWidget {
           case TorchState.off:
             return IconButton(
               iconSize: 32.0,
-              icon: const Icon(Icons.flash_off),
+              icon: Icon(Icons.flash_off, semanticLabel: L.toggle_flashlight),
               onPressed: () async {
                 await controller.toggleTorch();
               },
@@ -35,7 +37,7 @@ class ToggleFlashlightButton extends StatelessWidget {
           case TorchState.on:
             return IconButton(
               iconSize: 32.0,
-              icon: const Icon(Icons.flash_on),
+              icon: Icon(Icons.flash_on, semanticLabel: L.toggle_flashlight),
               onPressed: () async {
                 await controller.toggleTorch();
               },

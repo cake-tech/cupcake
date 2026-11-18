@@ -28,7 +28,7 @@ class HomeScreen extends AbstractView {
         actions: [
           IconButton(
             onPressed: viewModel.toggleSort,
-            icon: const Icon(Icons.sort),
+            icon: Icon(Icons.sort, semanticLabel: L.sort_wallets),
           ),
         ],
       );
@@ -135,6 +135,7 @@ class HomeScreen extends AbstractView {
                   Icons.edit,
                   size: 14,
                   color: T.colorScheme.onSurfaceVariant,
+                  semanticLabel: L.edit_wallet,
                 ),
               ),
             ),
