@@ -3,6 +3,8 @@ PODS:
     - Flutter
   - cw_mweb (0.0.1):
     - Flutter
+  - device_info_plus (0.0.1):
+    - Flutter
   - DKImagePickerController/Core (4.3.9):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
@@ -39,14 +41,9 @@ PODS:
   - file_picker (0.0.1):
     - DKImagePickerController/PhotoGallery
     - Flutter
+  - file_selector_ios (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
-  - flutter_inappwebview_ios (0.0.1):
-    - Flutter
-    - flutter_inappwebview_ios/Core (= 0.0.1)
-    - OrderedSet (~> 6.0.3)
-  - flutter_inappwebview_ios/Core (0.0.1):
-    - Flutter
-    - OrderedSet (~> 6.0.3)
   - flutter_native_splash (2.4.3):
     - Flutter
   - flutter_secure_storage (6.0.0):
@@ -60,7 +57,6 @@ PODS:
   - local_auth_darwin (0.0.1):
     - Flutter
     - FlutterMacOS
-  - OrderedSet (6.0.3)
   - package_info_plus (0.4.5):
     - Flutter
   - rive_common (0.0.1):
@@ -107,10 +103,11 @@ PODS:
 DEPENDENCIES:
   - bdk_flutter (from `.symlinks/plugins/bdk_flutter/ios`)
   - cw_mweb (from `.symlinks/plugins/cw_mweb/ios`)
+  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - fast_scanner (from `.symlinks/plugins/fast_scanner/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
+  - file_selector_ios (from `.symlinks/plugins/file_selector_ios/ios`)
   - Flutter (from `Flutter`)
-  - flutter_inappwebview_ios (from `.symlinks/plugins/flutter_inappwebview_ios/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - haptic_feedback (from `.symlinks/plugins/haptic_feedback/ios`)
@@ -129,7 +126,6 @@ SPEC REPOS:
   trunk:
     - DKImagePickerController
     - DKPhotoGallery
-    - OrderedSet
     - SDWebImage
     - sqlite3
     - SwiftyGif
@@ -139,14 +135,16 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/bdk_flutter/ios"
   cw_mweb:
     :path: ".symlinks/plugins/cw_mweb/ios"
+  device_info_plus:
+    :path: ".symlinks/plugins/device_info_plus/ios"
   fast_scanner:
     :path: ".symlinks/plugins/fast_scanner/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
+  file_selector_ios:
+    :path: ".symlinks/plugins/file_selector_ios/ios"
   Flutter:
     :path: Flutter
-  flutter_inappwebview_ios:
-    :path: ".symlinks/plugins/flutter_inappwebview_ios/ios"
   flutter_native_splash:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
   flutter_secure_storage:
@@ -177,22 +175,22 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   bdk_flutter: cef9180019b4c6b67a3e3dfb74611683fe140107
   cw_mweb: 3aea2fb35b2bd04d8b2d21b83216f3b8fb768d85
+  device_info_plus: 335f3ce08d2e174b9fdc3db3db0f4e3b1f66bd89
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
   fast_scanner: 2cb1ad3e69e645e9980fb4961396ce5804caa3e3
   file_picker: a0560bc09d61de87f12d246fc47d2119e6ef37be
+  file_selector_ios: ec57ec07954363dd730b642e765e58f199bb621a
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
   flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
   flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
   haptic_feedback: fd1d8509833f58f164fc12122c0357fa9b2750e0
   image_picker_ios: e0ece4aa2a75771a7de3fa735d26d90817041326
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   local_auth_darwin: c3ee6cce0a8d56be34c8ccb66ba31f7f180aaebb
-  OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   rive_common: dd421daaf9ae69f0125aa761dd96abd278399952
-  rlz: 3f4022361f540a5c26d9d2474fea1d2455b69d8d
+  rlz: c8363e00b6b220494d78e8c3f8e02244de65fb6b
   SDWebImage: 1bb6a1b84b6fe87b972a102bdc77dd589df33477
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
@@ -201,6 +199,6 @@ SPEC CHECKSUMS:
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
 
-PODFILE CHECKSUM: 4f1c12611da7338d21589c0b2ecd6bd20b109694
+PODFILE CHECKSUM: 54f2e44768016a2449ef52a11d37c150596c6381
 
 COCOAPODS: 1.16.2
