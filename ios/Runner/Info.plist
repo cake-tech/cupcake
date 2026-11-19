@@ -30,6 +30,8 @@
 	<string>Scanning QR codes for UR</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Authenticate with FaceID instead of pin</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used only if you choose to import a photo. Cupcake never shares your photos.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -1548,9 +1548,11 @@ packages:
   rlz:
     dependency: transitive
     description:
-      path: "../zkool2/rust_builder"
-      relative: true
-    source: path
+      path: rust_builder
+      ref: cb3e96f10e58a8fc8632b40636a0c64aa21fb653
+      resolved-ref: cb3e96f10e58a8fc8632b40636a0c64aa21fb653
+      url: "https://github.com/cake-tech/zkool2"
+    source: git
     version: "0.0.1"
   rxdart:
     dependency: transitive
@@ -2089,9 +2091,11 @@ packages:
   zkool:
     dependency: "direct main"
     description:
-      path: "/Users/user/work/zkool2"
-      relative: false
-    source: path
+      path: "."
+      ref: cb3e96f10e58a8fc8632b40636a0c64aa21fb653
+      resolved-ref: cb3e96f10e58a8fc8632b40636a0c64aa21fb653
+      url: "https://github.com/cake-tech/zkool2"
+    source: git
     version: "6.35.0"
 sdks:
   dart: ">=3.10.3 <4.0.0"

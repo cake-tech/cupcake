@@ -14,6 +14,9 @@ pushd lib/l10n
     done
 popd
 
+# flutter_gen_runner is disabled in pubspec.yaml (since #77), so build_runner no
+# longer writes lib/gen/*.gen.dart; generate them with the flutter_gen CLI instead.
+dart run flutter_gen:flutter_gen_command -c pubspec.yaml
 dart run build_runner build --delete-conflicting-outputs
 dart fix --apply lib/
 dart format lib/
