@@ -37,8 +37,8 @@ class LitecoinWalletCreation extends WalletCreation {
   );
 
   late StringFormElement passphrase = StringFormElement(
-    L.wallet_passphrase,
-    password: false,
+    L.seed_offset,
+    password: true,
     validator: nonEmptyValidator(
       L,
       extra: (final input) => null,
@@ -49,8 +49,8 @@ class LitecoinWalletCreation extends WalletCreation {
   );
 
   late StringFormElement passphraseConfirm = StringFormElement(
-    L.wallet_passphrase,
-    password: false,
+    L.seed_offset_confirm,
+    password: true,
     validator: nonEmptyValidator(
       L,
       extra: (final input) => input != passphrase.ctrl.text ? L.seed_passphrase_mismatch : null,
