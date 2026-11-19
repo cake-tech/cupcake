@@ -13,6 +13,7 @@ import 'package:cupcake/coins/litecoin/address.dart';
 import 'package:cupcake/coins/litecoin/amount.dart';
 import 'package:cupcake/coins/litecoin/coin.dart';
 import 'package:cupcake/coins/litecoin/wallet_info.dart';
+import 'package:cupcake/utils/psbt.dart';
 import 'package:cupcake/utils/types.dart';
 import 'package:cupcake/utils/urqr.dart';
 import 'package:cupcake/views/animated_qr_page.dart';
@@ -159,6 +160,7 @@ class LitecoinWallet implements CoinWallet {
           wallet: this,
           destMap: destMap,
           fee: LitecoinAmount(resp.fee.toInt()),
+          warnings: psbtConfirmationWarnings(base64.decode(psbtB64)),
           confirmCallback: (final BuildContext context) async {
             Uint8List sourceBytes;
             try {
