@@ -8,6 +8,7 @@ import 'package:cupcake/coins/litecoin/coin.dart';
 import 'package:cupcake/l10n/app_localizations.dart';
 import 'package:path/path.dart' as p;
 import 'package:bip39/bip39.dart' as bip39;
+import 'package:cupcake/coins/litecoin/mnemonic_entropy.dart';
 
 class CreateLitecoinWalletCreationMethod extends CreationMethod {
   CreateLitecoinWalletCreationMethod(
@@ -31,7 +32,10 @@ class CreateLitecoinWalletCreationMethod extends CreationMethod {
       throw Exception("Passphrase doesn't match");
     }
     // ignore: deprecated_member_use
-    final mnemonic = bip39.generateMnemonic(strength: 128);
+    final mnemonic = bip39.generateMnemonic(
+      strength: 128,
+      randomBytes: litecoinMnemonicEntropy,
+    );
 
     final keys = "${Litecoin().getPathForWallet(p.basename(walletPath))}.keys";
     final keysEncrypted =
