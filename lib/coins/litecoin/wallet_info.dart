@@ -5,6 +5,7 @@ import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/litecoin/coin.dart';
 import 'package:cupcake/utils/encryption/default.dart';
+import 'package:cupcake/utils/wallet_paths.dart';
 import 'package:cupcake/views/open_wallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as p;
@@ -71,17 +72,17 @@ class LitecoinWalletInfo extends CoinWalletInfo {
       throw Exception(Coin.L.error_wallet_name_unchanged);
     }
     final basePath = p.dirname(walletName);
-    if (File(p.join(basePath, newName)).existsSync()) {
+    final source = litecoinRenameSource(walletName);
+    if (File(renameCollisionPath(basePath, newName, keysFile: true)).existsSync()) {
       throw Exception(Coin.L.error_wallet_name_already_exists);
     }
-    File(walletName).copySync(p.join(basePath, newName));
+    File(source).copySync(p.join(basePath, "$newName.keys"));
     // Copy and delete later, if anything throws below we end up with copied walled,
     // instead of nuking the wallet
-    File(walletName).deleteSync();
-    File("$walletName.keys").deleteSync();
-    _walletName = newName;
+    File(source).deleteSync();
+    _walletName = pathAfterRename(walletName, newName);
   }
 
   @override
-  bool exists() => File(walletName).existsSync();
+  bool exists() => File(litecoinRenameSource(walletName)).existsSync();
 }

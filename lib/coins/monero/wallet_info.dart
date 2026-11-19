@@ -4,6 +4,7 @@ import 'package:cupcake/coins/abstract/coin.dart';
 import 'package:cupcake/coins/abstract/wallet.dart';
 import 'package:cupcake/coins/abstract/wallet_info.dart';
 import 'package:cupcake/coins/monero/coin.dart';
+import 'package:cupcake/utils/wallet_paths.dart';
 import 'package:cupcake/views/open_wallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as p;
@@ -88,7 +89,7 @@ class MoneroWalletInfo extends CoinWalletInfo {
     // instead of nuking the wallet
     File(walletName).deleteSync();
     File("$walletName.keys").deleteSync();
-    _walletName = newName;
+    _walletName = pathAfterRename(walletName, newName);
   }
 
   @override
