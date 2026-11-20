@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cupcake/utils/seed_verify_options.dart';
 import 'package:cupcake/view_model/abstract.dart';
 import 'package:mobx/mobx.dart';
 
@@ -25,14 +26,11 @@ abstract class VerifySeedViewModelBase extends ViewModel with Store {
   late final randomIndex = Random().nextInt(seedWords.length);
   String get randomWord => seedWords[randomIndex];
 
-  late final List<String> randomWords = () {
-    final w = wordList;
-    w.shuffle(Random.secure());
-    final elms = w.take(5).toList();
-    elms.add(randomWord);
-    elms.toSet(); // in case we got a duplicate
-    return elms.toList()..shuffle(Random.secure());
-  }();
+  late final List<String> randomWords = seedVerifyOptions(
+    wordList: wordList,
+    correctWord: randomWord,
+    random: Random.secure(),
+  );
 
   bool result(final String guessedWord) {
     return guessedWord.toLowerCase() == randomWord.toLowerCase();
